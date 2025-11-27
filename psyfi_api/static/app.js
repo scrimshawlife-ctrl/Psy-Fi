@@ -128,9 +128,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // Add color variation based on value
         if (name === 'valence') {
             if (value > 0) {
-                valueElement.style.color = 'var(--cyan-primary)';
+                valueElement.style.color = 'var(--pf-cyan)';
             } else {
-                valueElement.style.color = 'var(--magenta-primary)';
+                valueElement.style.color = 'var(--pf-magenta)';
             }
         }
     }
@@ -166,9 +166,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const max = parseInt(e.target.max);
 
             if (value < min || value > max) {
-                e.target.style.borderColor = 'rgba(255, 50, 50, 0.5)';
+                e.target.style.borderColor = 'var(--pf-danger)';
             } else {
-                e.target.style.borderColor = 'var(--border-subtle)';
+                e.target.style.borderColor = 'var(--pf-border-subtle)';
             }
         });
     });

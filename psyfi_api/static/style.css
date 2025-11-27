@@ -1,36 +1,70 @@
 /* ===================================
-   PsyFi - Cyber-Occult Styling
+   PsyFi - Consciousness Field Engine
    Applied Alchemy Labs
+   Brand Identity v1.0
    =================================== */
 
 :root {
-    /* Color Palette */
-    --bg-primary: #0a0a0f;
-    --bg-secondary: #12121a;
-    --bg-tertiary: #1a1a28;
-    --bg-panel: #151520;
+    /* ===== Neutrals (Base / Backgrounds) ===== */
+    --pf-bg-0: #05070B;           /* Void black-blue (main background) */
+    --pf-bg-1: #0B1018;           /* Panel background */
+    --pf-bg-2: #141B26;           /* Elevated card / hover */
+    --pf-border-subtle: #232939;  /* Subtle borders */
+    --pf-border-strong: #3A435C;  /* Strong borders */
 
-    --cyan-primary: #00ffff;
-    --cyan-dim: #00cccc;
-    --magenta-primary: #ff00ff;
-    --magenta-dim: #cc00cc;
-    --violet: #8b5cf6;
+    --pf-text-main: #F5F7FF;      /* Primary text */
+    --pf-text-muted: #9BA4C7;     /* Muted text */
+    --pf-text-soft: #6F7897;      /* Soft text */
+    --pf-text-accent: #EAE9FF;    /* Light violet accent text */
 
-    --text-primary: #e5e5e5;
-    --text-secondary: #a0a0b0;
-    --text-dim: #606070;
+    /* ===== Accent Spectrum ===== */
+    --pf-cyan: #3EE7F2;           /* Main "field" / energy color */
+    --pf-cyan-soft: #22B1C0;      /* Subdued cyan */
+    --pf-magenta: #FF42C1;        /* Psychedelic / highlight color */
+    --pf-magenta-soft: #C02C94;   /* Subdued magenta */
+    --pf-violet: #8F7BFF;         /* Valence / resonance */
+    --pf-violet-soft: #6451DA;    /* Subdued violet */
 
-    --border-primary: rgba(0, 255, 255, 0.3);
-    --border-secondary: rgba(255, 0, 255, 0.2);
-    --border-subtle: rgba(255, 255, 255, 0.1);
+    /* ===== Status / Semantic ===== */
+    --pf-success: #38D996;
+    --pf-warning: #FFB547;
+    --pf-danger: #FF4F6C;
+    --pf-info: #34C3FF;
 
-    --shadow-cyan: 0 0 20px rgba(0, 255, 255, 0.3);
-    --shadow-magenta: 0 0 20px rgba(255, 0, 255, 0.3);
-    --shadow-subtle: 0 4px 20px rgba(0, 0, 0, 0.5);
+    /* ===== Glow / Effects (RGBA) ===== */
+    --pf-glow-cyan: rgba(62, 231, 242, 0.35);
+    --pf-glow-magenta: rgba(255, 66, 193, 0.30);
+    --pf-glow-violet: rgba(143, 123, 255, 0.28);
 
-    /* Typography */
-    --font-primary: 'Inter', -apple-system, system-ui, sans-serif;
-    --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+    /* ===== Shadows ===== */
+    --pf-shadow-subtle: 0 4px 20px rgba(5, 7, 11, 0.6);
+    --pf-shadow-glow: 0 0 24px var(--pf-glow-cyan), 0 0 48px var(--pf-glow-violet);
+
+    /* ===== Typography ===== */
+    --pf-font-main: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    --pf-font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+    /* Legacy aliases for backward compatibility */
+    --bg-primary: var(--pf-bg-0);
+    --bg-secondary: var(--pf-bg-1);
+    --bg-tertiary: var(--pf-bg-2);
+    --bg-panel: var(--pf-bg-1);
+    --cyan-primary: var(--pf-cyan);
+    --cyan-dim: var(--pf-cyan-soft);
+    --magenta-primary: var(--pf-magenta);
+    --magenta-dim: var(--pf-magenta-soft);
+    --violet: var(--pf-violet);
+    --text-primary: var(--pf-text-main);
+    --text-secondary: var(--pf-text-muted);
+    --text-dim: var(--pf-text-soft);
+    --border-primary: var(--pf-glow-cyan);
+    --border-secondary: var(--pf-glow-magenta);
+    --border-subtle: var(--pf-border-subtle);
+    --shadow-cyan: 0 0 20px var(--pf-glow-cyan);
+    --shadow-magenta: 0 0 20px var(--pf-glow-magenta);
+    --shadow-subtle: var(--pf-shadow-subtle);
+    --font-primary: var(--pf-font-main);
+    --font-mono: var(--pf-font-mono);
 }
 
 /* ===================================
@@ -44,14 +78,16 @@
 }
 
 body {
-    font-family: var(--font-primary);
-    background: var(--bg-primary);
-    color: var(--text-primary);
+    font-family: var(--pf-font-main);
+    background: var(--pf-bg-0);
+    color: var(--pf-text-main);
     line-height: 1.6;
     min-height: 100vh;
+    /* Subtle radial gradient: cyan/violet bloom at center top, fading to void at edges */
     background-image:
-        radial-gradient(circle at 20% 50%, rgba(139, 92, 246, 0.05) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(0, 255, 255, 0.05) 0%, transparent 50%);
+        radial-gradient(circle at 50% 0%, var(--pf-glow-cyan) 0%, transparent 35%),
+        radial-gradient(circle at 50% 0%, var(--pf-glow-violet) 0%, transparent 50%);
+    background-attachment: fixed;
 }
 
 .container {
@@ -78,14 +114,14 @@ body {
 .sigil-inner {
     width: 80px;
     height: 80px;
-    border: 2px solid var(--border-primary);
+    border: 2px solid var(--pf-cyan);
     border-radius: 4px;
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
-    background: var(--bg-secondary);
-    box-shadow: var(--shadow-cyan);
+    background: var(--pf-bg-1);
+    box-shadow: 0 0 20px var(--pf-glow-cyan);
 }
 
 .sigil-inner::before,
@@ -94,7 +130,7 @@ body {
     position: absolute;
     width: 8px;
     height: 8px;
-    border: 1px solid var(--magenta-primary);
+    border: 1px solid var(--pf-magenta);
 }
 
 .sigil-inner::before {
@@ -113,8 +149,8 @@ body {
 
 .sigil-symbol {
     font-size: 48px;
-    color: var(--cyan-primary);
-    text-shadow: 0 0 10px var(--cyan-primary);
+    color: var(--pf-cyan);
+    text-shadow: 0 0 10px var(--pf-cyan);
 }
 
 .title {
@@ -129,7 +165,7 @@ body {
 }
 
 .title-main {
-    background: linear-gradient(135deg, var(--cyan-primary), var(--magenta-primary));
+    background: linear-gradient(135deg, var(--pf-cyan), var(--pf-magenta));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -138,14 +174,14 @@ body {
 
 .title-version {
     font-size: 14px;
-    color: var(--text-dim);
+    color: var(--pf-text-soft);
     font-weight: 400;
     letter-spacing: 2px;
 }
 
 .subtitle {
     font-size: 16px;
-    color: var(--text-secondary);
+    color: var(--pf-text-muted);
     letter-spacing: 3px;
     text-transform: uppercase;
     margin-bottom: 15px;
@@ -153,8 +189,8 @@ body {
 
 .lab-credit {
     font-size: 12px;
-    color: var(--text-dim);
-    font-family: var(--font-mono);
+    color: var(--pf-text-soft);
+    font-family: var(--pf-font-mono);
     letter-spacing: 2px;
 }
 
@@ -163,12 +199,12 @@ body {
    =================================== */
 
 .panel {
-    background: var(--bg-panel);
-    border: 1px solid var(--border-subtle);
-    border-radius: 8px;
+    background: var(--pf-bg-1);
+    border: 1px solid var(--pf-border-strong);
+    border-radius: 12px;
     margin-bottom: 30px;
     overflow: hidden;
-    box-shadow: var(--shadow-subtle);
+    box-shadow: var(--pf-shadow-subtle), var(--pf-shadow-glow);
     position: relative;
 }
 
@@ -181,15 +217,15 @@ body {
     height: 1px;
     background: linear-gradient(90deg,
         transparent,
-        var(--cyan-primary) 50%,
+        var(--pf-cyan) 50%,
         transparent
     );
-    opacity: 0.5;
+    opacity: 0.6;
 }
 
 .panel-header {
     padding: 20px 30px;
-    border-bottom: 1px solid var(--border-subtle);
+    border-bottom: 1px solid var(--pf-border-subtle);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -198,14 +234,14 @@ body {
 .panel-header h2 {
     font-size: 18px;
     font-weight: 500;
-    color: var(--text-primary);
+    color: var(--pf-text-main);
     letter-spacing: 1px;
 }
 
 .field-dimensions {
-    font-family: var(--font-mono);
+    font-family: var(--pf-font-mono);
     font-size: 12px;
-    color: var(--text-dim);
+    color: var(--pf-text-soft);
 }
 
 .panel-body {
@@ -231,33 +267,33 @@ body {
 
 .input-group label {
     font-size: 13px;
-    color: var(--text-secondary);
+    color: var(--pf-text-muted);
     text-transform: uppercase;
     letter-spacing: 1px;
     font-weight: 500;
 }
 
 .input-group input {
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-subtle);
-    color: var(--text-primary);
+    background: var(--pf-bg-1);
+    border: 1px solid var(--pf-border-subtle);
+    color: var(--pf-text-main);
     padding: 12px 16px;
     border-radius: 4px;
     font-size: 16px;
-    font-family: var(--font-mono);
+    font-family: var(--pf-font-mono);
     transition: all 0.3s ease;
 }
 
 .input-group input:focus {
     outline: none;
-    border-color: var(--cyan-primary);
-    box-shadow: 0 0 0 3px rgba(0, 255, 255, 0.1);
+    border-color: var(--pf-cyan);
+    box-shadow: 0 0 0 3px var(--pf-glow-cyan);
 }
 
 .input-hint {
     font-size: 11px;
-    color: var(--text-dim);
-    font-family: var(--font-mono);
+    color: var(--pf-text-soft);
+    font-family: var(--pf-font-mono);
 }
 
 /* ===================================
@@ -271,7 +307,7 @@ body {
 .preset-selector > label {
     display: block;
     font-size: 13px;
-    color: var(--text-secondary);
+    color: var(--pf-text-muted);
     text-transform: uppercase;
     letter-spacing: 1px;
     font-weight: 500;
@@ -285,9 +321,9 @@ body {
 }
 
 .preset-btn {
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-subtle);
-    color: var(--text-primary);
+    background: var(--pf-bg-1);
+    border: 1px solid var(--pf-border-subtle);
+    color: var(--pf-text-main);
     padding: 15px 12px;
     border-radius: 4px;
     cursor: pointer;
@@ -296,15 +332,15 @@ body {
     align-items: center;
     gap: 6px;
     transition: all 0.3s ease;
-    font-family: var(--font-primary);
+    font-family: var(--pf-font-main);
     min-height: 100px;
     touch-action: manipulation;
 }
 
 .preset-btn:hover {
-    border-color: var(--cyan-primary);
+    border-color: var(--pf-cyan);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 255, 255, 0.2);
+    box-shadow: 0 4px 12px var(--pf-glow-cyan);
 }
 
 .preset-btn:active {
@@ -312,8 +348,9 @@ body {
 }
 
 .preset-btn.active {
-    border-color: var(--cyan-primary);
-    background: rgba(0, 255, 255, 0.1);
+    border-color: var(--pf-cyan);
+    background: var(--pf-bg-2);
+    box-shadow: 0 0 12px var(--pf-glow-cyan);
 }
 
 .preset-icon {
@@ -329,13 +366,13 @@ body {
 
 .preset-desc {
     font-size: 11px;
-    color: var(--text-dim);
-    font-family: var(--font-mono);
+    color: var(--pf-text-soft);
+    font-family: var(--pf-font-mono);
 }
 
 .divider {
     height: 1px;
-    background: var(--border-subtle);
+    background: var(--pf-border-subtle);
     margin: 25px 0;
 }
 
@@ -344,8 +381,8 @@ body {
    =================================== */
 
 .btn-primary {
-    background: linear-gradient(135deg, var(--cyan-dim), var(--magenta-dim));
-    color: var(--text-primary);
+    background: linear-gradient(135deg, var(--pf-cyan), var(--pf-magenta));
+    color: var(--pf-text-main);
     border: none;
     padding: 16px 40px;
     border-radius: 4px;
@@ -360,12 +397,12 @@ body {
     gap: 12px;
     width: 100%;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0, 255, 255, 0.3);
+    box-shadow: var(--pf-shadow-subtle), 0 4px 15px var(--pf-glow-cyan);
 }
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 255, 255, 0.5);
+    box-shadow: var(--pf-shadow-subtle), 0 6px 20px var(--pf-glow-cyan), 0 6px 20px var(--pf-glow-magenta);
 }
 
 .btn-primary:active {
@@ -393,8 +430,8 @@ body {
 }
 
 .metric-card {
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-subtle);
+    background: var(--pf-bg-1);
+    border: 1px solid var(--pf-border-subtle);
     border-radius: 6px;
     padding: 20px;
     text-align: center;
@@ -402,13 +439,14 @@ body {
 }
 
 .metric-card:hover {
-    border-color: var(--cyan-primary);
+    border-color: var(--pf-violet);
+    background: var(--pf-bg-2);
     transform: translateY(-2px);
 }
 
 .metric-label {
     font-size: 12px;
-    color: var(--text-dim);
+    color: var(--pf-text-soft);
     text-transform: uppercase;
     letter-spacing: 1px;
     margin-bottom: 10px;
@@ -417,25 +455,25 @@ body {
 .metric-value {
     font-size: 32px;
     font-weight: 500;
-    font-family: var(--font-mono);
-    color: var(--cyan-primary);
+    font-family: var(--pf-font-mono);
+    color: var(--pf-cyan);
     margin-bottom: 15px;
-    text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+    text-shadow: 0 0 10px var(--pf-glow-cyan);
 }
 
 .metric-bar {
     width: 100%;
     height: 4px;
-    background: var(--bg-tertiary);
+    background: var(--pf-bg-2);
     border-radius: 2px;
     overflow: hidden;
 }
 
 .metric-bar-fill {
     height: 100%;
-    background: linear-gradient(90deg, var(--cyan-primary), var(--magenta-primary));
+    background: linear-gradient(90deg, var(--pf-cyan), var(--pf-magenta));
     transition: width 0.5s ease;
-    box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+    box-shadow: 0 0 10px var(--pf-glow-cyan);
 }
 
 /* ===================================
@@ -443,22 +481,22 @@ body {
    =================================== */
 
 .error-panel {
-    border-color: rgba(255, 50, 50, 0.5);
+    border-color: var(--pf-danger);
 }
 
 .error-header {
-    border-bottom-color: rgba(255, 50, 50, 0.3);
+    border-bottom-color: rgba(255, 79, 108, 0.3);
 }
 
 .error-header h2 {
-    color: #ff5555;
+    color: var(--pf-danger);
 }
 
 #errorMessage {
-    font-family: var(--font-mono);
+    font-family: var(--pf-font-mono);
     font-size: 13px;
-    color: #ff8888;
-    background: var(--bg-secondary);
+    color: var(--pf-danger);
+    background: var(--pf-bg-2);
     padding: 15px;
     border-radius: 4px;
     overflow-x: auto;
@@ -487,10 +525,11 @@ body {
 .spinner {
     width: 60px;
     height: 60px;
-    border: 3px solid var(--border-subtle);
-    border-top-color: var(--cyan-primary);
+    border: 3px solid var(--pf-border-subtle);
+    border-top-color: var(--pf-cyan);
     border-radius: 50%;
     animation: spin 1s linear infinite;
+    box-shadow: 0 0 20px var(--pf-glow-cyan);
 }
 
 @keyframes spin {
@@ -498,8 +537,8 @@ body {
 }
 
 .loading-overlay p {
-    color: var(--text-secondary);
-    font-family: var(--font-mono);
+    color: var(--pf-text-muted);
+    font-family: var(--pf-font-mono);
     letter-spacing: 2px;
 }
 
@@ -510,7 +549,7 @@ body {
 .footer {
     text-align: center;
     padding: 40px 0 20px;
-    border-top: 1px solid var(--border-subtle);
+    border-top: 1px solid var(--pf-border-subtle);
     margin-top: 60px;
 }
 
@@ -523,28 +562,29 @@ body {
 }
 
 .footer-links a {
-    color: var(--text-secondary);
+    color: var(--pf-text-muted);
     text-decoration: none;
     font-size: 13px;
     transition: color 0.3s ease;
 }
 
 .footer-links a:hover {
-    color: var(--cyan-primary);
+    color: var(--pf-cyan);
+    text-shadow: 0 0 8px var(--pf-glow-cyan);
 }
 
 .separator {
-    color: var(--text-dim);
+    color: var(--pf-text-soft);
 }
 
 .abx-badge {
-    font-family: var(--font-mono);
+    font-family: var(--pf-font-mono);
     font-size: 11px;
-    color: var(--text-dim);
-    background: var(--bg-secondary);
+    color: var(--pf-text-soft);
+    background: var(--pf-bg-1);
     padding: 4px 10px;
     border-radius: 3px;
-    border: 1px solid var(--border-subtle);
+    border: 1px solid var(--pf-border-subtle);
 }
 
 /* ===================================

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PsyFi – Consciousness Field Simulator</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <header class="header">
+            <div class="sigil">
+                <div class="sigil-inner">
+                    <span class="sigil-symbol">⬡</span>
+                </div>
+            </div>
+            <h1 class="title">
+                <span class="title-main">PsyFi</span>
+                <span class="title-version">v0.1.0</span>
+            </h1>
+            <p class="subtitle">Consciousness Field Simulation Engine</p>
+            <div class="lab-credit">Applied Alchemy Labs</div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Control Panel -->
+            <section class="panel control-panel">
+                <div class="panel-header">
+                    <h2>⚗️ Simulation Parameters</h2>
+                </div>
+                <div class="panel-body">
+                    <form id="simulationForm">
+                        <div class="input-grid">
+                            <div class="input-group">
+                                <label for="width">Field Width</label>
+                                <input type="number" id="width" name="width" value="64" min="8" max="512" required>
+                                <span class="input-hint">8-512 px</span>
+                            </div>
+                            <div class="input-group">
+                                <label for="height">Field Height</label>
+                                <input type="number" id="height" name="height" value="64" min="8" max="512" required>
+                                <span class="input-hint">8-512 px</span>
+                            </div>
+                            <div class="input-group">
+                                <label for="steps">Evolution Steps</label>
+                                <input type="number" id="steps" name="steps" value="20" min="1" max="1000" required>
+                                <span class="input-hint">1-1000 iterations</span>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-primary" id="runButton">
+                            <span class="btn-icon">▶</span>
+                            <span>Run Simulation</span>
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Results Panel -->
+            <section class="panel results-panel" id="resultsPanel" style="display: none;">
+                <div class="panel-header">
+                    <h2>🌌 Field Metrics</h2>
+                    <div class="field-dimensions" id="fieldDimensions"></div>
+                </div>
+                <div class="panel-body">
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-label">Valence</div>
+                            <div class="metric-value" id="valence">--</div>
+                            <div class="metric-bar">
+                                <div class="metric-bar-fill" id="valenceBar"></div>
+                            </div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Coherence</div>
+                            <div class="metric-value" id="coherence">--</div>
+                            <div class="metric-bar">
+                                <div class="metric-bar-fill" id="coherenceBar"></div>
+                            </div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Symmetry</div>
+                            <div class="metric-value" id="symmetry">--</div>
+                            <div class="metric-bar">
+                                <div class="metric-bar-fill" id="symmetryBar"></div>
+                            </div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Roughness</div>
+                            <div class="metric-value" id="roughness">--</div>
+                            <div class="metric-bar">
+                                <div class="metric-bar-fill" id="roughnessBar"></div>
+                            </div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Richness</div>
+                            <div class="metric-value" id="richness">--</div>
+                            <div class="metric-bar">
+                                <div class="metric-bar-fill" id="richnessBar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Error Panel -->
+            <section class="panel error-panel" id="errorPanel" style="display: none;">
+                <div class="panel-header error-header">
+                    <h2>⚠️ Error</h2>
+                </div>
+                <div class="panel-body">
+                    <pre id="errorMessage"></pre>
+                </div>
+            </section>
+
+            <!-- Loading State -->
+            <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+                <div class="spinner"></div>
+                <p>Computing consciousness field...</p>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-links">
+                <a href="/docs" target="_blank">API Docs</a>
+                <span class="separator">•</span>
+                <a href="https://github.com/scrimshawlife-ctrl/Psy-Fi" target="_blank">GitHub</a>
+                <span class="separator">•</span>
+                <span class="abx-badge">ABX-Core v1.3</span>
+            </div>
+        </footer>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>

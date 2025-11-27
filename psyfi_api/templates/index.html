@@ -2,8 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="Modular consciousness field simulation engine with ABX-Core v1.3">
+    <meta name="theme-color" content="#00ffff">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="PsyFi">
+
     <title>PsyFi – Consciousness Field Simulator</title>
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/static/manifest.json">
+
+    <!-- Stylesheets -->
     <link rel="stylesheet" href="/static/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -35,6 +46,35 @@
                 </div>
                 <div class="panel-body">
                     <form id="simulationForm">
+                        <!-- Preset Selector -->
+                        <div class="preset-selector">
+                            <label>Quick Presets</label>
+                            <div class="preset-buttons">
+                                <button type="button" class="preset-btn" data-preset="quick">
+                                    <span class="preset-icon">⚡</span>
+                                    <span class="preset-name">Quick Test</span>
+                                    <span class="preset-desc">32×32, 10 steps</span>
+                                </button>
+                                <button type="button" class="preset-btn" data-preset="standard">
+                                    <span class="preset-icon">⬡</span>
+                                    <span class="preset-name">Standard</span>
+                                    <span class="preset-desc">64×64, 20 steps</span>
+                                </button>
+                                <button type="button" class="preset-btn" data-preset="detailed">
+                                    <span class="preset-icon">✨</span>
+                                    <span class="preset-name">Detailed</span>
+                                    <span class="preset-desc">128×128, 50 steps</span>
+                                </button>
+                                <button type="button" class="preset-btn" data-preset="deep">
+                                    <span class="preset-icon">🌀</span>
+                                    <span class="preset-name">Deep Dive</span>
+                                    <span class="preset-desc">256×256, 100 steps</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="divider"></div>
+
                         <div class="input-grid">
                             <div class="input-group">
                                 <label for="width">Field Width</label>
@@ -137,5 +177,16 @@
     </div>
 
     <script src="/static/app.js"></script>
+
+    <!-- Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/static/sw.js')
+                    .then(reg => console.log('[PWA] Service Worker registered'))
+                    .catch(err => console.log('[PWA] Service Worker registration failed:', err));
+            });
+        }
+    </script>
 </body>
 </html>

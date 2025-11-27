@@ -8,6 +8,40 @@ document.addEventListener('DOMContentLoaded', () => {
     const resultsPanel = document.getElementById('resultsPanel');
     const errorPanel = document.getElementById('errorPanel');
 
+    // Preset configurations
+    const presets = {
+        quick: { width: 32, height: 32, steps: 10 },
+        standard: { width: 64, height: 64, steps: 20 },
+        detailed: { width: 128, height: 128, steps: 50 },
+        deep: { width: 256, height: 256, steps: 100 }
+    };
+
+    // Preset button handlers
+    const presetButtons = document.querySelectorAll('.preset-btn');
+    presetButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const presetName = button.dataset.preset;
+            const preset = presets[presetName];
+
+            if (preset) {
+                // Update form values
+                document.getElementById('width').value = preset.width;
+                document.getElementById('height').value = preset.height;
+                document.getElementById('steps').value = preset.steps;
+
+                // Update active state
+                presetButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+
+                // Optional: trigger validation
+                ['width', 'height', 'steps'].forEach(id => {
+                    const input = document.getElementById(id);
+                    input.dispatchEvent(new Event('input', { bubbles: true }));
+                });
+            }
+        });
+    });
+
     // Form submission handler
     form.addEventListener('submit', async (e) => {
         e.preventDefault();

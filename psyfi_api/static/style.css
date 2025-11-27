@@ -261,6 +261,85 @@ body {
 }
 
 /* ===================================
+   Preset Selector
+   =================================== */
+
+.preset-selector {
+    margin-bottom: 25px;
+}
+
+.preset-selector > label {
+    display: block;
+    font-size: 13px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 500;
+    margin-bottom: 15px;
+}
+
+.preset-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+}
+
+.preset-btn {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-primary);
+    padding: 15px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.3s ease;
+    font-family: var(--font-primary);
+    min-height: 100px;
+    touch-action: manipulation;
+}
+
+.preset-btn:hover {
+    border-color: var(--cyan-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 255, 255, 0.2);
+}
+
+.preset-btn:active {
+    transform: translateY(0);
+}
+
+.preset-btn.active {
+    border-color: var(--cyan-primary);
+    background: rgba(0, 255, 255, 0.1);
+}
+
+.preset-icon {
+    font-size: 24px;
+    margin-bottom: 4px;
+}
+
+.preset-name {
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+.preset-desc {
+    font-size: 11px;
+    color: var(--text-dim);
+    font-family: var(--font-mono);
+}
+
+.divider {
+    height: 1px;
+    background: var(--border-subtle);
+    margin: 25px 0;
+}
+
+/* ===================================
    Buttons
    =================================== */
 
@@ -482,19 +561,97 @@ body {
         letter-spacing: 4px;
     }
 
-    .input-grid {
-        grid-template-columns: 1fr;
+    .sigil-inner {
+        width: 60px;
+        height: 60px;
     }
 
+    .sigil-symbol {
+        font-size: 36px;
+    }
+
+    /* Better touch targets for mobile */
+    .input-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .input-group input {
+        padding: 14px 16px;
+        font-size: 16px; /* Prevent zoom on iOS */
+    }
+
+    /* Preset buttons full width on mobile */
+    .preset-buttons {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    .preset-btn {
+        min-height: 90px;
+        padding: 12px 10px;
+    }
+
+    /* Metrics in single column on mobile */
     .metrics-grid {
         grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .metric-card {
+        padding: 15px;
+    }
+
+    .metric-value {
+        font-size: 28px;
     }
 
     .panel-header {
         padding: 15px 20px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
     }
 
     .panel-body {
         padding: 20px;
+    }
+
+    /* Larger touch target for primary button */
+    .btn-primary {
+        padding: 18px 40px;
+        font-size: 14px;
+    }
+
+    /* Footer adjustments */
+    .footer {
+        padding: 30px 0 20px;
+        margin-top: 40px;
+    }
+
+    .footer-links {
+        gap: 10px;
+        font-size: 12px;
+    }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+    .title {
+        font-size: 28px;
+        letter-spacing: 3px;
+    }
+
+    .subtitle {
+        font-size: 12px;
+        letter-spacing: 2px;
+    }
+
+    .preset-buttons {
+        grid-template-columns: 1fr;
+    }
+
+    .preset-btn {
+        min-height: 80px;
     }
 }

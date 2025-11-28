@@ -1,0 +1,10 @@
+<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <!-- Meter arc -->
+  <path d="M 4 18 A 8 8 0 0 1 20 18" stroke="#EAE9FF" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <!-- Positive segment -->
+  <path d="M 12 10 A 8 8 0 0 1 20 18" stroke="#3EE7F2" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <!-- Center pivot -->
+  <circle cx="12" cy="18" r="2" fill="#EAE9FF"/>
+  <!-- Needle -->
+  <line x1="12" y1="18" x2="16" y2="13" stroke="#FF42C1" stroke-width="2" stroke-linecap="round"/>
+</svg>

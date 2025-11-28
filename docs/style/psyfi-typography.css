@@ -1,0 +1,155 @@
+/**
+ * PsyFi Typography System
+ * Applied Alchemy Labs
+ * Brand Identity v1.0
+ *
+ * This file contains the complete PsyFi typography token system.
+ * Use these tokens for all text elements to maintain brand consistency.
+ */
+
+/* ===== Font Imports ===== */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+    /* ===== Font Families ===== */
+    --pf-font-main: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --pf-font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
+    /* ===== Font Sizes ===== */
+    --pf-text-xs: 11px;
+    --pf-text-sm: 13px;
+    --pf-text-base: 16px;
+    --pf-text-lg: 18px;
+    --pf-text-xl: 24px;
+    --pf-text-2xl: 32px;
+    --pf-text-3xl: 48px;
+    --pf-text-4xl: 64px;
+
+    /* ===== Font Weights ===== */
+    --pf-weight-light: 300;
+    --pf-weight-regular: 400;
+    --pf-weight-medium: 500;
+    --pf-weight-semibold: 600;
+    --pf-weight-bold: 700;
+
+    /* ===== Line Heights ===== */
+    --pf-leading-tight: 1.2;
+    --pf-leading-normal: 1.5;
+    --pf-leading-relaxed: 1.6;
+    --pf-leading-loose: 1.8;
+
+    /* ===== Letter Spacing ===== */
+    --pf-tracking-tight: -0.02em;
+    --pf-tracking-normal: 0em;
+    --pf-tracking-wide: 0.05em;
+    --pf-tracking-wider: 0.1em;
+    --pf-tracking-widest: 0.15em;
+}
+
+/* ===== Typography Classes ===== */
+
+/* Headings */
+.pf-heading-1 {
+    font-family: var(--pf-font-main);
+    font-size: var(--pf-text-4xl);
+    font-weight: var(--pf-weight-bold);
+    line-height: var(--pf-leading-tight);
+    letter-spacing: var(--pf-tracking-tight);
+    color: var(--pf-text-main);
+}
+
+.pf-heading-2 {
+    font-family: var(--pf-font-main);
+    font-size: var(--pf-text-3xl);
+    font-weight: var(--pf-weight-semibold);
+    line-height: var(--pf-leading-tight);
+    letter-spacing: var(--pf-tracking-normal);
+    color: var(--pf-text-main);
+}
+
+.pf-heading-3 {
+    font-family: var(--pf-font-main);
+    font-size: var(--pf-text-2xl);
+    font-weight: var(--pf-weight-semibold);
+    line-height: var(--pf-leading-tight);
+    letter-spacing: var(--pf-tracking-wide);
+    color: var(--pf-text-main);
+}
+
+.pf-heading-4 {
+    font-family: var(--pf-font-main);
+    font-size: var(--pf-text-xl);
+    font-weight: var(--pf-weight-medium);
+    line-height: var(--pf-leading-normal);
+    letter-spacing: var(--pf-tracking-wide);
+    color: var(--pf-text-main);
+}
+
+/* Body Text */
+.pf-body {
+    font-family: var(--pf-font-main);
+    font-size: var(--pf-text-base);
+    font-weight: var(--pf-weight-regular);
+    line-height: var(--pf-leading-relaxed);
+    letter-spacing: var(--pf-tracking-normal);
+    color: var(--pf-text-main);
+}
+
+.pf-body-sm {
+    font-family: var(--pf-font-main);
+    font-size: var(--pf-text-sm);
+    font-weight: var(--pf-weight-regular);
+    line-height: var(--pf-leading-normal);
+    letter-spacing: var(--pf-tracking-normal);
+    color: var(--pf-text-muted);
+}
+
+/* Labels */
+.pf-label {
+    font-family: var(--pf-font-main);
+    font-size: var(--pf-text-sm);
+    font-weight: var(--pf-weight-medium);
+    line-height: var(--pf-leading-normal);
+    letter-spacing: var(--pf-tracking-wider);
+    text-transform: uppercase;
+    color: var(--pf-text-muted);
+}
+
+/* Code / Monospace */
+.pf-code {
+    font-family: var(--pf-font-mono);
+    font-size: var(--pf-text-sm);
+    font-weight: var(--pf-weight-regular);
+    line-height: var(--pf-leading-relaxed);
+    letter-spacing: var(--pf-tracking-normal);
+    color: var(--pf-text-accent);
+}
+
+.pf-metric {
+    font-family: var(--pf-font-mono);
+    font-size: var(--pf-text-2xl);
+    font-weight: var(--pf-weight-medium);
+    line-height: var(--pf-leading-tight);
+    letter-spacing: var(--pf-tracking-normal);
+    color: var(--pf-cyan);
+}
+
+/* Captions */
+.pf-caption {
+    font-family: var(--pf-font-main);
+    font-size: var(--pf-text-xs);
+    font-weight: var(--pf-weight-regular);
+    line-height: var(--pf-leading-normal);
+    letter-spacing: var(--pf-tracking-wide);
+    color: var(--pf-text-soft);
+}
+
+/**
+ * Usage Examples:
+ *
+ * <h1 class="pf-heading-1">PsyFi</h1>
+ * <p class="pf-body">Consciousness field simulation</p>
+ * <label class="pf-label">Width</label>
+ * <code class="pf-code">field.evolve()</code>
+ * <span class="pf-metric">0.847</span>
+ */

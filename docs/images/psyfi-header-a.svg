@@ -1,0 +1,107 @@
+<svg width="3000" height="800" viewBox="0 0 3000 800" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="3000" height="800" fill="#05070B"/>
+
+  <!-- Background gradient bloom -->
+  <defs>
+    <radialGradient id="cyanBloom" cx="25%" cy="50%" r="40%">
+      <stop offset="0%" style="stop-color:rgba(62, 231, 242, 0.15);stop-opacity:1" />
+      <stop offset="100%" style="stop-color:rgba(62, 231, 242, 0);stop-opacity:1" />
+    </radialGradient>
+    <radialGradient id="violetBloom" cx="25%" cy="50%" r="45%">
+      <stop offset="0%" style="stop-color:rgba(143, 123, 255, 0.1);stop-opacity:1" />
+      <stop offset="100%" style="stop-color:rgba(143, 123, 255, 0);stop-opacity:1" />
+    </radialGradient>
+
+    <!-- Gradient for title -->
+    <linearGradient id="titleGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#3EE7F2;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FF42C1;stop-opacity:1" />
+    </linearGradient>
+
+    <!-- Glow filters -->
+    <filter id="cyanGlow">
+      <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="magentaGlow">
+      <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background blooms -->
+  <ellipse cx="750" cy="400" rx="600" ry="500" fill="url(#cyanBloom)"/>
+  <ellipse cx="750" cy="400" rx="650" ry="550" fill="url(#violetBloom)"/>
+
+  <!-- Oscillatory wave grid background -->
+  <g opacity="0.08" stroke="#3EE7F2" stroke-width="1" fill="none">
+    <path d="M 400 200 Q 500 180, 600 200 T 800 200 T 1000 200 T 1200 200 T 1400 200"/>
+    <path d="M 400 280 Q 500 260, 600 280 T 800 280 T 1000 280 T 1200 280 T 1400 280"/>
+    <path d="M 400 360 Q 500 340, 600 360 T 800 360 T 1000 360 T 1200 360 T 1400 360"/>
+    <path d="M 400 440 Q 500 420, 600 440 T 800 440 T 1000 440 T 1200 440 T 1400 440"/>
+    <path d="M 400 520 Q 500 500, 600 520 T 800 520 T 1000 520 T 1200 520 T 1400 520"/>
+    <path d="M 400 600 Q 500 580, 600 600 T 800 600 T 1000 600 T 1200 600 T 1400 600"/>
+  </g>
+
+  <!-- Left: PsyFi Core Sigil -->
+  <g transform="translate(450, 400)">
+    <!-- Outer ring -->
+    <circle cx="0" cy="0" r="160" stroke="#3EE7F2" stroke-width="3" fill="none" filter="url(#cyanGlow)"/>
+    <circle cx="0" cy="0" r="145" stroke="#3EE7F2" stroke-width="1" fill="none" opacity="0.4"/>
+
+    <!-- Inner hexagon -->
+    <path d="M 0,-80 L 69.28,-40 L 69.28,40 L 0,80 L -69.28,40 L -69.28,-40 Z"
+          stroke="#FF42C1" stroke-width="2.5" fill="rgba(255, 66, 193, 0.05)" filter="url(#magentaGlow)"/>
+
+    <!-- Three radial lines -->
+    <line x1="0" y1="0" x2="0" y2="-120" stroke="#8F7BFF" stroke-width="2" opacity="0.8"/>
+    <line x1="0" y1="0" x2="103.92" y2="60" stroke="#8F7BFF" stroke-width="2" opacity="0.8"/>
+    <line x1="0" y1="0" x2="-103.92" y2="60" stroke="#8F7BFF" stroke-width="2" opacity="0.8"/>
+
+    <!-- Central dot -->
+    <circle cx="0" cy="0" r="8" fill="#3EE7F2" filter="url(#cyanGlow)"/>
+
+    <!-- Corner accents -->
+    <rect x="-170" y="-170" width="12" height="12" fill="none" stroke="#FF42C1" stroke-width="1.5" opacity="0.6"/>
+    <line x1="-170" y1="-158" x2="-170" y2="-170" stroke="none"/>
+    <line x1="-158" y1="-170" x2="-170" y2="-170" stroke="none"/>
+
+    <rect x="158" y="158" width="12" height="12" fill="none" stroke="#FF42C1" stroke-width="1.5" opacity="0.6"/>
+    <line x1="170" y1="158" x2="170" y2="170" stroke="none"/>
+    <line x1="158" y1="170" x2="170" y2="170" stroke="none"/>
+  </g>
+
+  <!-- Right: Title and Subtitle -->
+  <g transform="translate(1200, 340)">
+    <!-- Main title -->
+    <text x="0" y="0" font-family="'Inter', sans-serif" font-size="140" font-weight="600"
+          letter-spacing="12" fill="url(#titleGradient)">PSYFI</text>
+
+    <!-- Subtitle line 1 -->
+    <text x="0" y="90" font-family="'Inter', sans-serif" font-size="38" font-weight="400"
+          letter-spacing="4" fill="#9BA4C7" opacity="0.9">CONSCIOUSNESS FIELD ENGINE</text>
+
+    <!-- Subtitle line 2 -->
+    <text x="0" y="140" font-family="'JetBrains Mono', monospace" font-size="28" font-weight="400"
+          letter-spacing="3" fill="#6F7897">ABX-Core v1.3</text>
+  </g>
+
+  <!-- Minimal runic border -->
+  <rect x="50" y="50" width="2900" height="700" fill="none" stroke="#3A435C" stroke-width="1" opacity="0.4"/>
+
+  <!-- Top accent line with intermittent glow -->
+  <line x1="50" y1="50" x2="1500" y2="50" stroke="#3EE7F2" stroke-width="1" opacity="0.3"/>
+  <line x1="50" y1="50" x2="300" y2="50" stroke="#3EE7F2" stroke-width="2" opacity="0.6" filter="url(#cyanGlow)"/>
+
+  <!-- Bottom accent marks -->
+  <line x1="2700" y1="750" x2="2950" y2="750" stroke="#FF42C1" stroke-width="1" opacity="0.3"/>
+  <circle cx="2750" cy="750" r="3" fill="#FF42C1" opacity="0.5"/>
+  <circle cx="2900" cy="750" r="3" fill="#FF42C1" opacity="0.5"/>
+</svg>

@@ -1,0 +1,124 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PsyFi Substance Preset Schema",
+  "description": "Schema for consciousness-altering substance presets in the PsyFi engine. These presets model phenomenological effects for research and simulation purposes only.",
+  "type": "object",
+  "required": ["name", "class", "mechanism", "visual_signature", "emotional_signature", "state_phases", "psyfi_params"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Primary name of the substance"
+    },
+    "aliases": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Alternative names or abbreviations"
+    },
+    "class": {
+      "type": "string",
+      "enum": ["classic_psychedelic", "empathogen", "dissociative", "deliriant", "stimulant", "baseline", "meditative"],
+      "description": "Pharmacological class"
+    },
+    "mechanism": {
+      "type": "object",
+      "description": "Receptor binding profiles (normalized 0-1 scale)",
+      "properties": {
+        "5ht2a": {"type": "number", "minimum": 0, "maximum": 1},
+        "5ht1a": {"type": "number", "minimum": 0, "maximum": 1},
+        "sigma1": {"type": "number", "minimum": 0, "maximum": 1},
+        "nmda": {"type": "number", "minimum": 0, "maximum": 1},
+        "gaba": {"type": "number", "minimum": 0, "maximum": 1},
+        "dopamine": {"type": "number", "minimum": 0, "maximum": 1},
+        "serotonin": {"type": "number", "minimum": 0, "maximum": 1},
+        "norepinephrine": {"type": "number", "minimum": 0, "maximum": 1},
+        "acetylcholine": {"type": "number", "minimum": 0, "maximum": 1}
+      },
+      "required": ["5ht2a"]
+    },
+    "visual_signature": {
+      "type": "object",
+      "description": "Visual phenomenology parameters",
+      "properties": {
+        "tracers_color": {"type": "string"},
+        "tracers_length": {"type": "number", "minimum": 0, "maximum": 1},
+        "oscillation_style": {"type": "string", "enum": ["smooth", "geometric", "organic", "crystalline", "fractal", "minimal"]},
+        "symmetry_bias": {"type": "number", "minimum": 0, "maximum": 1},
+        "depth_distortion": {"type": "number", "minimum": 0, "maximum": 1},
+        "color_enhancement": {"type": "number", "minimum": 0, "maximum": 1},
+        "pattern_complexity": {"type": "number", "minimum": 0, "maximum": 1}
+      },
+      "required": ["tracers_color", "tracers_length", "oscillation_style", "symmetry_bias", "depth_distortion"]
+    },
+    "emotional_signature": {
+      "type": "object",
+      "description": "Affective and cognitive parameters",
+      "properties": {
+        "valence_bias": {"type": "number", "minimum": -1, "maximum": 1},
+        "arousal_level": {"type": "number", "minimum": -1, "maximum": 1},
+        "anxiety_tendency": {"type": "number", "minimum": 0, "maximum": 1},
+        "empathy_gain": {"type": "number", "minimum": 0, "maximum": 1},
+        "ego_boundary_softening": {"type": "number", "minimum": 0, "maximum": 1},
+        "thought_coherence": {"type": "number", "minimum": 0, "maximum": 1}
+      },
+      "required": ["valence_bias", "arousal_level", "ego_boundary_softening"]
+    },
+    "state_phases": {
+      "type": "object",
+      "description": "Temporal dynamics of effects",
+      "properties": {
+        "comeup": {
+          "type": "object",
+          "properties": {
+            "duration_minutes": {"type": "number"},
+            "intensity_curve": {"type": "string"}
+          }
+        },
+        "peak": {
+          "type": "object",
+          "properties": {
+            "duration_minutes": {"type": "number"},
+            "intensity_multiplier": {"type": "number"}
+          }
+        },
+        "plateau": {
+          "type": "object",
+          "properties": {
+            "duration_minutes": {"type": "number"}
+          }
+        },
+        "comedown": {
+          "type": "object",
+          "properties": {
+            "duration_minutes": {"type": "number"},
+            "intensity_curve": {"type": "string"}
+          }
+        }
+      },
+      "required": ["comeup", "peak", "comedown"]
+    },
+    "psyfi_params": {
+      "type": "object",
+      "description": "PsyFi-specific field dynamics parameters",
+      "properties": {
+        "normalization": {
+          "type": "object",
+          "properties": {
+            "P": {"type": "number", "description": "Exponent for divisive normalization"},
+            "V": {"type": "number", "description": "Surround weight"}
+          },
+          "required": ["P", "V"]
+        },
+        "phase_noise": {"type": "number", "minimum": 0, "maximum": 1},
+        "phase_reset_strength": {"type": "number", "minimum": 0, "maximum": 1},
+        "drift_amplitude": {"type": "number", "minimum": 0, "maximum": 1},
+        "drift_velocity": {"type": "number", "minimum": 0, "maximum": 1},
+        "coupling_strength": {"type": "number", "minimum": 0, "maximum": 2},
+        "receptor_modulation_map": {
+          "type": "object",
+          "description": "Maps receptor binding to PsyFi parameters"
+        }
+      },
+      "required": ["normalization", "phase_noise", "drift_amplitude", "drift_velocity"]
+    }
+  }
+}

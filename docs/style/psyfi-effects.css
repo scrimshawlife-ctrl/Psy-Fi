@@ -1,0 +1,128 @@
+/**
+ * PsyFi Effects System
+ * Applied Alchemy Labs
+ * Brand Identity v1.0
+ *
+ * Shadows, glows, transitions, and other visual effects.
+ */
+
+:root {
+    /* ===== Shadows ===== */
+    --pf-shadow-xs: 0 1px 2px rgba(5, 7, 11, 0.2);
+    --pf-shadow-sm: 0 2px 4px rgba(5, 7, 11, 0.3);
+    --pf-shadow-md: 0 4px 8px rgba(5, 7, 11, 0.4);
+    --pf-shadow-lg: 0 8px 16px rgba(5, 7, 11, 0.5);
+    --pf-shadow-xl: 0 12px 24px rgba(5, 7, 11, 0.6);
+    --pf-shadow-2xl: 0 20px 40px rgba(5, 7, 11, 0.7);
+
+    --pf-shadow-subtle: 0 4px 20px rgba(5, 7, 11, 0.6);
+    --pf-shadow-glow: 0 0 24px var(--pf-glow-cyan), 0 0 48px var(--pf-glow-violet);
+
+    --pf-shadow-glow-cyan: 0 0 20px var(--pf-glow-cyan);
+    --pf-shadow-glow-magenta: 0 0 20px var(--pf-glow-magenta);
+    --pf-shadow-glow-violet: 0 0 20px var(--pf-glow-violet);
+
+    /* ===== Border Radius ===== */
+    --pf-radius-sm: 4px;
+    --pf-radius-md: 8px;
+    --pf-radius-lg: 12px;
+    --pf-radius-xl: 16px;
+    --pf-radius-full: 9999px;
+
+    /* ===== Transitions ===== */
+    --pf-transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --pf-transition-base: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    --pf-transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* ===== Z-index Layers ===== */
+    --pf-z-base: 0;
+    --pf-z-dropdown: 100;
+    --pf-z-sticky: 200;
+    --pf-z-modal: 300;
+    --pf-z-popover: 400;
+    --pf-z-tooltip: 500;
+
+    /* ===== Blur ===== */
+    --pf-blur-sm: blur(4px);
+    --pf-blur-md: blur(8px);
+    --pf-blur-lg: blur(16px);
+
+    /* ===== Opacity ===== */
+    --pf-opacity-disabled: 0.5;
+    --pf-opacity-ghost: 0.3;
+    --pf-opacity-faint: 0.15;
+}
+
+/**
+ * Utility Classes for Common Effects
+ */
+
+.pf-glow-cyan {
+    box-shadow: var(--pf-shadow-glow-cyan);
+}
+
+.pf-glow-magenta {
+    box-shadow: var(--pf-shadow-glow-magenta);
+}
+
+.pf-glow-violet {
+    box-shadow: var(--pf-shadow-glow-violet);
+}
+
+.pf-glow-full {
+    box-shadow: var(--pf-shadow-glow);
+}
+
+.pf-transition {
+    transition: all var(--pf-transition-base);
+}
+
+.pf-transition-fast {
+    transition: all var(--pf-transition-fast);
+}
+
+.pf-transition-slow {
+    transition: all var(--pf-transition-slow);
+}
+
+/**
+ * Hover Effects
+ */
+.pf-hover-lift {
+    transition: transform var(--pf-transition-base);
+}
+
+.pf-hover-lift:hover {
+    transform: translateY(-2px);
+}
+
+.pf-hover-glow {
+    transition: box-shadow var(--pf-transition-base);
+}
+
+.pf-hover-glow:hover {
+    box-shadow: var(--pf-shadow-glow-cyan);
+}
+
+/**
+ * Background Patterns
+ */
+.pf-bg-radial-bloom {
+    background-image:
+        radial-gradient(circle at 50% 0%, var(--pf-glow-cyan) 0%, transparent 35%),
+        radial-gradient(circle at 50% 0%, var(--pf-glow-violet) 0%, transparent 50%);
+    background-attachment: fixed;
+}
+
+.pf-bg-gradient-primary {
+    background-image: var(--pf-gradient-cyan-magenta);
+}
+
+/**
+ * Usage Examples:
+ *
+ * box-shadow: var(--pf-shadow-subtle), var(--pf-shadow-glow);
+ * border-radius: var(--pf-radius-lg);
+ * transition: all var(--pf-transition-base);
+ * class="pf-glow-cyan pf-hover-lift"
+ */

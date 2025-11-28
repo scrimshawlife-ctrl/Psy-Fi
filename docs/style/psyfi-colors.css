@@ -1,0 +1,90 @@
+/**
+ * PsyFi Color System
+ * Applied Alchemy Labs
+ * Brand Identity v1.0
+ *
+ * This file contains the complete PsyFi color token system.
+ * Use these tokens for all UI elements to maintain brand consistency.
+ */
+
+:root {
+    /* ===== Neutrals (Base / Backgrounds) ===== */
+    --pf-bg-0: #05070B;           /* Void black-blue (main background) */
+    --pf-bg-1: #0B1018;           /* Panel background */
+    --pf-bg-2: #141B26;           /* Elevated card / hover */
+    --pf-bg-3: #1D2433;           /* Higher elevation */
+
+    /* ===== Borders ===== */
+    --pf-border-subtle: #232939;  /* Subtle borders */
+    --pf-border-medium: #2F3749;  /* Medium borders */
+    --pf-border-strong: #3A435C;  /* Strong borders */
+
+    /* ===== Text ===== */
+    --pf-text-main: #F5F7FF;      /* Primary text */
+    --pf-text-muted: #9BA4C7;     /* Muted text */
+    --pf-text-soft: #6F7897;      /* Soft text */
+    --pf-text-accent: #EAE9FF;    /* Light violet accent text */
+    --pf-text-dim: #4F5668;       /* Very dim text */
+
+    /* ===== Accent Spectrum ===== */
+    --pf-cyan: #3EE7F2;           /* Main "field" / energy color */
+    --pf-cyan-soft: #22B1C0;      /* Subdued cyan */
+    --pf-cyan-bright: #5FFAFF;    /* Bright cyan highlight */
+
+    --pf-magenta: #FF42C1;        /* Psychedelic / highlight color */
+    --pf-magenta-soft: #C02C94;   /* Subdued magenta */
+    --pf-magenta-bright: #FF6FD8; /* Bright magenta */
+
+    --pf-violet: #8F7BFF;         /* Valence / resonance */
+    --pf-violet-soft: #6451DA;    /* Subdued violet */
+    --pf-violet-bright: #A995FF;  /* Bright violet */
+
+    /* ===== Status / Semantic ===== */
+    --pf-success: #38D996;        /* Success / positive */
+    --pf-success-soft: #2AB37B;   /* Subdued success */
+
+    --pf-warning: #FFB547;        /* Warning / caution */
+    --pf-warning-soft: #E09C35;   /* Subdued warning */
+
+    --pf-danger: #FF4F6C;         /* Danger / error */
+    --pf-danger-soft: #E03854;    /* Subdued danger */
+
+    --pf-info: #34C3FF;           /* Info / neutral highlight */
+    --pf-info-soft: #22A8DB;      /* Subdued info */
+
+    /* ===== Glow / Effects (RGBA) ===== */
+    --pf-glow-cyan: rgba(62, 231, 242, 0.35);
+    --pf-glow-cyan-strong: rgba(62, 231, 242, 0.55);
+    --pf-glow-cyan-subtle: rgba(62, 231, 242, 0.15);
+
+    --pf-glow-magenta: rgba(255, 66, 193, 0.30);
+    --pf-glow-magenta-strong: rgba(255, 66, 193, 0.50);
+    --pf-glow-magenta-subtle: rgba(255, 66, 193, 0.12);
+
+    --pf-glow-violet: rgba(143, 123, 255, 0.28);
+    --pf-glow-violet-strong: rgba(143, 123, 255, 0.45);
+    --pf-glow-violet-subtle: rgba(143, 123, 255, 0.10);
+
+    /* ===== Overlays ===== */
+    --pf-overlay-light: rgba(245, 247, 255, 0.05);
+    --pf-overlay-medium: rgba(245, 247, 255, 0.10);
+    --pf-overlay-strong: rgba(245, 247, 255, 0.15);
+
+    --pf-overlay-dark: rgba(5, 7, 11, 0.75);
+    --pf-overlay-dark-heavy: rgba(5, 7, 11, 0.90);
+
+    /* ===== Gradients (for background-image usage) ===== */
+    --pf-gradient-cyan-magenta: linear-gradient(135deg, var(--pf-cyan), var(--pf-magenta));
+    --pf-gradient-violet-cyan: linear-gradient(135deg, var(--pf-violet), var(--pf-cyan));
+    --pf-gradient-spectrum: linear-gradient(90deg, var(--pf-cyan), var(--pf-violet), var(--pf-magenta));
+}
+
+/**
+ * Usage Examples:
+ *
+ * background: var(--pf-bg-0);
+ * color: var(--pf-text-main);
+ * border: 1px solid var(--pf-border-subtle);
+ * box-shadow: 0 0 20px var(--pf-glow-cyan);
+ * background-image: var(--pf-gradient-cyan-magenta);
+ */

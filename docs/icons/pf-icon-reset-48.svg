@@ -1,0 +1,8 @@
+<svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+  <!-- Circular arrow indicating reset -->
+  <path d="M 38 24 A 14 14 0 1 0 24 10" stroke="#EAE9FF" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <!-- Arrow head -->
+  <path d="M 24 10 L 18 4 M 24 10 L 30 4" stroke="#3EE7F2" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <!-- Center dot -->
+  <circle cx="24" cy="24" r="3" fill="#FF42C1"/>
+</svg>

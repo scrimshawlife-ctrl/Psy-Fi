@@ -1,0 +1,77 @@
+<svg width="3000" height="800" viewBox="0 0 3000 800" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="3000" height="800" fill="#05070B"/>
+
+  <!-- Definitions -->
+  <defs>
+    <linearGradient id="titleGradB" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#3EE7F2;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#8F7BFF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FF42C1;stop-opacity:1" />
+    </linearGradient>
+
+    <filter id="glowCyan">
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <pattern id="hexPattern" x="0" y="0" width="60" height="52" patternUnits="userSpaceOnUse">
+      <path d="M 30,0 L 52,15 L 52,37 L 30,52 L 8,37 L 8,15 Z"
+            fill="none" stroke="#3EE7F2" stroke-width="0.5" opacity="0.08"/>
+    </pattern>
+  </defs>
+
+  <!-- Hex lattice ghost texture -->
+  <rect width="3000" height="800" fill="url(#hexPattern)"/>
+
+  <!-- Wavy field grid (cyan lines) -->
+  <g stroke="#3EE7F2" stroke-width="1.5" fill="none" opacity="0.25">
+    <!-- Horizontal waves -->
+    <path d="M 0 150 Q 250 130, 500 150 T 1000 150 T 1500 150 T 2000 150 T 2500 150 T 3000 150"/>
+    <path d="M 0 250 Q 250 230, 500 250 T 1000 250 T 1500 250 T 2000 250 T 2500 250 T 3000 250"/>
+    <path d="M 0 400 Q 250 380, 500 400 T 1000 400 T 1500 400 T 2000 400 T 2500 400 T 3000 400"/>
+    <path d="M 0 550 Q 250 530, 500 550 T 1000 550 T 1500 550 T 2000 550 T 2500 550 T 3000 550"/>
+    <path d="M 0 650 Q 250 630, 500 650 T 1000 650 T 1500 650 T 2000 650 T 2500 650 T 3000 650"/>
+
+    <!-- Vertical oscillations -->
+    <path d="M 400 0 Q 380 100, 400 200 T 400 400 T 400 600 T 400 800"/>
+    <path d="M 800 0 Q 780 100, 800 200 T 800 400 T 800 600 T 800 800"/>
+    <path d="M 1500 0 Q 1480 100, 1500 200 T 1500 400 T 1500 600 T 1500 800"/>
+    <path d="M 2200 0 Q 2180 100, 2200 200 T 2200 400 T 2200 600 T 2200 800"/>
+    <path d="M 2600 0 Q 2580 100, 2600 200 T 2600 400 T 2600 600 T 2600 800"/>
+  </g>
+
+  <!-- Magenta phase arcs -->
+  <g stroke="#FF42C1" stroke-width="2" fill="none" opacity="0.2" filter="url(#glowCyan)">
+    <ellipse cx="1500" cy="400" rx="600" ry="200"/>
+    <ellipse cx="1500" cy="400" rx="450" ry="150"/>
+    <ellipse cx="1500" cy="400" rx="300" ry="100"/>
+  </g>
+
+  <!-- Title centered -->
+  <g transform="translate(1500, 300)">
+    <text x="0" y="0" text-anchor="middle" font-family="'Inter', sans-serif" font-size="160"
+          font-weight="700" letter-spacing="20" fill="url(#titleGradB)" filter="url(#glowCyan)">PSYFI</text>
+
+    <text x="0" y="90" text-anchor="middle" font-family="'Inter', sans-serif" font-size="36"
+          font-weight="400" letter-spacing="6" fill="#9BA4C7" opacity="0.85">APPLIED ALCHEMY LABS</text>
+
+    <text x="0" y="140" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="26"
+          font-weight="400" letter-spacing="4" fill="#6F7897">CONSCIOUSNESS SIMULATION</text>
+  </g>
+
+  <!-- Tiny sigil at lower-left -->
+  <g transform="translate(200, 680)" opacity="0.6">
+    <circle cx="0" cy="0" r="35" stroke="#3EE7F2" stroke-width="1.5" fill="none"/>
+    <path d="M 0,-18 L 15.6,-9 L 15.6,9 L 0,18 L -15.6,9 L -15.6,-9 Z"
+          stroke="#FF42C1" stroke-width="1" fill="none"/>
+    <circle cx="0" cy="0" r="3" fill="#3EE7F2"/>
+  </g>
+
+  <!-- AAL identifier -->
+  <text x="260" y="690" font-family="'JetBrains Mono', monospace" font-size="14"
+        font-weight="400" fill="#6F7897" opacity="0.7">AAL-PSYFI-v1.3</text>
+</svg>

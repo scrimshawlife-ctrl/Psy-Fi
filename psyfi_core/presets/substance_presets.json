@@ -1,0 +1,1184 @@
+{
+  "metadata": {
+    "version": "1.0.0",
+    "generator": "AAL Operations Lab",
+    "compliance": "ABX-Core v1.3",
+    "disclaimer": "These presets model phenomenological effects for research and simulation purposes only. Not for medical or diagnostic use.",
+    "last_updated": "2025-11-28"
+  },
+  "presets": {
+    "baseline": {
+      "name": "Baseline",
+      "aliases": ["normal", "sober", "default"],
+      "class": "baseline",
+      "mechanism": {
+        "5ht2a": 0.0,
+        "5ht1a": 0.0,
+        "sigma1": 0.0,
+        "nmda": 0.0,
+        "gaba": 0.0,
+        "dopamine": 0.0,
+        "serotonin": 0.0,
+        "norepinephrine": 0.0,
+        "acetylcholine": 0.0
+      },
+      "visual_signature": {
+        "tracers_color": "none",
+        "tracers_length": 0.0,
+        "oscillation_style": "minimal",
+        "symmetry_bias": 0.0,
+        "depth_distortion": 0.0,
+        "color_enhancement": 0.0,
+        "pattern_complexity": 0.0
+      },
+      "emotional_signature": {
+        "valence_bias": 0.0,
+        "arousal_level": 0.0,
+        "anxiety_tendency": 0.0,
+        "empathy_gain": 0.0,
+        "ego_boundary_softening": 0.0,
+        "thought_coherence": 1.0
+      },
+      "state_phases": {
+        "comeup": {"duration_minutes": 0, "intensity_curve": "none"},
+        "peak": {"duration_minutes": 0, "intensity_multiplier": 1.0},
+        "plateau": {"duration_minutes": 0},
+        "comedown": {"duration_minutes": 0, "intensity_curve": "none"}
+      },
+      "psyfi_params": {
+        "normalization": {"P": 2.0, "V": 0.5},
+        "phase_noise": 0.0,
+        "phase_reset_strength": 0.0,
+        "drift_amplitude": 0.0,
+        "drift_velocity": 0.0,
+        "coupling_strength": 0.3,
+        "receptor_modulation_map": {}
+      }
+    },
+    "lsd": {
+      "name": "LSD",
+      "aliases": ["lysergic acid diethylamide", "acid", "L"],
+      "class": "classic_psychedelic",
+      "mechanism": {
+        "5ht2a": 0.95,
+        "5ht1a": 0.75,
+        "sigma1": 0.0,
+        "nmda": 0.0,
+        "gaba": 0.0,
+        "dopamine": 0.65,
+        "serotonin": 0.85,
+        "norepinephrine": 0.45,
+        "acetylcholine": 0.0
+      },
+      "visual_signature": {
+        "tracers_color": "#3EE7F2",
+        "tracers_length": 0.85,
+        "oscillation_style": "geometric",
+        "symmetry_bias": 0.9,
+        "depth_distortion": 0.7,
+        "color_enhancement": 0.9,
+        "pattern_complexity": 0.95
+      },
+      "emotional_signature": {
+        "valence_bias": 0.4,
+        "arousal_level": 0.6,
+        "anxiety_tendency": 0.3,
+        "empathy_gain": 0.6,
+        "ego_boundary_softening": 0.8,
+        "thought_coherence": 0.6
+      },
+      "state_phases": {
+        "comeup": {"duration_minutes": 45, "intensity_curve": "sigmoid"},
+        "peak": {"duration_minutes": 180, "intensity_multiplier": 1.0},
+        "plateau": {"duration_minutes": 240},
+        "comedown": {"duration_minutes": 180, "intensity_curve": "logarithmic"}
+      },
+      "psyfi_params": {
+        "normalization": {"P": 1.8, "V": 0.35},
+        "phase_noise": 0.45,
+        "phase_reset_strength": 0.4,
+        "drift_amplitude": 0.7,
+        "drift_velocity": 0.55,
+        "coupling_strength": 0.8,
+        "receptor_modulation_map": {
+          "5ht2a_to_phase_noise": 0.47,
+          "5ht2a_to_drift": 0.74,
+          "5ht2a_to_symmetry": 0.95
+        }
+      }
+    },
+    "psilocybin": {
+      "name": "Psilocybin",
+      "aliases": ["psilocin", "magic mushrooms", "shrooms"],
+      "class": "classic_psychedelic",
+      "mechanism": {
+        "5ht2a": 0.90,
+        "5ht1a": 0.80,
+        "sigma1": 0.0,
+        "nmda": 0.0,
+        "gaba": 0.0,
+        "dopamine": 0.35,
+        "serotonin": 0.92,
+        "norepinephrine": 0.25,
+        "acetylcholine": 0.0
+      },
+      "visual_signature": {
+        "tracers_color": "#8F7BFF",
+        "tracers_length": 0.70,
+        "oscillation_style": "organic",
+        "symmetry_bias": 0.7,
+        "depth_distortion": 0.65,
+        "color_enhancement": 0.85,
+        "pattern_complexity": 0.80
+      },
+      "emotional_signature": {
+        "valence_bias": 0.5,
+        "arousal_level": 0.4,
+        "anxiety_tendency": 0.25,
+        "empathy_gain": 0.75,
+        "ego_boundary_softening": 0.75,
+        "thought_coherence": 0.65
+      },
+      "state_phases": {
+        "comeup": {"duration_minutes": 30, "intensity_curve": "sigmoid"},
+        "peak": {"duration_minutes": 120, "intensity_multiplier": 1.0},
+        "plateau": {"duration_minutes": 90},
+        "comedown": {"duration_minutes": 120, "intensity_curve": "logarithmic"}
+      },
+      "psyfi_params": {
+        "normalization": {"P": 1.9, "V": 0.40},
+        "phase_noise": 0.40,
+        "phase_reset_strength": 0.35,
+        "drift_amplitude": 0.60,
+        "drift_velocity": 0.45,
+        "coupling_strength": 0.75,
+        "receptor_modulation_map": {
+          "5ht2a_to_phase_noise": 0.44,
+          "5ht2a_to_drift": 0.67,
+          "5ht1a_to_valence": 0.80
+        }
+      }
+    },
+    "dmt": {
+      "name": "DMT",
+      "aliases": ["N,N-DMT", "dimitri", "spirit molecule"],
+      "class": "classic_psychedelic",
+      "mechanism": {
+        "5ht2a": 0.98,
+        "5ht1a": 0.82,
+        "sigma1": 0.55,
+        "nmda": 0.0,
+        "gaba": 0.0,
+        "dopamine": 0.40,
+        "serotonin": 0.95,
+        "norepinephrine": 0.35,
+        "acetylcholine": 0.0
+      },
+      "visual_signature": {
+        "tracers_color": "#FF42C1",
+        "tracers_length": 0.95,
+        "oscillation_style": "fractal",
+        "symmetry_bias": 0.95,
+        "depth_distortion": 0.98,
+        "color_enhancement": 0.98,
+        "pattern_complexity": 1.0
+      },
+      "emotional_signature": {
+        "valence_bias": 0.3,
+        "arousal_level": 0.9,
+        "anxiety_tendency": 0.55,
+        "empathy_gain": 0.45,
+        "ego_boundary_softening": 0.98,
+        "thought_coherence": 0.3
+      },
+      "state_phases": {
+        "comeup": {"duration_minutes": 2, "intensity_curve": "exponential"},
+        "peak": {"duration_minutes": 10, "intensity_multiplier": 1.5},
+        "plateau": {"duration_minutes": 5},
+        "comedown": {"duration_minutes": 15, "intensity_curve": "exponential"}
+      },
+      "psyfi_params": {
+        "normalization": {"P": 1.5, "V": 0.25},
+        "phase_noise": 0.85,
+        "phase_reset_strength": 0.75,
+        "drift_amplitude": 0.95,
+        "drift_velocity": 0.90,
+        "coupling_strength": 1.2,
+        "receptor_modulation_map": {
+          "5ht2a_to_phase_noise": 0.87,
+          "5ht2a_to_drift": 0.97,
+          "sigma1_to_dissociation": 0.55
+        }
+      }
+    },
+    "5-meo-dmt": {
+      "name": "5-MeO-DMT",
+      "aliases": ["toad", "the toad", "5-MeO"],
+      "class": "classic_psychedelic",
+      "mechanism": {
+        "5ht2a": 0.70,
+        "5ht1a": 0.95,
+        "sigma1": 0.40,
+        "nmda": 0.0,
+        "gaba": 0.0,
+        "dopamine": 0.25,
+        "serotonin": 0.90,
+        "norepinephrine": 0.30,
+        "acetylcholine": 0.0
+      },
+      "visual_signature": {
+        "tracers_color": "#FFFFFF",
+        "tracers_length": 0.50,
+        "oscillation_style": "minimal",
+        "symmetry_bias": 0.3,
+        "depth_distortion": 0.95,
+        "color_enhancement": 0.40,
+        "pattern_complexity": 0.30
+      },
+      "emotional_signature": {
+        "valence_bias": 0.2,
+        "arousal_level": 0.95,
+        "anxiety_tendency": 0.70,
+        "empathy_gain": 0.30,
+        "ego_boundary_softening": 1.0,
+        "thought_coherence": 0.1
+      },
+      "state_phases": {
+        "comeup": {"duration_minutes": 1, "intensity_curve": "exponential"},
+        "peak": {"duration_minutes": 15, "intensity_multiplier": 1.8},
+        "plateau": {"duration_minutes": 5},
+        "comedown": {"duration_minutes": 20, "intensity_curve": "exponential"}
+      },
+      "psyfi_params": {
+        "normalization": {"P": 1.2, "V": 0.15},
+        "phase_noise": 0.30,
+        "phase_reset_strength": 0.95,
+        "drift_amplitude": 0.50,
+        "drift_velocity": 0.95,
+        "coupling_strength": 0.2,
+        "receptor_modulation_map": {
+          "5ht1a_to_ego_dissolution": 0.95,
+          "5ht1a_to_phase_reset": 1.0
+        }
+      }
+    },
+    "mescaline": {
+      "name": "Mescaline",
+      "aliases": ["peyote", "san pedro"],
+      "class": "classic_psychedelic",
+      "mechanism": {
+        "5ht2a": 0.75,
+        "5ht1a": 0.50,
+        "sigma1": 0.0,
+        "nmda": 0.0,
+        "gaba": 0.0,
+        "dopamine": 0.50,
+        "serotonin": 0.70,
+        "norepinephrine": 0.45,
+        "acetylcholine": 0.0
+      },
+      "visual_signature": {
+        "tracers_color": "#FFB547",
+        "tracers_length": 0.75,
+        "oscillation_style": "geometric",
+        "symmetry_bias": 0.85,
+        "depth_distortion": 0.55,
+        "color_enhancement": 0.90,
+        "pattern_complexity": 0.85
+      },
+      "emotional_signature": {
+        "valence_bias": 0.6,
+        "arousal_level": 0.5,
+        "anxiety_tendency": 0.20,
+        "empathy_gain": 0.70,
+        "ego_boundary_softening": 0.65,
+        "thought_coherence": 0.70
+      },
+      "state_phases": {
+        "comeup": {"duration_minutes": 90, "intensity_curve": "linear"},
+        "peak": {"duration_minutes": 240, "intensity_multiplier": 1.0},
+        "plateau": {"duration_minutes": 180},
+        "comedown": {"duration_minutes": 180, "intensity_curve": "linear"}
+      },
+      "psyfi_params": {
+        "normalization": {"P": 2.0, "V": 0.45},
+        "phase_noise": 0.38,
+        "phase_reset_strength": 0.30,
+        "drift_amplitude": 0.55,
+        "drift_velocity": 0.40,
+        "coupling_strength": 0.70,
+        "receptor_modulation_map": {
+          "5ht2a_to_phase_noise": 0.40,
+          "dopamine_to_arousal": 0.50
+        }
+      }
+    },
+    "2c-b": {
+      "name": "2C-B",
+      "aliases": ["nexus", "bees", "venus"],
+      "class": "classic_psychedelic",
+      "mechanism": {
+        "5ht2a": 0.85,
+        "5ht1a": 0.40,
+        "sigma1": 0.0,
+        "nmda": 0.0,
+        "gaba": 0.0,
+        "dopamine": 0.45,
+        "serotonin": 0.80,
+        "norepinephrine": 0.50,
+        "acetylcholine": 0.0
+      },
+      "visual_signature": {
+        "tracers_color": "#FF42C1",
+        "tracers_length": 0.80,
+        "oscillation_style": "crystalline",
+        "symmetry_bias": 0.88,
+        "depth_distortion": 0.70,
+        "color_enhancement": 0.92,
+        "pattern_complexity": 0.88
+      },
+      "emotional_signature": {
+        "valence_bias": 0.65,
+        "arousal_level": 0.60,
+        "anxiety_tendency": 0.25,
+        "empathy_gain": 0.80,
+        "ego_boundary_softening": 0.55,
+        "thought_coherence": 0.75
+      },
+      "state_phases": {
+        "comeup": {"duration_minutes": 30, "intensity_curve": "sigmoid"},
+        "peak": {"duration_minutes": 120, "intensity_multiplier": 1.0},
+        "plateau": {"duration_minutes": 60},
+        "comedown": {"duration_minutes": 90, "intensity_curve": "logarithmic"}
+      },
+      "psyfi_params": {
+        "normalization": {"P": 1.85, "V": 0.38},
+        "phase_noise": 0.42,
+        "phase_reset_strength": 0.38,
+        "drift_amplitude": 0.65,
+        "drift_velocity": 0.50,
+        "coupling_strength": 0.78,
+        "receptor_modulation_map": {
+          "5ht2a_to_phase_noise": 0.45,
+          "5ht2a_to_symmetry": 0.88
+        }
+      }
+    },
+    "2c-e": {
+      "name": "2C-E",
+      "aliases": ["eternity", "aquarust"],
+      "class": "classic_psychedelic",
+      "mechanism": {
+        "5ht2a": 0.88,
+        "5ht1a": 0.35,
+        "sigma1": 0.0,
+        "nmda": 0.0,
+        "gaba": 0.0,
+        "dopamine": 0.40,
+        "serotonin": 0.82,
+        "norepinephrine": 0.55,
+        "acetylcholine": 0.0
+      },
+      "visual_signature": {
+        "tracers_color": "#3EE7F2",
+        "tracers_length": 0.82,
+        "oscillation_style": "geometric",
+        "symmetry_bias": 0.90,
+        "depth_distortion": 0.75,
+        "color_enhancement": 0.88,
+        "pattern_complexity": 0.90
+      },
+      "emotional_signature": {
+        "valence_bias": 0.35,
+        "arousal_level": 0.70,
+        "anxiety_tendency": 0.40,
+        "empathy_gain": 0.60,
+        "ego_boundary_softening": 0.65,
+        "thought_coherence": 0.65
+      },
+      "state_phases": {
+        "comeup": {"duration_minutes": 45, "intensity_curve": "sigmoid"},
+        "peak": {"duration_minutes": 150, "intensity_multiplier": 1.1},
+        "plateau": {"duration_minutes": 90},
+        "comedown": {"duration_minutes": 120, "intensity_curve": "logarithmic"}
+      },
+      "psyfi_params": {
+        "normalization": {"P": 1.75, "V": 0.35},
+        "phase_noise": 0.48,
+        "phase_reset_strength": 0.42,
+        "drift_amplitude": 0.70,
+        "drift_velocity": 0.55,
+        "coupling_strength": 0.82,
+        "receptor_modulation_map": {
+          "5ht2a_to_phase_noise": 0.48,
+          "5ht2a_to_drift": 0.75
+        }
+      }
+    },
+    "al-lad": {
+      "name": "AL-LAD",
+      "aliases": ["aladdin"],
+      "class": "classic_psychedelic",
+      "mechanism": {
+        "5ht2a": 0.80,
+        "5ht1a": 0.60,
+        "sigma1": 0.0,
+        "nmda": 0.0,
+        "gaba": 0.0,
+        "dopamine": 0.50,
+        "serotonin": 0.75,
+        "norepinephrine": 0.35,
+        "acetylcholine": 0.0
+      },
+      "visual_signature": {
+        "tracers_color": "#8F7BFF",
+        "tracers_length": 0.88,
+        "oscillation_style": "geometric",
+        "symmetry_bias": 0.92,
+        "depth_distortion": 0.65,
+        "color_enhancement": 0.95,
+        "pattern_complexity": 0.90
+      },
+      "emotional_signature": {
+        "valence_bias": 0.70,
+        "arousal_level": 0.55,
+        "anxiety_tendency": 0.15,
+        "empathy_gain": 0.65,
+        "ego_boundary_softening": 0.60,
+        "thought_coherence": 0.75
+      },
+      "state_phases": {
+        "comeup": {"duration_minutes": 30, "intensity_curve": "sigmoid"},
+        "peak": {"duration_minutes": 150, "intensity_multiplier": 1.0},
+        "plateau": {"duration_minutes": 120},
+        "comedown": {"duration_minutes": 120, "intensity_curve": "logarithmic"}
+      },
+      "psyfi_params": {
+        "normalization": {"P": 1.9, "V": 0.38},
+        "phase_noise": 0.43,
+        "phase_reset_strength": 0.35,
+        "drift_amplitude": 0.68,
+        "drift_velocity": 0.50,
+        "coupling_strength": 0.75,
+        "receptor_modulation_map": {
+          "5ht2a_to_phase_noise": 0.43,
+          "5ht2a_to_symmetry": 0.92
+        }
+      }
+    },
+    "eth-lad": {
+      "name": "ETH-LAD",
+      "aliases": [],
+      "class": "classic_psychedelic",
+      "mechanism": {
+        "5ht2a": 0.92,
+        "5ht1a": 0.70,
+        "sigma1": 0.0,
+        "nmda": 0.0,
+        "gaba": 0.0,
+        "dopamine": 0.60,
+        "serotonin": 0.82,
+        "norepinephrine": 0.40,
+        "acetylcholine": 0.0
+      },
+      "visual_signature": {
+        "tracers_color": "#FF42C1",
+        "tracers_length": 0.92,
+        "oscillation_style": "fractal",
+        "symmetry_bias": 0.94,
+        "depth_distortion": 0.80,
+        "color_enhancement": 0.94,
+        "pattern_complexity": 0.95
+      },
+      "emotional_signature": {
+        "valence_bias": 0.45,
+        "arousal_level": 0.70,
+        "anxiety_tendency": 0.35,
+        "empathy_gain": 0.60,
+        "ego_boundary_softening": 0.75,
+        "thought_coherence": 0.60
+      },
+      "state_phases": {
+        "comeup": {"duration_minutes": 40, "intensity_curve": "sigmoid"},
+        "peak": {"duration_minutes": 180, "intensity_multiplier": 1.2},
+        "plateau": {"duration_minutes": 150},
+        "comedown": {"duration_minutes": 150, "intensity_curve": "logarithmic"}
+      },
+      "psyfi_params": {
+        "normalization": {"P": 1.7, "V": 0.32},
+        "phase_noise": 0.50,
+        "phase_reset_strength": 0.45,
+        "drift_amplitude": 0.75,
+        "drift_velocity": 0.60,
+        "coupling_strength": 0.85,
+        "receptor_modulation_map": {
+          "5ht2a_to_phase_noise": 0.50,
+          "5ht2a_to_drift": 0.80
+        }
+      }
+    },
+    "harmalas": {
+      "name": "Harmalas",
+      "aliases": ["harmala alkaloids", "syrian rue", "MAOI"],
+      "class": "classic_psychedelic",
+      "mechanism": {
+        "5ht2a": 0.25,
+        "5ht1a": 0.40,
+        "sigma1": 0.0,
+        "nmda": 0.0,
+        "gaba": 0.30,
+        "dopamine": 0.20,
+        "serotonin": 0.60,
+        "norepinephrine": 0.15,
+        "acetylcholine": 0.25
+      },
+      "visual_signature": {
+        "tracers_color": "#8F7BFF",
+        "tracers_length": 0.30,
+        "oscillation_style": "organic",
+        "symmetry_bias": 0.40,
+        "depth_distortion": 0.35,
+        "color_enhancement": 0.45,
+        "pattern_complexity": 0.40
+      },
+      "emotional_signature": {
+        "valence_bias": 0.20,
+        "arousal_level": -0.20,
+        "anxiety_tendency": 0.15,
+        "empathy_gain": 0.50,
+        "ego_boundary_softening": 0.40,
+        "thought_coherence": 0.80
+      },
+      "state_phases": {
+        "comeup": {"duration_minutes": 30, "intensity_curve": "linear"},
+        "peak": {"duration_minutes": 120, "intensity_multiplier": 0.6},
+        "plateau": {"duration_minutes": 180},
+        "comedown": {"duration_minutes": 120, "intensity_curve": "linear"}
+      },
+      "psyfi_params": {
+        "normalization": {"P": 2.1, "V": 0.50},
+        "phase_noise": 0.20,
+        "phase_reset_strength": 0.15,
+        "drift_amplitude": 0.30,
+        "drift_velocity": 0.25,
+        "coupling_strength": 0.50,
+        "receptor_modulation_map": {
+          "gaba_to_calming": 0.30,
+          "5ht1a_to_introspection": 0.40
+        }
+      }
+    },
+    "ketamine": {
+      "name": "Ketamine",
+      "aliases": ["K", "special K", "ket"],
+      "class": "dissociative",
+      "mechanism": {
+        "5ht2a": 0.15,
+        "5ht1a": 0.10,
+        "sigma1": 0.65,
+        "nmda": 0.95,
+        "gaba": 0.20,
+        "dopamine": 0.40,
+        "serotonin": 0.15,
+        "norepinephrine": 0.30,
+        "acetylcholine": 0.0
+      },
+      "visual_signature": {
+        "tracers_color": "#3EE7F2",
+        "tracers_length": 0.60,
+        "oscillation_style": "smooth",
+        "symmetry_bias": 0.50,
+        "depth_distortion": 0.85,
+        "color_enhancement": 0.50,
+        "pattern_complexity": 0.45
+      },
+      "emotional_signature": {
+        "valence_bias": 0.15,
+        "arousal_level": -0.40,
+        "anxiety_tendency": 0.20,
+        "empathy_gain": 0.10,
+        "ego_boundary_softening": 0.90,
+        "thought_coherence": 0.40
+      },
+      "state_phases": {
+        "comeup": {"duration_minutes": 5, "intensity_curve": "exponential"},
+        "peak": {"duration_minutes": 45, "intensity_multiplier": 1.0},
+        "plateau": {"duration_minutes": 30},
+        "comedown": {"duration_minutes": 60, "intensity_curve": "exponential"}
+      },
+      "psyfi_params": {
+        "normalization": {"P": 2.2, "V": 0.60},
+        "phase_noise": 0.35,
+        "phase_reset_strength": 0.50,
+        "drift_amplitude": 0.75,
+        "drift_velocity": 0.30,
+        "coupling_strength": 0.20,
+        "receptor_modulation_map": {
+          "nmda_to_dissociation": 0.95,
+          "sigma1_to_depth_distortion": 0.65
+        }
+      }
+    },
+    "mxe": {
+      "name": "MXE",
+      "aliases": ["methoxetamine"],
+      "class": "dissociative",
+      "mechanism": {
+        "5ht2a": 0.25,
+        "5ht1a": 0.15,
+        "sigma1": 0.70,
+        "nmda": 0.90,
+        "gaba": 0.15,
+        "dopamine": 0.45,
+        "serotonin": 0.25,
+        "norepinephrine": 0.35,
+        "acetylcholine": 0.0
+      },
+      "visual_signature": {
+        "tracers_color": "#8F7BFF",
+        "tracers_length": 0.65,
+        "oscillation_style": "smooth",
+        "symmetry_bias": 0.55,
+        "depth_distortion": 0.88,
+        "color_enhancement": 0.60,
+        "pattern_complexity": 0.55
+      },
+      "emotional_signature": {
+        "valence_bias": 0.25,
+        "arousal_level": -0.30,
+        "anxiety_tendency": 0.25,
+        "empathy_gain": 0.20,
+        "ego_boundary_softening": 0.85,
+        "thought_coherence": 0.45
+      },
+      "state_phases": {
+        "comeup": {"duration_minutes": 15, "intensity_curve": "sigmoid"},
+        "peak": {"duration_minutes": 90, "intensity_multiplier": 1.0},
+        "plateau": {"duration_minutes": 60},
+        "comedown": {"duration_minutes": 90, "intensity_curve": "logarithmic"}
+      },
+      "psyfi_params": {
+        "normalization": {"P": 2.1, "V": 0.55},
+        "phase_noise": 0.38,
+        "phase_reset_strength": 0.52,
+        "drift_amplitude": 0.78,
+        "drift_velocity": 0.35,
+        "coupling_strength": 0.25,
+        "receptor_modulation_map": {
+          "nmda_to_dissociation": 0.90,
+          "sigma1_to_depth_distortion": 0.70
+        }
+      }
+    },
+    "dxm": {
+      "name": "DXM",
+      "aliases": ["dextromethorphan", "robo", "robotripping"],
+      "class": "dissociative",
+      "mechanism": {
+        "5ht2a": 0.30,
+        "5ht1a": 0.25,
+        "sigma1": 0.80,
+        "nmda": 0.75,
+        "gaba": 0.10,
+        "dopamine": 0.40,
+        "serotonin": 0.60,
+        "norepinephrine": 0.30,
+        "acetylcholine": 0.0
+      },
+      "visual_signature": {
+        "tracers_color": "#FF42C1",
+        "tracers_length": 0.55,
+        "oscillation_style": "organic",
+        "symmetry_bias": 0.45,
+        "depth_distortion": 0.80,
+        "color_enhancement": 0.55,
+        "pattern_complexity": 0.50
+      },
+      "emotional_signature": {
+        "valence_bias": 0.10,
+        "arousal_level": -0.50,
+        "anxiety_tendency": 0.30,
+        "empathy_gain": 0.15,
+        "ego_boundary_softening": 0.75,
+        "thought_coherence": 0.35
+      },
+      "state_phases": {
+        "comeup": {"duration_minutes": 60, "intensity_curve": "sigmoid"},
+        "peak": {"duration_minutes": 180, "intensity_multiplier": 1.0},
+        "plateau": {"duration_minutes": 120},
+        "comedown": {"duration_minutes": 180, "intensity_curve": "linear"}
+      },
+      "psyfi_params": {
+        "normalization": {"P": 2.3, "V": 0.65},
+        "phase_noise": 0.32,
+        "phase_reset_strength": 0.45,
+        "drift_amplitude": 0.70,
+        "drift_velocity": 0.28,
+        "coupling_strength": 0.30,
+        "receptor_modulation_map": {
+          "nmda_to_dissociation": 0.75,
+          "sigma1_to_depth_distortion": 0.80
+        }
+      }
+    },
+    "mdma": {
+      "name": "MDMA",
+      "aliases": ["ecstasy", "molly", "X"],
+      "class": "empathogen",
+      "mechanism": {
+        "5ht2a": 0.45,
+        "5ht1a": 0.30,
+        "sigma1": 0.0,
+        "nmda": 0.0,
+        "gaba": 0.0,
+        "dopamine": 0.70,
+        "serotonin": 0.95,
+        "norepinephrine": 0.85,
+        "acetylcholine": 0.0
+      },
+      "visual_signature": {
+        "tracers_color": "#FFB547",
+        "tracers_length": 0.40,
+        "oscillation_style": "smooth",
+        "symmetry_bias": 0.35,
+        "depth_distortion": 0.25,
+        "color_enhancement": 0.65,
+        "pattern_complexity": 0.30
+      },
+      "emotional_signature": {
+        "valence_bias": 0.90,
+        "arousal_level": 0.75,
+        "anxiety_tendency": 0.05,
+        "empathy_gain": 0.95,
+        "ego_boundary_softening": 0.50,
+        "thought_coherence": 0.80
+      },
+      "state_phases": {
+        "comeup": {"duration_minutes": 30, "intensity_curve": "sigmoid"},
+        "peak": {"duration_minutes": 120, "intensity_multiplier": 1.0},
+        "plateau": {"duration_minutes": 60},
+        "comedown": {"duration_minutes": 90, "intensity_curve": "logarithmic"}
+      },
+      "psyfi_params": {
+        "normalization": {"P": 2.0, "V": 0.45},
+        "phase_noise": 0.25,
+        "phase_reset_strength": 0.20,
+        "drift_amplitude": 0.35,
+        "drift_velocity": 0.40,
+        "coupling_strength": 0.65,
+        "receptor_modulation_map": {
+          "serotonin_to_empathy": 0.95,
+          "dopamine_to_arousal": 0.70
+        }
+      }
+    },
+    "mda": {
+      "name": "MDA",
+      "aliases": ["sass", "tenamfetamine"],
+      "class": "empathogen",
+      "mechanism": {
+        "5ht2a": 0.65,
+        "5ht1a": 0.35,
+        "sigma1": 0.0,
+        "nmda": 0.0,
+        "gaba": 0.0,
+        "dopamine": 0.65,
+        "serotonin": 0.90,
+        "norepinephrine": 0.80,
+        "acetylcholine": 0.0
+      },
+      "visual_signature": {
+        "tracers_color": "#8F7BFF",
+        "tracers_length": 0.60,
+        "oscillation_style": "geometric",
+        "symmetry_bias": 0.65,
+        "depth_distortion": 0.50,
+        "color_enhancement": 0.75,
+        "pattern_complexity": 0.60
+      },
+      "emotional_signature": {
+        "valence_bias": 0.85,
+        "arousal_level": 0.70,
+        "anxiety_tendency": 0.10,
+        "empathy_gain": 0.90,
+        "ego_boundary_softening": 0.60,
+        "thought_coherence": 0.75
+      },
+      "state_phases": {
+        "comeup": {"duration_minutes": 30, "intensity_curve": "sigmoid"},
+        "peak": {"duration_minutes": 150, "intensity_multiplier": 1.0},
+        "plateau": {"duration_minutes": 90},
+        "comedown": {"duration_minutes": 120, "intensity_curve": "logarithmic"}
+      },
+      "psyfi_params": {
+        "normalization": {"P": 1.95, "V": 0.42},
+        "phase_noise": 0.35,
+        "phase_reset_strength": 0.28,
+        "drift_amplitude": 0.48,
+        "drift_velocity": 0.45,
+        "coupling_strength": 0.70,
+        "receptor_modulation_map": {
+          "serotonin_to_empathy": 0.90,
+          "5ht2a_to_visual": 0.65
+        }
+      }
+    },
+    "dph": {
+      "name": "DPH",
+      "aliases": ["diphenhydramine", "benadryl"],
+      "class": "deliriant",
+      "mechanism": {
+        "5ht2a": 0.20,
+        "5ht1a": 0.10,
+        "sigma1": 0.0,
+        "nmda": 0.0,
+        "gaba": 0.25,
+        "dopamine": 0.15,
+        "serotonin": 0.15,
+        "norepinephrine": 0.10,
+        "acetylcholine": 0.85
+      },
+      "visual_signature": {
+        "tracers_color": "#6F7897",
+        "tracers_length": 0.45,
+        "oscillation_style": "organic",
+        "symmetry_bias": 0.20,
+        "depth_distortion": 0.70,
+        "color_enhancement": 0.15,
+        "pattern_complexity": 0.35
+      },
+      "emotional_signature": {
+        "valence_bias": -0.60,
+        "arousal_level": -0.70,
+        "anxiety_tendency": 0.80,
+        "empathy_gain": 0.0,
+        "ego_boundary_softening": 0.70,
+        "thought_coherence": 0.25
+      },
+      "state_phases": {
+        "comeup": {"duration_minutes": 60, "intensity_curve": "linear"},
+        "peak": {"duration_minutes": 180, "intensity_multiplier": 1.0},
+        "plateau": {"duration_minutes": 120},
+        "comedown": {"duration_minutes": 240, "intensity_curve": "linear"}
+      },
+      "psyfi_params": {
+        "normalization": {"P": 2.4, "V": 0.70},
+        "phase_noise": 0.55,
+        "phase_reset_strength": 0.40,
+        "drift_amplitude": 0.60,
+        "drift_velocity": 0.25,
+        "coupling_strength": 0.15,
+        "receptor_modulation_map": {
+          "acetylcholine_to_delirium": 0.85,
+          "acetylcholine_to_dysphoria": 0.70
+        }
+      }
+    },
+    "scopolamine": {
+      "name": "Scopolamine",
+      "aliases": ["devil's breath", "burundanga"],
+      "class": "deliriant",
+      "mechanism": {
+        "5ht2a": 0.10,
+        "5ht1a": 0.05,
+        "sigma1": 0.0,
+        "nmda": 0.0,
+        "gaba": 0.15,
+        "dopamine": 0.10,
+        "serotonin": 0.10,
+        "norepinephrine": 0.05,
+        "acetylcholine": 0.95
+      },
+      "visual_signature": {
+        "tracers_color": "#4F5668",
+        "tracers_length": 0.50,
+        "oscillation_style": "organic",
+        "symmetry_bias": 0.15,
+        "depth_distortion": 0.80,
+        "color_enhancement": 0.10,
+        "pattern_complexity": 0.40
+      },
+      "emotional_signature": {
+        "valence_bias": -0.75,
+        "arousal_level": -0.80,
+        "anxiety_tendency": 0.90,
+        "empathy_gain": 0.0,
+        "ego_boundary_softening": 0.85,
+        "thought_coherence": 0.15
+      },
+      "state_phases": {
+        "comeup": {"duration_minutes": 30, "intensity_curve": "sigmoid"},
+        "peak": {"duration_minutes": 240, "intensity_multiplier": 1.2},
+        "plateau": {"duration_minutes": 180},
+        "comedown": {"duration_minutes": 300, "intensity_curve": "linear"}
+      },
+      "psyfi_params": {
+        "normalization": {"P": 2.5, "V": 0.75},
+        "phase_noise": 0.60,
+        "phase_reset_strength": 0.50,
+        "drift_amplitude": 0.70,
+        "drift_velocity": 0.20,
+        "coupling_strength": 0.10,
+        "receptor_modulation_map": {
+          "acetylcholine_to_delirium": 0.95,
+          "acetylcholine_to_dysphoria": 0.85
+        }
+      }
+    },
+    "amphetamine": {
+      "name": "Amphetamine",
+      "aliases": ["speed", "adderall"],
+      "class": "stimulant",
+      "mechanism": {
+        "5ht2a": 0.15,
+        "5ht1a": 0.10,
+        "sigma1": 0.0,
+        "nmda": 0.0,
+        "gaba": 0.0,
+        "dopamine": 0.90,
+        "serotonin": 0.50,
+        "norepinephrine": 0.95,
+        "acetylcholine": 0.20
+      },
+      "visual_signature": {
+        "tracers_color": "#34C3FF",
+        "tracers_length": 0.20,
+        "oscillation_style": "minimal",
+        "symmetry_bias": 0.10,
+        "depth_distortion": 0.05,
+        "color_enhancement": 0.30,
+        "pattern_complexity": 0.10
+      },
+      "emotional_signature": {
+        "valence_bias": 0.60,
+        "arousal_level": 0.95,
+        "anxiety_tendency": 0.45,
+        "empathy_gain": 0.20,
+        "ego_boundary_softening": 0.05,
+        "thought_coherence": 0.95
+      },
+      "state_phases": {
+        "comeup": {"duration_minutes": 20, "intensity_curve": "sigmoid"},
+        "peak": {"duration_minutes": 120, "intensity_multiplier": 1.0},
+        "plateau": {"duration_minutes": 120},
+        "comedown": {"duration_minutes": 180, "intensity_curve": "linear"}
+      },
+      "psyfi_params": {
+        "normalization": {"P": 2.2, "V": 0.55},
+        "phase_noise": 0.15,
+        "phase_reset_strength": 0.10,
+        "drift_amplitude": 0.20,
+        "drift_velocity": 0.70,
+        "coupling_strength": 0.55,
+        "receptor_modulation_map": {
+          "dopamine_to_arousal": 0.90,
+          "norepinephrine_to_focus": 0.95
+        }
+      }
+    },
+    "cocaine": {
+      "name": "Cocaine",
+      "aliases": ["coke", "blow", "snow"],
+      "class": "stimulant",
+      "mechanism": {
+        "5ht2a": 0.20,
+        "5ht1a": 0.15,
+        "sigma1": 0.35,
+        "nmda": 0.0,
+        "gaba": 0.0,
+        "dopamine": 0.95,
+        "serotonin": 0.65,
+        "norepinephrine": 0.90,
+        "acetylcholine": 0.15
+      },
+      "visual_signature": {
+        "tracers_color": "#3EE7F2",
+        "tracers_length": 0.25,
+        "oscillation_style": "minimal",
+        "symmetry_bias": 0.15,
+        "depth_distortion": 0.10,
+        "color_enhancement": 0.40,
+        "pattern_complexity": 0.15
+      },
+      "emotional_signature": {
+        "valence_bias": 0.80,
+        "arousal_level": 0.98,
+        "anxiety_tendency": 0.55,
+        "empathy_gain": 0.15,
+        "ego_boundary_softening": 0.0,
+        "thought_coherence": 0.85
+      },
+      "state_phases": {
+        "comeup": {"duration_minutes": 5, "intensity_curve": "exponential"},
+        "peak": {"duration_minutes": 30, "intensity_multiplier": 1.2},
+        "plateau": {"duration_minutes": 15},
+        "comedown": {"duration_minutes": 45, "intensity_curve": "exponential"}
+      },
+      "psyfi_params": {
+        "normalization": {"P": 2.1, "V": 0.50},
+        "phase_noise": 0.18,
+        "phase_reset_strength": 0.12,
+        "drift_amplitude": 0.25,
+        "drift_velocity": 0.85,
+        "coupling_strength": 0.60,
+        "receptor_modulation_map": {
+          "dopamine_to_arousal": 0.95,
+          "norepinephrine_to_focus": 0.90
+        }
+      }
+    },
+    "methylphenidate": {
+      "name": "Methylphenidate",
+      "aliases": ["ritalin", "concerta"],
+      "class": "stimulant",
+      "mechanism": {
+        "5ht2a": 0.10,
+        "5ht1a": 0.05,
+        "sigma1": 0.0,
+        "nmda": 0.0,
+        "gaba": 0.0,
+        "dopamine": 0.80,
+        "serotonin": 0.30,
+        "norepinephrine": 0.85,
+        "acetylcholine": 0.25
+      },
+      "visual_signature": {
+        "tracers_color": "#34C3FF",
+        "tracers_length": 0.15,
+        "oscillation_style": "minimal",
+        "symmetry_bias": 0.05,
+        "depth_distortion": 0.03,
+        "color_enhancement": 0.25,
+        "pattern_complexity": 0.05
+      },
+      "emotional_signature": {
+        "valence_bias": 0.50,
+        "arousal_level": 0.85,
+        "anxiety_tendency": 0.35,
+        "empathy_gain": 0.15,
+        "ego_boundary_softening": 0.0,
+        "thought_coherence": 0.98
+      },
+      "state_phases": {
+        "comeup": {"duration_minutes": 30, "intensity_curve": "sigmoid"},
+        "peak": {"duration_minutes": 120, "intensity_multiplier": 1.0},
+        "plateau": {"duration_minutes": 90},
+        "comedown": {"duration_minutes": 120, "intensity_curve": "linear"}
+      },
+      "psyfi_params": {
+        "normalization": {"P": 2.2, "V": 0.52},
+        "phase_noise": 0.12,
+        "phase_reset_strength": 0.08,
+        "drift_amplitude": 0.18,
+        "drift_velocity": 0.65,
+        "coupling_strength": 0.58,
+        "receptor_modulation_map": {
+          "dopamine_to_focus": 0.80,
+          "norepinephrine_to_arousal": 0.85
+        }
+      }
+    },
+    "jhana": {
+      "name": "Jhana",
+      "aliases": ["meditative absorption", "samadhi"],
+      "class": "meditative",
+      "mechanism": {
+        "5ht2a": 0.30,
+        "5ht1a": 0.70,
+        "sigma1": 0.0,
+        "nmda": 0.0,
+        "gaba": 0.60,
+        "dopamine": 0.40,
+        "serotonin": 0.65,
+        "norepinephrine": 0.10,
+        "acetylcholine": 0.20
+      },
+      "visual_signature": {
+        "tracers_color": "#8F7BFF",
+        "tracers_length": 0.25,
+        "oscillation_style": "smooth",
+        "symmetry_bias": 0.80,
+        "depth_distortion": 0.30,
+        "color_enhancement": 0.40,
+        "pattern_complexity": 0.35
+      },
+      "emotional_signature": {
+        "valence_bias": 0.85,
+        "arousal_level": -0.40,
+        "anxiety_tendency": 0.0,
+        "empathy_gain": 0.70,
+        "ego_boundary_softening": 0.70,
+        "thought_coherence": 0.95
+      },
+      "state_phases": {
+        "comeup": {"duration_minutes": 20, "intensity_curve": "sigmoid"},
+        "peak": {"duration_minutes": 40, "intensity_multiplier": 1.0},
+        "plateau": {"duration_minutes": 60},
+        "comedown": {"duration_minutes": 20, "intensity_curve": "sigmoid"}
+      },
+      "psyfi_params": {
+        "normalization": {"P": 1.8, "V": 0.35},
+        "phase_noise": 0.08,
+        "phase_reset_strength": 0.30,
+        "drift_amplitude": 0.20,
+        "drift_velocity": 0.15,
+        "coupling_strength": 0.85,
+        "receptor_modulation_map": {
+          "gaba_to_calming": 0.60,
+          "5ht1a_to_bliss": 0.70
+        }
+      }
+    },
+    "rem_dream": {
+      "name": "REM Dream",
+      "aliases": ["dreaming", "REM sleep"],
+      "class": "baseline",
+      "mechanism": {
+        "5ht2a": 0.40,
+        "5ht1a": 0.50,
+        "sigma1": 0.0,
+        "nmda": 0.0,
+        "gaba": 0.30,
+        "dopamine": 0.45,
+        "serotonin": 0.50,
+        "norepinephrine": 0.05,
+        "acetylcholine": 0.80
+      },
+      "visual_signature": {
+        "tracers_color": "#FF42C1",
+        "tracers_length": 0.70,
+        "oscillation_style": "organic",
+        "symmetry_bias": 0.40,
+        "depth_distortion": 0.80,
+        "color_enhancement": 0.70,
+        "pattern_complexity": 0.85
+      },
+      "emotional_signature": {
+        "valence_bias": 0.0,
+        "arousal_level": 0.30,
+        "anxiety_tendency": 0.35,
+        "empathy_gain": 0.40,
+        "ego_boundary_softening": 0.60,
+        "thought_coherence": 0.30
+      },
+      "state_phases": {
+        "comeup": {"duration_minutes": 10, "intensity_curve": "sigmoid"},
+        "peak": {"duration_minutes": 20, "intensity_multiplier": 1.0},
+        "plateau": {"duration_minutes": 15},
+        "comedown": {"duration_minutes": 5, "intensity_curve": "exponential"}
+      },
+      "psyfi_params": {
+        "normalization": {"P": 1.6, "V": 0.30},
+        "phase_noise": 0.65,
+        "phase_reset_strength": 0.55,
+        "drift_amplitude": 0.75,
+        "drift_velocity": 0.60,
+        "coupling_strength": 0.40,
+        "receptor_modulation_map": {
+          "acetylcholine_to_vividness": 0.80,
+          "5ht2a_to_bizarreness": 0.40
+        }
+      }
+    }
+  }
+}

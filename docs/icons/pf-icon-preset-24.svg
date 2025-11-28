@@ -1,0 +1,16 @@
+<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <!-- Slider/fader controls -->
+  <g stroke-linecap="round">
+    <!-- Track 1 -->
+    <line x1="6" y1="6" x2="6" y2="18" stroke="#EAE9FF" stroke-width="2"/>
+    <circle cx="6" cy="10" r="2" fill="#3EE7F2"/>
+
+    <!-- Track 2 -->
+    <line x1="12" y1="6" x2="12" y2="18" stroke="#EAE9FF" stroke-width="2"/>
+    <circle cx="12" cy="14" r="2" fill="#FF42C1"/>
+
+    <!-- Track 3 -->
+    <line x1="18" y1="6" x2="18" y2="18" stroke="#EAE9FF" stroke-width="2"/>
+    <circle cx="18" cy="8" r="2" fill="#3EE7F2"/>
+  </g>
+</svg>

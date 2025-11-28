@@ -1,0 +1,59 @@
+<svg width="3000" height="400" viewBox="0 0 3000 400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#0B1018;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#05070B;stop-opacity:1" />
+    </linearGradient>
+
+    <filter id="cyanGlowFoot">
+      <feGaussianBlur stdDeviation="5" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <rect width="3000" height="400" fill="url(#bgGrad)"/>
+
+  <!-- Cyan glowing border line with intermittent magenta ticks -->
+  <line x1="100" y1="80" x2="2900" y2="80" stroke="#3EE7F2" stroke-width="2" opacity="0.6" filter="url(#cyanGlowFoot)"/>
+
+  <!-- Magenta tick marks -->
+  <g stroke="#FF42C1" stroke-width="2" opacity="0.5">
+    <line x1="400" y1="75" x2="400" y2="85"/>
+    <line x1="800" y1="75" x2="800" y2="85"/>
+    <line x1="1200" y1="75" x2="1200" y2="85"/>
+    <line x1="1500" y1="75" x2="1500" y2="85"/>
+    <line x1="1800" y1="75" x2="1800" y2="85"/>
+    <line x1="2200" y1="75" x2="2200" y2="85"/>
+    <line x1="2600" y1="75" x2="2600" y2="85"/>
+  </g>
+
+  <!-- Central sigil -->
+  <g transform="translate(1500, 200)">
+    <circle cx="0" cy="0" r="70" stroke="#3EE7F2" stroke-width="2.5" fill="none" filter="url(#cyanGlowFoot)"/>
+    <circle cx="0" cy="0" r="60" stroke="#3EE7F2" stroke-width="0.8" fill="none" opacity="0.3"/>
+
+    <!-- Hexagon -->
+    <path d="M 0,-35 L 30.3,-17.5 L 30.3,17.5 L 0,35 L -30.3,17.5 L -30.3,-17.5 Z"
+          stroke="#FF42C1" stroke-width="2" fill="rgba(255, 66, 193, 0.05)"/>
+
+    <!-- Center dot -->
+    <circle cx="0" cy="0" r="5" fill="#3EE7F2" filter="url(#cyanGlowFoot)"/>
+
+    <!-- Radials -->
+    <line x1="0" y1="0" x2="0" y2="-50" stroke="#8F7BFF" stroke-width="1.5" opacity="0.7"/>
+    <line x1="0" y1="0" x2="43.3" y2="25" stroke="#8F7BFF" stroke-width="1.5" opacity="0.7"/>
+    <line x1="0" y1="0" x2="-43.3" y2="25" stroke="#8F7BFF" stroke-width="1.5" opacity="0.7"/>
+  </g>
+
+  <!-- Text: Applied Alchemy Labs — PsyFi Module -->
+  <text x="1500" y="320" text-anchor="middle" font-family="'Inter', sans-serif" font-size="32"
+        font-weight="500" letter-spacing="4" fill="#9BA4C7">APPLIED ALCHEMY LABS — PSYFI MODULE</text>
+
+  <!-- Version info -->
+  <text x="1500" y="355" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="18"
+        font-weight="400" letter-spacing="2" fill="#6F7897" opacity="0.8">ABX-Core v1.3  |  Consciousness Field Engine</text>
+</svg>

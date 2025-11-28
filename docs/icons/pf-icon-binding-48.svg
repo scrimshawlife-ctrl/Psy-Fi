@@ -1,0 +1,14 @@
+<svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+  <!-- Two nodes connected -->
+  <g fill="none" stroke-linecap="round">
+    <!-- Left node -->
+    <circle cx="14" cy="24" r="8" stroke="#3EE7F2" stroke-width="2"/>
+    <!-- Right node -->
+    <circle cx="34" cy="24" r="8" stroke="#3EE7F2" stroke-width="2"/>
+    <!-- Connection -->
+    <line x1="22" y1="24" x2="26" y2="24" stroke="#FF42C1" stroke-width="2"/>
+  </g>
+  <!-- Centers -->
+  <circle cx="14" cy="24" r="2.5" fill="#EAE9FF"/>
+  <circle cx="34" cy="24" r="2.5" fill="#EAE9FF"/>
+</svg>

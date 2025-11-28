@@ -54,3 +54,17 @@ venv.bak/
 # OS
 .DS_Store
 Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Docker
+.dockerignore
+
+# Local environment files
+.env.local
+.env.*.local
+
+# Production configs (keep templates)
+!.env.example

@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  # PsyFi API Service
+  psyfi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: psyfi-api
+    ports:
+      - "8000:8000"
+    environment:
+      - ENVIRONMENT=production
+      - LOG_LEVEL=info
+      - WORKERS=4
+    volumes:
+      # Mount for development (comment out for production)
+      - ./psyfi_api:/app/psyfi_api
+      - ./psyfi_core:/app/psyfi_core
+      - ./docs:/app/docs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Nginx reverse proxy (optional, for production)
+  nginx:
+    image: nginx:alpine
+    container_name: psyfi-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./docs:/usr/share/nginx/html/docs:ro
+    depends_on:
+      - psyfi
+    restart: unless-stopped
+    profiles:
+      - production
+
+networks:
+  default:
+    name: psyfi-network

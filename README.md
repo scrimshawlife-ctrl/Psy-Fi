@@ -46,11 +46,13 @@ PsyFi embodies five ontological commitments:
 | 🧠 **ABX-Core v1.3** | Deterministic runtime with provenance tracking and metrics |
 | 🔧 **Modular Engines** | 20+ pluggable consciousness field processors (eurorack-style) |
 | 📐 **Real Mathematics** | Kuramoto coupling, divisive normalization, Gestalt principles |
-| 🌈 **Psychedelic Modeling** | LSD, psilocybin, DMT state simulation |
+| 🌈 **Psychedelic Modeling** | LSD, psilocybin, DMT state simulation with 22+ substance presets |
 | 🧘 **Meditative States** | Jhana absorption and attention modulation |
 | 💫 **Valence Assessment** | Multi-dimensional hedonic tone analysis |
+| 🎹 **MIDI Integration** | Real-time control via MIDI controllers, DAWs, and hardware |
 | 🌐 **Web UI** | Dark-mode interface for interactive simulation |
 | 🚀 **FastAPI Backend** | REST API with automatic documentation |
+| 📱 **Mobile & PWA** | Progressive Web App with offline support |
 
 ---
 
@@ -65,6 +67,9 @@ cd Psy-Fi
 
 # Install with development dependencies
 pip install -e ".[dev]"
+
+# Optional: Install MIDI support
+pip install mido python-rtmidi
 ```
 
 ### Launch the Web Interface
@@ -156,7 +161,7 @@ PsyFi follows a modular, layered architecture inspired by eurorack synthesizer d
 ┌────────────────────────┴────────────────────────────────────┐
 │                       API Layer (FastAPI)                    │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐     │
-│  │  /simulate   │  │    /health   │  │   /api/info  │     │
+│  │  /simulate   │  │  /api/midi   │  │    /health   │     │
 │  └──────────────┘  └──────────────┘  └──────────────┘     │
 └────────────────────────┬────────────────────────────────────┘
                          │
@@ -328,6 +333,58 @@ attention_params = AttentionPhiParams(
 modulated = apply_attention_modulation(absorbed, attention_params)
 ```
 
+### MIDI Real-Time Control
+
+```python
+from psyfi_core.midi import MIDIService, MIDIConfig
+
+# Configure MIDI
+config = MIDIConfig(
+    input_device="Launchpad Mini",  # Your MIDI controller
+    channel=0,
+    cc_smooth_factor=0.1,
+)
+
+# Create and start MIDI service
+midi = MIDIService(config)
+midi.open(input_device="Launchpad Mini")
+midi.start()
+
+# Now control PsyFi parameters in real-time:
+# - CC1 (Modulation) → phase_noise
+# - CC7 (Volume) → coupling_strength
+# - Notes C4-A4 → Trigger substance presets
+
+# Get current MIDI-controlled parameters
+params = midi.get_params()
+print(params)  # {'phase_noise': 0.45, 'coupling_strength': 0.7, ...}
+
+# Clean up
+midi.close()
+```
+
+**Control from REST API:**
+
+```bash
+# Start MIDI service
+curl -X POST http://localhost:8000/api/midi/start \
+  -H "Content-Type: application/json" \
+  -d '{"input_device": "Launchpad Mini", "channel": 0}'
+
+# Get current status
+curl http://localhost:8000/api/midi/status
+
+# Send MIDI CC
+curl -X POST http://localhost:8000/api/midi/send/cc \
+  -d '{"control": 1, "value": 64}'
+
+# Trigger preset
+curl -X POST http://localhost:8000/api/midi/send/note \
+  -d '{"note": 61, "velocity": 100}'  # LSD preset
+```
+
+See [docs/MIDI.md](docs/MIDI.md) for complete integration guide including DAW setup, hardware controllers, and bidirectional MIDI.
+
 ---
 
 ## 📁 Project Structure
@@ -338,7 +395,7 @@ Psy-Fi/
 ├── README.md                   # This file
 ├── .gitignore                  # Git ignore rules
 │
-├── psyfi_core/                 # Core library (~2,500 LOC)
+├── psyfi_core/                 # Core library (~3,500 LOC)
 │   ├── __init__.py
 │   ├── config.py               # PsyFi & ABX-Core config
 │   │
@@ -348,33 +405,57 @@ Psy-Fi/
 │   │   ├── provenance.py       # Provenance recording
 │   │   └── errors.py           # Error types
 │   │
-│   ├── models/                 # Data models (8 models)
+│   ├── models/                 # Data models
 │   │   ├── resonance_frame.py
 │   │   ├── valence_metrics.py
 │   │   ├── hedonic_profile.py
 │   │   ├── qualia_preset.py
 │   │   ├── receptor_profile.py
+│   │   ├── substance_preset.py # Substance preset system
+│   │   ├── preset_integration.py
 │   │   └── ...
 │   │
-│   └── engines/                # Engines (20+ processors)
-│       ├── consciousness_omega.py
-│       ├── valence_kappa.py
-│       ├── psychedelic_delta.py
-│       ├── jhana_omega.py
-│       └── ...
+│   ├── engines/                # Engines (20+ processors)
+│   │   ├── consciousness_omega.py
+│   │   ├── valence_kappa.py
+│   │   ├── psychedelic_delta.py
+│   │   ├── jhana_omega.py
+│   │   └── ...
+│   │
+│   ├── midi/                   # MIDI integration
+│   │   ├── service.py          # MIDIService (I/O, mappings)
+│   │   └── __init__.py
+│   │
+│   └── presets/                # Substance preset database
+│       ├── substance_presets.json   # 22+ substances
+│       └── substance_schema.json
 │
 ├── psyfi_api/                  # FastAPI application
 │   ├── main.py                 # Main app
 │   ├── routers/
-│   │   └── simulate.py         # Simulation endpoint
+│   │   ├── simulate.py         # Simulation endpoint
+│   │   └── midi.py             # MIDI control endpoints
 │   ├── templates/
 │   │   └── index.html          # Web UI
 │   └── static/
 │       ├── style.css           # Dark mode styling
 │       └── app.js              # Frontend logic
 │
+├── docs/                       # Documentation
+│   ├── MIDI.md                 # MIDI integration guide
+│   ├── DEPLOYMENT.md           # Deployment guide
+│   ├── MOBILE_PWA_GUIDE.md     # Mobile/PWA guide
+│   ├── images/                 # Graphics (headers, icons)
+│   └── style/                  # CSS design system
+│
+├── examples/                   # Usage examples
+│   ├── midi_basic.py           # Basic MIDI control
+│   ├── midi_daw_integration.py # DAW integration
+│   └── midi_api_client.py      # REST API client
+│
 ├── scripts/
-│   └── run_dev_server.py       # Dev server launcher
+│   ├── run_dev_server.py       # Dev server launcher
+│   └── deploy.sh               # Deployment helper
 │
 └── tests/                      # Test suite (10 tests)
     ├── test_resonance_frame.py
@@ -394,6 +475,14 @@ Psy-Fi/
 | `GET` | `/health` | Health check |
 | `GET` | `/api/info` | API information |
 | `POST` | `/simulate/` | Run consciousness field simulation |
+| `GET` | `/api/midi/devices` | List MIDI devices |
+| `POST` | `/api/midi/start` | Start MIDI service |
+| `POST` | `/api/midi/stop` | Stop MIDI service |
+| `GET` | `/api/midi/status` | Get MIDI status |
+| `GET` | `/api/midi/mappings` | Get MIDI control mappings |
+| `POST` | `/api/midi/send/cc` | Send MIDI CC message |
+| `POST` | `/api/midi/send/note` | Send MIDI note |
+| `GET` | `/api/midi/params` | Get MIDI-controlled parameters |
 | `GET` | `/docs` | OpenAPI documentation (Swagger) |
 | `GET` | `/redoc` | OpenAPI documentation (ReDoc) |
 
@@ -458,13 +547,16 @@ ruff check .
 
 ## 🗺️ Roadmap
 
+- [x] **Preset Library**: 22+ substance presets with realistic pharmacology ✅
+- [x] **MIDI Integration**: Real-time control via hardware/DAW ✅
+- [x] **Mobile & PWA**: Progressive Web App with offline support ✅
+- [x] **Deployment**: Docker, Railway, Render, Fly.io, Heroku configs ✅
 - [ ] **Multi-layer Simulations**: Stack multiple consciousness fields
-- [ ] **Preset Library**: Pre-configured psychedelic/meditative states
-- [ ] **Field Visualization**: Real-time heatmap rendering
+- [ ] **Field Visualization**: Real-time heatmap rendering in UI
 - [ ] **Time Series**: Track valence evolution over time
 - [ ] **Batch Simulations**: Run multiple simulations in parallel
 - [ ] **Export/Import**: Save and load field states
-- [ ] **Integration Hooks**: Connect to external neurofeedback systems
+- [ ] **Neurofeedback**: EEG/biometric integration via MIDI
 
 ---
 
@@ -507,6 +599,6 @@ If you use PsyFi in your research, please cite:
 
 *"Qualia are real, and reality is made of qualia."*
 
-[Applied Alchemy Labs](https://github.com/scrimshawlife-ctrl) • [Documentation](http://localhost:8000/docs) • [GitHub](https://github.com/scrimshawlife-ctrl/Psy-Fi)
+[Applied Alchemy Labs](https://github.com/scrimshawlife-ctrl) • [Documentation](http://localhost:8000/docs) • [MIDI Guide](docs/MIDI.md) • [Deployment Guide](docs/DEPLOYMENT.md)
 
 </div>

@@ -4,22 +4,14 @@ services:
     env: python
     region: oregon
     plan: starter
-    buildCommand: |
-      # Install system dependencies for MIDI (optional)
-      apt-get update || true
-      apt-get install -y libasound2-dev libjack-dev || true
-      # Install Python dependencies
-      pip install --upgrade pip
-      pip install -r requirements.txt
-    startCommand: uvicorn psyfi_api.main:app --host 0.0.0.0 --port $PORT --workers 2
+    buildCommand: pip install --upgrade pip && pip install -r requirements.txt
+    startCommand: uvicorn psyfi_api.main:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /health
     envVars:
       - key: ENVIRONMENT
         value: production
       - key: LOG_LEVEL
         value: info
-      - key: WORKERS
-        value: 2
       - key: ENABLE_SAFETY_CLAMP
         value: true
       - key: PYTHON_VERSION

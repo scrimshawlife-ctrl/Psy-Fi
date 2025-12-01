@@ -2,11 +2,22 @@
 // Applied Alchemy Labs
 
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('[PsyFi] Initializing...');
+
     const form = document.getElementById('simulationForm');
     const runButton = document.getElementById('runButton');
     const loadingOverlay = document.getElementById('loadingOverlay');
     const resultsPanel = document.getElementById('resultsPanel');
     const errorPanel = document.getElementById('errorPanel');
+
+    // Verify all elements loaded
+    if (!form) console.error('[PsyFi] Form not found!');
+    if (!runButton) console.error('[PsyFi] Run button not found!');
+    if (!loadingOverlay) console.error('[PsyFi] Loading overlay not found!');
+    if (!resultsPanel) console.error('[PsyFi] Results panel not found!');
+    if (!errorPanel) console.error('[PsyFi] Error panel not found!');
+
+    console.log('[PsyFi] All elements loaded successfully');
 
     // Preset configurations
     const presets = {
@@ -45,11 +56,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // Form submission handler
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
+        console.log('[PsyFi] Form submitted');
 
         // Get form values
         const width = parseInt(document.getElementById('width').value);
         const height = parseInt(document.getElementById('height').value);
         const steps = parseInt(document.getElementById('steps').value);
+
+        console.log(`[PsyFi] Parameters: ${width}×${height}, ${steps} steps`);
 
         // Show loading state
         showLoading(true);
@@ -57,6 +71,8 @@ document.addEventListener('DOMContentLoaded', () => {
         hideError();
 
         try {
+            console.log('[PsyFi] Calling API...');
+
             // Call the simulation API
             const response = await fetch('/simulate/', {
                 method: 'POST',
@@ -70,17 +86,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
             });
 
+            console.log(`[PsyFi] Response status: ${response.status}`);
+
             if (!response.ok) {
-                const errorData = await response.json();
+                const errorData = await response.json().catch(() => ({}));
                 throw new Error(errorData.detail || `HTTP ${response.status}: ${response.statusText}`);
             }
 
             const data = await response.json();
+            console.log('[PsyFi] Results received:', data);
 
             // Display results
             showResults(data);
 
         } catch (error) {
+            console.error('[PsyFi] Error:', error);
             // Display error
             showError(error.message);
         } finally {
@@ -188,4 +208,11 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.style.transition = 'opacity 0.5s ease';
         document.body.style.opacity = '1';
     }, 10);
+
+    console.log('[PsyFi] Ready! Press Run Simulation or Ctrl+Enter to start.');
+
+    // Test button click handler
+    runButton.addEventListener('click', () => {
+        console.log('[PsyFi] Button clicked directly');
+    });
 });

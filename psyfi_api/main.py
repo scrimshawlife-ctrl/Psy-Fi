@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from psyfi_api.routers import simulate
+from psyfi_api.routers import simulate, midi
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -32,6 +32,7 @@ templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 
 # Include routers
 app.include_router(simulate.router)
+app.include_router(midi.router)
 
 
 @app.get("/")
@@ -49,12 +50,19 @@ async def root(request: Request):
 
 @app.get("/health")
 async def health() -> dict[str, str]:
-    """Health check endpoint.
+    """Health check endpoint for monitoring and load balancers.
 
     Returns:
-        Health status
+        Comprehensive health status with version and timestamp
     """
-    return {"status": "ok"}
+    from datetime import datetime
+    return {
+        "status": "healthy",
+        "service": "psyfi-api",
+        "version": "1.0.0",
+        "abx_core": "1.3",
+        "timestamp": datetime.utcnow().isoformat() + "Z"
+    }
 
 
 @app.get("/api/info")

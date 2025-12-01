@@ -14,6 +14,7 @@ pydantic>=2.0.0
 jinja2>=3.1.0
 python-multipart>=0.0.6
 
-# MIDI integration (optional - graceful degradation if not available)
-mido>=1.3.0
-python-rtmidi>=1.5.0
+# MIDI integration (optional - may fail on platforms without system dependencies)
+# Uncomment if deploying to platform with ALSA/JACK support:
+# mido>=1.3.0
+# python-rtmidi>=1.5.0

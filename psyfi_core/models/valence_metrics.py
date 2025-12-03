@@ -3,6 +3,24 @@
 from pydantic import BaseModel, Field
 
 
+VALENCE_MIN = -0.2
+VALENCE_MAX = 0.8
+
+
+def normalize_valence(raw_valence: float) -> float:
+    """Normalize a raw valence score to the [-1, 1] range.
+
+    The weighted components naturally span [-0.2, 0.8]. We map that span
+    to [-1, 1] to align with the public contract and clamp for numerical
+    stability at the edges.
+    """
+
+    scaled = (raw_valence - VALENCE_MIN) / (VALENCE_MAX - VALENCE_MIN)
+    normalized = scaled * 2.0 - 1.0
+
+    return max(-1.0, min(1.0, normalized))
+
+
 class ValenceMetrics(BaseModel):
     """Comprehensive metrics for hedonic tone assessment.
 
@@ -41,5 +59,5 @@ class ValenceMetrics(BaseModel):
             - 0.2 * self.roughness_score
             + 0.1 * self.richness_score
         )
-        # Scale to [-1, 1] range
-        return 2.0 * valence - 1.0
+
+        return normalize_valence(valence)

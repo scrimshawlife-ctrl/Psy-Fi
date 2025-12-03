@@ -75,6 +75,9 @@ def test_compute_valence_metrics_random_field() -> None:
     # Confidence should be reasonable
     assert 0.0 <= metrics.confidence <= 1.0
 
+    # Valence score should be normalized
+    assert -1.0 <= metrics.valence_score <= 1.0
+
 
 def test_valence_metrics_in_range() -> None:
     """Test that valence metrics are in valid ranges."""
@@ -93,3 +96,27 @@ def test_valence_metrics_in_range() -> None:
         assert 0.0 <= metrics.roughness_score <= 1.0
         assert 0.0 <= metrics.richness_score <= 1.0
         assert 0.0 <= metrics.confidence <= 1.0
+
+        # Valence score is normalized to [-1, 1]
+        assert -1.0 <= metrics.valence_score <= 1.0
+
+
+def test_combined_valence_normalization_extremes() -> None:
+    """Ensure combined valence spans the documented [-1, 1] range."""
+
+    min_metrics = ValenceMetrics(
+        coherence_score=0.0,
+        symmetry_score=0.0,
+        roughness_score=1.0,
+        richness_score=0.0,
+    )
+
+    max_metrics = ValenceMetrics(
+        coherence_score=1.0,
+        symmetry_score=1.0,
+        roughness_score=0.0,
+        richness_score=1.0,
+    )
+
+    assert min_metrics.compute_combined_valence() == -1.0
+    assert max_metrics.compute_combined_valence() == 1.0

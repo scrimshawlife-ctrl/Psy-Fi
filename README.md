@@ -23,6 +23,16 @@
 
 ---
 
+## 🚀 One-Click Deployments
+
+Spin up the FastAPI backend directly from the repository using the provided IaC manifests.
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/scrimshawlife-ctrl/Psy-Fi)
+
+The Render button consumes the root `render.yaml` (health check on `/health`, uvicorn start command) and will auto-wire environment variables for production defaults. See [DEPLOYMENT.md](DEPLOYMENT.md#render) or [RENDER_DEPLOY.md](RENDER_DEPLOY.md) for deeper guidance.
+
+---
+
 ## 🌀 Overview
 
 **PsyFi** is a research-grade consciousness field simulation framework implementing deterministic, reproducible models of phenomenal states. Built on **ABX-Core v1.3**, it provides a eurorack-style modular architecture where consciousness field processors ("engines") can be composed to model baseline, psychedelic, and meditative consciousness states.
@@ -83,6 +93,29 @@ Then open your browser to **http://localhost:8000**
 
 ![PsyFi Web UI](docs/images/psyfi-ui-main.png)
 *Dark-mode interface with real-time consciousness field simulation*
+
+### Run the FastAPI backend directly
+
+If you just want the API without the frontend assets, use the lightweight launcher:
+
+```bash
+./scripts/run_api.sh
+```
+
+Environment variables:
+
+- `HOST` (default `0.0.0.0`)
+- `PORT` (default `8000`)
+
+### Quick Startup Check
+
+Verify the FastAPI app and routers load cleanly (even without MIDI dependencies) before deploying:
+
+```bash
+python test_startup.py
+```
+
+You should see the health, root, and `/api/info` routes reported as available. MIDI support is optional and the script will warn (not fail) if `mido`/`python-rtmidi` are not installed.
 
 ### Using the API Directly
 

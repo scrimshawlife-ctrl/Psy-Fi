@@ -45,7 +45,7 @@ async def root(request: Request):
     Returns:
         HTML template response
     """
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse(request, "index.html")
 
 
 @app.get("/health")
@@ -55,13 +55,13 @@ async def health() -> dict[str, str]:
     Returns:
         Comprehensive health status with version and timestamp
     """
-    from datetime import datetime
+    from datetime import datetime, timezone
     return {
         "status": "healthy",
         "service": "psyfi-api",
         "version": "1.0.0",
         "abx_core": "1.3",
-        "timestamp": datetime.utcnow().isoformat() + "Z"
+        "timestamp": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
     }
 
 

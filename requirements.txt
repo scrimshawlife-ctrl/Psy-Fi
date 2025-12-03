@@ -13,6 +13,7 @@ pydantic>=2.0.0
 # Web dependencies
 jinja2>=3.1.0
 python-multipart>=0.0.6
+httpx>=0.28.1
 
 # MIDI integration (optional - may fail on platforms without system dependencies)
 # Uncomment if deploying to platform with ALSA/JACK support:

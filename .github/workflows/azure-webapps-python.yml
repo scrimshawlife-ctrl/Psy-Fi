@@ -21,7 +21,7 @@ name: Build and deploy Python app to Azure Web App
 
 env:
   # Prefer a GitHub secret for app name to avoid deploying to a placeholder.
-  AZURE_WEBAPP_NAME: ${{ secrets.AZURE_WEBAPP_NAME || vars.AZURE_WEBAPP_NAME }}
+  AZURE_WEBAPP_NAME: ${{ coalesce(secrets.AZURE_WEBAPP_NAME, vars.AZURE_WEBAPP_NAME) }}
   PYTHON_VERSION: '3.11'             # align with project runtime (>=3.10)
   STARTUP_COMMAND: python -m uvicorn psyfi_api.main:app --host 0.0.0.0 --port 8000 --workers 4 --proxy-headers
 
@@ -33,9 +33,11 @@ on:
 permissions:
   contents: read
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+  jobs:
+    build:
+    # Skip when Azure secrets aren't configured (e.g., on forks)
+      if: ${{ env.AZURE_WEBAPP_NAME != '' && secrets.AZURE_WEBAPP_PUBLISH_PROFILE != '' }}
+      runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
@@ -72,6 +74,8 @@ jobs:
             !venv/
 
   deploy:
+    # Skip when Azure secrets aren't configured (e.g., on forks)
+    if: ${{ env.AZURE_WEBAPP_NAME != '' && secrets.AZURE_WEBAPP_PUBLISH_PROFILE != '' }}
     permissions:
       contents: none
     runs-on: ubuntu-latest

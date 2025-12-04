@@ -43,7 +43,7 @@ async def root(request: Request):
         request: FastAPI request object
 
     Returns:
-        HTML template response
+        HTML template response with request context
     """
     return templates.TemplateResponse(request, "index.html")
 
@@ -59,7 +59,7 @@ async def health() -> dict[str, str]:
     return {
         "status": "healthy",
         "service": "psyfi-api",
-        "version": "1.0.0",
+        "version": app.version,
         "abx_core": "1.3",
         "timestamp": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
     }

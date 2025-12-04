@@ -550,6 +550,9 @@ Psy-Fi/
 ### Running Tests
 
 ```bash
+# Install dependencies (includes FastAPI test client)
+pip install -e ".[dev]"
+
 # Run all tests
 pytest tests/ -v
 

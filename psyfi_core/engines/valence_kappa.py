@@ -2,7 +2,7 @@
 
 import numpy as np
 
-from psyfi_core.models.valence_metrics import ValenceMetrics
+from psyfi_core.models.valence_metrics import ValenceMetrics, normalize_valence
 
 
 def compute_valence_metrics(field: np.ndarray) -> ValenceMetrics:
@@ -89,12 +89,14 @@ def compute_valence_metrics(field: np.ndarray) -> ValenceMetrics:
     # Moderate richness = positive (too low or too high is bad)
     richness_contribution = 1.0 - abs(richness_score - 0.5) * 2  # Peak at 0.5
 
-    valence_score = (
+    raw_valence_score = (
         0.4 * coherence_score
         + 0.3 * symmetry_score
         - 0.2 * roughness_score
         + 0.1 * richness_contribution
     )
+
+    valence_score = normalize_valence(raw_valence_score)
 
     # Confidence is based on how much activity there is
     mean_magnitude = float(np.mean(magnitudes))

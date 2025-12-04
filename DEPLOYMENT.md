@@ -10,6 +10,7 @@ This guide covers multiple deployment strategies for the PsyFi consciousness fie
 - [Local Development](#local-development)
 - [Docker Deployment](#docker-deployment)
 - [Cloud Platforms](#cloud-platforms)
+  - [Azure App Service](#azure-app-service)
   - [Railway](#railway)
   - [Render](#render)
   - [Heroku](#heroku)
@@ -113,11 +114,36 @@ docker-compose down -v
 
 ## Cloud Platforms
 
+### Azure App Service
+
+**One-Click Deploy:**
+
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fscrimshawlife-ctrl%2FPsy-Fi%2Fmain%2Fazuredeploy.json)
+
+**Template details:**
+
+- Provisions a Linux App Service plan and Web App.
+- Sets Python 3.11 runtime and the uvicorn startup command (`python -m uvicorn psyfi_api.main:app --host 0.0.0.0 --port 8000 --workers 4 --proxy-headers`).
+- Enables HTTPS-only, HTTP/2, Always On, and build-on-deploy flags (`SCM_DO_BUILD_DURING_DEPLOYMENT=1`, `WEBSITE_RUN_FROM_PACKAGE=1`).
+
+**Deploy steps:**
+
+1. Click the button above and choose a Web App name, region, and SKU (default `B1`).
+2. After the deployment completes, download the Publish Profile from the Web App Overview blade.
+3. In GitHub, add repository secrets:
+   - `AZURE_WEBAPP_NAME`: the Web App name you selected.
+   - `AZURE_WEBAPP_PUBLISH_PROFILE`: contents of the Publish Profile XML.
+4. Push to `main` (or trigger manually) to run the `Build and deploy Python app to Azure Web App` workflow located in `.github/workflows/azure-webapps-python.yml`.
+
+**Notes:** The template only provisions infrastructure; deployments are handled by the GitHub Actions workflow once the secrets are present.
+
+---
+
 ### Railway
 
 **One-Click Deploy:**
 
-[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template)
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template?template=https://github.com/scrimshawlife-ctrl/Psy-Fi)
 
 **Manual Deployment:**
 
@@ -160,7 +186,7 @@ railway logs
 
 **One-Click Deploy:**
 
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy)
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/scrimshawlife-ctrl/Psy-Fi)
 
 **Manual Deployment:**
 

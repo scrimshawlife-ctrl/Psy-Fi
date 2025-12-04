@@ -16,10 +16,24 @@
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![ABX-Core](https://img.shields.io/badge/ABX--Core-v1.3-00ffff)](https://github.com/scrimshawlife-ctrl/Psy-Fi)
-[![Tests](https://img.shields.io/badge/tests-passing-00ff00)](https://github.com/scrimshawlife-ctrl/Psy-Fi)
+[![Tests](https://github.com/scrimshawlife-ctrl/Psy-Fi/actions/workflows/tests.yml/badge.svg)](https://github.com/scrimshawlife-ctrl/Psy-Fi/actions/workflows/tests.yml)
 [![License](https://img.shields.io/badge/license-MIT-purple)](LICENSE)
 
 </div>
+
+---
+
+## 🚀 One-Click Deployments
+
+Spin up the FastAPI backend directly from the repository using the provided IaC manifests.
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/scrimshawlife-ctrl/Psy-Fi)
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template?template=https://github.com/scrimshawlife-ctrl/Psy-Fi)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fscrimshawlife-ctrl%2FPsy-Fi%2Fmain%2Fazuredeploy.json)
+
+The Render, Railway, and Azure buttons are pinned below the repository description for quick access.
+
+The Render button consumes the root `render.yaml` (health check on `/health`, uvicorn start command) and will auto-wire environment variables for production defaults. See [DEPLOYMENT.md](DEPLOYMENT.md#render) or [RENDER_DEPLOY.md](RENDER_DEPLOY.md) for deeper guidance. Azure users can provision an App Service plan + Web App in one click via the ARM template; after creation, hook up GitHub Actions with the app publish profile to deploy automatically.
 
 ---
 
@@ -83,6 +97,29 @@ Then open your browser to **http://localhost:8000**
 
 ![PsyFi Web UI](docs/images/psyfi-ui-main.png)
 *Dark-mode interface with real-time consciousness field simulation*
+
+### Run the FastAPI backend directly
+
+If you just want the API without the frontend assets, use the lightweight launcher:
+
+```bash
+./scripts/run_api.sh
+```
+
+Environment variables:
+
+- `HOST` (default `0.0.0.0`)
+- `PORT` (default `8000`)
+
+### Quick Startup Check
+
+Verify the FastAPI app and routers load cleanly (even without MIDI dependencies) before deploying:
+
+```bash
+python test_startup.py
+```
+
+You should see the health, root, and `/api/info` routes reported as available. MIDI support is optional and the script will warn (not fail) if `mido`/`python-rtmidi` are not installed.
 
 ### Using the API Directly
 
@@ -517,6 +554,9 @@ Psy-Fi/
 ### Running Tests
 
 ```bash
+# Install dependencies (includes FastAPI test client)
+pip install -e ".[dev]"
+
 # Run all tests
 pytest tests/ -v
 

@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from psyfi_api.routers import simulate, midi
+from psyfi_api.routers import simulate, midi, admin
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -33,6 +33,7 @@ templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 # Include routers
 app.include_router(simulate.router)
 app.include_router(midi.router)
+app.include_router(admin.router)
 
 
 @app.get("/")
@@ -46,6 +47,19 @@ async def root(request: Request):
         HTML template response
     """
     return templates.TemplateResponse("index.html", {"request": request})
+
+
+@app.get("/admin")
+async def admin_panel(request: Request):
+    """Admin panel endpoint - serves the admin UI.
+
+    Args:
+        request: FastAPI request object
+
+    Returns:
+        HTML template response
+    """
+    return templates.TemplateResponse("admin.html", {"request": request})
 
 
 @app.get("/health")

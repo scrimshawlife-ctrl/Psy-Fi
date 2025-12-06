@@ -19,161 +19,792 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        /* 4-Panel Layout Styles */
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background: var(--pf-bg-0);
+            color: var(--pf-text);
+        }
+
+        /* Top Bar */
+        .top-bar {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--pf-bg-1);
+            border-bottom: 1px solid var(--pf-border-subtle);
+            flex-shrink: 0;
+        }
+
+        .top-bar-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--pf-cyan);
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .top-bar-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-left: auto;
+        }
+
+        .scenario-select {
+            padding: 0.5rem 0.75rem;
+            background: var(--pf-bg-0);
+            border: 1px solid var(--pf-border-subtle);
+            border-radius: 6px;
+            color: var(--pf-text);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            min-width: 150px;
+        }
+
+        .scenario-select:focus {
+            outline: none;
+            border-color: var(--pf-cyan);
+        }
+
+        .seed-input {
+            padding: 0.5rem 0.75rem;
+            background: var(--pf-bg-0);
+            border: 1px solid var(--pf-border-subtle);
+            border-radius: 6px;
+            color: var(--pf-text);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            width: 100px;
+        }
+
+        .seed-input:focus {
+            outline: none;
+            border-color: var(--pf-cyan);
+        }
+
+        .btn-generate {
+            padding: 0.5rem 1.5rem;
+            background: var(--pf-cyan);
+            color: var(--pf-bg-0);
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .btn-generate:hover:not(:disabled) {
+            background: var(--pf-magenta);
+            transform: translateY(-1px);
+        }
+
+        .btn-generate:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .status-pill {
+            padding: 0.375rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+        }
+
+        .status-ready {
+            background: rgba(0, 255, 100, 0.1);
+            color: #00ff64;
+        }
+
+        .status-computing {
+            background: rgba(62, 231, 242, 0.1);
+            color: var(--pf-cyan);
+        }
+
+        .status-complete {
+            background: rgba(255, 66, 193, 0.1);
+            color: var(--pf-magenta);
+        }
+
+        .status-indicator {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Main Layout */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 300px 1fr 320px;
+            flex: 1;
+            overflow: hidden;
+            gap: 0;
+        }
+
+        /* Left Panel */
+        .left-panel {
+            background: var(--pf-bg-1);
+            border-right: 1px solid var(--pf-border-subtle);
+            overflow-y: auto;
+            padding: 1.5rem;
+        }
+
+        .panel-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .panel-section-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--pf-cyan);
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .input-group {
+            margin-bottom: 1rem;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--pf-text-subtle);
+            margin-bottom: 0.375rem;
+        }
+
+        .input-group input,
+        .input-group select,
+        .input-group textarea {
+            width: 100%;
+            padding: 0.5rem;
+            background: var(--pf-bg-0);
+            border: 1px solid var(--pf-border-subtle);
+            border-radius: 4px;
+            color: var(--pf-text);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+        }
+
+        .input-group textarea {
+            resize: vertical;
+            min-height: 60px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus,
+        .input-group textarea:focus {
+            outline: none;
+            border-color: var(--pf-cyan);
+        }
+
+        .input-hint {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--pf-text-subtle);
+            margin-top: 0.25rem;
+        }
+
+        /* Center Panel */
+        .center-panel {
+            display: flex;
+            flex-direction: column;
+            background: var(--pf-bg-0);
+            overflow: hidden;
+        }
+
+        .visualization-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            background: var(--pf-bg-0);
+            position: relative;
+        }
+
+        .canvas-wrapper {
+            max-width: 100%;
+            max-height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #fieldCanvas {
+            max-width: 100%;
+            max-height: 100%;
+            border: 1px solid var(--pf-border-subtle);
+            border-radius: 4px;
+            image-rendering: pixelated;
+        }
+
+        .placeholder-text {
+            text-align: center;
+            color: var(--pf-text-subtle);
+        }
+
+        .placeholder-text .sigil-symbol {
+            font-size: 4rem;
+            color: var(--pf-border-subtle);
+            display: block;
+            margin-bottom: 1rem;
+        }
+
+        .metrics-panel {
+            background: var(--pf-bg-1);
+            border-top: 1px solid var(--pf-border-subtle);
+            padding: 1rem 1.5rem;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        .metric-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .metric-label {
+            font-size: 0.75rem;
+            color: var(--pf-text-subtle);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.25rem;
+        }
+
+        .metric-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--pf-cyan);
+        }
+
+        /* Right Panel */
+        .right-panel {
+            background: var(--pf-bg-1);
+            border-left: 1px solid var(--pf-border-subtle);
+            overflow-y: auto;
+            padding: 1.5rem;
+        }
+
+        .engine-module {
+            background: var(--pf-bg-0);
+            border: 1px solid var(--pf-border-subtle);
+            border-radius: 6px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .engine-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+        }
+
+        .engine-name {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--pf-text);
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 40px;
+            height: 20px;
+            background: var(--pf-bg-2);
+            border-radius: 10px;
+            transition: background 0.2s;
+            cursor: pointer;
+        }
+
+        .toggle-switch.active {
+            background: var(--pf-cyan);
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 16px;
+            height: 16px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.2s;
+        }
+
+        .toggle-switch.active::after {
+            transform: translateX(20px);
+        }
+
+        .engine-params {
+            display: none;
+        }
+
+        .engine-params.open {
+            display: block;
+        }
+
+        .param-control {
+            margin-bottom: 0.75rem;
+        }
+
+        .param-label {
+            font-size: 0.75rem;
+            color: var(--pf-text-subtle);
+            margin-bottom: 0.25rem;
+            display: block;
+        }
+
+        .param-slider {
+            width: 100%;
+            height: 4px;
+            border-radius: 2px;
+            background: var(--pf-bg-2);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .param-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--pf-cyan);
+            cursor: pointer;
+        }
+
+        .param-slider::-moz-range-thumb {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--pf-cyan);
+            cursor: pointer;
+            border: none;
+        }
+
+        .param-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--pf-cyan);
+            float: right;
+        }
+
+        /* Advanced Drawer */
+        .advanced-drawer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--pf-bg-1);
+            border-top: 2px solid var(--pf-cyan);
+            transform: translateY(calc(100% - 40px));
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            max-height: 50vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .advanced-drawer.open {
+            transform: translateY(0);
+        }
+
+        .drawer-handle {
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background: var(--pf-bg-1);
+            border-bottom: 1px solid var(--pf-border-subtle);
+        }
+
+        .drawer-handle:hover {
+            background: var(--pf-bg-2);
+        }
+
+        .drawer-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+        }
+
+        .drawer-tabs {
+            display: flex;
+            gap: 1rem;
+            border-bottom: 1px solid var(--pf-border-subtle);
+            margin-bottom: 1rem;
+        }
+
+        .drawer-tab {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            color: var(--pf-text-subtle);
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .drawer-tab.active {
+            color: var(--pf-cyan);
+            border-bottom-color: var(--pf-cyan);
+        }
+
+        .drawer-tab-content {
+            display: none;
+        }
+
+        .drawer-tab-content.active {
+            display: block;
+        }
+
+        pre.json-output {
+            background: var(--pf-bg-0);
+            border: 1px solid var(--pf-border-subtle);
+            border-radius: 4px;
+            padding: 1rem;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--pf-text);
+        }
+
+        .log-entry {
+            padding: 0.5rem;
+            border-left: 2px solid var(--pf-border-subtle);
+            margin-bottom: 0.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+        }
+
+        .log-entry.info {
+            border-left-color: var(--pf-cyan);
+        }
+
+        .log-entry.success {
+            border-left-color: #00ff64;
+        }
+
+        .log-entry.error {
+            border-left-color: #ff4444;
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .loading-overlay.active {
+            display: flex;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--pf-border-subtle);
+            border-top-color: var(--pf-cyan);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Utility Classes */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .main-layout {
+                grid-template-columns: 250px 1fr 280px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .left-panel,
+            .right-panel {
+                display: none;
+            }
+
+            .top-bar {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Header Section -->
-        <header class="header">
-            <div class="sigil">
-                <div class="sigil-inner">
-                    <span class="sigil-symbol">⬡</span>
+    <div class="app-container">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <div class="top-bar-logo">
+                <span class="sigil-symbol">⬡</span>
+                <span>PsyFi</span>
+            </div>
+
+            <div class="top-bar-controls">
+                <select class="scenario-select" id="scenarioSelect">
+                    <option value="baseline">Baseline</option>
+                    <option value="lsd" selected>LSD-25</option>
+                    <option value="psilocybin">Psilocybin</option>
+                    <option value="dmt">DMT</option>
+                    <option value="5-meo-dmt">5-MeO-DMT</option>
+                    <option value="mescaline">Mescaline</option>
+                    <option value="2c-b">2C-B</option>
+                    <option value="2c-e">2C-E</option>
+                    <option value="al-lad">AL-LAD</option>
+                    <option value="eth-lad">ETH-LAD</option>
+                    <option value="ketamine">Ketamine</option>
+                    <option value="mxe">MXE</option>
+                    <option value="dxm">DXM</option>
+                    <option value="mdma">MDMA</option>
+                    <option value="mda">MDA</option>
+                    <option value="jhana">Jhana State</option>
+                    <option value="rem_dream">REM Dream</option>
+                </select>
+
+                <input type="number" class="seed-input" id="seedInput" value="42" placeholder="Seed">
+
+                <button class="btn-generate" id="generateBtn">
+                    <span>▶</span>
+                    <span>Generate</span>
+                </button>
+
+                <div class="status-pill status-ready" id="statusPill">
+                    <span class="status-indicator"></span>
+                    <span id="statusText">Ready</span>
+                </div>
+
+                <a href="/admin" class="btn-generate" style="background: var(--pf-bg-2); text-decoration: none; padding: 0.5rem 1rem;">
+                    Admin
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Layout -->
+        <div class="main-layout">
+            <!-- Left Panel -->
+            <div class="left-panel">
+                <div class="panel-section">
+                    <div class="panel-section-title">Field Geometry</div>
+                    <div class="input-group">
+                        <label>Width</label>
+                        <input type="number" id="widthInput" value="64" min="8" max="512">
+                        <span class="input-hint">8-512 px</span>
+                    </div>
+                    <div class="input-group">
+                        <label>Height</label>
+                        <input type="number" id="heightInput" value="64" min="8" max="512">
+                        <span class="input-hint">8-512 px</span>
+                    </div>
+                    <div class="input-group">
+                        <label>Depth (reserved)</label>
+                        <input type="number" id="depthInput" value="1" min="1" max="16" disabled>
+                        <span class="input-hint">Future: 3D fields</span>
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <div class="panel-section-title">Initial Conditions</div>
+                    <div class="input-group">
+                        <label>Evolution Steps</label>
+                        <input type="number" id="stepsInput" value="20" min="1" max="1000">
+                        <span class="input-hint">1-1000 iterations</span>
+                    </div>
+                    <div class="input-group">
+                        <label>Noise Scale</label>
+                        <input type="number" id="noiseScaleInput" value="1.0" min="0.1" max="10" step="0.1">
+                        <span class="input-hint">Field initialization</span>
+                    </div>
+                    <div class="input-group">
+                        <label>Init Mode</label>
+                        <select id="initModeSelect">
+                            <option value="random">Random Noise</option>
+                            <option value="gaussian">Gaussian</option>
+                            <option value="uniform">Uniform</option>
+                            <option value="perlin">Perlin Noise</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <div class="panel-section-title">Consciousness Context</div>
+                    <div class="input-group">
+                        <label>Intention (experimental)</label>
+                        <textarea id="intentionInput" placeholder="Enter your intention..."></textarea>
+                        <span class="input-hint">Semantic encoding future feature</span>
+                    </div>
                 </div>
             </div>
-            <h1 class="title">
-                <span class="title-main">PsyFi</span>
-                <span class="title-version">v0.1.0</span>
-            </h1>
-            <p class="subtitle">Consciousness Field Simulation Engine</p>
-            <div class="lab-credit">Applied Alchemy Labs</div>
-        </header>
 
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Control Panel -->
-            <section class="panel control-panel">
-                <div class="panel-header">
-                    <h2>⚗️ Simulation Parameters</h2>
+            <!-- Center Panel -->
+            <div class="center-panel">
+                <div class="visualization-container" id="visualizationContainer">
+                    <div class="placeholder-text">
+                        <span class="sigil-symbol">⬡</span>
+                        <p>Select a scenario and click Generate</p>
+                        <p style="font-size: 0.85rem; color: var(--pf-text-subtle);">ABX-Core v1.3 Consciousness Field Simulator</p>
+                    </div>
+                    <canvas id="fieldCanvas" class="hidden"></canvas>
                 </div>
-                <div class="panel-body">
-                    <form id="simulationForm">
-                        <!-- Preset Selector -->
-                        <div class="preset-selector">
-                            <label>Quick Presets</label>
-                            <div class="preset-buttons">
-                                <button type="button" class="preset-btn" data-preset="quick">
-                                    <span class="preset-icon">⚡</span>
-                                    <span class="preset-name">Quick Test</span>
-                                    <span class="preset-desc">32×32, 10 steps</span>
-                                </button>
-                                <button type="button" class="preset-btn" data-preset="standard">
-                                    <span class="preset-icon">⬡</span>
-                                    <span class="preset-name">Standard</span>
-                                    <span class="preset-desc">64×64, 20 steps</span>
-                                </button>
-                                <button type="button" class="preset-btn" data-preset="detailed">
-                                    <span class="preset-icon">✨</span>
-                                    <span class="preset-name">Detailed</span>
-                                    <span class="preset-desc">128×128, 50 steps</span>
-                                </button>
-                                <button type="button" class="preset-btn" data-preset="deep">
-                                    <span class="preset-icon">🌀</span>
-                                    <span class="preset-name">Deep Dive</span>
-                                    <span class="preset-desc">256×256, 100 steps</span>
-                                </button>
-                            </div>
-                        </div>
 
-                        <div class="divider"></div>
-
-                        <div class="input-grid">
-                            <div class="input-group">
-                                <label for="width">Field Width</label>
-                                <input type="number" id="width" name="width" value="64" min="8" max="512" required>
-                                <span class="input-hint">8-512 px</span>
-                            </div>
-                            <div class="input-group">
-                                <label for="height">Field Height</label>
-                                <input type="number" id="height" name="height" value="64" min="8" max="512" required>
-                                <span class="input-hint">8-512 px</span>
-                            </div>
-                            <div class="input-group">
-                                <label for="steps">Evolution Steps</label>
-                                <input type="number" id="steps" name="steps" value="20" min="1" max="1000" required>
-                                <span class="input-hint">1-1000 iterations</span>
-                            </div>
-                        </div>
-                        <button type="submit" class="btn-primary" id="runButton">
-                            <span class="btn-icon">▶</span>
-                            <span>Run Simulation</span>
-                        </button>
-                    </form>
-                </div>
-            </section>
-
-            <!-- Results Panel -->
-            <section class="panel results-panel" id="resultsPanel" style="display: none;">
-                <div class="panel-header">
-                    <h2>🌌 Field Metrics</h2>
-                    <div class="field-dimensions" id="fieldDimensions"></div>
-                </div>
-                <div class="panel-body">
+                <div class="metrics-panel">
                     <div class="metrics-grid">
-                        <div class="metric-card">
-                            <div class="metric-label">Valence</div>
-                            <div class="metric-value" id="valence">--</div>
-                            <div class="metric-bar">
-                                <div class="metric-bar-fill" id="valenceBar"></div>
-                            </div>
+                        <div class="metric-item">
+                            <span class="metric-label">Valence</span>
+                            <span class="metric-value" id="valenceMetric">--</span>
                         </div>
-                        <div class="metric-card">
-                            <div class="metric-label">Coherence</div>
-                            <div class="metric-value" id="coherence">--</div>
-                            <div class="metric-bar">
-                                <div class="metric-bar-fill" id="coherenceBar"></div>
-                            </div>
+                        <div class="metric-item">
+                            <span class="metric-label">Coherence</span>
+                            <span class="metric-value" id="coherenceMetric">--</span>
                         </div>
-                        <div class="metric-card">
-                            <div class="metric-label">Symmetry</div>
-                            <div class="metric-value" id="symmetry">--</div>
-                            <div class="metric-bar">
-                                <div class="metric-bar-fill" id="symmetryBar"></div>
-                            </div>
+                        <div class="metric-item">
+                            <span class="metric-label">Symmetry</span>
+                            <span class="metric-value" id="symmetryMetric">--</span>
                         </div>
-                        <div class="metric-card">
-                            <div class="metric-label">Roughness</div>
-                            <div class="metric-value" id="roughness">--</div>
-                            <div class="metric-bar">
-                                <div class="metric-bar-fill" id="roughnessBar"></div>
-                            </div>
+                        <div class="metric-item">
+                            <span class="metric-label">Roughness</span>
+                            <span class="metric-value" id="roughnessMetric">--</span>
                         </div>
-                        <div class="metric-card">
-                            <div class="metric-label">Richness</div>
-                            <div class="metric-value" id="richness">--</div>
-                            <div class="metric-bar">
-                                <div class="metric-bar-fill" id="richnessBar"></div>
-                            </div>
+                        <div class="metric-item">
+                            <span class="metric-label">Richness</span>
+                            <span class="metric-value" id="richnessMetric">--</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-label">Dimensions</span>
+                            <span class="metric-value" id="dimensionsMetric">--</span>
                         </div>
                     </div>
                 </div>
-            </section>
+            </div>
 
-            <!-- Error Panel -->
-            <section class="panel error-panel" id="errorPanel" style="display: none;">
-                <div class="panel-header error-header">
-                    <h2>⚠️ Error</h2>
-                </div>
-                <div class="panel-body">
-                    <pre id="errorMessage"></pre>
-                </div>
-            </section>
+            <!-- Right Panel -->
+            <div class="right-panel">
+                <div class="panel-section-title" style="margin-bottom: 1rem;">Engine Modules</div>
 
-            <!-- Loading State -->
-            <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+                <div class="engine-module">
+                    <div class="engine-header" data-engine="consciousness_omega">
+                        <span class="engine-name">consciousness_omega</span>
+                        <div class="toggle-switch active"></div>
+                    </div>
+                </div>
+
+                <div class="engine-module">
+                    <div class="engine-header" data-engine="psychedelic_reset">
+                        <span class="engine-name">psychedelic_reset</span>
+                        <div class="toggle-switch active"></div>
+                    </div>
+                </div>
+
+                <div class="engine-module">
+                    <div class="engine-header" data-engine="jhana_attractor">
+                        <span class="engine-name">jhana_attractor</span>
+                        <div class="toggle-switch"></div>
+                    </div>
+                </div>
+
+                <div class="engine-module">
+                    <div class="engine-header" data-engine="valence_analyzer">
+                        <span class="engine-name">valence_analyzer</span>
+                        <div class="toggle-switch active"></div>
+                    </div>
+                </div>
+
+                <div class="engine-module">
+                    <div class="engine-header" data-engine="pain_modulator">
+                        <span class="engine-name">pain_modulator</span>
+                        <div class="toggle-switch"></div>
+                    </div>
+                </div>
+
+                <p style="font-size: 0.75rem; color: var(--pf-text-subtle); margin-top: 1rem; padding: 0 0.5rem;">
+                    Engine selection controls future simulation modes. Currently all enabled engines run automatically.
+                </p>
+            </div>
+        </div>
+
+        <!-- Advanced Drawer -->
+        <div class="advanced-drawer" id="advancedDrawer">
+            <div class="drawer-handle" id="drawerHandle">
+                <span style="color: var(--pf-text-subtle); font-size: 0.85rem;">▲ Advanced Debug</span>
+            </div>
+            <div class="drawer-content">
+                <div class="drawer-tabs">
+                    <div class="drawer-tab active" data-tab="logs">Console Logs</div>
+                    <div class="drawer-tab" data-tab="raw">Raw JSON</div>
+                    <div class="drawer-tab" data-tab="debug">Debug Info</div>
+                </div>
+
+                <div class="drawer-tab-content active" id="logsTab">
+                    <div id="logEntries">
+                        <div class="log-entry info">System initialized. Ready to simulate.</div>
+                    </div>
+                </div>
+
+                <div class="drawer-tab-content" id="rawTab">
+                    <pre class="json-output" id="rawJsonOutput">No simulation data yet.</pre>
+                </div>
+
+                <div class="drawer-tab-content" id="debugTab">
+                    <pre class="json-output" id="debugInfo">
+Browser: <span id="browserInfo"></span>
+Timestamp: <span id="timestampInfo"></span>
+Session ID: <span id="sessionInfo"></span>
+                    </pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Overlay -->
+        <div class="loading-overlay" id="loadingOverlay">
+            <div>
                 <div class="spinner"></div>
-                <p>Computing consciousness field...</p>
+                <p style="margin-top: 1rem; color: var(--pf-cyan);">Computing consciousness field...</p>
             </div>
-        </main>
-
-        <!-- Footer -->
-        <footer class="footer">
-            <div class="footer-links">
-                <a href="/docs" target="_blank">API Docs</a>
-                <span class="separator">•</span>
-                <a href="https://github.com/scrimshawlife-ctrl/Psy-Fi" target="_blank">GitHub</a>
-                <span class="separator">•</span>
-                <span class="abx-badge">ABX-Core v1.3</span>
-            </div>
-        </footer>
+        </div>
     </div>
 
     <script src="/static/app.js"></script>

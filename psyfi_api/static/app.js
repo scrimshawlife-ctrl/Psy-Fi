@@ -1,92 +1,98 @@
 // PsyFi - Consciousness Field Simulator
-// Applied Alchemy Labs
+// Applied Alchemy Labs - ABX-Core v1.3
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('[PsyFi] Initializing...');
+    console.log('[PsyFi] Initializing comprehensive UI...');
+    addLog('System initialized. Ready to simulate.', 'info');
 
-    const form = document.getElementById('simulationForm');
-    const runButton = document.getElementById('runButton');
+    // Get UI elements
+    const generateBtn = document.getElementById('generateBtn');
+    const scenarioSelect = document.getElementById('scenarioSelect');
+    const seedInput = document.getElementById('seedInput');
+    const statusPill = document.getElementById('statusPill');
+    const statusText = document.getElementById('statusText');
     const loadingOverlay = document.getElementById('loadingOverlay');
-    const resultsPanel = document.getElementById('resultsPanel');
-    const errorPanel = document.getElementById('errorPanel');
 
-    // Verify all elements loaded
-    if (!form) console.error('[PsyFi] Form not found!');
-    if (!runButton) console.error('[PsyFi] Run button not found!');
-    if (!loadingOverlay) console.error('[PsyFi] Loading overlay not found!');
-    if (!resultsPanel) console.error('[PsyFi] Results panel not found!');
-    if (!errorPanel) console.error('[PsyFi] Error panel not found!');
+    // Left panel inputs
+    const widthInput = document.getElementById('widthInput');
+    const heightInput = document.getElementById('heightInput');
+    const stepsInput = document.getElementById('stepsInput');
+    const noiseScaleInput = document.getElementById('noiseScaleInput');
+    const initModeSelect = document.getElementById('initModeSelect');
+    const intentionInput = document.getElementById('intentionInput');
 
-    console.log('[PsyFi] All elements loaded successfully');
+    // Visualization
+    const visualizationContainer = document.getElementById('visualizationContainer');
+    const fieldCanvas = document.getElementById('fieldCanvas');
+    const ctx = fieldCanvas.getContext('2d');
 
-    // Preset configurations
-    const presets = {
-        quick: { width: 32, height: 32, steps: 10 },
-        standard: { width: 64, height: 64, steps: 20 },
-        detailed: { width: 128, height: 128, steps: 50 },
-        deep: { width: 256, height: 256, steps: 100 }
-    };
+    // Metrics
+    const valenceMetric = document.getElementById('valenceMetric');
+    const coherenceMetric = document.getElementById('coherenceMetric');
+    const symmetryMetric = document.getElementById('symmetryMetric');
+    const roughnessMetric = document.getElementById('roughnessMetric');
+    const richnessMetric = document.getElementById('richnessMetric');
+    const dimensionsMetric = document.getElementById('dimensionsMetric');
 
-    // Preset button handlers
-    const presetButtons = document.querySelectorAll('.preset-btn');
-    presetButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const presetName = button.dataset.preset;
-            const preset = presets[presetName];
+    // Advanced drawer
+    const advancedDrawer = document.getElementById('advancedDrawer');
+    const drawerHandle = document.getElementById('drawerHandle');
+    const drawerTabs = document.querySelectorAll('.drawer-tab');
+    const rawJsonOutput = document.getElementById('rawJsonOutput');
+    const debugInfo = document.getElementById('debugInfo');
+    const browserInfo = document.getElementById('browserInfo');
+    const timestampInfo = document.getElementById('timestampInfo');
+    const sessionInfo = document.getElementById('sessionInfo');
 
-            if (preset) {
-                // Update form values
-                document.getElementById('width').value = preset.width;
-                document.getElementById('height').value = preset.height;
-                document.getElementById('steps').value = preset.steps;
+    // Engine toggles
+    const engineToggles = document.querySelectorAll('.toggle-switch');
+    const engineStates = {};
 
-                // Update active state
-                presetButtons.forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-
-                // Optional: trigger validation
-                ['width', 'height', 'steps'].forEach(id => {
-                    const input = document.getElementById(id);
-                    input.dispatchEvent(new Event('input', { bubbles: true }));
-                });
-            }
-        });
+    // Initialize engine states
+    engineToggles.forEach(toggle => {
+        const header = toggle.parentElement;
+        const engineName = header.dataset.engine;
+        engineStates[engineName] = toggle.classList.contains('active');
     });
 
-    // Form submission handler
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        console.log('[PsyFi] Form submitted');
+    // Set debug info
+    browserInfo.textContent = navigator.userAgent.split(' ').pop();
+    sessionInfo.textContent = generateSessionId();
+    updateTimestamp();
 
-        // Get form values
-        const width = parseInt(document.getElementById('width').value);
-        const height = parseInt(document.getElementById('height').value);
-        const steps = parseInt(document.getElementById('steps').value);
+    console.log('[PsyFi] All elements loaded successfully');
+    addLog('UI components initialized', 'success');
 
-        console.log(`[PsyFi] Parameters: ${width}×${height}, ${steps} steps`);
-
-        // Show loading state
-        showLoading(true);
-        hideResults();
-        hideError();
+    // Generate button click handler
+    generateBtn.addEventListener('click', async () => {
+        console.log('[PsyFi] Generate button clicked');
+        addLog(`Generating ${scenarioSelect.value} simulation...`, 'info');
 
         try {
-            console.log('[PsyFi] Calling API...');
+            // Update status
+            setStatus('computing');
+            loadingOverlay.classList.add('active');
 
-            // Call the simulation API
+            // Get parameters
+            const params = {
+                width: parseInt(widthInput.value),
+                height: parseInt(heightInput.value),
+                steps: parseInt(stepsInput.value),
+                scenario: scenarioSelect.value,
+                seed: parseInt(seedInput.value) || 42
+            };
+
+            console.log('[PsyFi] Parameters:', params);
+            addLog(`Parameters: ${params.width}×${params.height}, ${params.steps} steps, seed ${params.seed}`, 'info');
+
+            // Call simulation API
             const response = await fetch('/simulate/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    width: width,
-                    height: height,
-                    steps: steps
-                })
+                body: JSON.stringify(params)
             });
-
-            console.log(`[PsyFi] Response status: ${response.status}`);
 
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({}));
@@ -94,125 +100,275 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const data = await response.json();
-            console.log('[PsyFi] Results received:', data);
+            console.log('[PsyFi] Simulation complete:', data);
+            addLog('Simulation completed successfully', 'success');
 
             // Display results
-            showResults(data);
+            displayResults(data, params);
+
+            // Update status
+            setStatus('complete');
+
+            // Store to history
+            await storeToHistory(data, params);
 
         } catch (error) {
             console.error('[PsyFi] Error:', error);
-            // Display error
-            showError(error.message);
+            addLog(`Error: ${error.message}`, 'error');
+            alert(`Simulation failed: ${error.message}`);
+            setStatus('ready');
         } finally {
-            showLoading(false);
+            loadingOverlay.classList.remove('active');
         }
     });
 
-    // Show/hide loading overlay
-    function showLoading(show) {
-        loadingOverlay.style.display = show ? 'flex' : 'none';
-        runButton.disabled = show;
-    }
-
     // Display simulation results
-    function showResults(data) {
-        // Update field dimensions
-        document.getElementById('fieldDimensions').textContent =
-            `${data.width} × ${data.height}`;
+    function displayResults(data, params) {
+        // Update metrics
+        valenceMetric.textContent = data.valence?.toFixed(3) || '--';
+        coherenceMetric.textContent = data.coherence?.toFixed(3) || '--';
+        symmetryMetric.textContent = data.symmetry?.toFixed(3) || '--';
+        roughnessMetric.textContent = data.roughness?.toFixed(3) || '--';
+        richnessMetric.textContent = data.richness?.toFixed(3) || '--';
+        dimensionsMetric.textContent = `${data.width}×${data.height}`;
 
-        // Update metric values and bars
-        updateMetric('valence', data.valence, normalizeValue(data.valence, -1, 1));
-        updateMetric('coherence', data.coherence, data.coherence);
-        updateMetric('symmetry', data.symmetry, data.symmetry);
-        updateMetric('roughness', data.roughness, data.roughness);
-        updateMetric('richness', data.richness, data.richness);
+        // Update raw JSON
+        rawJsonOutput.textContent = JSON.stringify(data, null, 2);
 
-        // Show results panel with animation
-        resultsPanel.style.display = 'block';
-        setTimeout(() => {
-            resultsPanel.style.opacity = '1';
-        }, 10);
+        // Draw visualization (magnitude heatmap)
+        if (data.magnitude && data.width && data.height) {
+            drawFieldVisualization(data.magnitude, data.width, data.height);
+        }
+
+        addLog(`Rendered ${params.width}×${params.height} field visualization`, 'success');
     }
 
-    // Update individual metric
-    function updateMetric(name, value, barValue) {
-        // Update value display
-        const valueElement = document.getElementById(name);
-        valueElement.textContent = value.toFixed(3);
+    // Draw field visualization on canvas
+    function drawFieldVisualization(magnitudeData, width, height) {
+        // Set canvas size
+        fieldCanvas.width = width;
+        fieldCanvas.height = height;
 
-        // Update bar
-        const barElement = document.getElementById(`${name}Bar`);
-        const percentage = Math.max(0, Math.min(100, barValue * 100));
-        barElement.style.width = `${percentage}%`;
+        // Show canvas, hide placeholder
+        fieldCanvas.classList.remove('hidden');
+        const placeholder = visualizationContainer.querySelector('.placeholder-text');
+        if (placeholder) placeholder.style.display = 'none';
 
-        // Add color variation based on value
-        if (name === 'valence') {
-            if (value > 0) {
-                valueElement.style.color = 'var(--pf-cyan)';
-            } else {
-                valueElement.style.color = 'var(--pf-magenta)';
+        // Create ImageData
+        const imageData = ctx.createImageData(width, height);
+        const data = imageData.data;
+
+        // Find min/max for normalization
+        const flat = magnitudeData.flat();
+        const min = Math.min(...flat);
+        const max = Math.max(...flat);
+        const range = max - min || 1;
+
+        // Fill pixels
+        for (let y = 0; y < height; y++) {
+            for (let x = 0; x < width; x++) {
+                const value = magnitudeData[y][x];
+                const normalized = (value - min) / range;
+
+                // Cyan-Magenta-Yellow colormap (PsyFi theme)
+                const idx = (y * width + x) * 4;
+
+                if (normalized < 0.5) {
+                    // Cyan to Magenta
+                    const t = normalized * 2;
+                    data[idx + 0] = Math.floor(62 + (255 - 62) * t);    // R
+                    data[idx + 1] = Math.floor(231 * (1 - t));          // G
+                    data[idx + 2] = Math.floor(242 - (242 - 193) * t);  // B
+                } else {
+                    // Magenta to Yellow
+                    const t = (normalized - 0.5) * 2;
+                    data[idx + 0] = Math.floor(255);                    // R
+                    data[idx + 1] = Math.floor(66 + (181) * t);         // G
+                    data[idx + 2] = Math.floor(193 - 122 * t);          // B
+                }
+
+                data[idx + 3] = 255; // Alpha
             }
+        }
+
+        // Put image data
+        ctx.putImageData(imageData, 0, 0);
+
+        console.log('[PsyFi] Visualization rendered:', width, 'x', height);
+    }
+
+    // Set status pill
+    function setStatus(status) {
+        statusPill.className = 'status-pill';
+
+        if (status === 'ready') {
+            statusPill.classList.add('status-ready');
+            statusText.textContent = 'Ready';
+            generateBtn.disabled = false;
+        } else if (status === 'computing') {
+            statusPill.classList.add('status-computing');
+            statusText.textContent = 'Computing';
+            generateBtn.disabled = true;
+        } else if (status === 'complete') {
+            statusPill.classList.add('status-complete');
+            statusText.textContent = 'Complete';
+            generateBtn.disabled = false;
         }
     }
 
-    // Normalize value from range to 0-1
-    function normalizeValue(value, min, max) {
-        return (value - min) / (max - min);
+    // Store to run history
+    async function storeToHistory(data, params) {
+        try {
+            await fetch('/admin/api/history', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    timestamp: new Date().toISOString(),
+                    scenario: params.scenario,
+                    width: params.width,
+                    height: params.height,
+                    steps: params.steps,
+                    seed: params.seed,
+                    metrics: {
+                        valence: data.valence,
+                        coherence: data.coherence,
+                        symmetry: data.symmetry,
+                        roughness: data.roughness,
+                        richness: data.richness
+                    },
+                    duration_ms: data.duration_ms || null
+                })
+            });
+            addLog('Run saved to history', 'success');
+        } catch (error) {
+            console.error('[PsyFi] Failed to save to history:', error);
+            addLog('Failed to save to history', 'error');
+        }
     }
 
-    // Hide results panel
-    function hideResults() {
-        resultsPanel.style.display = 'none';
-        resultsPanel.style.opacity = '0';
+    // Add log entry to drawer
+    function addLog(message, type = 'info') {
+        const logEntries = document.getElementById('logEntries');
+        const entry = document.createElement('div');
+        entry.className = `log-entry ${type}`;
+        entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+        logEntries.appendChild(entry);
+
+        // Scroll to bottom
+        logEntries.scrollTop = logEntries.scrollHeight;
+
+        // Limit to 100 entries
+        while (logEntries.children.length > 100) {
+            logEntries.removeChild(logEntries.firstChild);
+        }
     }
 
-    // Show error message
-    function showError(message) {
-        document.getElementById('errorMessage').textContent = message;
-        errorPanel.style.display = 'block';
+    // Drawer handle toggle
+    drawerHandle.addEventListener('click', () => {
+        advancedDrawer.classList.toggle('open');
+        const isOpen = advancedDrawer.classList.contains('open');
+        drawerHandle.innerHTML = isOpen
+            ? '<span style="color: var(--pf-text-subtle); font-size: 0.85rem;">▼ Advanced Debug</span>'
+            : '<span style="color: var(--pf-text-subtle); font-size: 0.85rem;">▲ Advanced Debug</span>';
+    });
+
+    // Drawer tabs
+    drawerTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const targetTab = tab.dataset.tab;
+
+            // Update active tab
+            drawerTabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+
+            // Update active content
+            document.querySelectorAll('.drawer-tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`${targetTab}Tab`).classList.add('active');
+        });
+    });
+
+    // Engine toggles
+    engineToggles.forEach(toggle => {
+        toggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggle.classList.toggle('active');
+
+            const header = toggle.parentElement;
+            const engineName = header.dataset.engine;
+            engineStates[engineName] = toggle.classList.contains('active');
+
+            console.log('[PsyFi] Engine toggled:', engineName, engineStates[engineName]);
+            addLog(`Engine ${engineName}: ${engineStates[engineName] ? 'enabled' : 'disabled'}`, 'info');
+        });
+    });
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+        // Ctrl/Cmd + Enter to generate
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+            e.preventDefault();
+            generateBtn.click();
+        }
+
+        // Escape to close drawer
+        if (e.key === 'Escape' && advancedDrawer.classList.contains('open')) {
+            advancedDrawer.classList.remove('open');
+        }
+
+        // D key to toggle drawer
+        if (e.key === 'd' && !e.ctrlKey && !e.metaKey) {
+            const focused = document.activeElement;
+            if (focused.tagName !== 'INPUT' && focused.tagName !== 'TEXTAREA') {
+                advancedDrawer.classList.toggle('open');
+            }
+        }
+    });
+
+    // Update timestamp every second
+    function updateTimestamp() {
+        timestampInfo.textContent = new Date().toISOString();
+    }
+    setInterval(updateTimestamp, 1000);
+
+    // Generate session ID
+    function generateSessionId() {
+        return Math.random().toString(36).substring(2, 11).toUpperCase();
     }
 
-    // Hide error panel
-    function hideError() {
-        errorPanel.style.display = 'none';
-    }
-
-    // Add input validation and visual feedback
-    const inputs = form.querySelectorAll('input[type="number"]');
-    inputs.forEach(input => {
+    // Input validation
+    const numericInputs = [widthInput, heightInput, stepsInput, noiseScaleInput, seedInput];
+    numericInputs.forEach(input => {
         input.addEventListener('input', (e) => {
-            const value = parseInt(e.target.value);
-            const min = parseInt(e.target.min);
-            const max = parseInt(e.target.max);
+            const value = parseFloat(e.target.value);
+            const min = parseFloat(e.target.min);
+            const max = parseFloat(e.target.max);
 
             if (value < min || value > max) {
-                e.target.style.borderColor = 'var(--pf-danger)';
+                e.target.style.borderColor = '#ff4444';
             } else {
                 e.target.style.borderColor = 'var(--pf-border-subtle)';
             }
         });
     });
 
-    // Keyboard shortcuts
-    document.addEventListener('keydown', (e) => {
-        // Ctrl/Cmd + Enter to run simulation
-        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-            e.preventDefault();
-            form.dispatchEvent(new Event('submit'));
-        }
+    // Scenario change handler
+    scenarioSelect.addEventListener('change', () => {
+        console.log('[PsyFi] Scenario changed to:', scenarioSelect.value);
+        addLog(`Scenario changed to: ${scenarioSelect.value}`, 'info');
     });
 
-    // Add subtle animation on load
+    // Page load animation
     document.body.style.opacity = '0';
     setTimeout(() => {
         document.body.style.transition = 'opacity 0.5s ease';
         document.body.style.opacity = '1';
     }, 10);
 
-    console.log('[PsyFi] Ready! Press Run Simulation or Ctrl+Enter to start.');
-
-    // Test button click handler
-    runButton.addEventListener('click', () => {
-        console.log('[PsyFi] Button clicked directly');
-    });
+    console.log('[PsyFi] Ready! Press Generate or Ctrl+Enter to simulate.');
+    console.log('[PsyFi] Press D to toggle debug drawer.');
+    addLog('Keyboard shortcuts: Ctrl+Enter (generate), D (debug), Esc (close)', 'info');
 });

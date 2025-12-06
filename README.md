@@ -58,7 +58,8 @@ PsyFi embodies five ontological commitments:
 | 🧘 **Meditative States** | Jhana absorption and attention modulation |
 | 💫 **Valence Assessment** | Multi-dimensional hedonic tone analysis |
 | 🎹 **MIDI Integration** | Real-time control via MIDI controllers, DAWs, and hardware |
-| 🌐 **Web UI** | Dark-mode interface for interactive simulation |
+| 🌐 **Web UI** | Comprehensive 4-panel interface with real-time visualization |
+| 🎛️ **Admin Panel** | System monitoring, run history, engine registry at /admin |
 | 🚀 **FastAPI Backend** | REST API with automatic documentation |
 | 📱 **Mobile & PWA** | Progressive Web App with offline support |
 
@@ -151,6 +152,61 @@ metrics = compute_valence_metrics(evolved)
 print(f"Valence: {metrics.valence_score:.3f}")
 print(f"Coherence: {metrics.coherence_score:.3f}")
 ```
+
+---
+
+## 🎨 Web Interface Features
+
+PsyFi features a comprehensive 4-panel interface for interactive consciousness field simulation:
+
+### Main Interface
+
+**Top Bar**
+- **Scenario Dropdown**: 17 substance presets (LSD, Psilocybin, DMT, Ketamine, MDMA, Jhana, REM Dream, etc.)
+- **Seed Control**: Deterministic simulation with seed values
+- **Generate Button**: Trigger simulations with one click
+- **Status Pill**: Real-time status (Ready → Computing → Complete)
+
+**Left Panel: Field Configuration**
+- **Field Geometry**: Width, Height, Depth (future 3D support)
+- **Initial Conditions**: Evolution steps, noise scale, initialization mode
+- **Consciousness Context**: Intention field (experimental semantic encoding)
+
+**Center Panel: Visualization**
+- **Canvas Display**: Real-time magnitude heatmap with cyan-magenta-yellow colormap
+- **Metrics Display**: Valence, coherence, symmetry, roughness, richness
+
+**Right Panel: Engine Controls**
+- **Engine Modules**: Toggle switches for consciousness processors
+  - consciousness_omega (Kuramoto coupling)
+  - psychedelic_reset (Phase reset dynamics)
+  - jhana_attractor (Meditative absorption)
+  - valence_analyzer (Hedonic assessment)
+  - pain_modulator (Suffering dynamics)
+
+**Advanced Drawer** (press `D` or click handle)
+- **Console Logs**: Real-time operation logging
+- **Raw JSON**: Complete API response data
+- **Debug Info**: Browser, timestamp, session ID
+
+### Admin Panel (`/admin`)
+
+Access the admin panel at **http://localhost:8000/admin** for system monitoring:
+
+- **System Status**: Version, ABX-Core, engine count, preset count
+- **Engine Registry**: All 20 consciousness field processors with categories
+- **Substance Presets**: 22 pharmacological models with receptor profiles
+- **Configuration**: Environment, safety clamp, field size limits
+- **Run History**: Table of all simulations with metrics and timing
+- **Auto-Refresh**: Updates every 30 seconds
+
+### Keyboard Shortcuts
+
+| Shortcut | Action |
+|----------|--------|
+| `Ctrl+Enter` | Run simulation |
+| `D` | Toggle advanced debug drawer |
+| `Esc` | Close drawer |
 
 ---
 

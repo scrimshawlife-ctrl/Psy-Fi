@@ -1,0 +1,51 @@
+# Google Cloud App Engine Configuration for PsyFi
+# Applied Alchemy Labs - ABX-Core v1.3
+
+runtime: python311
+
+entrypoint: uvicorn psyfi_api.main:app --host 0.0.0.0 --port 8080
+
+instance_class: F2
+
+automatic_scaling:
+  target_cpu_utilization: 0.65
+  min_instances: 1
+  max_instances: 10
+  min_pending_latency: 30ms
+  max_pending_latency: automatic
+  max_concurrent_requests: 50
+
+env_variables:
+  ENVIRONMENT: 'production'
+  LOG_LEVEL: 'info'
+  ENABLE_SAFETY_CLAMP: 'true'
+  PYTHON_VERSION: '3.11'
+
+handlers:
+  - url: /static
+    static_dir: psyfi_api/static
+    secure: always
+
+  - url: /health
+    script: auto
+    secure: always
+
+  - url: /.*
+    script: auto
+    secure: always
+
+# Health checks
+liveness_check:
+  path: "/health"
+  check_interval_sec: 30
+  timeout_sec: 4
+  failure_threshold: 2
+  success_threshold: 2
+
+readiness_check:
+  path: "/health"
+  check_interval_sec: 5
+  timeout_sec: 4
+  failure_threshold: 2
+  success_threshold: 2
+  app_start_timeout_sec: 300

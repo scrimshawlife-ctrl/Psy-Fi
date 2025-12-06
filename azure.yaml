@@ -1,0 +1,30 @@
+# Azure App Service Configuration for PsyFi
+# Applied Alchemy Labs - ABX-Core v1.3
+
+# This file configures Azure App Service deployment
+# Use with: az webapp up --runtime PYTHON:3.11 --sku B1
+
+runtime:
+  name: python
+  version: "3.11"
+
+build:
+  commands:
+    - pip install --upgrade pip
+    - pip install -r requirements.txt
+
+run:
+  command: uvicorn psyfi_api.main:app --host 0.0.0.0 --port 8000
+
+environment:
+  ENVIRONMENT: production
+  LOG_LEVEL: info
+  ENABLE_SAFETY_CLAMP: "true"
+  PYTHON_VERSION: "3.11"
+  SCM_DO_BUILD_DURING_DEPLOYMENT: "true"
+  WEBSITE_HEALTHCHECK_MAXPINGFAILURES: "3"
+
+health:
+  path: /health
+  interval: 30
+  timeout: 10

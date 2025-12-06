@@ -19,6 +19,14 @@
 [![Tests](https://img.shields.io/badge/tests-passing-00ff00)](https://github.com/scrimshawlife-ctrl/Psy-Fi)
 [![License](https://img.shields.io/badge/license-MIT-purple)](LICENSE)
 
+### 🚀 One-Click Deploy
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/scrimshawlife-ctrl/Psy-Fi)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fscrimshawlife-ctrl%2FPsy-Fi%2Fmain%2Fazure-deploy.json)
+[![Run on Google Cloud](https://deploy.cloud.run/button.svg)](https://deploy.cloud.run?git_repo=https://github.com/scrimshawlife-ctrl/Psy-Fi)
+
+[Deployment Guide](deploy-buttons.md) • [Manual Setup](DEPLOYMENT.md)
+
 </div>
 
 ---

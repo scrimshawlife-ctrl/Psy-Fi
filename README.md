@@ -60,6 +60,7 @@ PsyFi embodies five ontological commitments:
 | 🎹 **MIDI Integration** | Real-time control via MIDI controllers, DAWs, and hardware |
 | 🌐 **Web UI** | Comprehensive 4-panel interface with real-time visualization |
 | 🎛️ **Admin Panel** | System monitoring, run history, engine registry at /admin |
+| 🔌 **Overlay Server** | Capability-based API with full provenance tracking |
 | 🚀 **FastAPI Backend** | REST API with automatic documentation |
 | 📱 **Mobile & PWA** | Progressive Web App with offline support |
 
@@ -81,7 +82,7 @@ pip install -e ".[dev]"
 pip install mido python-rtmidi
 ```
 
-### Launch the Web Interface
+### Launch the Web Interface (FastAPI)
 
 ```bash
 # Start the development server
@@ -93,7 +94,37 @@ Then open your browser to **http://localhost:8000**
 ![PsyFi Web UI](docs/images/psyfi-ui-main.png)
 *Dark-mode interface with real-time consciousness field simulation*
 
-### Using the API Directly
+### Launch the Overlay Server (Capability-Based API)
+
+```bash
+# Start the overlay server
+python -m psyfi_overlay.server
+
+# Custom host/port
+python -m psyfi_overlay.server --host 0.0.0.0 --port 8787
+```
+
+Then test with:
+
+```bash
+# Ping capability
+curl -X POST http://localhost:8787/run \
+  -H "Content-Type: application/json" \
+  -d '{"capability": "psyfi.ping", "input": {}}'
+
+# Run simulation with provenance
+curl -X POST http://localhost:8787/run \
+  -H "Content-Type: application/json" \
+  -d '{
+    "capability": "psyfi.simulate",
+    "input": {"width": 64, "height": 64, "steps": 20, "seed": 42},
+    "seed": "deterministic-seed"
+  }'
+```
+
+See [OVERLAY_API.md](docs/OVERLAY_API.md) for full documentation of all capabilities.
+
+### Using the FastAPI Directly
 
 ```bash
 # Health check

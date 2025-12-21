@@ -1,0 +1,6 @@
+{
+  "name": "psyfi",
+  "enabled": true,
+  "py_exports": ["psyfi.exports"],
+  "service_url": "http://127.0.0.1:8120"
+}

@@ -9,6 +9,7 @@ def apply_phase_reset(
     field: np.ndarray,
     strength: float,
     runtime: ABXRuntime,
+    seed: int | None = None,
 ) -> np.ndarray:
     """Apply phase reset (DMT-like reality dissolution).
 
@@ -19,10 +20,14 @@ def apply_phase_reset(
         field: 2D complex field (height, width)
         strength: Reset strength (0 = no reset, 1 = complete randomization)
         runtime: ABX runtime for deterministic RNG
+        seed: Optional seed override for deterministic randomness
 
     Returns:
         Field with phase reset applied
     """
+    if seed is not None:
+        runtime = runtime.fork_with_seed(seed, extra_meta={"seed_source": "reset_psi"})
+
     # Extract magnitude and phase
     magnitudes = np.abs(field)
     phases = np.angle(field)
@@ -40,5 +45,6 @@ def apply_phase_reset(
     # Update provenance
     runtime.provenance.add_module("reset_psi")
     runtime.provenance.add_parameter("reset_strength", strength)
+    runtime.provenance.add_parameter("seed", runtime.seed)
 
     return result.astype(np.complex64)

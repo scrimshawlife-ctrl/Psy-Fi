@@ -5,10 +5,31 @@ from typing import Dict, List, Optional
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
-from psyfi_core.midi import MIDI_AVAILABLE, MIDIService, MIDIConfig, create_midi_service
+from psyfi_core.midi import MIDI_AVAILABLE, MIDIService, MIDIConfig, MIDIControlMap
 
 # Global MIDI service instance
 _midi_service: Optional[MIDIService] = None
+
+
+def _require_midi_service() -> MIDIService:
+    """Return the running MIDI service or raise a 404 error."""
+    if not _midi_service:
+        raise HTTPException(status_code=404, detail="MIDI service not running")
+    return _midi_service
+
+
+def _require_output_port(service: MIDIService) -> None:
+    """Ensure the MIDI service has an open output port."""
+    if not service.output_port:
+        raise HTTPException(status_code=503, detail="No MIDI output device open")
+
+
+def _require_active_service() -> MIDIService:
+    """Return the MIDI service if running, otherwise raise 503."""
+    service = _require_midi_service()
+    if not service._running:
+        raise HTTPException(status_code=503, detail="MIDI service not active")
+    return service
 
 router = APIRouter(prefix="/api/midi", tags=["MIDI"])
 
@@ -105,7 +126,7 @@ async def start_midi_service(config: MIDIConfigRequest) -> Dict[str, str]:
             detail="MIDI not available. Install with: pip install mido python-rtmidi"
         )
 
-    if _midi_service and _midi_service._running:
+    if _midi_service:
         raise HTTPException(status_code=409, detail="MIDI service already running")
 
     try:
@@ -119,9 +140,10 @@ async def start_midi_service(config: MIDIConfigRequest) -> Dict[str, str]:
         )
 
         # Create and start service
-        _midi_service = MIDIService(midi_config)
-        _midi_service.open(config.input_device, config.output_device)
-        _midi_service.start()
+        service = MIDIService(midi_config)
+        service.open(config.input_device, config.output_device)
+        service.start()
+        _midi_service = service
 
         return {
             "status": "started",
@@ -129,6 +151,11 @@ async def start_midi_service(config: MIDIConfigRequest) -> Dict[str, str]:
         }
 
     except Exception as e:
+        if "service" in locals():
+            try:
+                service.close()
+            finally:
+                _midi_service = None
         raise HTTPException(status_code=500, detail=f"Failed to start MIDI service: {str(e)}")
 
 
@@ -142,20 +169,19 @@ async def stop_midi_service() -> Dict[str, str]:
     """
     global _midi_service
 
-    if not _midi_service:
-        raise HTTPException(status_code=404, detail="MIDI service not running")
+    service = _require_midi_service()
 
     try:
-        _midi_service.close()
-        _midi_service = None
-
-        return {
-            "status": "stopped",
-            "message": "MIDI service stopped successfully"
-        }
-
+        service.close()
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to stop MIDI service: {str(e)}")
+    finally:
+        _midi_service = None
+
+    return {
+        "status": "stopped",
+        "message": "MIDI service stopped successfully"
+    }
 
 
 @router.get("/status", response_model=MIDIStatusResponse)
@@ -166,7 +192,8 @@ async def get_midi_status() -> MIDIStatusResponse:
     Returns:
         Service status and current parameters
     """
-    if not _midi_service:
+    service = _midi_service
+    if not service:
         return MIDIStatusResponse(
             running=False,
             input_device=None,
@@ -176,11 +203,11 @@ async def get_midi_status() -> MIDIStatusResponse:
         )
 
     return MIDIStatusResponse(
-        running=_midi_service._running,
-        input_device=_midi_service.config.input_device,
-        output_device=_midi_service.config.output_device,
-        channel=_midi_service.config.channel,
-        current_params=_midi_service.get_params()
+        running=service._running,
+        input_device=service.config.input_device,
+        output_device=service.config.output_device,
+        channel=service.config.channel,
+        current_params=service.get_params()
     )
 
 
@@ -192,15 +219,13 @@ async def get_midi_mappings() -> MIDIControlMapResponse:
     Returns:
         CC, note, and program change mappings
     """
-    if not _midi_service:
-        raise HTTPException(status_code=404, detail="MIDI service not running")
-
+    service = _require_active_service()
     return MIDIControlMapResponse(
-        cc_to_param=_midi_service.control_map.cc_to_param,
+        cc_to_param=service.control_map.cc_to_param,
         note_to_preset={
-            k: v for k, v in _midi_service.control_map.note_to_preset.items()
+            k: v for k, v in service.control_map.note_to_preset.items()
         },
-        program_to_class=_midi_service.control_map.program_to_class
+        program_to_class=service.control_map.program_to_class
     )
 
 
@@ -215,14 +240,11 @@ async def send_midi_cc(request: MIDICCRequest) -> Dict[str, str]:
     Returns:
         Status message
     """
-    if not _midi_service:
-        raise HTTPException(status_code=404, detail="MIDI service not running")
-
-    if not _midi_service.output_port:
-        raise HTTPException(status_code=503, detail="No MIDI output device open")
+    service = _require_active_service()
+    _require_output_port(service)
 
     try:
-        _midi_service.send_cc(request.control, request.value)
+        service.send_cc(request.control, request.value)
         return {
             "status": "sent",
             "message": f"CC {request.control} = {request.value} sent"
@@ -243,14 +265,11 @@ async def send_midi_note(request: MIDINoteRequest) -> Dict[str, str]:
     Returns:
         Status message
     """
-    if not _midi_service:
-        raise HTTPException(status_code=404, detail="MIDI service not running")
-
-    if not _midi_service.output_port:
-        raise HTTPException(status_code=503, detail="No MIDI output device open")
+    service = _require_active_service()
+    _require_output_port(service)
 
     try:
-        _midi_service.send_note(request.note, request.velocity, request.duration)
+        service.send_note(request.note, request.velocity, request.duration)
         return {
             "status": "sent",
             "message": f"Note {request.note} velocity {request.velocity} sent"

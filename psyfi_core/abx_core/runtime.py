@@ -80,6 +80,33 @@ class ABXRuntime:
 
         return new_runtime
 
+    def fork_with_seed(
+        self, seed: int, extra_meta: dict[str, Any] | None = None
+    ) -> "ABXRuntime":
+        """Fork this runtime with a new seed and extended provenance.
+
+        Args:
+            seed: Seed to use for the forked runtime
+            extra_meta: Additional metadata to add to the forked runtime's provenance
+
+        Returns:
+            New ABXRuntime with updated seed and extended metadata
+        """
+        extra_meta = extra_meta or {}
+
+        new_provenance = self.provenance.clone_with_meta(
+            {**extra_meta, "seed_override": seed}
+        )
+
+        new_runtime = ABXRuntime(
+            deterministic=self.deterministic,
+            seed=seed,
+            metrics=ABXMetrics(),
+            provenance=new_provenance,
+        )
+
+        return new_runtime
+
     def verify_determinism(self, hash_a: int, hash_b: int) -> None:
         """Verify that two hash values match when in deterministic mode.
 

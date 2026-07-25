@@ -15,8 +15,9 @@ Prefer **procedural** geometry (glyphs, SDF, ribbons, metaballs, volumes, crysta
 
 - Compress mesh attributes for crystal/glyph caches generated offline.
 - Decode **only** via `AssetPipeline` (`dracoBridge` + optional worker) — never on the render critical path.
-- Runtime: `createDracoWasmDecoder({ wasmUrl | impl })` → `planDracoMeshUpload` → `GpuAssetUploader` (vertex/index buffers).
-- Until WASM is vendored, Draco glTF plans are **deferred** (`needs: draco-wasm`). Tests use the PSYD passthrough pack.
+- Runtime: `createDracoWasmDecoder()` (default `draco3d` WASM) → `planDracoMeshUpload` → `GpuAssetUploader`.
+- Browser assets: `/gpu/vendor/draco/gltf/` (refresh via `./scripts/vendor_gpu_codecs.sh`).
+- PSYD passthrough pack remains available for lightweight unit fixtures (`mode: 'passthrough'`).
 
 ## KTX2 / BasisU
 
@@ -24,7 +25,7 @@ Prefer **procedural** geometry (glyphs, SDF, ribbons, metaballs, volumes, crysta
 - Prefer UASTC for normals/ORM, ETC1S for color when size-bound (Battery Saver downloads).
 - Runtime: worker/main `decodeKtx2Bytes` + `parseKtx2Container` (level index) → `planKtx2Upload`.
 - **Uncompressed** RGBA8 (`vkFormat` R8G8B8A8_UNORM, supercompression none) uploads via `queue.writeTexture`.
-- BasisLZ / Zstd containers return a **deferred** plan (`needs: basis-transcoder`) until a transcoder is wired.
+- BasisLZ containers use `createBasisTranscoder()` + `planKtx2UploadAsync` when the vendored transcoder is ready (`/gpu/vendor/basis/`); otherwise deferred (`needs: basis-transcoder`).
 
 ## Optional Gaussian Splats
 

@@ -1,7 +1,13 @@
+import { createBasisTranscoder, type BasisTranscoder } from './basisTranscoder'
 import { decodeAssetBytes, type AssetDecodeMeta, type DecodedAssetPayload } from './decodeAsset'
 import { createDracoWasmDecoder, type DracoWasmDecoder } from './dracoBridge'
 import { GpuAssetUploader, type GpuUploadDevice, type UploadedAsset } from './GpuAssetUploader'
-import { planDracoMeshUpload, planLoadedAssetUpload, type GpuUploadPlan } from './uploadPlan'
+import {
+  planDracoMeshUpload,
+  planKtx2UploadAsync,
+  planLoadedAssetUpload,
+  type GpuUploadPlan,
+} from './uploadPlan'
 
 export type AssetKind = 'gltf' | 'ktx2' | 'splat'
 
@@ -32,6 +38,7 @@ export class AssetLoader {
   private mode: AssetLoadMode = 'main'
   private worker: Worker | null = null
   private draco: DracoWasmDecoder
+  private basis: BasisTranscoder
 
   constructor(opts?: {
     mode?: AssetLoadMode
@@ -40,8 +47,10 @@ export class AssetLoader {
     workerFactory?: () => Worker
     draco?: DracoWasmDecoder
     dracoWasmUrl?: string
+    basis?: BasisTranscoder
   }) {
     this.draco = opts?.draco ?? createDracoWasmDecoder({ wasmUrl: opts?.dracoWasmUrl })
+    this.basis = opts?.basis ?? createBasisTranscoder()
     if (opts?.mode === 'worker') {
       try {
         if (opts.workerFactory) {
@@ -142,7 +151,10 @@ export class AssetLoader {
     signal?: AbortSignal,
   ): Promise<{ asset: LoadedAsset; plan: GpuUploadPlan; uploaded: UploadedAsset }> {
     const asset = await this.load(req, signal)
-    const plan = this.planUpload(asset)
+    const plan =
+      asset.kind === 'ktx2'
+        ? await planKtx2UploadAsync(asset.id, asset.bytes, this.basis)
+        : this.planUpload(asset)
     const uploaded = new GpuAssetUploader(device).upload(plan)
     return { asset, plan, uploaded }
   }
@@ -155,6 +167,7 @@ export class AssetLoader {
     this.worker?.terminate()
     this.worker = null
     this.draco.dispose()
+    this.basis.dispose()
     this.cache.clear()
   }
 }

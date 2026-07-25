@@ -4,6 +4,7 @@
  */
 
 import type { LoadedAsset } from './AssetLoader'
+import type { BasisTranscoder } from './basisTranscoder'
 import { parseKtx2Container, sliceKtx2Level, type Ktx2Container } from './ktx2Parse'
 import type { DracoDecodedMesh, DracoWasmDecoder } from './dracoBridge'
 
@@ -25,7 +26,7 @@ export interface Texture2dUploadPlan {
   height: number
   mipCount: number
   mips: TextureMipUpload[]
-  source: 'ktx2-uncompressed'
+  source: 'ktx2-uncompressed' | 'ktx2-basislz'
   container: Ktx2Container
 }
 
@@ -115,6 +116,9 @@ export async function planDracoMeshUpload(
   decoder: DracoWasmDecoder,
   attributes?: Record<string, number>,
 ): Promise<GpuUploadPlan> {
+  if (!decoder.ready && decoder.ensureReady) {
+    await decoder.ensureReady()
+  }
   if (!decoder.ready) {
     return {
       kind: 'deferred',
@@ -135,6 +139,54 @@ export async function planDracoMeshUpload(
     indices: mesh.indices,
     source: 'draco-wasm',
     decoder: mesh.decoder,
+  }
+}
+
+/** Plan KTX2 upload, optionally transcoding BasisLZ via a ready Basis transcoder. */
+export async function planKtx2UploadAsync(
+  id: string,
+  bytes: ArrayBuffer,
+  transcoder?: BasisTranscoder | null,
+): Promise<GpuUploadPlan> {
+  const sync = planKtx2Upload(id, bytes)
+  if (sync.kind !== 'deferred' || sync.needs !== 'basis-transcoder' || !transcoder) {
+    return sync
+  }
+  if (!transcoder.ready && transcoder.ensureReady) {
+    await transcoder.ensureReady()
+  }
+  if (!transcoder.ready) return sync
+
+  try {
+    const rgba = await transcoder.transcodeKtx2ToRgba8(bytes)
+    const container = parseKtx2Container(bytes)
+    return {
+      kind: 'texture2d',
+      id,
+      format: 'rgba8unorm',
+      width: rgba.width,
+      height: rgba.height,
+      mipCount: 1,
+      mips: [
+        {
+          level: 0,
+          width: rgba.width,
+          height: rgba.height,
+          bytes: rgba.rgba,
+          bytesPerRow: rgba.width * 4,
+        },
+      ],
+      source: 'ktx2-basislz',
+      container,
+    }
+  } catch (err) {
+    return {
+      kind: 'deferred',
+      id,
+      reason: err instanceof Error ? err.message : 'basis transcode failed',
+      needs: 'basis-transcoder',
+      detail: sync.detail,
+    }
   }
 }
 

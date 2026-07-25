@@ -22,7 +22,10 @@ def test_template_wires_cancel_recovery_and_renderer() -> None:
     assert 'id="installButton"' in html
     assert 'id="importSessionInput"' in html
     assert 'id="loadingStatus"' in html
+    assert 'id="experienceCanvasGL"' in html
+    assert 'id="phaseScrub"' in html
     assert 'src="/static/renderer.js"' in html
+    assert 'src="/static/viz/parameterFieldWebGL.js"' in html
     assert 'src="/static/app.js"' in html
 
 

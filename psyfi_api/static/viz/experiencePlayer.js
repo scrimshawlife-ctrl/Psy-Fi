@@ -194,16 +194,18 @@
   class ExperiencePlayer {
     constructor(opts) {
       this.canvas = opts.canvas;
+      this.glCanvas = opts.glCanvas || null;
       this.preferWebGL = !!opts.preferWebGL;
       this.webgl = null;
       this.renderer = new ExperienceRenderer(this.canvas);
-      if (this.preferWebGL && global.PsyFiViz.ParameterFieldWebGL && global.PsyFiViz.ParameterFieldWebGL.supported()) {
-        this.webgl = new global.PsyFiViz.ParameterFieldWebGL(this.canvas);
+      if (
+        this.glCanvas &&
+        global.PsyFiViz.ParameterFieldWebGL &&
+        global.PsyFiViz.ParameterFieldWebGL.supported()
+      ) {
+        this.webgl = new global.PsyFiViz.ParameterFieldWebGL(this.glCanvas);
         if (!this.webgl.ok) this.webgl = null;
       }
-      this.active = this.webgl || this.renderer;
-      this.backend = this.webgl ? 'webgl' : 'canvas2d';
-      this.renderer.backend = this.backend;
       this.timeline = null;
       this.idx = 0;
       this.playing = false;
@@ -212,25 +214,34 @@
       this.renderer.onFrameInfo = (info) => this._status(info);
       this.modulators = { camera: 0, motion: 0, midi: 0 };
       this.fieldBridge = null;
+      this.setPreferWebGL(this.preferWebGL);
+    }
+
+    _syncCanvasVisibility() {
+      const useGL = this.backend === 'webgl' && this.webgl && this.webgl.ok;
+      if (this.canvas) this.canvas.hidden = !!useGL;
+      if (this.glCanvas) this.glCanvas.hidden = !useGL;
     }
 
     setPreferWebGL(on) {
       this.preferWebGL = !!on;
-      if (on && !this.webgl && global.PsyFiViz.ParameterFieldWebGL && global.PsyFiViz.ParameterFieldWebGL.supported()) {
-        // Need a dedicated canvas for WebGL if 2d context already taken — keep Canvas path
-        this.backend = 'canvas2d';
-      } else if (on && this.webgl && this.webgl.ok) {
-        this.active = this.webgl;
+      const wasPlaying = this.playing;
+      this.pause();
+      if (on && this.webgl && this.webgl.ok) {
         this.backend = 'webgl';
       } else {
-        this.active = this.renderer;
         this.backend = 'canvas2d';
       }
       this.renderer.backend = this.backend;
+      this._syncCanvasVisibility();
+      if (this.timeline && this.timeline.frames && this.timeline.frames[this.idx]) {
+        this.setFrame(this.timeline.frames[this.idx]);
+      }
+      if (wasPlaying) this.play();
     }
 
     resize() {
-      const parent = this.canvas.parentElement;
+      const parent = (this.canvas && this.canvas.parentElement) || (this.glCanvas && this.glCanvas.parentElement);
       const w = Math.max(280, parent ? parent.clientWidth : 480);
       const h = Math.max(220, Math.floor(w * 0.62));
       this.renderer.resize(w, h);
@@ -338,7 +349,11 @@
     }
 
     exportViewportPng() {
-      const url = this.canvas.toDataURL('image/png');
+      const target =
+        this.backend === 'webgl' && this.glCanvas && !this.glCanvas.hidden
+          ? this.glCanvas
+          : this.canvas;
+      const url = target.toDataURL('image/png');
       const a = document.createElement('a');
       a.href = url;
       a.download = `psyfi-field-${Date.now()}.png`;

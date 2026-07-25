@@ -660,6 +660,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // ===== Live Experience workspace =====
 (function initExperienceWorkspace() {
     const canvas = document.getElementById('experienceCanvas');
+    const glCanvas = document.getElementById('experienceCanvasGL');
     if (!canvas || !window.PsyFiViz || !window.PsyFiViz.ExperiencePlayer) {
         console.warn('[PsyFi] Experience player not available');
         return;
@@ -688,12 +689,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const player = new PsyFiViz.ExperiencePlayer({
         canvas,
+        glCanvas,
         statusEl,
         provenanceEl,
         preferWebGL: !!(preferWebGLChk && preferWebGLChk.checked),
     });
     player.resize();
     window.addEventListener('resize', () => player.resize());
+
+    // Optional: poll server MIDI activity into the MIDI modulator slider
+    let midiPoll = null;
+    function startMidiPoll() {
+        if (midiPoll) return;
+        midiPoll = setInterval(async () => {
+            try {
+                const res = await fetch('/api/v1/midi/status');
+                if (!res.ok) return;
+                const st = await res.json();
+                if (!st.running || !modMidi) return;
+                // Map any active output level-ish signal; fall back to gentle pulse when running.
+                const level = typeof st.activity === 'number' ? st.activity : 0.35;
+                modMidi.value = Math.min(1, Math.max(Number(modMidi.value), level)).toFixed(2);
+                syncModulators();
+            } catch (_e) { /* ignore */ }
+        }, 1200);
+    }
+    document.getElementById('modMidi')?.addEventListener('pointerdown', startMidiPoll);
     player.onPhaseIndex = (idx, total) => {
         if (!phaseScrub) return;
         phaseScrub.max = String(Math.max(0, total - 1));

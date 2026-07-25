@@ -995,7 +995,8 @@ body {
   overflow: hidden;
   min-height: 260px;
 }
-#experienceCanvas {
+#experienceCanvas,
+#experienceCanvasGL {
   display: block;
   width: 100%;
   height: auto;

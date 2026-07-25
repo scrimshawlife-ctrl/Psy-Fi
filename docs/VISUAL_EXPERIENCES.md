@@ -14,11 +14,15 @@ Web-first **Live Experience** runtime:
 ```bash
 cd Psy-Fi
 source .venv/bin/activate   # or: uv venv && uv pip install -e ".[dev]"
-python scripts/build_experience_catalog.py
-pytest tests/test_experiences.py -q
-python scripts/run_dev_server.py
+python3 scripts/build_experience_catalog.py
+python3 scripts/regenerate_overlay_goldens.py
+pytest tests/test_experiences.py tests/test_overlay_goldens.py -q
+python3 scripts/run_dev_server.py
 # open http://localhost:8000 → Live Experience panel
 ```
+
+Renderer modules: `static/viz/math.js`, `safetyPass.js`, `engines/`, `parameterFieldWebGL.js`, `experiencePlayer.js`.  
+Prefer WebGL uses a dedicated `#experienceCanvasGL` (Canvas 2D remains `#experienceCanvas`).
 
 ## API
 

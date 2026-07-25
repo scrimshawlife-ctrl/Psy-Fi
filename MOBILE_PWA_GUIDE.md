@@ -17,6 +17,7 @@ The installable PWA is PsyFi's mobile application surface for the current delive
 5. Export or import portable `psyfi.session.v1` JSON.
 6. Install prompt when the browser supports it (iOS: Share → Add to Home Screen).
 7. View in-browser capability diagnostics (`/#capabilities`).
+8. Open **GPU Lab** at [`/gpu/`](../docs/PWA_GPU_ROUTE.md) — **separate route**, not embedded in the shell.
 
 ### Planned (web track)
 
@@ -58,6 +59,15 @@ Supported Chromium-based browsers may expose an install action. Installation is 
 - no loss of data during service-worker update;
 - recovery from interrupted simulations and page suspension.
 
+## GPU Lab route (decided)
+
+`/gpu/` is a **separate** WebGPU surface. The installable PWA `start_url` remains `/`.  
+Do not iframe-embed the GPU bundle into Live Experience. Full rationale: [`docs/PWA_GPU_ROUTE.md`](docs/PWA_GPU_ROUTE.md).
+
+- Manifest shortcut **GPU Lab** → `/gpu/` (Chromium).
+- Service worker: `/gpu/` is network-first; shell precache does **not** include the GPU `dist/` graph.
+- Offline navigation to `/gpu/` falls back to the cached shell (`/`).
+
 ## Caching Strategy
 
 Do not use a single cache-first strategy for every resource.
@@ -66,6 +76,7 @@ Do not use a single cache-first strategy for every resource.
 |---|---|
 | Versioned static assets | cache-first with immutable hashes |
 | HTML/navigation | network-first with cached fallback |
+| `/gpu/` Lab (HTML + assets) | network-first; opportunistic asset cache; offline → shell `/` |
 | API simulation requests | network-only unless an explicitly versioned local compute path exists |
 | Preset/catalog metadata | stale-while-revalidate where safe |
 | Saved sessions/results | IndexedDB, not service-worker cache |

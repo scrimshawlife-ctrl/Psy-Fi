@@ -1,7 +1,8 @@
 // PsyFi Service Worker - progressive enhancement of the existing PWA shell.
-// Strategies follow MOBILE_PWA_GUIDE.md using the current static asset layout.
+// Strategies follow MOBILE_PWA_GUIDE.md + docs/PWA_GPU_ROUTE.md.
+// Decision: /gpu/ is a separate route (not embedded); not shell-precached.
 
-const CACHE_NAME = 'psyfi-shell-v8';
+const CACHE_NAME = 'psyfi-shell-v9';
 const SHELL_URLS = [
   '/',
   '/static/style.css',
@@ -53,6 +54,10 @@ function isApiOrSimulateRequest(url) {
   );
 }
 
+function isGpuRoute(url) {
+  return url.pathname === '/gpu' || url.pathname.startsWith('/gpu/');
+}
+
 function isNavigationRequest(request) {
   return request.mode === 'navigate' || request.destination === 'document';
 }
@@ -68,6 +73,29 @@ self.addEventListener('fetch', (event) => {
   // Simulation/API traffic is network-only.
   if (isApiOrSimulateRequest(url)) {
     event.respondWith(fetch(request));
+    return;
+  }
+
+  // GPU Lab (/gpu/): network-first; never use the legacy shell HTML as a
+  // successful stand-in for GPU documents when online. Offline → shell `/`.
+  if (isGpuRoute(url)) {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          // Cache hashed GPU assets opportunistically; skip opaque failures.
+          if (response.ok && !isNavigationRequest(request)) {
+            const copy = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
+          }
+          return response;
+        })
+        .catch(() => {
+          if (isNavigationRequest(request)) {
+            return caches.match('/');
+          }
+          return caches.match(request).then((cached) => cached || Response.error());
+        })
+    );
     return;
   }
 

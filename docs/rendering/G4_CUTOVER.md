@@ -1,7 +1,7 @@
 # G4 Cutover Readiness Checklist
 
-Status: **in progress** — asset GPU path wired into SceneRoot; visual goldens still open  
-Related: [`ROADMAP.md`](ROADMAP.md), [`MIGRATION_PLAN.md`](MIGRATION_PLAN.md), [`../CONTINUATION_PLAN.md`](../CONTINUATION_PLAN.md)
+Status: **nearly complete** — PWA route decided; pixel goldens still open  
+Related: [`ROADMAP.md`](ROADMAP.md), [`MIGRATION_PLAN.md`](MIGRATION_PLAN.md), [`../CONTINUATION_PLAN.md`](../CONTINUATION_PLAN.md), [`../PWA_GPU_ROUTE.md`](../PWA_GPU_ROUTE.md)
 
 ## Asset GPU path
 
@@ -23,8 +23,14 @@ Canonical data: `packages/psyfi-gpu-renderer/src/contracts/g4Parity.ts` (CI-test
 | Substance overlays (13) | yes | yes | via snapshot procedural |
 | Modulators (cam/motion/MIDI/audio/haptics) | yes | partial | MIDI/haptics still legacy-primary |
 | Reduce motion | yes | yes | snapshot flag |
-| Offline / PWA | yes | partial | `/gpu/` separate route |
+| Offline / PWA | yes | partial | `/gpu/` **separate route (decided)** — [`PWA_GPU_ROUTE.md`](../PWA_GPU_ROUTE.md) |
 | KTX2 / Draco optional assets | n/a | partial | SceneAssetLayer; Python arrays empty by default |
+
+## PWA decision
+
+- [x] Keep `/gpu/` as separate route — **decided**; do not embed in the shell
+- [x] `MOBILE_PWA_GUIDE.md` + SW v9 network-first for `/gpu/`
+- [x] Manifest shortcut + capabilities panel link to GPU Lab
 
 ## Visual regression
 
@@ -41,14 +47,10 @@ Canonical seeds (also in `g4Parity.ts`):
 - [ ] Capture `/gpu/` stills or histogram hashes in CI (needs WebGPU runner)
 - [ ] Document intentional deltas vs Canvas/WebGL legacy
 
-## PWA decision
-
-- [ ] Keep `/gpu/` as separate route (current) **or** embed in shell
-- [ ] Update `MOBILE_PWA_GUIDE.md` after decision
-
 ## Exit criteria for G4
 
 1. Parity table filled with no ship blockers (authority + safety = yes) — **met in CI**
-2. At least one CI-backed visual smoke for `/gpu/` — **seeds listed; pixel goldens pending WebGPU CI**
+2. At least one CI-backed visual smoke for `/gpu/` — **structure goldens met; pixel goldens pending WebGPU CI**
 3. Asset upload path documented + tested + SceneRoot wired — **met**
 4. Hard freeze unchanged unless additive OpenAPI synced — **met**
+5. PWA embed-vs-route decision — **met** (separate route)

@@ -57,7 +57,7 @@ Platform package: `packages/psyfi-gpu-renderer`
 - [x] CPU scene-snapshot structure goldens (`test_g4_scene_goldens.py`)
 - [ ] Pixel / histogram goldens on WebGPU CI runner
 - [ ] Vendor real Draco WASM / Basis transcoder (optional; bridges ready)
-- [ ] PWA integration decision (embed vs route)
+- [x] PWA integration decision — **separate `/gpu/` route** ([`PWA_GPU_ROUTE.md`](../PWA_GPU_ROUTE.md))
 - [x] Soft → **hard** freeze includes scene-snapshot schema
 - Legacy viz marked deprecated (not deleted until iOS/web gates)
 - Device matrix: living QA (unfrozen as ship gate)

@@ -39,7 +39,7 @@ def test_template_wires_cancel_recovery_and_renderer() -> None:
 
 def test_service_worker_precaches_renderer_assets() -> None:
     sw = (STATIC / "sw.js").read_text(encoding="utf-8")
-    assert "psyfi-shell-v8" in sw
+    assert "psyfi-shell-v9" in sw
     assert "/static/renderer.js" in sw
     assert "/static/render_worker.js" in sw
     assert "/static/viz/math.js" in sw
@@ -48,6 +48,23 @@ def test_service_worker_precaches_renderer_assets() -> None:
     assert "/static/viz/experiencePlayer.js" in sw
     assert "/static/icon-192.png" in sw
     assert "/simulate" in sw  # still treated as network-only path matcher
+    assert "isGpuRoute" in sw
+    assert "/gpu/" in sw
+    # GPU dist must not be shell-precached (separate route decision).
+    assert "/gpu/" not in sw.split("SHELL_URLS")[1].split("];")[0]
+
+
+def test_pwa_gpu_route_decision_documented() -> None:
+    doc = (ROOT / "docs" / "PWA_GPU_ROUTE.md").read_text(encoding="utf-8")
+    assert "separate route" in doc.lower()
+    assert "/gpu/" in doc
+    assert "not embed" in doc.lower() or "Do **not** embed" in doc
+    manifest = (STATIC / "manifest.json").read_text(encoding="utf-8")
+    assert '"url": "/gpu/"' in manifest
+    assert '"start_url": "/"' in manifest
+    app_js = (STATIC / "app.js").read_text(encoding="utf-8")
+    assert 'href="/gpu/"' in app_js
+    assert "GPU Lab route" in app_js
 
 
 def test_pwa_png_icons_exist() -> None:

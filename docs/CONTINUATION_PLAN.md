@@ -51,10 +51,11 @@ Board: [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md)
 - [x] Draco/KTX2 GPU upload path (uncompressed KTX2 + Draco WASM bridge) · `G4_CUTOVER.md`
 - [x] SceneAssetLayer + G4 parity matrix / visual seed list in CI
 - [x] G4 scene-snapshot structure goldens (canonical seeds)
+- [x] PWA decision: `/gpu/` stays a **separate route** ([`PWA_GPU_ROUTE.md`](PWA_GPU_ROUTE.md))
 
 ## Recommended next steps (priority order)
 
-### P0 — Validate on real hardware (human QA)
+### P0 — Validate on real hardware (human QA) — **highest remaining priority**
 
 Ship code is ready; confirm Ultra auto-select and frame comfort on at least one card per vendor band:
 
@@ -77,7 +78,7 @@ Guide: [`DESKTOP_GPU.md`](DESKTOP_GPU.md).
 ### P2 — Later / opportunistic
 
 - Optional legacy WebGL 1:1 shaders (only if keeping `/` long-term parity)
-- PWA embed-vs-route decision for `/gpu/`
+- WebGPU pixel / histogram goldens (needs GPU CI runner)
 - Future CUDA/HIP workers (Compose `nvidia` profile already reserves the GPU; not required for WebGPU)
 - XR readiness (`docs/rendering/XR_COMPATIBILITY.md`) — non-blocking
 

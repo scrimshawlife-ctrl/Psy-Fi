@@ -820,6 +820,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const pauseBtn = document.getElementById('pauseExperienceBtn');
     const neutralBtn = document.getElementById('neutralBtn');
     const statusEl = document.getElementById('experienceStatus');
+    function syncFieldStatusLive(msg) {
+        if (!statusEl) return;
+        const t = String(msg || '');
+        const live = /running|loading|bridging|Computing|Playing|timeline/i.test(t)
+            && !/idle|paused|failed|Neutral/i.test(t);
+        statusEl.dataset.live = live ? 'true' : 'false';
+    }
+    if (statusEl && typeof MutationObserver !== 'undefined') {
+        syncFieldStatusLive(statusEl.textContent);
+        new MutationObserver(() => syncFieldStatusLive(statusEl.textContent)).observe(statusEl, {
+            characterData: true,
+            childList: true,
+            subtree: true,
+        });
+    }
+
     const provenanceEl = document.getElementById('experienceProvenancePanel');
     const modCamera = document.getElementById('modCamera');
     const modMotion = document.getElementById('modMotion');

@@ -50,9 +50,10 @@ def test_template_wires_cancel_recovery_and_renderer() -> None:
 
 def test_service_worker_precaches_renderer_assets() -> None:
     sw = (STATIC / "sw.js").read_text(encoding="utf-8")
-    assert "psyfi-shell-v16" in sw
+    assert "psyfi-shell-v17" in sw
     assert ".woff2" in sw
     assert "/assets/icons/pf-icon-reset-24.svg" in sw
+    assert "/assets/icons/pf-icon-valence-meter-24.svg" in sw
     assert "/static/renderer.js" in sw
     assert "/static/render_worker.js" in sw
     assert "/static/viz/math.js" in sw
@@ -104,6 +105,15 @@ def test_pwa_png_icons_exist() -> None:
     assert "tabular-nums" in style
     assert ".pf-icon" in style
     assert "max-width: 1280px" in style
+    assert "launch-panel-in" in style
+    assert "field-pulse" in style
+    assert "launch-sigil" in html
+    assert "pf-icon-valence" in html
+    assert "syncFieldStatusLive" in (STATIC / "app.js").read_text(encoding="utf-8")
+    gpu_index = ROOT / "packages" / "psyfi-gpu-renderer" / "index.html"
+    assert "/static/fonts/fonts.css" in gpu_index.read_text(encoding="utf-8")
+    gpu_main = ROOT / "packages" / "psyfi-gpu-renderer" / "src" / "main.tsx"
+    assert "styles/chrome.css" in gpu_main.read_text(encoding="utf-8")
     # Live Experience leads Workbench (field before sim form).
     assert html.index('id="experiencePanel"') < html.index('id="workspace"')
 

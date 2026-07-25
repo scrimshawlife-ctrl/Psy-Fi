@@ -35,6 +35,18 @@
       "footer": "Ft2",
       "designed_as_app": true,
       "notes": "GPU fonts+token CSS; field stage widen; icon pack wired; SW v16 woff2; tracer default #3ee7f2; soft-present paper; modulator demoted"
+    },
+    {
+      "date": "2026-07-25",
+      "target": "launch splash + Workbench motion + GPU source chrome (dist via Docker build)",
+      "verb": "fix",
+      "genre": "atmospheric",
+      "macrostructure": "Workbench",
+      "theme": "design.md",
+      "nav": "N9",
+      "footer": "Ft2",
+      "designed_as_app": true,
+      "notes": "Launch grain+sigil; scan/shell/field motion; metric icons; SW v17; GPU fonts/chrome already in source (Docker rebuilds dist)"
     }
   ]
 }

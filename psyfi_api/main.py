@@ -7,7 +7,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from psyfi_api.routers import simulate, midi, presets
+from psyfi_api.routers import simulate, midi, presets, jobs, telemetry
+from psyfi_api.telemetry import TELEMETRY_ENABLED
+from psyfi_core.models.substance_preset import get_registry
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -41,6 +43,8 @@ templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 app.include_router(simulate.router)
 app.include_router(midi.router)
 app.include_router(presets.router)
+app.include_router(jobs.router)
+app.include_router(telemetry.router)
 
 
 @app.get("/")
@@ -58,11 +62,7 @@ async def root(request: Request):
 
 @app.get("/health")
 async def health() -> dict[str, str]:
-    """Health check endpoint for monitoring and load balancers.
-
-    Returns:
-        Comprehensive health status with version and timestamp
-    """
+    """Liveness check for monitoring and load balancers."""
     from datetime import datetime, timezone
     return {
         "status": "healthy",
@@ -73,15 +73,40 @@ async def health() -> dict[str, str]:
     }
 
 
-@app.get("/api/info")
-async def api_info() -> dict[str, str]:
-    """API info endpoint (for programmatic access).
+@app.get("/ready")
+async def ready() -> dict:
+    """Readiness check: presets and critical static assets must be available."""
+    from datetime import datetime, timezone
 
-    Returns:
-        API information
-    """
+    checks: dict[str, bool] = {}
+    try:
+        presets = get_registry().list_presets()
+        checks["presets_loaded"] = len(presets) > 0
+    except Exception:  # noqa: BLE001
+        checks["presets_loaded"] = False
+
+    checks["session_schema"] = (REPO_ROOT / "psyfi_core" / "schemas" / "session.schema.json").exists()
+    checks["icon_192"] = (BASE_DIR / "static" / "icon-192.png").exists()
+    checks["icon_512"] = (BASE_DIR / "static" / "icon-512.png").exists()
+    checks["renderer_js"] = (BASE_DIR / "static" / "renderer.js").exists()
+
+    ready_ok = all(checks.values())
+    return {
+        "status": "ready" if ready_ok else "not_ready",
+        "service": "psyfi-api",
+        "version": app.version,
+        "checks": checks,
+        "telemetry_server_enabled": TELEMETRY_ENABLED,
+        "timestamp": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+    }
+
+
+@app.get("/api/info")
+async def api_info() -> dict[str, str | bool]:
+    """API info endpoint (for programmatic access)."""
     return {
         "message": "PsyFi API - Consciousness Field Simulation",
         "version": "0.1.0",
         "abx_core": "1.3",
+        "telemetry_server_enabled": TELEMETRY_ENABLED,
     }

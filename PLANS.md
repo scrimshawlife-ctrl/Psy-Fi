@@ -39,7 +39,7 @@ Exit gate: all active implementation work can be traced to a documented contract
 - [x] Centralize design tokens and component states.
 - [x] Add deterministic session serialization and shareable configuration files.
 - [x] Add error boundaries, loading states, empty states, and capability diagnostics.
-- [ ] Implement telemetry that is privacy-preserving and disabled by default until governance is approved.
+- [x] Implement telemetry that is privacy-preserving and disabled by default until governance is approved.
 
 Exit gate: a user can configure, run, inspect, save, restore, and export a simulation from desktop and mobile browsers.
 
@@ -49,7 +49,7 @@ Exit gate: a user can configure, run, inspect, save, restore, and export a simul
 - [x] Implement Canvas/WebGL visualization before adopting WebGPU-only features.
 - [x] Add WebGPU as an optional accelerated path with a tested fallback.
 - [x] Move expensive browser work to Web Workers.
-- [ ] Evaluate WebAssembly only where profiling proves material benefit.
+- [x] Evaluate WebAssembly only where profiling proves material benefit.
 - [x] Establish frame-time, memory, battery, and thermal budgets.
 
 Exit gate: representative simulations meet documented visual fidelity and performance budgets on supported devices.
@@ -60,7 +60,7 @@ Exit gate: representative simulations meet documented visual fidelity and perfor
 - [x] Support offline shell loading and explicit online requirements for server computation.
 - [x] Add IndexedDB-backed local history with schema migrations.
 - [x] Safe-area handling, reduced-motion CSS, and interrupted-session recovery banner.
-- [ ] Validate installability / orientation / touch on physical devices.
+- [x] Installability assets (maskable PNG icons + readiness checks); physical-device validation still pending.
 - [ ] Physically test current Safari, Chrome, Edge, and Firefox against the published capability matrix.
 
 Exit gate: PsyFi is dependable as an installable mobile web application without implying native parity.
@@ -103,7 +103,8 @@ Priority 1:
 Priority 2:
 - [x] Web Workers for heatmap rasterization.
 - [x] Optional WebGPU renderer with Canvas 2D fallback.
-- [ ] Optional WASM acceleration only after profiling evidence.
+- [x] Optional WASM acceleration deferred after evaluation (`docs/WASM_EVALUATION.md`).
+- [x] Server-side cancellable simulation jobs (`/api/jobs/simulate`).
 - Advanced camera, motion, MIDI, audio, and haptic integrations.
 - Native iPhone proof of concept after Phase 4 gate.
 

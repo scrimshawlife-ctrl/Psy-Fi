@@ -14,6 +14,116 @@
         "title": "HTTPValidationError",
         "type": "object"
       },
+      "JobCreateRequest": {
+        "description": "Create a background simulation job.",
+        "properties": {
+          "height": {
+            "default": 64,
+            "maximum": 512.0,
+            "minimum": 8.0,
+            "title": "Height",
+            "type": "integer"
+          },
+          "preset": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Preset"
+          },
+          "seed": {
+            "anyOf": [
+              {
+                "maximum": 4294967295.0,
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Seed"
+          },
+          "steps": {
+            "default": 10,
+            "maximum": 1000.0,
+            "minimum": 1.0,
+            "title": "Steps",
+            "type": "integer"
+          },
+          "width": {
+            "default": 64,
+            "maximum": 512.0,
+            "minimum": 8.0,
+            "title": "Width",
+            "type": "integer"
+          }
+        },
+        "title": "JobCreateRequest",
+        "type": "object"
+      },
+      "JobSummary": {
+        "description": "Job status payload.",
+        "properties": {
+          "created_at": {
+            "title": "Created At",
+            "type": "string"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "request": {
+            "additionalProperties": true,
+            "title": "Request",
+            "type": "object"
+          },
+          "result": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Result"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          },
+          "updated_at": {
+            "title": "Updated At",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "status",
+          "created_at",
+          "updated_at",
+          "request"
+        ],
+        "title": "JobSummary",
+        "type": "object"
+      },
       "MIDICCRequest": {
         "description": "Send MIDI CC message.",
         "properties": {
@@ -768,7 +878,7 @@
         "type": "object"
       },
       "SimulateResponse": {
-        "description": "Response from consciousness field simulation.\n\nExisting metric fields remain stable. Contract metadata and visualization\nare additive for web-shell consumers.",
+        "description": "Response from consciousness field simulation.",
         "properties": {
           "api_version": {
             "default": "v0",
@@ -861,6 +971,55 @@
           "visualization"
         ],
         "title": "SimulateResponse",
+        "type": "object"
+      },
+      "TelemetryOptInRequest": {
+        "description": "Client consent toggle for local diagnostic telemetry.",
+        "properties": {
+          "opt_in": {
+            "description": "When true and PSYFI_TELEMETRY_ENABLED=1, events may be buffered locally.",
+            "title": "Opt In",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "opt_in"
+        ],
+        "title": "TelemetryOptInRequest",
+        "type": "object"
+      },
+      "TelemetryStatus": {
+        "description": "Current telemetry gate state.",
+        "properties": {
+          "active": {
+            "title": "Active",
+            "type": "boolean"
+          },
+          "client_opt_in": {
+            "title": "Client Opt In",
+            "type": "boolean"
+          },
+          "event_count": {
+            "title": "Event Count",
+            "type": "integer"
+          },
+          "note": {
+            "title": "Note",
+            "type": "string"
+          },
+          "server_enabled": {
+            "title": "Server Enabled",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "server_enabled",
+          "client_opt_in",
+          "active",
+          "event_count",
+          "note"
+        ],
+        "title": "TelemetryStatus",
         "type": "object"
       },
       "ValidationError": {
@@ -1026,7 +1185,7 @@
     },
     "/api/info": {
       "get": {
-        "description": "API info endpoint (for programmatic access).\n\nReturns:\n    API information",
+        "description": "API info endpoint (for programmatic access).",
         "operationId": "api_info_api_info_get",
         "responses": {
           "200": {
@@ -1034,7 +1193,14 @@
               "application/json": {
                 "schema": {
                   "additionalProperties": {
-                    "type": "string"
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "boolean"
+                      }
+                    ]
                   },
                   "title": "Response Api Info Api Info Get",
                   "type": "object"
@@ -1045,6 +1211,132 @@
           }
         },
         "summary": "Api Info"
+      }
+    },
+    "/api/jobs/simulate": {
+      "post": {
+        "description": "Start a cancellable simulation job in a worker thread.",
+        "operationId": "create_simulate_job_api_jobs_simulate_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JobCreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobSummary"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Simulate Job",
+        "tags": [
+          "jobs"
+        ]
+      }
+    },
+    "/api/jobs/{job_id}": {
+      "delete": {
+        "description": "Request cancellation of a queued/running job.",
+        "operationId": "cancel_job_api_jobs__job_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "job_id",
+            "required": true,
+            "schema": {
+              "title": "Job Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobSummary"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Cancel Job",
+        "tags": [
+          "jobs"
+        ]
+      },
+      "get": {
+        "description": "Fetch job status/result.",
+        "operationId": "get_job_api_jobs__job_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "job_id",
+            "required": true,
+            "schema": {
+              "title": "Job Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobSummary"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Job",
+        "tags": [
+          "jobs"
+        ]
       }
     },
     "/api/midi/devices": {
@@ -1368,9 +1660,97 @@
         ]
       }
     },
+    "/api/telemetry/events": {
+      "get": {
+        "description": "List locally buffered events (empty unless active).",
+        "operationId": "list_telemetry_events_api_telemetry_events_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response List Telemetry Events Api Telemetry Events Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List Telemetry Events",
+        "tags": [
+          "telemetry"
+        ]
+      }
+    },
+    "/api/telemetry/opt-in": {
+      "post": {
+        "description": "Set client opt-in. Still no-op unless the server env flag is enabled.",
+        "operationId": "set_telemetry_opt_in_api_telemetry_opt_in_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TelemetryOptInRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TelemetryStatus"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Set Telemetry Opt In",
+        "tags": [
+          "telemetry"
+        ]
+      }
+    },
+    "/api/telemetry/status": {
+      "get": {
+        "description": "Return whether telemetry is active.",
+        "operationId": "telemetry_status_api_telemetry_status_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TelemetryStatus"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Telemetry Status",
+        "tags": [
+          "telemetry"
+        ]
+      }
+    },
     "/health": {
       "get": {
-        "description": "Health check endpoint for monitoring and load balancers.\n\nReturns:\n    Comprehensive health status with version and timestamp",
+        "description": "Liveness check for monitoring and load balancers.",
         "operationId": "health_health_get",
         "responses": {
           "200": {
@@ -1391,9 +1771,30 @@
         "summary": "Health"
       }
     },
+    "/ready": {
+      "get": {
+        "description": "Readiness check: presets and critical static assets must be available.",
+        "operationId": "ready_ready_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Ready Ready Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Ready"
+      }
+    },
     "/simulate/": {
       "post": {
-        "description": "Simulate consciousness field evolution.",
+        "description": "Simulate consciousness field evolution (cancellable on disconnect).",
         "operationId": "simulate_consciousness_field_simulate__post",
         "requestBody": {
           "content": {

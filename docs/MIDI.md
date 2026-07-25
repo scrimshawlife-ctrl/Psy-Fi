@@ -89,14 +89,20 @@ curl http://localhost:8000/api/midi/status
 
 ### Control Change (CC) → Parameter Mappings
 
-| CC # | Controller        | PsyFi Parameter      | Range   | Description                           |
-|------|-------------------|----------------------|---------|---------------------------------------|
-| 1    | Modulation Wheel  | `phase_noise`        | 0.0-1.0 | Phase field noise intensity           |
-| 7    | Volume            | `coupling_strength`  | 0.0-2.0 | Kuramoto oscillator coupling          |
-| 10   | Pan               | `drift_amplitude`    | 0.0-1.0 | Phase drift amplitude                 |
-| 11   | Expression        | `V` (divisive norm)  | 0.0-1.0 | Surround suppression strength         |
-| 74   | Brightness        | `P` (divisive norm)  | 1.0-3.0 | Normalization exponent                |
-| 71   | Resonance         | `decay_rate`         | 0.0-1.0 | Field magnitude decay                 |
+Default mappings from `MIDIControlMap` in `psyfi_core/midi/service.py`:
+
+| CC # | Controller           | PsyFi Parameter      | Range   | Description                           |
+|------|----------------------|----------------------|---------|---------------------------------------|
+| 1    | Modulation Wheel     | `phase_noise`        | 0.0-1.0 | Phase field noise intensity           |
+| 2    | Breath Controller    | `drift_amplitude`    | 0.0-1.0 | Phase drift amplitude                 |
+| 4    | Foot Controller      | `drift_velocity`     | 0.0-1.0 | Phase drift velocity                  |
+| 7    | Volume               | `coupling_strength`  | 0.0-1.0 | Kuramoto oscillator coupling (CC path)|
+| 10   | Pan                  | `normalization_P`    | 0.0-1.0 | Divisive-norm exponent (normalized)   |
+| 11   | Expression           | `normalization_V`    | 0.0-1.0 | Surround suppression strength         |
+| 16   | General Purpose 1    | `symmetry_bias`      | 0.0-1.0 | Visual symmetry bias                  |
+| 17   | General Purpose 2    | `depth_distortion`   | 0.0-1.0 | Depth distortion                      |
+| 18   | General Purpose 3    | `valence_bias`       | 0.0-1.0 | Affective valence bias                |
+| 19   | General Purpose 4    | `arousal_level`      | 0.0-1.0 | Arousal level                         |
 
 **Example**: Moving the modulation wheel (CC1) from 0 to 127 will smoothly increase `phase_noise` from 0.0 to 1.0.
 
@@ -110,25 +116,25 @@ Trigger substance presets via MIDI notes (C4 = 60):
 | 61   | C#4       | lsd            | LSD (5-HT2A agonist)          |
 | 62   | D4        | psilocybin     | Psilocybin (classic tryptamine)|
 | 63   | D#4       | dmt            | DMT (breakthrough intensity)   |
-| 64   | E4        | ketamine       | Ketamine (NMDA antagonist)     |
-| 65   | F4        | mdma           | MDMA (empathogen)              |
-| 66   | F#4       | mescaline      | Mescaline (phenethylamine)     |
-| 67   | G4        | 2cb            | 2C-B (visual psychedelic)      |
-| 68   | G#4       | jhana          | Meditative jhana state         |
-| 69   | A4        | rem_dream      | REM sleep dreaming             |
+| 64   | E4        | 5-meo-dmt      | 5-MeO-DMT                      |
+| 65   | F4        | ketamine       | Ketamine (NMDA antagonist)     |
+| 66   | F#4       | mdma           | MDMA (empathogen)              |
+| 67   | G4        | mescaline      | Mescaline (phenethylamine)     |
+| 68   | G#4       | 2c-b           | 2C-B (visual psychedelic)      |
+| 69   | A4        | jhana          | Meditative jhana state         |
+| 70   | A#4       | rem_dream      | REM sleep dreaming             |
 
 **Velocity Sensitivity**: Note velocity (0-127) controls preset intensity (0.0-1.0).
 
 ### Program Change → Class Mappings
 
-| Program # | Substance Class | Description                  |
-|-----------|-----------------|------------------------------|
-| 0         | psychedelic     | Classic psychedelics         |
-| 1         | dissociative    | NMDA antagonists             |
-| 2         | empathogen      | Serotonin releasers          |
-| 3         | stimulant       | Dopamine/NE agonists         |
-| 4         | deliriant       | Anticholinergics             |
-| 5         | baseline        | Default/sober state          |
+| Program # | Substance Class        | Description                  |
+|-----------|------------------------|------------------------------|
+| 0         | baseline               | Default/sober state          |
+| 1         | classic_psychedelic    | Classic psychedelics         |
+| 2         | dissociative           | NMDA antagonists             |
+| 3         | empathogen             | Serotonin releasers          |
+| 4         | meditative             | Meditative states            |
 
 ---
 
@@ -233,16 +239,17 @@ GET /api/midi/mappings
   "cc_to_param": {
     "1": "phase_noise",
     "7": "coupling_strength",
-    "10": "drift_amplitude"
+    "10": "normalization_P"
   },
   "note_to_preset": {
     "60": "baseline",
     "61": "lsd",
-    "62": "psilocybin"
+    "62": "psilocybin",
+    "64": "5-meo-dmt"
   },
   "program_to_class": {
-    "0": "psychedelic",
-    "1": "dissociative"
+    "0": "baseline",
+    "1": "classic_psychedelic"
   }
 }
 ```
@@ -404,7 +411,7 @@ midi.close()
 4. **Map Controls**:
    - Use CC1 (Modulation) for phase noise
    - Use CC7 (Volume) for coupling strength
-   - Use notes C4-A4 for preset changes
+   - Use notes C4–A#4 (60–70) for preset changes
 
 ### Logic Pro / FL Studio / Bitwig
 
@@ -432,17 +439,17 @@ curl -X POST http://localhost:8000/api/midi/start \
 ### Akai MPK / Arturia KeyLab
 
 ```python
-# Configure knobs/faders to send CC1, CC7, CC10, CC11, CC74, CC71
-# Configure pads to send notes 60-69
+# Configure knobs/faders to send CC1, CC2, CC4, CC7, CC10, CC11, CC16-19
+# Configure pads to send notes 60-70
 # Start PsyFi MIDI service
 ```
 
 ### Touch OSC / MIDI Controller Apps
 
 Create custom layouts with:
-- 6 faders → CC1, 7, 10, 11, 74, 71
-- 10 buttons → Notes 60-69
-- Program change buttons → 0-5
+- Faders → CC1, 2, 4, 7, 10, 11 (plus CC16–19 for visual/affect)
+- Buttons → Notes 60–70
+- Program change buttons → 0–4
 
 ---
 

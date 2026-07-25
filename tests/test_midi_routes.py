@@ -133,3 +133,90 @@ def test_send_commands_require_running_service(monkeypatch):
     assert inactive_note.status_code == 503
     assert no_output_cc.status_code == 503
     assert no_output_note.status_code == 503
+
+
+def test_output_only_start_keeps_service_active(monkeypatch):
+    """Output-only MIDI start must mark the service active for send routes."""
+
+    class OutputOnlyService:
+        def __init__(self, config=None):
+            self.config = config or midi.MIDIConfig()
+            self.control_map = midi.MIDIControlMap()
+            self.input_port = None
+            self.output_port = None
+            self._running = False
+            self.sent = []
+
+        def open(self, input_device=None, output_device=None):
+            # Simulate an environment with an output device only.
+            self.output_port = object()
+            self.config.output_device = output_device or "Virtual Output"
+
+        def start(self):
+            # Mirror the real service contract: active without an input thread.
+            if not self.input_port and not self.output_port:
+                raise RuntimeError("No MIDI ports open")
+            self._running = True
+
+        def close(self):
+            self._running = False
+            self.output_port = None
+
+        def get_params(self):
+            return {}
+
+        def send_cc(self, control, value):
+            self.sent.append(("cc", control, value))
+
+        def send_note(self, note, velocity, duration=0.1):
+            self.sent.append(("note", note, velocity, duration))
+
+    monkeypatch.setattr(midi, "MIDI_AVAILABLE", True)
+    monkeypatch.setattr(midi, "MIDIService", OutputOnlyService)
+
+    with TestClient(app) as client:
+        start = client.post(
+            "/api/midi/start",
+            json={"output_device": "Virtual Output"},
+        )
+        status = client.get("/api/midi/status")
+        mappings = client.get("/api/midi/mappings")
+        cc = client.post("/api/midi/send/cc", json={"control": 1, "value": 64})
+
+    assert start.status_code == 200
+    assert status.status_code == 200
+    assert status.json()["running"] is True
+    assert mappings.status_code == 200
+    assert mappings.json()["note_to_preset"]["64"] == "5-meo-dmt"
+    assert cc.status_code == 200
+    assert midi._midi_service.sent == [("cc", 1, 64)]
+
+
+def test_midi_service_start_output_only_sets_running():
+    """Unit-level: MIDIService.start() activates output-only sessions."""
+    from psyfi_core.midi.service import MIDIService
+
+    service = MIDIService.__new__(MIDIService)
+    service.input_port = None
+    service.output_port = object()
+    service._running = False
+    service._input_thread = None
+
+    MIDIService.start(service)
+
+    assert service._running is True
+    assert service._input_thread is None
+
+
+def test_midi_service_start_requires_a_port():
+    """Unit-level: start without any open ports should fail fast."""
+    from psyfi_core.midi.service import MIDIService
+
+    service = MIDIService.__new__(MIDIService)
+    service.input_port = None
+    service.output_port = None
+    service._running = False
+    service._input_thread = None
+
+    with pytest.raises(RuntimeError, match="No MIDI ports open"):
+        MIDIService.start(service)

@@ -202,18 +202,26 @@ class MIDIService:
             self.output_port = None
 
     def start(self) -> None:
-        """Start MIDI input processing."""
-        if not self.input_port:
-            print("Warning: No MIDI input port open")
-            return
+        """Mark the service active and start input processing when available.
+
+        Output-only sessions (no input port) remain active so send/status routes
+        work after a successful start. At least one open port is required.
+        """
+        if not self.input_port and not self.output_port:
+            raise RuntimeError(
+                "No MIDI ports open; open an input or output device first"
+            )
 
         self._running = True
-        self._input_thread = threading.Thread(target=self._input_loop, daemon=True)
-        self._input_thread.start()
-        print("MIDI input processing started")
+        if self.input_port:
+            self._input_thread = threading.Thread(target=self._input_loop, daemon=True)
+            self._input_thread.start()
+            print("MIDI input processing started")
+        else:
+            print("MIDI service started (output-only)")
 
     def stop(self) -> None:
-        """Stop MIDI input processing."""
+        """Stop MIDI input processing and mark the service inactive."""
         self._running = False
         if self._input_thread:
             self._input_thread.join(timeout=1.0)

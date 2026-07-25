@@ -13,10 +13,14 @@ SNAPSHOT = ROOT / "docs" / "contracts" / "openapi.json"
 REQUIRED_PATHS = {
     "/",
     "/health",
+    "/ready",
     "/api/info",
     "/simulate/",
     "/api/presets/",
     "/api/presets/{preset_id}",
+    "/api/jobs/simulate",
+    "/api/jobs/{job_id}",
+    "/api/telemetry/status",
     "/api/midi/devices",
     "/api/midi/start",
 }

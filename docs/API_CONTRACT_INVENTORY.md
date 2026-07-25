@@ -13,10 +13,15 @@ Document the live FastAPI surface, static/PWA assets, and service-worker behavio
 |---|---|---|---|---|
 | `GET` | `/` | — | HTML shell | Existing Jinja template |
 | `GET` | `/health` | — | status dict | Liveness + version |
+| `GET` | `/ready` | — | readiness dict | Presets/icons/schema checks |
 | `GET` | `/api/info` | — | info dict | Pre-`/api/v1` info surface |
-| `POST` | `/simulate/` | `SimulateRequest` | `SimulateResponse` | Additive session/provenance/visualization; optional `preset` |
+| `POST` | `/simulate/` | `SimulateRequest` | `SimulateResponse` | Sync path; cancels on disconnect |
+| `POST` | `/api/jobs/simulate` | job request | job summary | Async cancellable job |
+| `GET` | `/api/jobs/{id}` | — | job summary | Poll status/result |
+| `DELETE` | `/api/jobs/{id}` | — | job summary | Request cancel |
 | `GET` | `/api/presets/` | — | `PresetListResponse` | Existing substance registry catalog |
 | `GET` | `/api/presets/{id}` | — | `PresetDetail` | Id or alias lookup |
+| `GET/POST` | `/api/telemetry/*` | opt-in | status/events | Disabled unless env + client consent |
 | `GET` | `/api/midi/*` | MIDI models | MIDI models / dicts | Process-global MIDI service |
 | `GET` | `/assets/icons/*` | — | static files | Mount of existing `docs/icons` |
 | `GET` | `/static/*` | — | static files | Existing UI assets + SW |

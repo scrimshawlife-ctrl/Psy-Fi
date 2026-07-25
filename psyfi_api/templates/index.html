@@ -118,8 +118,12 @@
                             <input type="checkbox" id="preferWebGPU" checked>
                             Prefer WebGPU when available (Canvas 2D fallback)
                         </label>
+                        <label class="checkbox-row" for="telemetryOptIn">
+                            <input type="checkbox" id="telemetryOptIn">
+                            Opt in to local diagnostic telemetry (off unless server enables it)
+                        </label>
                         <p class="network-status" id="networkStatus" data-state="online" aria-live="polite">Online — server computation available</p>
-                        <p class="input-hint">Esc or Cancel aborts the in-flight browser request.</p>
+                        <p class="input-hint">Esc or Cancel requests server-side job cancellation.</p>
                     </form>
                 </div>
             </section>

@@ -28,6 +28,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let lastPayload = null;
     let activeAbort = null;
+    let activeJobId = null;
+    let cancelRequested = false;
     let recoveryRecord = null;
 
     const gridPresets = {
@@ -383,6 +385,45 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    async function sleep(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+
+    async function runViaJob(body) {
+        const create = await fetch('/api/jobs/simulate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body),
+        });
+        if (!create.ok) {
+            const errorData = await create.json().catch(() => ({}));
+            throw new Error(errorData.detail || `Job create failed (${create.status})`);
+        }
+        const created = await create.json();
+        activeJobId = created.id;
+
+        while (true) {
+            if (cancelRequested && activeJobId) {
+                await fetch(`/api/jobs/${activeJobId}`, { method: 'DELETE' });
+            }
+            const poll = await fetch(`/api/jobs/${activeJobId}`);
+            if (!poll.ok) throw new Error(`Job poll failed (${poll.status})`);
+            const job = await poll.json();
+            if (job.status === 'completed' && job.result) {
+                return job.result;
+            }
+            if (job.status === 'cancelled') {
+                const err = new Error(job.error || 'Simulation cancelled');
+                err.name = 'AbortError';
+                throw err;
+            }
+            if (job.status === 'failed') {
+                throw new Error(job.error || 'Simulation job failed');
+            }
+            await sleep(120);
+        }
+    }
+
     form.addEventListener('submit', async (event) => {
         event.preventDefault();
         if (!navigator.onLine) {
@@ -396,10 +437,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const seed = parseInt(document.getElementById('seed').value, 10);
         const preset = substanceSelect.value || null;
 
+        cancelRequested = false;
+        activeJobId = null;
         if (activeAbort) activeAbort.abort();
         activeAbort = typeof AbortController !== 'undefined' ? new AbortController() : null;
 
-        // Mark potential interruption for recovery if the tab is closed mid-run.
         try {
             localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify({
                 interrupted: true,
@@ -414,17 +456,14 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const body = { width, height, steps, seed };
             if (preset) body.preset = preset;
-            const response = await fetch('/simulate/', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(body),
-                signal: activeAbort ? activeAbort.signal : undefined,
-            });
-            if (!response.ok) {
-                const errorData = await response.json().catch(() => ({}));
-                throw new Error(errorData.detail || `HTTP ${response.status}`);
+
+            // Job API enables true server-side cancellation via should_cancel.
+            const data = await runViaJob(body);
+            if (cancelRequested) {
+                const err = new Error('Simulation cancelled');
+                err.name = 'AbortError';
+                throw err;
             }
-            const data = await response.json();
             await showResults(data);
             try {
                 await saveHistoryRecord(data);
@@ -433,18 +472,26 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } catch (error) {
             if (error && error.name === 'AbortError') {
-                showError('Simulation cancelled. The server may still finish the compute; no result was applied.');
+                showError('Simulation cancelled on the server. No result was applied.');
             } else {
                 showError(error.message || String(error));
             }
         } finally {
             activeAbort = null;
+            activeJobId = null;
+            cancelRequested = false;
             showLoading(false);
         }
     });
 
-    cancelButton?.addEventListener('click', () => {
+    cancelButton?.addEventListener('click', async () => {
+        cancelRequested = true;
         if (activeAbort) activeAbort.abort();
+        if (activeJobId) {
+            try {
+                await fetch(`/api/jobs/${activeJobId}`, { method: 'DELETE' });
+            } catch (_error) { /* ignore */ }
+        }
     });
 
     document.getElementById('exportSessionButton')?.addEventListener('click', () => {
@@ -502,13 +549,30 @@ document.addEventListener('DOMContentLoaded', () => {
         renderCapabilities();
     });
 
+    const telemetryOptIn = document.getElementById('telemetryOptIn');
+    telemetryOptIn?.addEventListener('change', async () => {
+        try {
+            await fetch('/api/telemetry/opt-in', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ opt_in: !!telemetryOptIn.checked }),
+            });
+        } catch (error) {
+            console.warn('[PsyFi] telemetry opt-in failed', error);
+        }
+    });
+
     document.addEventListener('keydown', (event) => {
         if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
             event.preventDefault();
             form.dispatchEvent(new Event('submit'));
         }
-        if (event.key === 'Escape' && activeAbort) {
-            activeAbort.abort();
+        if (event.key === 'Escape') {
+            cancelRequested = true;
+            if (activeAbort) activeAbort.abort();
+            if (activeJobId) {
+                fetch(`/api/jobs/${activeJobId}`, { method: 'DELETE' }).catch(() => {});
+            }
         }
     });
 

@@ -219,7 +219,9 @@ async def get_midi_mappings() -> MIDIControlMapResponse:
     Returns:
         CC, note, and program change mappings
     """
-    service = _require_active_service()
+    # Mappings are static configuration; require a started service instance
+    # but do not require the input listener thread to be active.
+    service = _require_midi_service()
     return MIDIControlMapResponse(
         cc_to_param=service.control_map.cc_to_param,
         note_to_preset={

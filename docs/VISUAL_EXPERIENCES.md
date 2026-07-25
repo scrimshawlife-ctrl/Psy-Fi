@@ -49,6 +49,8 @@ python scripts/run_dev_server.py
 
 - Curated inputs: `data/phenomenology/positive/`
 - Derived catalog: `data/phenomenology/derived/experience_catalog.v1.json`
+- Distilled substance visuals: `data/phenomenology/derived/substance_visual_overlays.v1.json`
+  - Feeds `GET /api/v1/substances` and `parameter_mapper` (engine weights, palette, bias, safety)
 - Full source texts are not shown in UI; hooks are short derived motifs with hashed refs
 
 ## Authority labels

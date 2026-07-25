@@ -176,7 +176,7 @@ class DAWIntegration:
             print("   ⚠️  No metrics to export")
             return
 
-        self.midi.export_to_midi(self.metrics_history, filename)
+        self.midi.export_to_midi_file(self.metrics_history, filename)
         print(f"   ✅ Exported {len(self.metrics_history)} timesteps")
         print(f"   📂 Import '{filename}' into your DAW to visualize consciousness metrics!")
 

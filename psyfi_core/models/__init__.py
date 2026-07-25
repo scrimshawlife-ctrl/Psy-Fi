@@ -8,6 +8,14 @@ from psyfi_core.models.receptor_profile import ReceptorProfile
 from psyfi_core.models.valence_metrics import ValenceMetrics
 from psyfi_core.models.negative_valence import NegativeValenceSignature
 from psyfi_core.models.gestalt_profile import GestaltProfile
+from psyfi_core.models.session import (
+    PsyFiSession,
+    PsyFiVisualization,
+    SessionMetrics,
+    SessionParameters,
+    SessionProvenance,
+    SessionResult,
+)
 
 __all__ = [
     "ResonanceFrame",
@@ -18,4 +26,10 @@ __all__ = [
     "ValenceMetrics",
     "NegativeValenceSignature",
     "GestaltProfile",
+    "PsyFiSession",
+    "PsyFiVisualization",
+    "SessionMetrics",
+    "SessionParameters",
+    "SessionProvenance",
+    "SessionResult",
 ]

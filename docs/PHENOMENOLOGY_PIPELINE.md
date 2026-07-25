@@ -7,11 +7,14 @@ scripts/build_experience_catalog.py
         ↓
 motif scores + valence filter + engine suggestions
         ↓
-experience_catalog.v1.json + substance_visual_overlays.v1.json
+experience_catalog.v1.json
+        ↓
+aggregate per substance → substance_visual_overlays.v1.json
+  (visual_signature, engine_weights, parameter_bias, palette, phase, safety)
         ↓
 parameter_mapper.map_parameters / build_parameter_timeline
         ↓
-API + Canvas ExperiencePlayer
+API (/api/v1/substances, /api/v1/visualize/...) + Canvas ExperiencePlayer
 ```
 
 ## Rebuild catalog

@@ -1,11 +1,13 @@
 """Consciousness Omega - core field evolution with Kuramoto coupling."""
 
+from collections.abc import Callable
 from typing import Literal
 
 import numpy as np
 from pydantic import BaseModel, Field
 
 from psyfi_core.abx_core import ABXRuntime
+from psyfi_core.abx_core.errors import SimulationCancelled
 
 
 class ConsciousnessOmegaParams(BaseModel):
@@ -13,7 +15,7 @@ class ConsciousnessOmegaParams(BaseModel):
 
     Attributes:
         coupling_type: Type of coupling between oscillators
-        coupling_strength: Strength of coupling (0 = independent, 1 = strong coupling)
+        coupling_strength: Strength of coupling (0 = independent, 2 = max coupling)
         natural_freq_base: Base natural frequency for oscillators
         freq_depth_scale: How much depth (y-position) affects frequency
         freq_brightness_scale: How much brightness affects frequency
@@ -22,7 +24,8 @@ class ConsciousnessOmegaParams(BaseModel):
     """
 
     coupling_type: Literal["symmetric", "asymmetric"] = Field(default="symmetric")
-    coupling_strength: float = Field(default=0.5, ge=0.0, le=1.0)
+    # Upper bound matches substance presets / safety defaults (e.g. DMT = 1.2)
+    coupling_strength: float = Field(default=0.5, ge=0.0, le=2.0)
     natural_freq_base: float = Field(default=1.0)
     freq_depth_scale: float = Field(default=0.5)
     freq_brightness_scale: float = Field(default=0.1)
@@ -34,6 +37,7 @@ def evolve_consciousness_omega(
     field: np.ndarray,
     params: ConsciousnessOmegaParams,
     runtime: ABXRuntime | None = None,
+    should_cancel: Callable[[], bool] | None = None,
 ) -> np.ndarray:
     """Evolve consciousness field using Kuramoto-like coupling.
 
@@ -45,6 +49,8 @@ def evolve_consciousness_omega(
         field: 2D complex field (height, width)
         params: Evolution parameters
         runtime: Optional ABX runtime for metrics tracking
+        should_cancel: Optional callback checked each step; when true, raises
+            ``SimulationCancelled`` so API jobs can abort promptly.
 
     Returns:
         Evolved field
@@ -73,6 +79,11 @@ def evolve_consciousness_omega(
     current_phases = phases.copy()
 
     for step in range(params.steps):
+        if should_cancel is not None and should_cancel():
+            raise SimulationCancelled(
+                f"Simulation cancelled after {step}/{params.steps} steps"
+            )
+
         # Compute coupling term from nearest neighbors
         # Simple 4-neighbor coupling (up, down, left, right)
 

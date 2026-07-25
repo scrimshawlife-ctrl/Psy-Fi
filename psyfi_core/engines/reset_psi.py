@@ -25,15 +25,20 @@ def apply_phase_reset(
     Returns:
         Field with phase reset applied
     """
+    # Fork RNG when an explicit seed is provided, but keep provenance on the
+    # caller runtime so seeded resets remain visible to the parent chain.
+    rng_runtime = runtime
     if seed is not None:
-        runtime = runtime.fork_with_seed(seed, extra_meta={"seed_source": "reset_psi"})
+        rng_runtime = runtime.fork_with_seed(
+            seed, extra_meta={"seed_source": "reset_psi"}
+        )
 
     # Extract magnitude and phase
     magnitudes = np.abs(field)
     phases = np.angle(field)
 
     # Generate random phases using runtime RNG for determinism
-    random_phases = runtime.rng.uniform(-np.pi, np.pi, size=phases.shape)
+    random_phases = rng_runtime.rng.uniform(-np.pi, np.pi, size=phases.shape)
 
     # Blend current phases with random phases
     alpha = np.clip(strength, 0.0, 1.0)
@@ -42,9 +47,12 @@ def apply_phase_reset(
     # Reconstruct field with original magnitudes and new phases
     result = magnitudes * np.exp(1j * new_phases)
 
-    # Update provenance
+    # Update provenance on the caller runtime
     runtime.provenance.add_module("reset_psi")
     runtime.provenance.add_parameter("reset_strength", strength)
-    runtime.provenance.add_parameter("seed", runtime.seed)
+    runtime.provenance.add_parameter("seed", rng_runtime.seed)
+    if seed is not None:
+        runtime.provenance.add_meta("seed_override", seed)
+        runtime.provenance.add_meta("seed_source", "reset_psi")
 
     return result.astype(np.complex64)

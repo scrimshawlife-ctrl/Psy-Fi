@@ -261,16 +261,8 @@ def _phase_intensity(phase_profile: dict[str, Any], t: float) -> tuple[str, floa
     return "plateau", 0.75
 
 
-def _engine_weights(
-    recipe: dict[str, Any] | None,
-    mode: str,
-    substance: str,
-    params: dict[str, float],
-) -> dict[str, float]:
+def _style_engine_baseline(style: str) -> dict[str, float]:
     weights = {k: 0.0 for k in ENGINE_WEIGHT_KEYS}
-    style = (SUBSTANCE_VISUAL_DEFAULTS.get(substance) or {}).get("oscillation_style", "minimal")
-
-    # Baseline by substance style
     if style == "geometric":
         weights.update(recursive_feedback=0.7, kaleidoscope=0.65, flow_field=0.25, organic_bloom=0.15)
     elif style == "organic":
@@ -295,6 +287,29 @@ def _engine_weights(
         )
     else:
         weights.update(recursive_feedback=0.5, flow_field=0.3)
+    return weights
+
+
+def _engine_weights(
+    recipe: dict[str, Any] | None,
+    mode: str,
+    substance: str,
+    params: dict[str, float],
+    overlay: dict[str, Any] | None = None,
+) -> dict[str, float]:
+    style = (
+        (overlay or {}).get("oscillation_style")
+        or (overlay or {}).get("visual_signature", {}).get("oscillation_style")
+        or (SUBSTANCE_VISUAL_DEFAULTS.get(substance) or {}).get("oscillation_style", "minimal")
+    )
+    weights = _style_engine_baseline(style)
+
+    # Distilled substance overlay weights (from scraped+seed recipe aggregates)
+    overlay_weights = (overlay or {}).get("engine_weights") or {}
+    if overlay_weights:
+        for key, value in overlay_weights.items():
+            if key in weights:
+                weights[key] = 0.45 * weights[key] + 0.55 * float(value)
 
     if recipe:
         primary = recipe.get("primary_engines") or []
@@ -327,6 +342,17 @@ def _engine_weights(
     return {k: round(v / total, 4) for k, v in weights.items()}
 
 
+def _resolve_overlay(substance: str, substance_overlay: dict[str, Any] | None) -> dict[str, Any] | None:
+    if substance_overlay:
+        return substance_overlay
+    try:
+        from psyfi_core.experiences.catalog import get_default_catalog
+
+        return get_default_catalog().overlay(substance)
+    except Exception:  # noqa: BLE001
+        return None
+
+
 def map_parameters(
     *,
     substance: str = "lsd",
@@ -335,6 +361,7 @@ def map_parameters(
     seed: int = 42,
     experience: dict[str, Any] | None = None,
     substance_visual: dict[str, Any] | None = None,
+    substance_overlay: dict[str, Any] | None = None,
     phase_t: float = 0.4,
     neutral_view: bool = False,
     reduce_motion: bool = False,
@@ -350,13 +377,28 @@ def map_parameters(
         mode = "open"
     intensity = _clamp(intensity)
 
+    overlay = _resolve_overlay(substance, substance_overlay)
+    overlay_signature = (overlay or {}).get("visual_signature") or {}
+
     visual = {
         **SUBSTANCE_VISUAL_DEFAULTS.get("baseline", {}),
         **SUBSTANCE_VISUAL_DEFAULTS.get(substance, {}),
+        **overlay_signature,
         **(substance_visual or {}),
     }
+    if overlay and overlay.get("tracers_color"):
+        visual.setdefault("tracers_color", overlay["tracers_color"])
+    if overlay and overlay.get("oscillation_style"):
+        visual["oscillation_style"] = overlay["oscillation_style"]
+
     if experience and experience.get("visual_recipe", {}).get("palette"):
         pal = experience["visual_recipe"]["palette"]
+        if pal.get("tracers"):
+            visual["tracers_color"] = pal["tracers"]
+        if pal.get("energy") is not None:
+            visual["color_enhancement"] = float(pal["energy"])
+    elif overlay and overlay.get("palette"):
+        pal = overlay["palette"]
         if pal.get("tracers"):
             visual["tracers_color"] = pal["tracers"]
         if pal.get("energy") is not None:
@@ -365,18 +407,22 @@ def map_parameters(
     params = dict(DEFAULT_PARAMS)
     params.update(_visual_to_params(visual))
 
-    recipe = (experience or {}).get("visual_recipe") or {}
-    bias = recipe.get("parameter_bias") or {}
-    for k, v in bias.items():
-        if k in params or k in DEFAULT_PARAMS:
-            params[k] = float(v)
+    # Substance-level distilled bias, then recipe-specific bias
+    for source_bias in (
+        (overlay or {}).get("parameter_bias") or {},
+        ((experience or {}).get("visual_recipe") or {}).get("parameter_bias") or {},
+    ):
+        for k, v in source_bias.items():
+            if k in params or k in DEFAULT_PARAMS:
+                params[k] = float(v)
 
+    recipe = (experience or {}).get("visual_recipe") or {}
     for k, v in MODE_BIASES[mode].items():
         params[k] = params.get(k, 0.0) + float(v)
 
-    phase_name, phase_amp = _phase_intensity(recipe.get("phase_profile") or {}, phase_t)
+    phase_profile = recipe.get("phase_profile") or (overlay or {}).get("phase_profile") or {}
+    phase_name, phase_amp = _phase_intensity(phase_profile, phase_t)
     scale = intensity * phase_amp
-
     # Scale expressive params by intensity/phase; keep some floor for readability
     expressive = [
         "feedback_strength",
@@ -428,7 +474,17 @@ def map_parameters(
         safety["max_flash_hz"] = min(safety["max_flash_hz"], 1.5)
         safety["max_luminance_delta"] = min(safety["max_luminance_delta"], 0.22)
 
-    engines = _engine_weights(recipe, mode, substance, params)
+    if overlay and overlay.get("safety"):
+        safety["max_flash_hz"] = min(
+            safety["max_flash_hz"],
+            float(overlay["safety"].get("max_flash_hz", safety["max_flash_hz"])),
+        )
+        safety["max_luminance_delta"] = min(
+            safety["max_luminance_delta"],
+            float(overlay["safety"].get("max_luminance_delta", safety["max_luminance_delta"])),
+        )
+
+    engines = _engine_weights(recipe, mode, substance, params, overlay=overlay)
 
     if neutral_view:
         params = {k: (0.05 if k not in ("stability",) else 0.95) for k in params}

@@ -2,7 +2,7 @@
 
 ## Principle
 
-The iPhone application is a later platform implementation of a validated PsyFi product, not a parallel redesign. Native work begins after the web product reaches the Phase 4 validation gate in `PLANS.md`.
+The iPhone application is a **separate, deferred track** — not part of current web/PWA delivery. Native work begins only after the web product reaches the Phase 4 validation gate in `PLANS.md`, and only if a dedicated iOS effort is opened. Until then, treat this document as a migration sketch so web contracts stay portable.
 
 ## Native Entry Criteria
 

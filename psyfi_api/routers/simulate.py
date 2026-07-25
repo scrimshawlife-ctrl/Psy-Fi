@@ -1,48 +1,40 @@
 """Simulation endpoint for consciousness field evolution."""
 
-import numpy as np
-from fastapi import APIRouter
+from __future__ import annotations
+
+import asyncio
+import contextlib
+
+from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel, Field
 
-from psyfi_core import PsyFiConfig, ABXRuntime
-from psyfi_core.models import ResonanceFrame
-from psyfi_core.engines import (
-    ConsciousnessOmegaParams,
-    evolve_consciousness_omega,
-    NormalizationParams,
-    apply_normalization,
-    compute_valence_metrics,
+from psyfi_api.simulation_service import PresetNotFoundError, run_simulation
+from psyfi_api.telemetry import telemetry
+from psyfi_core.abx_core.errors import SimulationCancelled
+from psyfi_core.models.session import (
+    SESSION_SCHEMA_VERSION,
+    PsyFiSession,
+    PsyFiVisualization,
 )
 
 router = APIRouter(prefix="/simulate", tags=["simulation"])
 
 
 class SimulateRequest(BaseModel):
-    """Request for consciousness field simulation.
-
-    Attributes:
-        width: Width of the field
-        height: Height of the field
-        steps: Number of evolution steps
-    """
+    """Request for consciousness field simulation."""
 
     width: int = Field(default=64, ge=8, le=512)
     height: int = Field(default=64, ge=8, le=512)
     steps: int = Field(default=10, ge=1, le=1000)
+    seed: int | None = Field(default=None, ge=0, le=2**32 - 1)
+    preset: str | None = Field(
+        default=None,
+        description="Optional substance preset id/alias influencing coupling and normalization.",
+    )
 
 
 class SimulateResponse(BaseModel):
-    """Response from consciousness field simulation.
-
-    Attributes:
-        width: Width of the field
-        height: Height of the field
-        valence: Overall valence score
-        coherence: Coherence score
-        symmetry: Symmetry score
-        roughness: Roughness score
-        richness: Richness score
-    """
+    """Response from consciousness field simulation."""
 
     width: int
     height: int
@@ -51,65 +43,60 @@ class SimulateResponse(BaseModel):
     symmetry: float
     roughness: float
     richness: float
+    schema_version: str = SESSION_SCHEMA_VERSION
+    engine_version: str = "0.1.0"
+    api_version: str = "v1"
+    seed: int
+    provenance_id: str
+    module_chain: list[str]
+    preset: str | None = None
+    session: PsyFiSession
+    visualization: PsyFiVisualization
 
 
 @router.post("/", response_model=SimulateResponse)
-async def simulate_consciousness_field(request: SimulateRequest) -> SimulateResponse:
-    """Simulate consciousness field evolution.
+async def simulate_consciousness_field(
+    body: SimulateRequest,
+    request: Request,
+) -> SimulateResponse:
+    """Simulate consciousness field evolution (cancellable on disconnect)."""
+    cancelled = {"flag": False, "done": False}
 
-    Creates a random initial field, evolves it using Consciousness Omega,
-    applies normalization, and computes valence metrics.
+    async def _watch_disconnect() -> None:
+        while not cancelled["done"]:
+            if await request.is_disconnected():
+                cancelled["flag"] = True
+                return
+            await asyncio.sleep(0.05)
 
-    Args:
-        request: Simulation parameters
+    watch_task = asyncio.create_task(_watch_disconnect())
+    try:
+        payload = await asyncio.to_thread(
+            run_simulation,
+            width=body.width,
+            height=body.height,
+            steps=body.steps,
+            seed=body.seed,
+            preset=body.preset,
+            should_cancel=lambda: cancelled["flag"],
+        )
+    except PresetNotFoundError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    except SimulationCancelled as exc:
+        telemetry.emit("simulate_cancelled", mode="sync", reason=str(exc))
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
+    finally:
+        cancelled["done"] = True
+        watch_task.cancel()
+        with contextlib.suppress(asyncio.CancelledError):
+            await watch_task
 
-    Returns:
-        Simulation results with valence metrics
-    """
-    # Create configuration
-    config = PsyFiConfig()
-    config.validate_grid_size(request.width, request.height)
-
-    # Create deterministic runtime
-    runtime = ABXRuntime(deterministic=True, seed=config.abx.default_seed)
-    runtime.metrics.set_grid_size(request.width, request.height)
-
-    # Create initial resonance frame with zeros
-    frame = ResonanceFrame.zeros(request.width, request.height)
-
-    # Initialize field with random phases on the unit circle
-    # This creates a field with uniform magnitude but random phases
-    random_phases = runtime.rng.uniform(
-        -np.pi, np.pi, size=(request.height, request.width)
+    telemetry.emit(
+        "simulate_completed",
+        mode="sync",
+        width=body.width,
+        height=body.height,
+        steps=body.steps,
+        preset=body.preset or "none",
     )
-    initial_magnitudes = runtime.rng.uniform(0.5, 1.5, size=(request.height, request.width))
-    initial_field = initial_magnitudes * np.exp(1j * random_phases)
-    initial_field = initial_field.astype(np.complex64)
-
-    frame = frame.copy_with_field(initial_field)
-
-    # Evolve the field using Consciousness Omega
-    params = ConsciousnessOmegaParams(
-        coupling_type="symmetric",
-        coupling_strength=0.5,
-        steps=request.steps,
-        dt=0.1,
-    )
-    evolved_field = evolve_consciousness_omega(frame.field, params, runtime)
-
-    # Apply normalization
-    norm_params = NormalizationParams(P=1.0, V=1.0, surround_radius=3)
-    normalized_field = apply_normalization(evolved_field, norm_params)
-
-    # Compute valence metrics
-    valence_metrics = compute_valence_metrics(normalized_field)
-
-    return SimulateResponse(
-        width=request.width,
-        height=request.height,
-        valence=valence_metrics.valence_score,
-        coherence=valence_metrics.coherence_score,
-        symmetry=valence_metrics.symmetry_score,
-        roughness=valence_metrics.roughness_score,
-        richness=valence_metrics.richness_score,
-    )
+    return SimulateResponse.model_validate(payload)

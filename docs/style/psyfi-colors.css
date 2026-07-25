@@ -77,6 +77,47 @@
     --pf-gradient-cyan-magenta: linear-gradient(135deg, var(--pf-cyan), var(--pf-magenta));
     --pf-gradient-violet-cyan: linear-gradient(135deg, var(--pf-violet), var(--pf-cyan));
     --pf-gradient-spectrum: linear-gradient(90deg, var(--pf-cyan), var(--pf-violet), var(--pf-magenta));
+
+    /* ===== Semantic aliases (docs/DESIGN_SYSTEM.md) =====
+       Map portable semantic names onto the existing --pf-* brand tokens
+       so new UI work can adopt the design-system vocabulary without a
+       parallel palette. Values remain the live brand until a deliberate
+       visual refresh lands. */
+    --color-surface-canvas: var(--pf-bg-0);
+    --color-surface-panel: var(--pf-bg-1);
+    --color-surface-elevated: var(--pf-bg-2);
+    --color-text-primary: var(--pf-text-main);
+    --color-text-secondary: var(--pf-text-muted);
+    --color-text-muted: var(--pf-text-soft);
+    --color-signal-primary: var(--pf-cyan);
+    --color-signal-secondary: var(--pf-magenta);
+    --color-signal-tertiary: var(--pf-violet);
+    --color-status-success: var(--pf-success);
+    --color-status-warning: var(--pf-warning);
+    --color-status-danger: var(--pf-danger);
+
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 24px;
+    --space-6: 32px;
+    --space-7: 48px;
+    --space-8: 64px;
+
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+    --radius-pill: 999px;
+
+    --duration-instant: 0ms;
+    --duration-fast: 120ms;
+    --duration-standard: 220ms;
+    --duration-slow: 420ms;
+
+    --opacity-disabled: 0.42;
+    --opacity-muted: 0.68;
+    --opacity-scrim: 0.72;
 }
 
 /**

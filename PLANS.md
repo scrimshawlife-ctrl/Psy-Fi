@@ -1,18 +1,18 @@
 # PsyFi Plans
 
 Status: active
-Canonical product sequence: web application → installable PWA → validated mobile web experience → native iPhone application.
+Canonical product sequence: web application → installable PWA → validated mobile web experience. Native iPhone work is a separate later track (parked; see Phase 5).
 
 ## Product Direction
 
-PsyFi is web-first. The existing deterministic Python engine and FastAPI service remain the authoritative computation layer while the browser becomes the primary product surface. Native Apple development begins only after the interaction model, rendering language, information architecture, and performance targets are validated on the web.
+PsyFi is web-first. The existing deterministic Python engine and FastAPI service remain the authoritative computation layer while the browser is the primary product surface. **This engineering track focuses only on the web app and PWA.** Native Apple development is deferred to a separate effort after Phase 4 validation; do not block web delivery on iOS work.
 
 ## Architectural Invariants
 
 1. Deterministic simulation outputs must be reproducible from versioned inputs, parameters, and seeds.
 2. UI, rendering, persistence, and platform integrations must not become authoritative over simulation state.
 3. API contracts must be versioned and platform-neutral.
-4. Design tokens, schemas, presets, terminology, and asset formats must remain portable to iOS.
+4. Design tokens, schemas, presets, terminology, and asset formats should stay platform-neutral (portable later; not an iOS deliverable now).
 5. Browser capability failures must degrade explicitly rather than silently changing behavior.
 6. Claims about consciousness or psychedelic states must be presented as modeled outputs, not medical findings.
 
@@ -23,88 +23,108 @@ PsyFi is web-first. The existing deterministic Python engine and FastAPI service
 - [x] Declare web-first product strategy.
 - [x] Preserve Python/FastAPI as the initial computation authority.
 - [x] Define web architecture, design system, and iOS migration constraints.
-- [ ] Inventory current API routes, response schemas, static assets, and service-worker behavior.
-- [ ] Add machine-readable API schemas and representative fixtures.
-- [ ] Establish performance and accessibility baselines.
+- [x] Inventory current API routes, response schemas, static assets, and service-worker behavior.
+- [x] Add machine-readable API schemas and representative fixtures.
+- [x] Establish performance and accessibility baselines.
+- [x] Decide frontend boundary using existing FastAPI static shell (see `docs/FRONTEND_BOUNDARY.md`).
+- [x] Extract design tokens as semantic aliases over existing `--pf-*` CSS.
+- [x] Define deterministic session schema via Pydantic + exported JSON Schema.
 
 Exit gate: all active implementation work can be traced to a documented contract or acceptance criterion.
 
 ### Phase 1 — Web Product Foundation
 
-- [ ] Establish a dedicated frontend application boundary.
-- [ ] Build responsive navigation, simulation workspace, preset browser, results inspector, and provenance panel.
-- [ ] Centralize design tokens and component states.
-- [ ] Add deterministic session serialization and shareable configuration files.
-- [ ] Add error boundaries, loading states, empty states, and capability diagnostics.
-- [ ] Implement telemetry that is privacy-preserving and disabled by default until governance is approved.
+- [x] Establish a dedicated frontend application boundary.
+- [x] Build responsive navigation, simulation workspace, preset browser, results inspector, and provenance panel.
+- [x] Centralize design tokens and component states.
+- [x] Add deterministic session serialization and shareable configuration files.
+- [x] Add error boundaries, loading states, empty states, and capability diagnostics.
+- [x] Implement telemetry that is privacy-preserving and disabled by default until governance is approved.
 
 Exit gate: a user can configure, run, inspect, save, restore, and export a simulation from desktop and mobile browsers.
 
 ### Phase 2 — Visualization Runtime
 
 - [x] Define a renderer-independent visualization schema.
-- [x] Implement Canvas visualization (WebGL/WebGPU optional path deferred).
-- [x] Phenomenology catalog → immutable parameter field → multi-engine Live Experience UI.
+- [x] Implement Canvas visualization for Live Experience + simulation heatmap (WebGL path optional).
+- [x] Phenomenology catalog → substance visual overlays → immutable parameter field → Live Experience UI.
 - [x] Safety pass (flash/luminance clamp), Reduce Motion, Neutral View, provenance panel.
-- [ ] Add WebGPU as an optional accelerated path with a tested fallback.
-- [ ] Move expensive browser work to Web Workers.
-- [ ] Evaluate WebAssembly only where profiling proves material benefit.
-- [ ] Establish frame-time, memory, battery, and thermal budgets on device matrix.
+- [x] Add WebGPU as an optional accelerated path for simulation heatmap with Canvas fallback.
+- [x] Move expensive heatmap rasterization to Web Workers.
+- [x] Evaluate WebAssembly only where profiling proves material benefit.
+- [x] Establish frame-time, memory, battery, and thermal budgets (device matrix still open).
 
 Exit gate: representative simulations meet documented visual fidelity and performance budgets on supported devices.
 
-**Partial exit (2026-07-24):** vertical slice shipped — see `docs/ENGINEERING_RECEIPT_VISUAL_EXPERIENCES.md`.
+**Partial exit (2026-07-24 / continued):** visual experience vertical slice + distilled substance overlays — see `docs/ENGINEERING_RECEIPT_VISUAL_EXPERIENCES.md`.
 
 ### Phase 3 — PWA and Mobile-Web Hardening
 
-- [ ] Replace blanket caching with versioned cache strategies.
-- [ ] Support offline shell loading and explicit online requirements for server computation.
-- [ ] Add IndexedDB-backed local history with schema migrations.
-- [ ] Validate installability, safe-area handling, orientation, touch, reduced motion, and interrupted-session recovery.
-- [ ] Test current Safari, Chrome, Edge, and Firefox; publish a capability matrix.
+- [x] Replace blanket caching with versioned cache strategies.
+- [x] Support offline shell loading and explicit online requirements for server computation.
+- [x] Add IndexedDB-backed local history with schema migrations.
+- [x] Safe-area handling, reduced-motion CSS, and interrupted-session recovery banner.
+- [x] Installability assets (maskable PNG icons + readiness checks); physical-device validation still pending.
+- [ ] Physically test current Safari, Chrome, Edge, and Firefox against the published capability matrix.
 
 Exit gate: PsyFi is dependable as an installable mobile web application without implying native parity.
 
-### Phase 4 — Product Validation
+### Phase 4 — Product Validation (web)
 
-- [ ] Run structured usability studies.
+- [ ] Run structured usability studies on the web/PWA product.
 - [ ] Validate core workflows, terminology, visual hierarchy, and interpretability.
-- [ ] Identify which platform limitations materially block the intended experience.
-- [ ] Freeze v1 API contracts, design tokens, visualization schemas, and export formats.
+- [ ] Identify which browser/platform limitations materially block the intended experience.
+- [ ] Freeze v1 API contracts (`/api/v1`), design tokens, visualization schemas, and export formats.
 
-Exit gate: evidence supports a native iPhone build and identifies the exact native capabilities required.
+Exit gate: the web product is validated enough to freeze contracts; native work remains optional and separate.
 
-### Phase 5 — Native iPhone Application
+### Phase 5 — Native iPhone Application (deferred / separate track)
 
-- [ ] Build a SwiftUI shell against the same versioned API and fixtures.
-- [ ] Port renderer-independent schemas and design tokens.
-- [ ] Implement Apple-specific camera, motion, haptics, audio, Metal, and persistence adapters only where justified.
-- [ ] Preserve cross-platform session files and result exports.
-- [ ] Maintain parity tests between web and iOS for deterministic engine outputs.
+Status: **out of scope for current web delivery.** Kept only as a future migration sketch in `docs/IOS_MIGRATION.md`.
 
-Exit gate: iPhone adds verified platform value without creating a second product definition.
+- [ ] (Deferred) Build a SwiftUI shell against the same versioned API and fixtures.
+- [ ] (Deferred) Port renderer-independent schemas and design tokens.
+- [ ] (Deferred) Implement Apple-specific adapters only where justified.
+- [ ] (Deferred) Preserve cross-platform session files and result exports.
+- [ ] (Deferred) Maintain parity tests between web and iOS for deterministic engine outputs.
+
+Exit gate: not applicable until a dedicated iOS track is opened after Phase 4.
 
 ## Near-Term Work Queue
 
 Priority 0:
-- API contract inventory and OpenAPI review.
-- Frontend boundary decision based on current repository constraints.
-- Design token extraction.
-- Accessibility and performance baselines.
-- Deterministic session schema.
+- [x] API contract inventory and OpenAPI review.
+- [x] Frontend boundary decision based on current repository constraints.
+- [x] Design token extraction.
+- [x] Accessibility and performance baselines.
+- [x] Deterministic session schema.
 
 Priority 1:
-- Simulation workspace redesign.
-- Results/provenance inspector.
-- [x] Visualization schema and renderer prototype (Live Experience + catalog).
-- IndexedDB history and import/export.
-- Browser capability matrix.
+- [x] Simulation workspace redesign (continue enhancing existing shell).
+- [x] Results/provenance inspector enrichment beyond the current panel.
+- [x] Visualization schema consumer / Canvas renderer prototype.
+- [x] Live Experience + phenomenology catalog + substance visual overlays.
+- [x] IndexedDB history replacing interim localStorage.
+- [x] Browser capability matrix.
 
 Priority 2:
-- Web Workers and optional WASM acceleration.
-- WebGPU accelerated renderer.
-- Advanced camera, motion, MIDI, audio, and haptic integrations.
-- Native iPhone proof of concept after Phase 4 gate.
+- [x] Web Workers for heatmap rasterization.
+- [x] Optional WebGPU renderer with Canvas 2D fallback.
+- [x] Optional WASM acceleration deferred after evaluation (`docs/WASM_EVALUATION.md`).
+- [x] Server-side cancellable simulation jobs (`/api/v1/jobs/simulate`).
+- [x] Canonical `/api/v1` web API with legacy `/api` mirrors.
+- [x] Install prompt hook, session import, and stronger offline empty states.
+- Advanced camera, motion, MIDI, audio, and haptic integrations (web-optional).
+- Native iPhone work remains parked (separate track).
+
+### Continuation (web-only)
+
+See [`docs/CONTINUATION_PLAN.md`](docs/CONTINUATION_PLAN.md) for the next P0–P2 queue after substance-overlay distillation:
+
+- physical-device matrix + visual differentiation QA
+- split Live Experience engines + WebGL ParameterField port
+- enrich thin substance source packs; simulation↔experience bridge
+- optional camera/motion adapters; Phase 4 usability freeze
 
 ## Definition of Done
 

@@ -477,6 +477,7 @@ Psy-Fi/
 │   ├── main.py                 # Main app
 │   ├── routers/
 │   │   ├── simulate.py         # Simulation endpoint
+│   │   ├── presets.py          # Substance preset catalog
 │   │   └── midi.py             # MIDI control endpoints
 │   ├── templates/
 │   │   └── index.html          # Web UI
@@ -484,12 +485,20 @@ Psy-Fi/
 │       ├── style.css           # Dark mode styling
 │       └── app.js              # Frontend logic
 │
+├── PLANS.md                    # Web-first delivery plan and gates
+├── MOBILE_PWA_GUIDE.md         # Mobile/PWA guidance
 ├── docs/                       # Documentation
+│   ├── WEB_ARCHITECTURE.md     # Web-first architecture
+│   ├── DESIGN_SYSTEM.md        # Portable design contracts
+│   ├── IOS_MIGRATION.md        # Evidence-gated iPhone path
+│   ├── FRONTEND_BOUNDARY.md    # Frontend decision record
+│   ├── API_CONTRACT_INVENTORY.md
+│   ├── BASELINES.md            # A11y/perf baselines
+│   ├── contracts/              # OpenAPI snapshot + fixtures
 │   ├── MIDI.md                 # MIDI integration guide
-│   ├── DEPLOYMENT.md           # Deployment guide
-│   ├── MOBILE_PWA_GUIDE.md     # Mobile/PWA guide
 │   ├── images/                 # Graphics (headers, icons)
-│   └── style/                  # CSS design system
+│   ├── icons/                  # SVG icon pack (served at /assets/icons)
+│   └── style/                  # CSS design system + tokens.json
 │
 ├── examples/                   # Usage examples
 │   ├── midi_basic.py           # Basic MIDI control
@@ -590,16 +599,21 @@ ruff check .
 
 ## 🗺️ Roadmap
 
+Canonical delivery sequence and engineering gates live in [`PLANS.md`](PLANS.md).
+
 - [x] **Preset Library**: 22+ substance presets with realistic pharmacology ✅
 - [x] **MIDI Integration**: Real-time control via hardware/DAW ✅
-- [x] **Mobile & PWA**: Progressive Web App with offline support ✅
+- [x] **Web-first plans**: architecture, design system, PWA, iOS migration docs ✅
+- [x] **Phase 0 contracts**: OpenAPI snapshot, session schema, token aliases, baselines ✅
 - [x] **Deployment**: Docker, Railway, Render, Fly.io, Heroku configs ✅
+- [x] **Field Visualization**: Live Experience multi-engine Canvas field + phenomenology catalog + distilled substance overlays
+- [x] **Phase 1–3 web foundation**: workspace, jobs, PWA shell, IndexedDB history (physical-device matrix still open)
 - [ ] **Multi-layer Simulations**: Stack multiple consciousness fields
-- [x] **Field Visualization**: Live Experience multi-engine Canvas field + phenomenology catalog (WebGL/perf budgets next)
 - [ ] **Time Series**: Track valence evolution over time
 - [ ] **Batch Simulations**: Run multiple simulations in parallel
-- [ ] **Export/Import**: Save and load field states
-- [ ] **Neurofeedback**: EEG/biometric integration via MIDI
+- [ ] **Native iPhone**: separate deferred track after Phase 4 (`docs/IOS_MIGRATION.md`)
+
+Supporting docs: [`docs/VISUAL_EXPERIENCES.md`](docs/VISUAL_EXPERIENCES.md) · [`docs/WEB_ARCHITECTURE.md`](docs/WEB_ARCHITECTURE.md) · [`docs/DESIGN_SYSTEM.md`](docs/DESIGN_SYSTEM.md) · [`MOBILE_PWA_GUIDE.md`](MOBILE_PWA_GUIDE.md)
 
 ---
 
@@ -642,6 +656,6 @@ If you use PsyFi in your research, please cite:
 
 *"Qualia are real, and reality is made of qualia."*
 
-[Applied Alchemy Labs](https://github.com/scrimshawlife-ctrl) • [Documentation](http://localhost:8000/docs) • [MIDI Guide](docs/MIDI.md) • [Deployment Guide](docs/DEPLOYMENT.md)
+[Applied Alchemy Labs](https://github.com/scrimshawlife-ctrl) • [Plans](PLANS.md) • [API Docs](http://localhost:8000/docs) • [MIDI Guide](docs/MIDI.md) • [Deployment Guide](DEPLOYMENT.md)
 
 </div>

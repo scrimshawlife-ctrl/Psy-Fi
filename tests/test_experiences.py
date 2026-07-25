@@ -90,5 +90,23 @@ def test_api_substances():
     with TestClient(app) as client:
         res = client.get("/api/v1/substances")
     assert res.status_code == 200
-    assert "lsd" in [s["id"] for s in res.json()["substances"]]
-    assert "open" in res.json()["modes"]
+    payload = res.json()
+    by_id = {s["id"]: s for s in payload["substances"]}
+    assert "lsd" in by_id
+    assert "open" in payload["modes"]
+    lsd = by_id["lsd"]
+    assert lsd["overlay"]
+    assert "visual_signature" in lsd["overlay"]
+    assert "engine_weights" in lsd["overlay"]
+    assert lsd["visual_signature"]["oscillation_style"]
+    assert lsd["recommended_mode"] in {"open", "attractor", "void", "power"}
+
+
+def test_substance_overlays_drive_distinct_engines():
+    lsd = map_parameters(substance="lsd", mode="open", seed=11, intensity=0.8, phase_t=0.5)
+    psilo = map_parameters(substance="psilocybin", mode="open", seed=11, intensity=0.8, phase_t=0.5)
+    dmt = map_parameters(substance="dmt", mode="open", seed=11, intensity=0.8, phase_t=0.5)
+    assert lsd.hash != psilo.hash != dmt.hash
+    assert lsd.engines.get("kaleidoscope", 0) >= psilo.engines.get("kaleidoscope", 0) * 0.6
+    assert psilo.engines.get("organic_bloom", 0) >= lsd.engines.get("organic_bloom", 0)
+    assert dmt.engines.get("entity_lattice", 0) >= lsd.engines.get("entity_lattice", 0)

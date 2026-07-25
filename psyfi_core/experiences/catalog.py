@@ -3,13 +3,14 @@
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_CATALOG_PATH = ROOT / "data" / "phenomenology" / "derived" / "experience_catalog.v1.json"
+DEFAULT_OVERLAY_PATH = ROOT / "data" / "phenomenology" / "derived" / "substance_visual_overlays.v1.json"
 
 
 @dataclass
@@ -19,6 +20,7 @@ class ExperienceCatalog:
     schema_version: str
     recipes: list[dict[str, Any]]
     path: Path | None = None
+    overlays: dict[str, dict[str, Any]] = field(default_factory=dict)
 
     def list(
         self,
@@ -52,6 +54,21 @@ class ExperienceCatalog:
     def substances(self) -> list[str]:
         return sorted({r.get("substance", "unknown") for r in self.recipes})
 
+    def overlay(self, substance: str) -> dict[str, Any] | None:
+        key = substance.lower().replace("_", "-")
+        if key == "5meo-dmt":
+            key = "5-meo-dmt"
+        return self.overlays.get(key)
+
+
+def load_overlays(path: Path | str | None = None) -> dict[str, dict[str, Any]]:
+    overlay_path = Path(path) if path else DEFAULT_OVERLAY_PATH
+    if not overlay_path.exists():
+        return {}
+    data = json.loads(overlay_path.read_text(encoding="utf-8"))
+    overlays = data.get("overlays") or {}
+    return {str(k).lower().replace("_", "-"): v for k, v in overlays.items()}
+
 
 def load_catalog(path: Path | str | None = None) -> ExperienceCatalog:
     catalog_path = Path(path) if path else DEFAULT_CATALOG_PATH
@@ -64,6 +81,7 @@ def load_catalog(path: Path | str | None = None) -> ExperienceCatalog:
         schema_version=data.get("schema_version", "1.0.0"),
         recipes=list(recipes),
         path=catalog_path if catalog_path.exists() else None,
+        overlays=load_overlays(),
     )
 
 

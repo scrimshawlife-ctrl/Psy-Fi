@@ -1,0 +1,298 @@
+{
+  "$defs": {
+    "SessionMetrics": {
+      "description": "Public metric bundle aligned with SimulateResponse.",
+      "properties": {
+        "coherence": {
+          "title": "Coherence",
+          "type": "number"
+        },
+        "richness": {
+          "title": "Richness",
+          "type": "number"
+        },
+        "roughness": {
+          "title": "Roughness",
+          "type": "number"
+        },
+        "symmetry": {
+          "title": "Symmetry",
+          "type": "number"
+        },
+        "valence": {
+          "title": "Valence",
+          "type": "number"
+        }
+      },
+      "required": [
+        "valence",
+        "coherence",
+        "symmetry",
+        "roughness",
+        "richness"
+      ],
+      "title": "SessionMetrics",
+      "type": "object"
+    },
+    "SessionParameters": {
+      "description": "Canonical parameters required to reproduce a simulation.",
+      "properties": {
+        "coupling_strength": {
+          "default": 0.5,
+          "maximum": 2.0,
+          "minimum": 0.0,
+          "title": "Coupling Strength",
+          "type": "number"
+        },
+        "drift_amplitude": {
+          "anyOf": [
+            {
+              "maximum": 1.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Drift Amplitude"
+        },
+        "drift_velocity": {
+          "anyOf": [
+            {
+              "maximum": 1.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Drift Velocity"
+        },
+        "height": {
+          "maximum": 512,
+          "minimum": 8,
+          "title": "Height",
+          "type": "integer"
+        },
+        "normalization_P": {
+          "default": 1.0,
+          "title": "Normalization P",
+          "type": "number"
+        },
+        "normalization_V": {
+          "default": 1.0,
+          "title": "Normalization V",
+          "type": "number"
+        },
+        "phase_noise": {
+          "anyOf": [
+            {
+              "maximum": 1.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Phase Noise"
+        },
+        "phase_reset_strength": {
+          "anyOf": [
+            {
+              "maximum": 1.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Phase Reset Strength"
+        },
+        "steps": {
+          "maximum": 1000,
+          "minimum": 1,
+          "title": "Steps",
+          "type": "integer"
+        },
+        "width": {
+          "maximum": 512,
+          "minimum": 8,
+          "title": "Width",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "width",
+        "height",
+        "steps"
+      ],
+      "title": "SessionParameters",
+      "type": "object"
+    },
+    "SessionProvenance": {
+      "description": "Portable provenance subset derived from ABX ProvenanceRecord.",
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "meta": {
+          "additionalProperties": true,
+          "title": "Meta",
+          "type": "object"
+        },
+        "module_chain": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Module Chain",
+          "type": "array"
+        },
+        "parameters": {
+          "additionalProperties": true,
+          "title": "Parameters",
+          "type": "object"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "title": "SessionProvenance",
+      "type": "object"
+    },
+    "SessionResult": {
+      "description": "Optional result payload attached after a successful run.",
+      "properties": {
+        "checksum": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Checksum"
+        },
+        "metrics": {
+          "$ref": "#/$defs/SessionMetrics"
+        },
+        "visualization_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Visualization Ref"
+        }
+      },
+      "required": [
+        "metrics"
+      ],
+      "title": "SessionResult",
+      "type": "object"
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Deterministic session document shared by web and future iOS clients.",
+  "properties": {
+    "abx_core": {
+      "default": "1.3",
+      "title": "Abx Core",
+      "type": "string"
+    },
+    "api_version": {
+      "default": "v1",
+      "title": "Api Version",
+      "type": "string"
+    },
+    "assumptions": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Assumptions",
+      "type": "array"
+    },
+    "created_at": {
+      "title": "Created At",
+      "type": "string"
+    },
+    "engine_version": {
+      "default": "0.1.0",
+      "title": "Engine Version",
+      "type": "string"
+    },
+    "labels": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Labels",
+      "type": "object"
+    },
+    "parameters": {
+      "$ref": "#/$defs/SessionParameters"
+    },
+    "preset": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Preset"
+    },
+    "provenance": {
+      "$ref": "#/$defs/SessionProvenance"
+    },
+    "result": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/SessionResult"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "schema_version": {
+      "default": "psyfi.session.v1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "seed": {
+      "maximum": 4294967295,
+      "minimum": 0,
+      "title": "Seed",
+      "type": "integer"
+    },
+    "updated_at": {
+      "title": "Updated At",
+      "type": "string"
+    }
+  },
+  "required": [
+    "seed",
+    "parameters",
+    "provenance"
+  ],
+  "title": "PsyFiSession",
+  "type": "object"
+}

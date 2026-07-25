@@ -376,36 +376,215 @@ def recipes_from_files() -> list[dict]:
     return out
 
 
+ENGINE_KEYS = (
+    "recursive_feedback",
+    "kaleidoscope",
+    "flow_field",
+    "organic_bloom",
+    "void_expansion",
+    "entity_lattice",
+    "neutral_view",
+)
+
+
+def _oscillation_style(means: dict[str, float], substance: str) -> str:
+    """Infer oscillation style from distilled motif means + substance priors."""
+    g = means.get("geometry", 0.0)
+    n = means.get("nature", 0.0)
+    m = means.get("machines", 0.0)
+    v = means.get("space_void", 0.0)
+    e = means.get("entities", 0.0)
+    if substance == "pcp":
+        return "unstable"
+    if substance == "ketamine" or (v > 0.55 and g < 0.4 and m < 0.35):
+        return "smooth" if substance == "ketamine" else "minimal"
+    if substance in ("5-meo-dmt",) or (v >= 0.7 and g < 0.45 and m < 0.35):
+        return "minimal"
+    if m >= 0.35 or e >= 0.45 or (substance == "dmt" and v >= 0.35):
+        return "fractal"
+    if n >= g and n >= 0.35:
+        return "organic"
+    if g >= 0.35:
+        return "geometric"
+    return "organic" if substance == "psilocybin" else "geometric"
+
+
+def _visual_signature(means: dict[str, float], substance: str, style: str) -> dict:
+    """Distill scalar visual settings used by parameter_mapper / presets."""
+    g = means.get("geometry", 0.35)
+    c = means.get("color_light", 0.4)
+    v = means.get("space_void", 0.3)
+    m = means.get("machines", 0.1)
+    n = means.get("nature", 0.2)
+    complexity = min(1.0, 0.3 + 0.55 * max(g, m) + 0.2 * v)
+    if substance == "pcp":
+        complexity *= 0.55
+    return {
+        "tracers_color": TRACERS.get(substance, "#63F3E8"),
+        "tracers_length": round(min(1.0, 0.25 + 0.65 * c + 0.15 * g), 3),
+        "oscillation_style": style,
+        "symmetry_bias": round(min(1.0, 0.2 + 0.7 * g + 0.1 * m), 3),
+        "depth_distortion": round(min(1.0, 0.2 + 0.7 * v + 0.15 * m), 3),
+        "color_enhancement": round(min(1.0, 0.25 + 0.7 * c + 0.1 * n), 3),
+        "pattern_complexity": round(complexity, 3),
+    }
+
+
+def _avg_engine_weights(substance_recipes: list[dict]) -> dict[str, float]:
+    weights = {k: 0.0 for k in ENGINE_KEYS}
+    for recipe in substance_recipes:
+        visual = recipe.get("visual_recipe") or {}
+        for i, eng in enumerate(visual.get("primary_engines") or []):
+            key = str(eng).replace("-", "_")
+            if key in weights:
+                weights[key] += max(0.35, 0.9 - 0.12 * i)
+        for i, eng in enumerate(visual.get("secondary_engines") or []):
+            key = str(eng).replace("-", "_")
+            if key in weights:
+                weights[key] += max(0.15, 0.5 - 0.08 * i)
+    total = sum(weights.values()) or 1.0
+    return {k: round(v / total, 4) for k, v in weights.items()}
+
+
+def _avg_parameter_bias(substance_recipes: list[dict]) -> dict[str, float]:
+    sums: dict[str, float] = defaultdict(float)
+    counts: dict[str, int] = defaultdict(int)
+    for recipe in substance_recipes:
+        bias = ((recipe.get("visual_recipe") or {}).get("parameter_bias")) or {}
+        for key, value in bias.items():
+            sums[key] += float(value)
+            counts[key] += 1
+    return {k: round(sums[k] / max(1, counts[k]), 3) for k in sorted(sums)}
+
+
+def _avg_palette(substance_recipes: list[dict], substance: str) -> dict:
+    energies = []
+    contrasts = []
+    for recipe in substance_recipes:
+        pal = ((recipe.get("visual_recipe") or {}).get("palette")) or {}
+        if pal.get("energy") is not None:
+            energies.append(float(pal["energy"]))
+        if pal.get("contrast") is not None:
+            contrasts.append(float(pal["contrast"]))
+    return {
+        "tracers": TRACERS.get(substance, "#63F3E8"),
+        "energy": round(sum(energies) / len(energies), 3) if energies else 0.5,
+        "contrast": round(sum(contrasts) / len(contrasts), 3) if contrasts else 0.55,
+    }
+
+
+def _avg_phase_profile(substance_recipes: list[dict]) -> dict:
+    phases = ("comeup", "peak", "plateau", "comedown")
+    defaults = {
+        "comeup": {"duration_norm": 0.15, "intensity": 0.35},
+        "peak": {"duration_norm": 0.45, "intensity": 1.0},
+        "plateau": {"duration_norm": 0.25, "intensity": 0.75},
+        "comedown": {"duration_norm": 0.15, "intensity": 0.3},
+    }
+    out = {}
+    for phase in phases:
+        durs = []
+        ints = []
+        for recipe in substance_recipes:
+            cfg = ((recipe.get("visual_recipe") or {}).get("phase_profile") or {}).get(phase) or {}
+            if cfg.get("duration_norm") is not None:
+                durs.append(float(cfg["duration_norm"]))
+            if cfg.get("intensity") is not None:
+                ints.append(float(cfg["intensity"]))
+        out[phase] = {
+            "duration_norm": round(sum(durs) / len(durs), 3) if durs else defaults[phase]["duration_norm"],
+            "intensity": round(sum(ints) / len(ints), 3) if ints else defaults[phase]["intensity"],
+        }
+    return out
+
+
 def build_overlays(recipes: list[dict]) -> dict:
-    buckets: dict[str, list] = defaultdict(list)
-    for r in recipes:
-        buckets[r["substance"]].append(r["motifs"])
+    """Distill per-substance visual settings from scraped/seed experience recipes."""
+    buckets: dict[str, list[dict]] = defaultdict(list)
+    for recipe in recipes:
+        buckets[recipe["substance"]].append(recipe)
+
     overlays = {}
-    for substance, motif_list in buckets.items():
+    for substance, substance_recipes in sorted(buckets.items()):
+        motif_list = [r.get("motifs") or {} for r in substance_recipes]
         avg = Counter()
-        for m in motif_list:
-            for k, v in m.items():
-                avg[k] += v
+        for motifs in motif_list:
+            for key, value in motifs.items():
+                avg[key] += float(value)
         n = max(1, len(motif_list))
         means = {k: round(v / n, 3) for k, v in avg.items()}
+        style = _oscillation_style(means, substance)
+        mode_counts = Counter(
+            (r.get("visual_recipe") or {}).get("mode_default", "open") for r in substance_recipes
+        )
+        recommended_mode = mode_counts.most_common(1)[0][0] if mode_counts else "open"
+        primary, secondary, _mode = _engines_for(means, substance)
         overlays[substance] = {
+            "schema_version": "1.0.0",
+            "substance": substance,
+            "authority": {
+                "motifs": "INFERRED",
+                "parameters": "INFERRED",
+                "source_existence": "OBSERVED",
+            },
             "motif_means": means,
-            "sample_count": len(motif_list),
+            "sample_count": len(substance_recipes),
             "tracers_color": TRACERS.get(substance, "#63F3E8"),
-            "recommended_mode": max(
-                (
-                    (r.get("visual_recipe") or {}).get("mode_default", "open")
-                    for r in recipes
-                    if r["substance"] == substance
-                ),
-                key=lambda x: 1,
-                default="open",
-            ),
+            "recommended_mode": recommended_mode,
+            "oscillation_style": style,
+            "visual_signature": _visual_signature(means, substance, style),
+            "engine_weights": _avg_engine_weights(substance_recipes),
+            "primary_engines": primary,
+            "secondary_engines": secondary,
+            "parameter_bias": _avg_parameter_bias(substance_recipes),
+            "palette": _avg_palette(substance_recipes, substance),
+            "phase_profile": _avg_phase_profile(substance_recipes),
+            "safety": {
+                "max_flash_hz": 1.5 if substance in ("dmt", "pcp") else 2.0,
+                "max_luminance_delta": 0.28 if substance == "5-meo-dmt" else 0.35,
+                "intensity_cap": 0.55 if substance == "pcp" else 1.0,
+            },
         }
     return {
         "schema_version": "1.0.0",
+        "generator": "scripts/build_experience_catalog.py",
+        "disclaimer": (
+            "Distilled visual settings from curated phenomenology recipes. "
+            "INFERRED parameters for research/visualization only — not medical advice."
+        ),
         "overlays": overlays,
     }
+
+
+def sync_preset_visual_signatures(overlays: dict) -> list[str]:
+    """Push distilled visual_signature scalars into substance_presets.json."""
+    presets_path = ROOT / "psyfi_core" / "presets" / "substance_presets.json"
+    if not presets_path.exists():
+        return []
+    data = json.loads(presets_path.read_text(encoding="utf-8"))
+    updated: list[str] = []
+    for key, preset in (data.get("presets") or {}).items():
+        sid = key.lower().replace("_", "-")
+        overlay = overlays.get(sid)
+        if overlay is None and sid == "5meo-dmt":
+            overlay = overlays.get("5-meo-dmt")
+        if not overlay:
+            continue
+        sig = overlay.get("visual_signature") or {}
+        if not sig:
+            continue
+        preset["visual_signature"] = {
+            "tracers_color": sig["tracers_color"],
+            "tracers_length": sig["tracers_length"],
+            "oscillation_style": sig["oscillation_style"],
+            "symmetry_bias": sig["symmetry_bias"],
+            "depth_distortion": sig["depth_distortion"],
+            "color_enhancement": sig["color_enhancement"],
+            "pattern_complexity": sig["pattern_complexity"],
+        }
+        updated.append(key)
+    presets_path.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
+    return updated
 
 
 def main() -> None:
@@ -431,13 +610,17 @@ def main() -> None:
         "recipe_count": len(unique),
         "recipes": unique,
     }
+    overlay_doc = build_overlays(unique)
     OUT_PATH.write_text(json.dumps(catalog, indent=2), encoding="utf-8")
-    OVERLAY_PATH.write_text(json.dumps(build_overlays(unique), indent=2), encoding="utf-8")
+    OVERLAY_PATH.write_text(json.dumps(overlay_doc, indent=2), encoding="utf-8")
     # also copy builtin for import fallback
     builtin = ROOT / "psyfi_core" / "experiences" / "builtin_catalog.v1.json"
     builtin.write_text(json.dumps(catalog, indent=2), encoding="utf-8")
+    synced = sync_preset_visual_signatures(overlay_doc.get("overlays") or {})
     print(f"Wrote {len(unique)} recipes -> {OUT_PATH}")
     print(f"Overlays -> {OVERLAY_PATH}")
+    if synced:
+        print(f"Synced visual_signature into presets: {', '.join(synced)}")
     by = Counter(r["substance"] for r in unique)
     print("By substance:", dict(by))
 

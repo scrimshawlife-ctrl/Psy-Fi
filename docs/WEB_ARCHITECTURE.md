@@ -31,22 +31,29 @@ PsyFi deterministic core
 
 ## Repository Evolution
 
-Preferred target layout:
+Preferred longer-term layout:
 
 ```text
 apps/
-  web/                  # frontend product surface
+  web/                  # frontend product surface (future)
 packages/
-  contracts/            # generated or source-controlled API/schema types
-  design-tokens/        # platform-neutral design values
-  visualization-schema/ # renderer-independent scene/state definitions
-psyfi_api/               # FastAPI application
-psyfi_core/              # deterministic Python authority
+  contracts/            # optional extracted contract package (future)
+  design-tokens/        # optional extracted token package (future)
+psyfi_api/               # FastAPI application + current web shell
+psyfi_core/              # deterministic Python authority + session models/schemas
 tests/
 docs/
 ```
 
-Migration should be incremental. Existing static assets remain operational until the dedicated frontend reaches feature parity.
+Migration is incremental and reuses current infrastructure first:
+
+- contracts live as Pydantic models (`psyfi_core/models/session.py`) and exported schemas (`psyfi_core/schemas/`)
+- OpenAPI snapshots export from the live FastAPI app into `docs/contracts/`
+- design tokens alias onto existing `docs/style` / `psyfi_api/static` CSS variables
+- icons are served from existing `docs/icons`
+- frontend boundary decision: progressive enhancement of the current shell (`docs/FRONTEND_BOUNDARY.md`)
+
+Existing static assets remain operational until a dedicated frontend reaches feature parity.
 
 ## Frontend Selection Gate
 
@@ -72,7 +79,7 @@ UI state must never mutate or reinterpret authoritative metrics without preservi
 
 ## API Standards
 
-- Version public routes under `/api/v1` before incompatible expansion.
+- Public browser routes are versioned under `/api/v1` (legacy `/api/*` and `/simulate/` remain mirrored).
 - Use Pydantic models for all request and response bodies.
 - Generate OpenAPI in CI and detect breaking changes.
 - Include `schema_version`, engine version, seed, parameter set, and provenance identifier in saved results.

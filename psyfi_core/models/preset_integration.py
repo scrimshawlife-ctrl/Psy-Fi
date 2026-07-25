@@ -258,8 +258,12 @@ def apply_preset(
 
     # Track provenance
     if runtime is not None:
-        runtime.provenance.add_event(
-            f"Applied preset '{preset.name}' at intensity {intensity:.2f}"
+        runtime.provenance.add_module("preset_integration")
+        runtime.provenance.add_parameter("preset_name", preset.name)
+        runtime.provenance.add_parameter("preset_intensity", float(intensity))
+        runtime.provenance.add_meta(
+            "preset_applied",
+            f"Applied preset '{preset.name}' at intensity {float(intensity):.2f}",
         )
 
     return params

@@ -76,16 +76,31 @@ async def get_experience(experience_id: str) -> dict[str, Any]:
 async def list_substances() -> dict[str, Any]:
     catalog = get_default_catalog()
     substances = sorted(set(catalog.substances()) | set(SUBSTANCE_VISUAL_DEFAULTS.keys()))
+    items = []
+    for substance_id in substances:
+        overlay = catalog.overlay(substance_id) or {}
+        signature = {
+            **SUBSTANCE_VISUAL_DEFAULTS.get(substance_id, {}),
+            **(overlay.get("visual_signature") or {}),
+        }
+        items.append(
+            {
+                "id": substance_id,
+                "visual_signature": signature,
+                "overlay": overlay or None,
+                "recommended_mode": overlay.get("recommended_mode") or "open",
+                "recipe_count": len(catalog.list(substance=substance_id, valence=None)),
+                "authority": overlay.get("authority")
+                or {
+                    "motifs": "INFERRED",
+                    "parameters": "INFERRED",
+                    "source_existence": "OBSERVED",
+                },
+            }
+        )
     return {
         "schema_version": "1.0.0",
-        "substances": [
-            {
-                "id": s,
-                "visual_signature": SUBSTANCE_VISUAL_DEFAULTS.get(s, {}),
-                "recipe_count": len(catalog.list(substance=s, valence=None)),
-            }
-            for s in substances
-        ],
+        "substances": items,
         "modes": list(MODE_BIASES.keys()),
     }
 
@@ -98,17 +113,21 @@ async def parameter_timeline(body: TimelineRequest) -> dict[str, Any]:
         experience = catalog.get(body.experience_id)
         if not experience:
             raise HTTPException(status_code=404, detail=f"Experience not found: {body.experience_id}")
-        # optional intensity cap from recipe safety
-        cap = float((experience.get("safety") or {}).get("intensity_cap", 1.0))
-        intensity = min(body.intensity, cap)
         if not body.substance or body.substance == "lsd":
             # prefer recipe substance when client left default-ish
             substance = experience.get("substance") or body.substance
         else:
             substance = body.substance
     else:
-        intensity = body.intensity
         substance = body.substance
+
+    overlay = catalog.overlay(substance) or {}
+    cap = float(
+        (experience or {}).get("safety", {}).get("intensity_cap")
+        or overlay.get("safety", {}).get("intensity_cap")
+        or 1.0
+    )
+    intensity = min(body.intensity, cap)
 
     if body.phase_t is not None and body.neutral_view:
         snap = map_parameters(

@@ -2,19 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Modular consciousness field simulation engine with ABX-Core v1.3">
-    <meta name="theme-color" content="#00ffff">
+    <meta name="theme-color" content="#3EE7F2">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="PsyFi">
 
     <title>PsyFi – Consciousness Field Simulator</title>
 
-    <!-- PWA Manifest -->
     <link rel="manifest" href="/static/manifest.json">
-
-    <!-- Stylesheets -->
+    <link rel="icon" href="/assets/icons/pf-icon-core-sigil-24.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/assets/icons/pf-icon-core-sigil-48.svg">
     <link rel="stylesheet" href="/static/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,7 +21,6 @@
 </head>
 <body>
     <div class="container">
-        <!-- Header Section -->
         <header class="header">
             <div class="sigil">
                 <div class="sigil-inner">
@@ -35,38 +33,50 @@
             </h1>
             <p class="subtitle">Consciousness Field Simulation Engine</p>
             <div class="lab-credit">Applied Alchemy Labs</div>
+            <p class="disclaimer">Modeled simulation outputs — not medical findings.</p>
         </header>
 
-        <!-- Main Content -->
+        <nav class="workspace-nav" aria-label="Workspace sections">
+            <a href="#workspace" class="nav-link">Workspace</a>
+            <a href="#experiencePanel" class="nav-link">Live Experience</a>
+            <a href="#presets" class="nav-link">Presets</a>
+            <a href="#results" class="nav-link">Results</a>
+            <a href="#history" class="nav-link">History</a>
+            <a href="#capabilities" class="nav-link">Capabilities</a>
+            <button type="button" class="nav-link" id="installButton" hidden>Install app</button>
+        </nav>
+
+        <div class="recovery-banner" id="recoveryBanner" hidden role="status" aria-live="polite">
+            <p id="recoveryText">A previous session is available to restore.</p>
+            <div class="session-actions">
+                <button type="button" class="btn-secondary" id="recoveryRestore">Restore</button>
+                <button type="button" class="btn-secondary" id="recoveryDismiss">Dismiss</button>
+            </div>
+        </div>
+
         <main class="main-content">
-            <!-- Control Panel -->
-            <section class="panel control-panel">
+            <section class="panel control-panel" id="workspace">
                 <div class="panel-header">
-                    <h2>⚗️ Simulation Parameters</h2>
+                    <h2>Simulation Workspace</h2>
                 </div>
                 <div class="panel-body">
                     <form id="simulationForm">
-                        <!-- Preset Selector -->
                         <div class="preset-selector">
-                            <label>Quick Presets</label>
+                            <label>Grid presets</label>
                             <div class="preset-buttons">
                                 <button type="button" class="preset-btn" data-preset="quick">
-                                    <span class="preset-icon">⚡</span>
                                     <span class="preset-name">Quick Test</span>
                                     <span class="preset-desc">32×32, 10 steps</span>
                                 </button>
                                 <button type="button" class="preset-btn" data-preset="standard">
-                                    <span class="preset-icon">⬡</span>
                                     <span class="preset-name">Standard</span>
                                     <span class="preset-desc">64×64, 20 steps</span>
                                 </button>
                                 <button type="button" class="preset-btn" data-preset="detailed">
-                                    <span class="preset-icon">✨</span>
                                     <span class="preset-name">Detailed</span>
                                     <span class="preset-desc">128×128, 50 steps</span>
                                 </button>
                                 <button type="button" class="preset-btn" data-preset="deep">
-                                    <span class="preset-icon">🌀</span>
                                     <span class="preset-name">Deep Dive</span>
                                     <span class="preset-desc">256×256, 100 steps</span>
                                 </button>
@@ -79,23 +89,43 @@
                             <div class="input-group">
                                 <label for="width">Field Width</label>
                                 <input type="number" id="width" name="width" value="64" min="8" max="512" required>
-                                <span class="input-hint">8-512 px</span>
                             </div>
                             <div class="input-group">
                                 <label for="height">Field Height</label>
                                 <input type="number" id="height" name="height" value="64" min="8" max="512" required>
-                                <span class="input-hint">8-512 px</span>
                             </div>
                             <div class="input-group">
                                 <label for="steps">Evolution Steps</label>
                                 <input type="number" id="steps" name="steps" value="20" min="1" max="1000" required>
-                                <span class="input-hint">1-1000 iterations</span>
+                            </div>
+                            <div class="input-group">
+                                <label for="seed">Seed</label>
+                                <input type="number" id="seed" name="seed" value="1337" min="0" max="4294967295" required>
+                            </div>
+                            <div class="input-group">
+                                <label for="substancePreset">Substance Preset</label>
+                                <select id="substancePreset" name="substancePreset">
+                                    <option value="">None (baseline coupling)</option>
+                                </select>
                             </div>
                         </div>
-                        <button type="submit" class="btn-primary" id="runButton">
-                            <span class="btn-icon">▶</span>
-                            <span>Run Simulation</span>
-                        </button>
+                        <div class="run-actions">
+                            <button type="submit" class="btn-primary" id="runButton">
+                                <span class="btn-icon">▶</span>
+                                <span>Run Simulation</span>
+                            </button>
+                            <button type="button" class="btn-secondary" id="cancelButton" hidden>Cancel</button>
+                        </div>
+                        <label class="checkbox-row" for="preferWebGPU">
+                            <input type="checkbox" id="preferWebGPU" checked>
+                            Prefer WebGPU when available (Canvas 2D fallback)
+                        </label>
+                        <label class="checkbox-row" for="telemetryOptIn">
+                            <input type="checkbox" id="telemetryOptIn">
+                            Opt in to local diagnostic telemetry (off unless server enables it)
+                        </label>
+                        <p class="network-status" id="networkStatus" data-state="online" aria-live="polite">Online — server computation available</p>
+                        <p class="input-hint">Esc or Cancel requests server-side job cancellation.</p>
                     </form>
                 </div>
             </section>
@@ -103,7 +133,7 @@
             <!-- Live Experience Workspace -->
             <section class="panel experience-panel" id="experiencePanel">
                 <div class="panel-header">
-                    <h2>◈ Live Experience</h2>
+                    <h2>Live Experience</h2>
                     <div class="field-status" id="experienceStatus">Field idle</div>
                 </div>
                 <div class="panel-body experience-body">
@@ -149,7 +179,7 @@
                             <span class="btn-icon">◎</span>
                             <span>Load Experience</span>
                         </button>
-                        <div class="provenance-panel" id="provenancePanel">
+                        <div class="provenance-panel" id="experienceProvenancePanel">
                             <div class="muted">Load an experience to inspect provenance.</div>
                         </div>
                         <p class="disclaimer">Modeled phenomenology for research/visualization only. Not medical, diagnostic, or therapeutic advice. Interpretation is speculative.</p>
@@ -157,92 +187,128 @@
                 </div>
             </section>
 
-            <!-- Results Panel -->
-            <section class="panel results-panel" id="resultsPanel" style="display: none;">
+            <section class="panel" id="presets">
                 <div class="panel-header">
-                    <h2>🌌 Field Metrics</h2>
-                    <div class="field-dimensions" id="fieldDimensions"></div>
+                    <h2>Substance Preset Browser</h2>
                 </div>
                 <div class="panel-body">
-                    <div class="metrics-grid">
-                        <div class="metric-card">
-                            <div class="metric-label">Valence</div>
-                            <div class="metric-value" id="valence">--</div>
-                            <div class="metric-bar">
-                                <div class="metric-bar-fill" id="valenceBar"></div>
+                    <p class="empty-state" id="presetEmpty">Loading presets from the existing registry…</p>
+                    <div class="substance-grid" id="substanceGrid" hidden></div>
+                </div>
+            </section>
+
+            <section class="panel results-panel" id="results">
+                <div class="panel-header">
+                    <h2>Results &amp; Provenance</h2>
+                    <div class="field-dimensions" id="fieldDimensions">No run yet</div>
+                </div>
+                <div class="panel-body">
+                    <p class="empty-state" id="resultsEmpty">Run a simulation to inspect metrics, provenance, and the field heatmap.</p>
+
+                    <div id="resultsContent" hidden>
+                        <div class="viz-layout">
+                            <div class="viz-frame">
+                                <canvas id="fieldCanvas" width="320" height="320" role="img" aria-labelledby="vizSummary"></canvas>
+                                <canvas id="fieldCanvasGPU" width="320" height="320" hidden role="img" aria-labelledby="vizSummary"></canvas>
+                                <p class="viz-summary" id="vizSummary"></p>
+                                <p class="input-hint" id="vizBackend">Renderer: pending</p>
+                            </div>
+                            <div class="metrics-grid">
+                                <div class="metric-card"><div class="metric-label">Valence</div><div class="metric-value" id="valence">--</div><div class="metric-bar"><div class="metric-bar-fill" id="valenceBar"></div></div></div>
+                                <div class="metric-card"><div class="metric-label">Coherence</div><div class="metric-value" id="coherence">--</div><div class="metric-bar"><div class="metric-bar-fill" id="coherenceBar"></div></div></div>
+                                <div class="metric-card"><div class="metric-label">Symmetry</div><div class="metric-value" id="symmetry">--</div><div class="metric-bar"><div class="metric-bar-fill" id="symmetryBar"></div></div></div>
+                                <div class="metric-card"><div class="metric-label">Roughness</div><div class="metric-value" id="roughness">--</div><div class="metric-bar"><div class="metric-bar-fill" id="roughnessBar"></div></div></div>
+                                <div class="metric-card"><div class="metric-label">Richness</div><div class="metric-value" id="richness">--</div><div class="metric-bar"><div class="metric-bar-fill" id="richnessBar"></div></div></div>
                             </div>
                         </div>
-                        <div class="metric-card">
-                            <div class="metric-label">Coherence</div>
-                            <div class="metric-value" id="coherence">--</div>
-                            <div class="metric-bar">
-                                <div class="metric-bar-fill" id="coherenceBar"></div>
-                            </div>
+
+                        <div class="provenance-panel" id="provenancePanel" aria-live="polite">
+                            <div>Seed: <code id="resultSeed">--</code></div>
+                            <div>Preset: <code id="resultPreset">--</code></div>
+                            <div>Provenance: <code id="resultProvenance">--</code></div>
+                            <div>Modules: <code id="resultModules">--</code></div>
                         </div>
-                        <div class="metric-card">
-                            <div class="metric-label">Symmetry</div>
-                            <div class="metric-value" id="symmetry">--</div>
-                            <div class="metric-bar">
-                                <div class="metric-bar-fill" id="symmetryBar"></div>
-                            </div>
-                        </div>
-                        <div class="metric-card">
-                            <div class="metric-label">Roughness</div>
-                            <div class="metric-value" id="roughness">--</div>
-                            <div class="metric-bar">
-                                <div class="metric-bar-fill" id="roughnessBar"></div>
-                            </div>
-                        </div>
-                        <div class="metric-card">
-                            <div class="metric-label">Richness</div>
-                            <div class="metric-value" id="richness">--</div>
-                            <div class="metric-bar">
-                                <div class="metric-bar-fill" id="richnessBar"></div>
-                            </div>
+                        <div class="session-actions">
+                            <button type="button" class="btn-secondary" id="exportSessionButton">Export Session JSON</button>
+                            <button type="button" class="btn-secondary" id="saveHistoryButton">Save to History</button>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- Error Panel -->
-            <section class="panel error-panel" id="errorPanel" style="display: none;">
+            <section class="panel" id="history">
+                <div class="panel-header">
+                    <h2>Session History</h2>
+                </div>
+                <div class="panel-body">
+                    <p class="empty-state" id="historyEmpty">No IndexedDB history yet. Save a completed run, or import a Psy-Fi session JSON to inspect offline.</p>
+                    <ul class="history-list" id="historyList"></ul>
+                    <div class="session-actions">
+                        <button type="button" class="btn-secondary" id="clearHistoryButton">Clear History</button>
+                        <label class="btn-secondary file-import" for="importSessionInput">
+                            Import session
+                            <input id="importSessionInput" type="file" accept="application/json,.json" hidden />
+                        </label>
+                    </div>
+                </div>
+            </section>
+
+            <section class="panel" id="capabilities">
+                <div class="panel-header">
+                    <h2>Browser Capability Diagnostics</h2>
+                </div>
+                <div class="panel-body">
+                    <p class="input-hint">Optional APIs never block the core online workflow. Values are detected in this browser.</p>
+                    <table class="capability-table" id="capabilityTable">
+                        <thead>
+                            <tr>
+                                <th scope="col">Capability</th>
+                                <th scope="col">Supported</th>
+                                <th scope="col">Fallback</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="panel error-panel" id="errorPanel" hidden>
                 <div class="panel-header error-header">
-                    <h2>⚠️ Error</h2>
+                    <h2>Error</h2>
                 </div>
                 <div class="panel-body">
                     <pre id="errorMessage"></pre>
                 </div>
             </section>
 
-            <!-- Loading State -->
-            <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+            <div class="loading-overlay" id="loadingOverlay" hidden>
                 <div class="spinner"></div>
-                <p>Computing consciousness field...</p>
+                <p id="loadingStatus">Computing consciousness field…</p>
             </div>
         </main>
 
-        <!-- Footer -->
         <footer class="footer">
             <div class="footer-links">
                 <a href="/docs" target="_blank">API Docs</a>
                 <span class="separator">•</span>
                 <a href="https://github.com/scrimshawlife-ctrl/Psy-Fi" target="_blank">GitHub</a>
                 <span class="separator">•</span>
+                <a href="/assets/icons/pf-icon-core-sigil-48.svg" target="_blank">Icons</a>
+                <span class="separator">•</span>
                 <span class="abx-badge">ABX-Core v1.3</span>
             </div>
         </footer>
     </div>
 
+    <script src="/static/renderer.js"></script>
     <script src="/static/viz/experiencePlayer.js"></script>
     <script src="/static/app.js"></script>
-
-    <!-- Service Worker Registration -->
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/static/sw.js')
-                    .then(reg => console.log('[PWA] Service Worker registered'))
-                    .catch(err => console.log('[PWA] Service Worker registration failed:', err));
+                    .then(() => console.log('[PWA] Service Worker registered'))
+                    .catch((err) => console.log('[PWA] Service Worker registration failed:', err));
             });
         }
     </script>

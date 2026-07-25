@@ -1,0 +1,181 @@
+{
+  "$defs": {
+    "VisualizationAccessibility": {
+      "description": "Accessibility contract required for every canonical visualization.",
+      "properties": {
+        "downloadable_data_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Downloadable Data Ref"
+        },
+        "high_contrast_palette": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "High Contrast Palette"
+        },
+        "legend": {
+          "items": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "title": "Legend",
+          "type": "array"
+        },
+        "reduced_motion_alternative": {
+          "minLength": 1,
+          "title": "Reduced Motion Alternative",
+          "type": "string"
+        },
+        "summary": {
+          "minLength": 1,
+          "title": "Summary",
+          "type": "string"
+        }
+      },
+      "required": [
+        "summary",
+        "reduced_motion_alternative"
+      ],
+      "title": "VisualizationAccessibility",
+      "type": "object"
+    },
+    "VisualizationChannel": {
+      "description": "One renderable channel in a platform-neutral visualization scene.",
+      "properties": {
+        "blend": {
+          "default": "replace",
+          "pattern": "^(replace|add|multiply|screen)$",
+          "title": "Blend",
+          "type": "string"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "palette": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Palette"
+        },
+        "role": {
+          "pattern": "^(magnitude|phase|valence|coherence|custom)$",
+          "title": "Role",
+          "type": "string"
+        },
+        "units": {
+          "title": "Units",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "role",
+        "units"
+      ],
+      "title": "VisualizationChannel",
+      "type": "object"
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Renderer-independent visualization schema (Canvas/WebGL/WebGPU/Metal).",
+  "properties": {
+    "accessibility": {
+      "$ref": "#/$defs/VisualizationAccessibility"
+    },
+    "channels": {
+      "items": {
+        "$ref": "#/$defs/VisualizationChannel"
+      },
+      "title": "Channels",
+      "type": "array"
+    },
+    "field": {
+      "additionalProperties": true,
+      "title": "Field",
+      "type": "object"
+    },
+    "frame_index": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Frame Index"
+    },
+    "layers": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Layers",
+      "type": "array"
+    },
+    "provenance_id": {
+      "title": "Provenance Id",
+      "type": "string"
+    },
+    "renderer_requirements": {
+      "additionalProperties": true,
+      "title": "Renderer Requirements",
+      "type": "object"
+    },
+    "schema_version": {
+      "default": "psyfi.visualization.v1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "sequence_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Sequence Id"
+    },
+    "view": {
+      "additionalProperties": true,
+      "title": "View",
+      "type": "object"
+    }
+  },
+  "required": [
+    "provenance_id",
+    "field",
+    "channels",
+    "accessibility"
+  ],
+  "title": "PsyFiVisualization",
+  "type": "object"
+}

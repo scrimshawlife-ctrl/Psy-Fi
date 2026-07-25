@@ -156,12 +156,23 @@
 .workspace-nav .nav-link {
     color: var(--color-text-secondary);
     text-decoration: none;
+    background: transparent;
+    font: inherit;
+    cursor: pointer;
     border: 1px solid var(--pf-border-subtle);
     border-radius: var(--radius-pill);
     padding: 0.45rem 0.85rem;
     min-height: 44px;
     display: inline-flex;
     align-items: center;
+}
+
+.file-import {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin: 0;
 }
 
 .workspace-nav .nav-link:hover,

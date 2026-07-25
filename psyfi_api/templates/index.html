@@ -42,6 +42,7 @@
             <a href="#results" class="nav-link">Results</a>
             <a href="#history" class="nav-link">History</a>
             <a href="#capabilities" class="nav-link">Capabilities</a>
+            <button type="button" class="nav-link" id="installButton" hidden>Install app</button>
         </nav>
 
         <div class="recovery-banner" id="recoveryBanner" hidden role="status" aria-live="polite">
@@ -182,10 +183,14 @@
                     <h2>Session History</h2>
                 </div>
                 <div class="panel-body">
-                    <p class="empty-state" id="historyEmpty">No IndexedDB history yet. Save a completed run to inspect it offline.</p>
+                    <p class="empty-state" id="historyEmpty">No IndexedDB history yet. Save a completed run, or import a Psy-Fi session JSON to inspect offline.</p>
                     <ul class="history-list" id="historyList"></ul>
                     <div class="session-actions">
                         <button type="button" class="btn-secondary" id="clearHistoryButton">Clear History</button>
+                        <label class="btn-secondary file-import" for="importSessionInput">
+                            Import session
+                            <input id="importSessionInput" type="file" accept="application/json,.json" hidden />
+                        </label>
                     </div>
                 </div>
             </section>
@@ -220,7 +225,7 @@
 
             <div class="loading-overlay" id="loadingOverlay" hidden>
                 <div class="spinner"></div>
-                <p>Computing consciousness field…</p>
+                <p id="loadingStatus">Computing consciousness field…</p>
             </div>
         </main>
 

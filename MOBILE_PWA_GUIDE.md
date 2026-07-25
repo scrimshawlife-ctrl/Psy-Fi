@@ -4,20 +4,21 @@ Status: active web-first guidance. See [`PLANS.md`](PLANS.md), [`docs/WEB_ARCHIT
 
 ## Product Role
 
-The installable PWA is PsyFi's first mobile application surface. It is not described as equivalent to a native iPhone app. The web experience is used to validate workflows, rendering, terminology, performance, and demand before native development begins.
+The installable PWA is PsyFi's mobile application surface for the current delivery track. Native iPhone work is a separate deferred effort (`docs/IOS_MIGRATION.md`). The web experience validates workflows, rendering, terminology, performance, and demand.
 
 ## Supported Experience
 
 ### Implemented now (existing web shell)
 
 1. Configure grid size / steps / seed, choose a quick size preset, or pick a substance preset.
-2. Run a server-backed simulation while online.
-3. Inspect metrics, provenance, and a Canvas magnitude heatmap.
+2. Run a cancellable server-backed simulation via `/api/v1/jobs` while online.
+3. Inspect metrics, provenance, and a Canvas magnitude heatmap (optional WebGPU path).
 4. Save/restore sessions via IndexedDB history (with `localStorage` last-session fallback).
-5. Export the last session as JSON.
-6. View in-browser capability diagnostics (`/#capabilities`).
+5. Export or import portable `psyfi.session.v1` JSON.
+6. Install prompt when the browser supports it (iOS: Share → Add to Home Screen).
+7. View in-browser capability diagnostics (`/#capabilities`).
 
-### Planned (not yet in the client)
+### Planned (web track)
 
 - Offline compute parity with the Python engine.
 - Camera/motion/audio/haptic adapters beyond detection.

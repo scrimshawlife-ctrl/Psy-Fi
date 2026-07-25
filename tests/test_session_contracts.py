@@ -44,6 +44,7 @@ def test_simulate_returns_session_and_is_seed_deterministic() -> None:
     b = second.json()
 
     assert a["seed"] == 42
+    assert a["api_version"] == "v1"
     assert a["schema_version"] == "psyfi.session.v1"
     assert a["provenance_id"]
     assert a["module_chain"] == [

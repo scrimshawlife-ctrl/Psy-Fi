@@ -1,7 +1,7 @@
 // PsyFi Service Worker - progressive enhancement of the existing PWA shell.
 // Strategies follow MOBILE_PWA_GUIDE.md using the current static asset layout.
 
-const CACHE_NAME = 'psyfi-shell-v4';
+const CACHE_NAME = 'psyfi-shell-v5';
 const SHELL_URLS = [
   '/',
   '/static/style.css',

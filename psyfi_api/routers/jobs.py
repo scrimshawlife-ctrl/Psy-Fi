@@ -13,7 +13,7 @@ from psyfi_api.simulation_service import PresetNotFoundError, run_simulation
 from psyfi_api.telemetry import telemetry
 from psyfi_core.abx_core.errors import SimulationCancelled
 
-router = APIRouter(prefix="/api/jobs", tags=["jobs"])
+router = APIRouter(prefix="/jobs", tags=["jobs"])
 
 
 class JobCreateRequest(BaseModel):

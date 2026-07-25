@@ -5,12 +5,15 @@ const RECOVERY_DISMISS_KEY = 'psyfi.session.v1.recovery_dismissed';
 const DB_NAME = 'psyfi-sessions';
 const DB_VERSION = 1;
 const STORE_NAME = 'history';
+const API_V1 = '/api/v1';
 
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('simulationForm');
     const runButton = document.getElementById('runButton');
     const cancelButton = document.getElementById('cancelButton');
+    const installButton = document.getElementById('installButton');
     const loadingOverlay = document.getElementById('loadingOverlay');
+    const loadingStatus = document.getElementById('loadingStatus');
     const errorPanel = document.getElementById('errorPanel');
     const networkStatus = document.getElementById('networkStatus');
     const substanceSelect = document.getElementById('substancePreset');
@@ -25,12 +28,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const vizBackend = document.getElementById('vizBackend');
     const recoveryBanner = document.getElementById('recoveryBanner');
     const preferWebGPU = document.getElementById('preferWebGPU');
+    const importSessionInput = document.getElementById('importSessionInput');
 
     let lastPayload = null;
     let activeAbort = null;
     let activeJobId = null;
     let cancelRequested = false;
     let recoveryRecord = null;
+    let deferredInstallPrompt = null;
 
     const gridPresets = {
         quick: { width: 32, height: 32, steps: 10 },
@@ -44,12 +49,17 @@ document.addEventListener('DOMContentLoaded', () => {
         el.hidden = hidden;
     }
 
-    function showLoading(show) {
+    function showLoading(show, statusText) {
         setHidden(loadingOverlay, !show);
         runButton.disabled = show;
         if (cancelButton) {
             setHidden(cancelButton, !show);
             cancelButton.disabled = !show;
+        }
+        if (loadingStatus && statusText) {
+            loadingStatus.textContent = statusText;
+        } else if (loadingStatus && show) {
+            loadingStatus.textContent = 'Computing consciousness field…';
         }
     }
 
@@ -286,7 +296,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function loadPresets() {
         try {
-            const response = await fetch('/api/presets/');
+            const response = await fetch(`${API_V1}/presets/`);
             if (!response.ok) throw new Error(`Preset catalog failed (${response.status})`);
             const data = await response.json();
             substanceSelect.innerHTML = '<option value="">None (baseline coupling)</option>';
@@ -390,7 +400,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function runViaJob(body) {
-        const create = await fetch('/api/jobs/simulate', {
+        showLoading(true, 'Queueing simulation job…');
+        const create = await fetch(`${API_V1}/jobs/simulate`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(body),
@@ -401,14 +412,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         const created = await create.json();
         activeJobId = created.id;
+        showLoading(true, `Job ${activeJobId} running…`);
 
         while (true) {
             if (cancelRequested && activeJobId) {
-                await fetch(`/api/jobs/${activeJobId}`, { method: 'DELETE' });
+                await fetch(`${API_V1}/jobs/${activeJobId}`, { method: 'DELETE' });
             }
-            const poll = await fetch(`/api/jobs/${activeJobId}`);
+            const poll = await fetch(`${API_V1}/jobs/${activeJobId}`);
             if (!poll.ok) throw new Error(`Job poll failed (${poll.status})`);
             const job = await poll.json();
+            showLoading(true, `Job ${activeJobId}: ${job.status}`);
             if (job.status === 'completed' && job.result) {
                 return job.result;
             }
@@ -489,8 +502,59 @@ document.addEventListener('DOMContentLoaded', () => {
         if (activeAbort) activeAbort.abort();
         if (activeJobId) {
             try {
-                await fetch(`/api/jobs/${activeJobId}`, { method: 'DELETE' });
+                await fetch(`${API_V1}/jobs/${activeJobId}`, { method: 'DELETE' });
             } catch (_error) { /* ignore */ }
+        }
+    });
+
+    window.addEventListener('beforeinstallprompt', (event) => {
+        event.preventDefault();
+        deferredInstallPrompt = event;
+        setHidden(installButton, false);
+    });
+
+    installButton?.addEventListener('click', async () => {
+        if (!deferredInstallPrompt) {
+            showError('Install is unavailable in this browser. On iPhone use Share → Add to Home Screen.');
+            return;
+        }
+        deferredInstallPrompt.prompt();
+        await deferredInstallPrompt.userChoice;
+        deferredInstallPrompt = null;
+        setHidden(installButton, true);
+    });
+
+    importSessionInput?.addEventListener('change', async (event) => {
+        const file = event.target.files && event.target.files[0];
+        if (!file) return;
+        try {
+            const text = await file.text();
+            const session = JSON.parse(text);
+            if (!session || session.schema_version !== 'psyfi.session.v1' || !session.parameters) {
+                throw new Error('File is not a psyfi.session.v1 document');
+            }
+            const payload = {
+                width: session.parameters.width,
+                height: session.parameters.height,
+                valence: session.result?.metrics?.valence ?? 0,
+                coherence: session.result?.metrics?.coherence ?? 0,
+                symmetry: session.result?.metrics?.symmetry ?? 0,
+                roughness: session.result?.metrics?.roughness ?? 0,
+                richness: session.result?.metrics?.richness ?? 0,
+                seed: session.seed,
+                preset: session.preset,
+                provenance_id: session.provenance?.id,
+                module_chain: session.provenance?.module_chain || [],
+                session,
+                visualization: null,
+            };
+            applyRecordToForm(payload);
+            await showResults(payload);
+            hideError();
+        } catch (error) {
+            showError(`Import failed: ${error.message || error}`);
+        } finally {
+            importSessionInput.value = '';
         }
     });
 
@@ -552,7 +616,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const telemetryOptIn = document.getElementById('telemetryOptIn');
     telemetryOptIn?.addEventListener('change', async () => {
         try {
-            await fetch('/api/telemetry/opt-in', {
+            await fetch(`${API_V1}/telemetry/opt-in`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ opt_in: !!telemetryOptIn.checked }),
@@ -571,10 +635,15 @@ document.addEventListener('DOMContentLoaded', () => {
             cancelRequested = true;
             if (activeAbort) activeAbort.abort();
             if (activeJobId) {
-                fetch(`/api/jobs/${activeJobId}`, { method: 'DELETE' }).catch(() => {});
+                fetch(`${API_V1}/jobs/${activeJobId}`, { method: 'DELETE' }).catch(() => {});
             }
         }
     });
+
+    // Explicit offline empty-state copy for results when never run + offline.
+    if (!navigator.onLine && resultsEmpty) {
+        resultsEmpty.textContent = 'You are offline. Restore a history item or import a session JSON to inspect prior modeled results.';
+    }
 
     // Service worker update nudge
     if ('serviceWorker' in navigator) {

@@ -28,8 +28,9 @@ def test_evolve_respects_should_cancel() -> None:
 
 def test_job_create_complete_and_cancel() -> None:
     with TestClient(app) as client:
+        # Canonical v1 job path
         created = client.post(
-            "/api/jobs/simulate",
+            "/api/v1/jobs/simulate",
             json={"width": 24, "height": 24, "steps": 8, "seed": 3},
         )
         assert created.status_code == 200
@@ -38,7 +39,7 @@ def test_job_create_complete_and_cancel() -> None:
         deadline = time.time() + 5
         final = None
         while time.time() < deadline:
-            poll = client.get(f"/api/jobs/{job_id}")
+            poll = client.get(f"/api/v1/jobs/{job_id}")
             assert poll.status_code == 200
             final = poll.json()
             if final["status"] in {"completed", "failed", "cancelled"}:
@@ -48,8 +49,9 @@ def test_job_create_complete_and_cancel() -> None:
         assert final is not None
         assert final["status"] == "completed"
         assert final["result"]["seed"] == 3
+        assert final["result"]["api_version"] == "v1"
 
-        # Long job then cancel
+        # Legacy mirror still works for cancel flows
         long_job = client.post(
             "/api/jobs/simulate",
             json={"width": 64, "height": 64, "steps": 400, "seed": 1},
@@ -74,13 +76,20 @@ def test_ready_and_telemetry_gates() -> None:
         assert ready.status_code == 200
         payload = ready.json()
         assert payload["status"] == "ready"
+        assert payload["api_version"] == "v1"
         assert payload["checks"]["presets_loaded"] is True
         assert payload["checks"]["icon_192"] is True
 
-        status = client.get("/api/telemetry/status").json()
+        assert client.get("/api/v1/ready").status_code == 200
+
+        status = client.get("/api/v1/telemetry/status").json()
         assert status["server_enabled"] is False
         assert status["active"] is False
 
-        opted = client.post("/api/telemetry/opt-in", json={"opt_in": True}).json()
+        opted = client.post("/api/v1/telemetry/opt-in", json={"opt_in": True}).json()
         assert opted["client_opt_in"] is True
         assert opted["active"] is False  # server flag still off
+
+        # Legacy telemetry mirror remains available
+        legacy = client.get("/api/telemetry/status")
+        assert legacy.status_code == 200

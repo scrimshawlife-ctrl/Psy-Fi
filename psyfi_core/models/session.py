@@ -65,7 +65,7 @@ class PsyFiSession(BaseModel):
 
     schema_version: str = Field(default=SESSION_SCHEMA_VERSION)
     engine_version: str = Field(default="0.1.0")
-    api_version: str = Field(default="v0")
+    api_version: str = Field(default="v1")
     abx_core: str = Field(default="1.3")
     created_at: str = Field(default_factory=utc_now_iso)
     updated_at: str = Field(default_factory=utc_now_iso)
@@ -98,7 +98,7 @@ class PsyFiSession(BaseModel):
         normalization_P: float = 1.0,
         normalization_V: float = 1.0,
         engine_version: str = "0.1.0",
-        api_version: str = "v0",
+        api_version: str = "v1",
     ) -> "PsyFiSession":
         """Build a session document from an existing simulation run."""
         now = utc_now_iso()

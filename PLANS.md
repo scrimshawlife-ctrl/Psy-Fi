@@ -1,18 +1,18 @@
 # PsyFi Plans
 
 Status: active
-Canonical product sequence: web application → installable PWA → validated mobile web experience → native iPhone application.
+Canonical product sequence: web application → installable PWA → validated mobile web experience. Native iPhone work is a separate later track (parked; see Phase 5).
 
 ## Product Direction
 
-PsyFi is web-first. The existing deterministic Python engine and FastAPI service remain the authoritative computation layer while the browser becomes the primary product surface. Native Apple development begins only after the interaction model, rendering language, information architecture, and performance targets are validated on the web.
+PsyFi is web-first. The existing deterministic Python engine and FastAPI service remain the authoritative computation layer while the browser is the primary product surface. **This engineering track focuses only on the web app and PWA.** Native Apple development is deferred to a separate effort after Phase 4 validation; do not block web delivery on iOS work.
 
 ## Architectural Invariants
 
 1. Deterministic simulation outputs must be reproducible from versioned inputs, parameters, and seeds.
 2. UI, rendering, persistence, and platform integrations must not become authoritative over simulation state.
 3. API contracts must be versioned and platform-neutral.
-4. Design tokens, schemas, presets, terminology, and asset formats must remain portable to iOS.
+4. Design tokens, schemas, presets, terminology, and asset formats should stay platform-neutral (portable later; not an iOS deliverable now).
 5. Browser capability failures must degrade explicitly rather than silently changing behavior.
 6. Claims about consciousness or psychedelic states must be presented as modeled outputs, not medical findings.
 
@@ -65,24 +65,26 @@ Exit gate: representative simulations meet documented visual fidelity and perfor
 
 Exit gate: PsyFi is dependable as an installable mobile web application without implying native parity.
 
-### Phase 4 — Product Validation
+### Phase 4 — Product Validation (web)
 
-- [ ] Run structured usability studies.
+- [ ] Run structured usability studies on the web/PWA product.
 - [ ] Validate core workflows, terminology, visual hierarchy, and interpretability.
-- [ ] Identify which platform limitations materially block the intended experience.
-- [ ] Freeze v1 API contracts, design tokens, visualization schemas, and export formats.
+- [ ] Identify which browser/platform limitations materially block the intended experience.
+- [ ] Freeze v1 API contracts (`/api/v1`), design tokens, visualization schemas, and export formats.
 
-Exit gate: evidence supports a native iPhone build and identifies the exact native capabilities required.
+Exit gate: the web product is validated enough to freeze contracts; native work remains optional and separate.
 
-### Phase 5 — Native iPhone Application
+### Phase 5 — Native iPhone Application (deferred / separate track)
 
-- [ ] Build a SwiftUI shell against the same versioned API and fixtures.
-- [ ] Port renderer-independent schemas and design tokens.
-- [ ] Implement Apple-specific camera, motion, haptics, audio, Metal, and persistence adapters only where justified.
-- [ ] Preserve cross-platform session files and result exports.
-- [ ] Maintain parity tests between web and iOS for deterministic engine outputs.
+Status: **out of scope for current web delivery.** Kept only as a future migration sketch in `docs/IOS_MIGRATION.md`.
 
-Exit gate: iPhone adds verified platform value without creating a second product definition.
+- [ ] (Deferred) Build a SwiftUI shell against the same versioned API and fixtures.
+- [ ] (Deferred) Port renderer-independent schemas and design tokens.
+- [ ] (Deferred) Implement Apple-specific adapters only where justified.
+- [ ] (Deferred) Preserve cross-platform session files and result exports.
+- [ ] (Deferred) Maintain parity tests between web and iOS for deterministic engine outputs.
+
+Exit gate: not applicable until a dedicated iOS track is opened after Phase 4.
 
 ## Near-Term Work Queue
 
@@ -104,9 +106,11 @@ Priority 2:
 - [x] Web Workers for heatmap rasterization.
 - [x] Optional WebGPU renderer with Canvas 2D fallback.
 - [x] Optional WASM acceleration deferred after evaluation (`docs/WASM_EVALUATION.md`).
-- [x] Server-side cancellable simulation jobs (`/api/jobs/simulate`).
-- Advanced camera, motion, MIDI, audio, and haptic integrations.
-- Native iPhone proof of concept after Phase 4 gate.
+- [x] Server-side cancellable simulation jobs (`/api/v1/jobs/simulate`).
+- [x] Canonical `/api/v1` web API with legacy `/api` mirrors.
+- [x] Install prompt hook, session import, and stronger offline empty states.
+- Advanced camera, motion, MIDI, audio, and haptic integrations (web-optional).
+- Native iPhone work remains parked (separate track).
 
 ## Definition of Done
 

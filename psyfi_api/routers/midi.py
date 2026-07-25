@@ -31,7 +31,7 @@ def _require_active_service() -> MIDIService:
         raise HTTPException(status_code=503, detail="MIDI service not active")
     return service
 
-router = APIRouter(prefix="/api/midi", tags=["MIDI"])
+router = APIRouter(prefix="/midi", tags=["MIDI"])
 
 
 # Request/Response models

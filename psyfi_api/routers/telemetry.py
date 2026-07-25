@@ -7,7 +7,7 @@ from pydantic import BaseModel, Field
 
 from psyfi_api.telemetry import TELEMETRY_ENABLED, telemetry
 
-router = APIRouter(prefix="/api/telemetry", tags=["telemetry"])
+router = APIRouter(prefix="/telemetry", tags=["telemetry"])
 
 
 class TelemetryOptInRequest(BaseModel):

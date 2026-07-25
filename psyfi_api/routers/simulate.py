@@ -45,7 +45,7 @@ class SimulateResponse(BaseModel):
     richness: float
     schema_version: str = SESSION_SCHEMA_VERSION
     engine_version: str = "0.1.0"
-    api_version: str = "v0"
+    api_version: str = "v1"
     seed: int
     provenance_id: str
     module_chain: list[str]

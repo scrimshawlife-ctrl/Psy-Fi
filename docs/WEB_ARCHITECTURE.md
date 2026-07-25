@@ -79,7 +79,7 @@ UI state must never mutate or reinterpret authoritative metrics without preservi
 
 ## API Standards
 
-- Version public routes under `/api/v1` before incompatible expansion.
+- Public browser routes are versioned under `/api/v1` (legacy `/api/*` and `/simulate/` remain mirrored).
 - Use Pydantic models for all request and response bodies.
 - Generate OpenAPI in CI and detect breaking changes.
 - Include `schema_version`, engine version, seed, parameter set, and provenance identifier in saved results.

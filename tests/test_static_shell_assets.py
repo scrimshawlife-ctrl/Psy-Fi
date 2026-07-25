@@ -19,13 +19,16 @@ def test_template_wires_cancel_recovery_and_renderer() -> None:
     assert 'id="cancelButton"' in html
     assert 'id="recoveryBanner"' in html
     assert 'id="fieldCanvasGPU"' in html
+    assert 'id="installButton"' in html
+    assert 'id="importSessionInput"' in html
+    assert 'id="loadingStatus"' in html
     assert 'src="/static/renderer.js"' in html
     assert 'src="/static/app.js"' in html
 
 
 def test_service_worker_precaches_renderer_assets() -> None:
     sw = (STATIC / "sw.js").read_text(encoding="utf-8")
-    assert "psyfi-shell-v4" in sw
+    assert "psyfi-shell-v5" in sw
     assert "/static/renderer.js" in sw
     assert "/static/render_worker.js" in sw
     assert "/static/icon-192.png" in sw
@@ -42,6 +45,9 @@ def test_app_uses_abort_controller_and_worker_renderer() -> None:
     app_js = (STATIC / "app.js").read_text(encoding="utf-8")
     assert "AbortController" in app_js
     assert "PsyFiRenderer" in app_js
+    assert "const API_V1 = '/api/v1'" in app_js
+    assert "beforeinstallprompt" in app_js
+    assert "importSessionInput" in app_js
     renderer_js = (STATIC / "renderer.js").read_text(encoding="utf-8")
     assert "render_worker.js" in renderer_js
     assert "navigator.gpu" in renderer_js

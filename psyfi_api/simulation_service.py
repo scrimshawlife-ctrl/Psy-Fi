@@ -140,7 +140,7 @@ def run_simulation(
         "richness": metrics.richness,
         "schema_version": session.schema_version,
         "engine_version": session.engine_version,
-        "api_version": session.api_version,
+        "api_version": "v1",
         "seed": effective_seed,
         "provenance_id": session.provenance.id,
         "module_chain": session.provenance.module_chain,

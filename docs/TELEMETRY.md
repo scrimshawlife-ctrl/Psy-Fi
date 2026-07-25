@@ -8,11 +8,11 @@ Related: [`PLANS.md`](../PLANS.md), `psyfi_api/telemetry.py`
 Telemetry is active only when **both** are true:
 
 1. Server env `PSYFI_TELEMETRY_ENABLED=1`
-2. Client opt-in via `POST /api/telemetry/opt-in` `{ "opt_in": true }`
+2. Client opt-in via `POST /api/v1/telemetry/opt-in` `{ "opt_in": true }` (legacy: `/api/telemetry/opt-in`)
 
 ## Behavior
 
-- Events are buffered in-process only (`/api/telemetry/events`).
+- Events are buffered in-process only (`/api/v1/telemetry/events`).
 - No network sink, analytics vendor, or persistent disk log is configured.
 - Obvious sensitive keys are stripped (`ip`, `authorization`, field payloads, etc.).
 - Opting out clears the local buffer.

@@ -468,7 +468,7 @@
             "type": "string"
           },
           "api_version": {
-            "default": "v0",
+            "default": "v1",
             "title": "Api Version",
             "type": "string"
           },
@@ -881,7 +881,7 @@
         "description": "Response from consciousness field simulation.",
         "properties": {
           "api_version": {
-            "default": "v0",
+            "default": "v1",
             "title": "Api Version",
             "type": "string"
           },
@@ -1168,7 +1168,7 @@
   "paths": {
     "/": {
       "get": {
-        "description": "Root endpoint - serves the web UI.\n\nArgs:\n    request: FastAPI request object\n\nReturns:\n    HTML template response with request context",
+        "description": "Root endpoint - serves the web UI.",
         "operationId": "root__get",
         "responses": {
           "200": {
@@ -1185,7 +1185,7 @@
     },
     "/api/info": {
       "get": {
-        "description": "API info endpoint (for programmatic access).",
+        "description": "API info endpoint (legacy + v1).",
         "operationId": "api_info_api_info_get",
         "responses": {
           "200": {
@@ -1730,6 +1730,634 @@
       "get": {
         "description": "Return whether telemetry is active.",
         "operationId": "telemetry_status_api_telemetry_status_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TelemetryStatus"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Telemetry Status",
+        "tags": [
+          "telemetry"
+        ]
+      }
+    },
+    "/api/v1/info": {
+      "get": {
+        "description": "API info endpoint (legacy + v1).",
+        "operationId": "api_info_api_v1_info_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "boolean"
+                      }
+                    ]
+                  },
+                  "title": "Response Api Info Api V1 Info Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Api Info"
+      }
+    },
+    "/api/v1/jobs/simulate": {
+      "post": {
+        "description": "Start a cancellable simulation job in a worker thread.",
+        "operationId": "create_simulate_job_api_v1_jobs_simulate_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JobCreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobSummary"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Simulate Job",
+        "tags": [
+          "jobs"
+        ]
+      }
+    },
+    "/api/v1/jobs/{job_id}": {
+      "delete": {
+        "description": "Request cancellation of a queued/running job.",
+        "operationId": "cancel_job_api_v1_jobs__job_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "job_id",
+            "required": true,
+            "schema": {
+              "title": "Job Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobSummary"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Cancel Job",
+        "tags": [
+          "jobs"
+        ]
+      },
+      "get": {
+        "description": "Fetch job status/result.",
+        "operationId": "get_job_api_v1_jobs__job_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "job_id",
+            "required": true,
+            "schema": {
+              "title": "Job Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobSummary"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Job",
+        "tags": [
+          "jobs"
+        ]
+      }
+    },
+    "/api/v1/midi/devices": {
+      "get": {
+        "description": "List available MIDI input and output devices.\n\nReturns:\n    Dictionary with input/output device lists",
+        "operationId": "list_midi_devices_api_v1_midi_devices_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MIDIDevicesResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List Midi Devices",
+        "tags": [
+          "MIDI"
+        ]
+      }
+    },
+    "/api/v1/midi/mappings": {
+      "get": {
+        "description": "Get current MIDI control mappings.\n\nReturns:\n    CC, note, and program change mappings",
+        "operationId": "get_midi_mappings_api_v1_midi_mappings_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MIDIControlMapResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get Midi Mappings",
+        "tags": [
+          "MIDI"
+        ]
+      }
+    },
+    "/api/v1/midi/params": {
+      "get": {
+        "description": "Get current MIDI-controlled parameters.\n\nReturns:\n    Dictionary of parameter name -> value",
+        "operationId": "get_midi_params_api_v1_midi_params_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "number"
+                  },
+                  "title": "Response Get Midi Params Api V1 Midi Params Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get Midi Params",
+        "tags": [
+          "MIDI"
+        ]
+      }
+    },
+    "/api/v1/midi/send/cc": {
+      "post": {
+        "description": "Send MIDI Control Change message.\n\nArgs:\n    request: CC message parameters\n\nReturns:\n    Status message",
+        "operationId": "send_midi_cc_api_v1_midi_send_cc_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MIDICCRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "title": "Response Send Midi Cc Api V1 Midi Send Cc Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Send Midi Cc",
+        "tags": [
+          "MIDI"
+        ]
+      }
+    },
+    "/api/v1/midi/send/note": {
+      "post": {
+        "description": "Send MIDI note on/off.\n\nArgs:\n    request: Note message parameters\n\nReturns:\n    Status message",
+        "operationId": "send_midi_note_api_v1_midi_send_note_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MIDINoteRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "title": "Response Send Midi Note Api V1 Midi Send Note Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Send Midi Note",
+        "tags": [
+          "MIDI"
+        ]
+      }
+    },
+    "/api/v1/midi/start": {
+      "post": {
+        "description": "Start MIDI service with configuration.\n\nArgs:\n    config: MIDI configuration\n\nReturns:\n    Status message",
+        "operationId": "start_midi_service_api_v1_midi_start_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MIDIConfigRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "title": "Response Start Midi Service Api V1 Midi Start Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Start Midi Service",
+        "tags": [
+          "MIDI"
+        ]
+      }
+    },
+    "/api/v1/midi/status": {
+      "get": {
+        "description": "Get current MIDI service status.\n\nReturns:\n    Service status and current parameters",
+        "operationId": "get_midi_status_api_v1_midi_status_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MIDIStatusResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get Midi Status",
+        "tags": [
+          "MIDI"
+        ]
+      }
+    },
+    "/api/v1/midi/stop": {
+      "post": {
+        "description": "Stop MIDI service.\n\nReturns:\n    Status message",
+        "operationId": "stop_midi_service_api_v1_midi_stop_post",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "title": "Response Stop Midi Service Api V1 Midi Stop Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Stop Midi Service",
+        "tags": [
+          "MIDI"
+        ]
+      }
+    },
+    "/api/v1/presets/": {
+      "get": {
+        "description": "List substance presets from the existing JSON registry.",
+        "operationId": "list_substance_presets_api_v1_presets__get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PresetListResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List Substance Presets",
+        "tags": [
+          "presets"
+        ]
+      }
+    },
+    "/api/v1/presets/{preset_id}": {
+      "get": {
+        "description": "Fetch one preset by id or alias.",
+        "operationId": "get_substance_preset_api_v1_presets__preset_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "preset_id",
+            "required": true,
+            "schema": {
+              "title": "Preset Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PresetDetail"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Substance Preset",
+        "tags": [
+          "presets"
+        ]
+      }
+    },
+    "/api/v1/ready": {
+      "get": {
+        "description": "Readiness check: presets and critical static assets must be available.",
+        "operationId": "ready_api_v1_ready_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Ready Api V1 Ready Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Ready"
+      }
+    },
+    "/api/v1/simulate/": {
+      "post": {
+        "description": "Simulate consciousness field evolution (cancellable on disconnect).",
+        "operationId": "simulate_consciousness_field_api_v1_simulate__post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SimulateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimulateResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Simulate Consciousness Field",
+        "tags": [
+          "simulation"
+        ]
+      }
+    },
+    "/api/v1/telemetry/events": {
+      "get": {
+        "description": "List locally buffered events (empty unless active).",
+        "operationId": "list_telemetry_events_api_v1_telemetry_events_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response List Telemetry Events Api V1 Telemetry Events Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List Telemetry Events",
+        "tags": [
+          "telemetry"
+        ]
+      }
+    },
+    "/api/v1/telemetry/opt-in": {
+      "post": {
+        "description": "Set client opt-in. Still no-op unless the server env flag is enabled.",
+        "operationId": "set_telemetry_opt_in_api_v1_telemetry_opt_in_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TelemetryOptInRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TelemetryStatus"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Set Telemetry Opt In",
+        "tags": [
+          "telemetry"
+        ]
+      }
+    },
+    "/api/v1/telemetry/status": {
+      "get": {
+        "description": "Return whether telemetry is active.",
+        "operationId": "telemetry_status_api_v1_telemetry_status_get",
         "responses": {
           "200": {
             "content": {

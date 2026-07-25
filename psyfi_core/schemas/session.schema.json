@@ -216,7 +216,7 @@
       "type": "string"
     },
     "api_version": {
-      "default": "v0",
+      "default": "v1",
       "title": "Api Version",
       "type": "string"
     },

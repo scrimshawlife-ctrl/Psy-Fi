@@ -9,25 +9,28 @@ Document the live FastAPI surface, static/PWA assets, and service-worker behavio
 
 ## Live HTTP Routes
 
+Canonical browser client paths are under `/api/v1/*`. Legacy `/api/*` and `/simulate/` remain mounted for compatibility.
+
 | Method | Path | Request | Response | Notes |
 |---|---|---|---|---|
 | `GET` | `/` | — | HTML shell | Existing Jinja template |
 | `GET` | `/health` | — | status dict | Liveness + version |
-| `GET` | `/ready` | — | readiness dict | Presets/icons/schema checks |
-| `GET` | `/api/info` | — | info dict | Pre-`/api/v1` info surface |
-| `POST` | `/simulate/` | `SimulateRequest` | `SimulateResponse` | Sync path; cancels on disconnect |
-| `POST` | `/api/jobs/simulate` | job request | job summary | Async cancellable job |
-| `GET` | `/api/jobs/{id}` | — | job summary | Poll status/result |
-| `DELETE` | `/api/jobs/{id}` | — | job summary | Request cancel |
-| `GET` | `/api/presets/` | — | `PresetListResponse` | Existing substance registry catalog |
-| `GET` | `/api/presets/{id}` | — | `PresetDetail` | Id or alias lookup |
-| `GET/POST` | `/api/telemetry/*` | opt-in | status/events | Disabled unless env + client consent |
-| `GET` | `/api/midi/*` | MIDI models | MIDI models / dicts | Process-global MIDI service |
+| `GET` | `/ready`, `/api/v1/ready` | — | readiness dict | Presets/icons/schema checks |
+| `GET` | `/api/info`, `/api/v1/info` | — | info dict | Includes `api_version: v1` |
+| `POST` | `/simulate/`, `/api/v1/simulate/` | `SimulateRequest` | `SimulateResponse` | Sync path; cancels on disconnect |
+| `POST` | `/api/v1/jobs/simulate` | job request | job summary | Canonical async cancellable job |
+| `GET` | `/api/v1/jobs/{id}` | — | job summary | Poll status/result |
+| `DELETE` | `/api/v1/jobs/{id}` | — | job summary | Request cancel |
+| `GET` | `/api/v1/presets/` | — | `PresetListResponse` | Existing substance registry catalog |
+| `GET` | `/api/v1/presets/{id}` | — | `PresetDetail` | Id or alias lookup |
+| `GET/POST` | `/api/v1/telemetry/*` | opt-in | status/events | Disabled unless env + client consent |
+| `GET` | `/api/v1/midi/*` | MIDI models | MIDI models / dicts | Process-global MIDI service |
+| `*` | `/api/jobs/*`, `/api/presets/*`, `/api/telemetry/*`, `/api/midi/*` | same | same | Legacy mirrors of v1 |
 | `GET` | `/assets/icons/*` | — | static files | Mount of existing `docs/icons` |
 | `GET` | `/static/*` | — | static files | Existing UI assets + SW |
 
 OpenAPI snapshot: [`docs/contracts/openapi.json`](contracts/openapi.json)  
-Regenerate: `python scripts/export_openapi.py`
+Regenerate: `python3 scripts/export_openapi.py`
 
 ## Machine-Readable Contracts (Existing Tree)
 
@@ -50,25 +53,23 @@ Regenerate: `python scripts/export_openapi.py`
 - contract metadata: `schema_version`, `engine_version`, `api_version`, `seed`, `provenance_id`, `module_chain`
 - embedded `session` document (`PsyFiSession`) for local save/export
 
-`api_version` remains `v0` until `/api/v1` routes are introduced.
+`api_version` is `v1` for session documents and simulate/job responses. The web shell calls `/api/v1` exclusively.
 
 ## Static Assets and PWA
 
 | Path | Role | Integration note |
 |---|---|---|
 | `psyfi_api/templates/index.html` | App shell | Progressive enhancement target |
-| `psyfi_api/static/app.js` | Client | localStorage session save/restore/export |
+| `psyfi_api/static/app.js` | Client | `/api/v1` jobs/presets; IndexedDB history; install + import |
 | `psyfi_api/static/style.css` | UI tokens | semantic aliases → `--pf-*` |
 | `psyfi_api/static/sw.js` | Service worker | network-only API; network-first HTML; cache-first `/static` |
-| `psyfi_api/static/manifest.json` | Manifest | icons point at `/assets/icons` (existing SVG pack) |
+| `psyfi_api/static/manifest.json` | Manifest | PNG icons + SVG brand pack |
 | `docs/icons/*.svg` | Icon pack | Served via FastAPI mount |
 | `docs/style/*.css` | Brand CSS | Source for token aliases |
 
-## Remaining Gaps
+## Remaining Gaps (web track)
 
-- `/api/v1` versioned public routes
-- cancellation / timeout for long simulations
-- preset catalog + export endpoints
-- IndexedDB migrations (localStorage is interim)
-- maskable PNG icons for stricter installability checks
+- Physical-device validation against the capability matrix (Safari/Chrome/Edge/Firefox)
+- Phase 4 usability validation and formal contract freeze
 - OpenAPI breaking-change gate in CI beyond snapshot test
+- Native iOS is out of scope for this track (see `docs/IOS_MIGRATION.md`)

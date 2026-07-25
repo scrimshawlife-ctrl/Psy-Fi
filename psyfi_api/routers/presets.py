@@ -7,7 +7,7 @@ from pydantic import BaseModel, Field
 
 from psyfi_core.models.substance_preset import get_registry, load_preset
 
-router = APIRouter(prefix="/api/presets", tags=["presets"])
+router = APIRouter(prefix="/presets", tags=["presets"])
 
 
 class PresetSummary(BaseModel):

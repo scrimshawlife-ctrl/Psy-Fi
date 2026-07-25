@@ -1599,12 +1599,6 @@ body.launch-ready #appShell {
     }
 }
 
-@media (prefers-reduced-motion: reduce) {
-    .pf-tip {
-        transition: none;
-    }
-}
-
 @media (max-width: 480px) {
     .brand-row {
         align-items: flex-start;
@@ -1634,5 +1628,9 @@ body.launch-ready #appShell {
 
     .field-status[data-live="true"] {
         opacity: 1;
+    }
+
+    .pf-tip {
+        transition: none;
     }
 }

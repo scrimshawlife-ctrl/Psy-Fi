@@ -36,18 +36,25 @@ export class AssetLoader {
   constructor(opts?: {
     mode?: AssetLoadMode
     workerUrl?: string | URL
+    /** Test/injection hook — bypasses Worker URL construction. */
+    workerFactory?: () => Worker
     draco?: DracoWasmDecoder
     dracoWasmUrl?: string
   }) {
     this.draco = opts?.draco ?? createDracoWasmDecoder({ wasmUrl: opts?.dracoWasmUrl })
-    if (opts?.mode === 'worker' && typeof Worker !== 'undefined') {
+    if (opts?.mode === 'worker') {
       try {
-        const url =
-          opts.workerUrl ??
-          // Vite / bundler module worker
-          new URL('./asset.worker.ts', import.meta.url)
-        this.worker = new Worker(url, { type: 'module' })
-        this.mode = 'worker'
+        if (opts.workerFactory) {
+          this.worker = opts.workerFactory()
+          this.mode = 'worker'
+        } else if (typeof Worker !== 'undefined') {
+          const url =
+            opts.workerUrl ??
+            // Vite / bundler module worker
+            new URL('./asset.worker.ts', import.meta.url)
+          this.worker = new Worker(url, { type: 'module' })
+          this.mode = 'worker'
+        }
       } catch {
         this.mode = 'main'
         this.worker = null
@@ -82,11 +89,6 @@ export class AssetLoader {
     const worker = this.worker
     if (!worker) return this.loadMain(req, signal)
     return new Promise((resolve, reject) => {
-      const onAbort = () => {
-        worker.postMessage({ type: 'abort', id: req.id })
-        reject(new DOMException('Aborted', 'AbortError'))
-      }
-      signal?.addEventListener('abort', onAbort, { once: true })
       const onMessage = (ev: MessageEvent) => {
         const data = ev.data as {
           type: string
@@ -97,8 +99,7 @@ export class AssetLoader {
           error?: string
         }
         if (data.id !== req.id) return
-        worker.removeEventListener('message', onMessage)
-        signal?.removeEventListener('abort', onAbort)
+        cleanup()
         if (data.type === 'error') reject(new Error(data.error || 'worker asset error'))
         else {
           resolve({
@@ -109,6 +110,16 @@ export class AssetLoader {
           })
         }
       }
+      const onAbort = () => {
+        cleanup()
+        worker.postMessage({ type: 'abort', id: req.id })
+        reject(new DOMException('Aborted', 'AbortError'))
+      }
+      const cleanup = () => {
+        worker.removeEventListener('message', onMessage)
+        signal?.removeEventListener('abort', onAbort)
+      }
+      signal?.addEventListener('abort', onAbort, { once: true })
       worker.addEventListener('message', onMessage)
       worker.postMessage({ type: 'load', id: req.id, url: req.url, kind: req.kind })
     })

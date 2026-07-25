@@ -25,6 +25,7 @@ import type { SceneSnapshotV1 } from '../contracts/SceneSnapshot'
 import type { QualityTier } from '../contracts/QualityTier'
 import { tierConfig } from '../contracts/QualityTier'
 import { resolveTemporalPolicy } from './TemporalAccumulate'
+import { disposePresentResources, type DisposableGpuResource } from './presentDispose'
 
 /**
  * Present path: scene → GTAO → SSR → bloom → DoF → motion blur → chroma → temporal → grade → safety.
@@ -51,6 +52,7 @@ export function PresentPipeline({
   useEffect(() => {
     const renderer = gl as unknown as InstanceType<typeof THREE.WebGPURenderer>
     const scenePass = pass(scene, camera)
+    const disposables: DisposableGpuResource[] = [scenePass]
     const needsMrt = cfg.post.ssao || cfg.post.ssr || cfg.post.motionBlur
 
     if (needsMrt) {
@@ -74,18 +76,21 @@ export function PresentPipeline({
     if (cfg.post.ssao && normal) {
       const aoPass = ao(depth, normal, camera)
       aoPass.resolutionScale = tier === 'balanced' ? 0.5 : 1
+      disposables.push(aoPass)
       node = aoPass.getTextureNode().mul(color)
     }
 
     if (cfg.post.ssr && normal) {
       const metal = scenePass.getTextureNode('metalness')
       const ssrPass = ssr(node, depth, normal, metal, camera)
+      disposables.push(ssrPass)
       node = node.add(ssrPass.getTextureNode().mul(float(0.28)))
     }
 
     if (cfg.post.bloom) {
       const bloomPass = bloom(node, 0.35, 0.4, 0.85)
       bloomStrengthRef.current = bloomPass.strength
+      disposables.push(bloomPass)
       node = node.add(bloomPass)
     } else {
       bloomStrengthRef.current = null
@@ -94,21 +99,28 @@ export function PresentPipeline({
     if (cfg.post.depthOfField) {
       const viewZ = scenePass.getViewZNode('depth')
       // Subtle DoF — Neutral path still reads clearly via safety/exposure later
-      node = dof(node, viewZ, float(2.2), float(0.018), float(0.006))
+      const dofPass = dof(node, viewZ, float(2.2), float(0.018), float(0.006))
+      disposables.push(dofPass)
+      node = dofPass
     }
 
     if (cfg.post.motionBlur) {
       const vel = scenePass.getTextureNode('velocity')
-      node = motionBlur(node, vel, 8)
+      const mb = motionBlur(node, vel, 8)
+      disposables.push(mb)
+      node = mb
     }
 
     if (cfg.post.chromaticAberration) {
-      node = rgbShift(node, 0.0018, 0.0)
+      const chroma = rgbShift(node, 0.0018, 0.0)
+      disposables.push(chroma)
+      node = chroma
     }
 
     if (cfg.post.taa) {
       const temporal = afterImage(node, 0.82)
       temporalDampRef.current = temporal.damp
+      disposables.push(temporal)
       node = temporal.getTextureNode()
     } else {
       temporalDampRef.current = null
@@ -129,6 +141,7 @@ export function PresentPipeline({
     const post = new THREE.PostProcessing(renderer, node)
     post.outputColorTransform = !cfg.post.hdr
     postRef.current = post
+    disposables.push(post)
 
     renderer.toneMapping = cfg.post.hdr ? THREE.ACESFilmicToneMapping : THREE.NoToneMapping
     renderer.toneMappingExposure = 1.0
@@ -137,6 +150,7 @@ export function PresentPipeline({
       postRef.current = null
       bloomStrengthRef.current = null
       temporalDampRef.current = null
+      disposePresentResources(disposables)
     }
   }, [
     gl,

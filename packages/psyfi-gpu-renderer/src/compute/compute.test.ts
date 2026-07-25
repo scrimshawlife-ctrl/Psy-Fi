@@ -52,6 +52,12 @@ describe('G2 compute kernels', () => {
     expect(moved).toBe(true)
     expect(particleBudgetForTier(48_000, 0.5)).toBeLessThanOrEqual(48_000)
     expect(particleBudgetForTier(12_000, 0.1)).toBeGreaterThanOrEqual(64)
+    // Small intensity lerps must not change the quantized budget every frame.
+    const a = particleBudgetForTier(2048, 0.5)
+    const b = particleBudgetForTier(2048, 0.51)
+    const c = particleBudgetForTier(2048, 0.52)
+    expect(a).toBe(b)
+    expect(b).toBe(c)
   })
 
   it('cull drops far spheres and keeps near', () => {

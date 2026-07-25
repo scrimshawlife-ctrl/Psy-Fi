@@ -41,4 +41,29 @@ describe('AssetLoader G2', () => {
     await expect(fetchAssetBytes('/missing')).rejects.toThrow(/404/)
     vi.unstubAllGlobals()
   })
+
+  it('worker abort removes the message listener so same-id reloads settle', async () => {
+    const listeners = new Set<(ev: MessageEvent) => void>()
+    const worker = {
+      postMessage: vi.fn(),
+      addEventListener: (_type: string, fn: (ev: MessageEvent) => void) => {
+        listeners.add(fn)
+      },
+      removeEventListener: (_type: string, fn: (ev: MessageEvent) => void) => {
+        listeners.delete(fn)
+      },
+      terminate: vi.fn(),
+    }
+    const loader = new AssetLoader({
+      mode: 'worker',
+      workerFactory: () => worker as unknown as Worker,
+    })
+    const controller = new AbortController()
+    const pending = loader.load({ id: 'same', kind: 'gltf', url: '/x.gltf' }, controller.signal)
+    expect(listeners.size).toBe(1)
+    controller.abort()
+    await expect(pending).rejects.toMatchObject({ name: 'AbortError' })
+    expect(listeners.size).toBe(0)
+    loader.dispose()
+  })
 })

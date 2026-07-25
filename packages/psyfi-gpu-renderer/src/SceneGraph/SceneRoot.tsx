@@ -13,6 +13,7 @@ import { MagnitudePlane } from '../procedural/MagnitudePlane'
 import { FlowParticleField } from '../procedural/FlowParticleField'
 import { LightingRig } from '../Lighting/LightingRig'
 import { PostStack } from '../PostProcessing/PostStack'
+import { SceneAssetLayer } from '../AssetPipeline/SceneAssetLayer'
 
 export function SceneRoot({
   snapshot,
@@ -53,6 +54,7 @@ export function SceneRoot({
         {snapshot.magnitude_field ? (
           <MagnitudePlane field={snapshot.magnitude_field} mix={neutral ? 0 : 0.35} />
         ) : null}
+        <SceneAssetLayer snapshot={snapshot} enabled={!neutral && tier !== 'battery'} />
       </group>
       {!neutral && cfg.post.contactShadows ? (
         <ContactShadows

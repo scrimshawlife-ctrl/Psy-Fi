@@ -54,7 +54,8 @@ Canonical queue: [`CONTINUATION_PLAN.md`](CONTINUATION_PLAN.md).
 | **P0** | Validate Ultra auto-tier on real NVIDIA / AMD / Intel desktops via `/gpu/` | Human QA |
 | **P1** | Profiling HUD polish in `/gpu/` (FPS · avg/p95/max · budget) | **done** |
 | **P1** | Draco/KTX2 WASM GPU upload beyond header decode | **done** (Basis/real Draco WASM optional) |
-| **P1** | G4 cutover smoke: parity evidence + visual goldens | Eng · `docs/rendering/G4_CUTOVER.md` |
+| **P1** | G4 cutover: parity matrix + SceneAssetLayer | **done** (pixel goldens pending WebGPU CI) |
+| **P1** | G4 pixel / histogram goldens | Eng · needs WebGPU CI runner |
 | **P2** | Re-run device matrix after major UI changes | QA |
 | **P2** | Optional legacy WebGL 1:1 shaders; future CUDA workers | Eng (opportunistic) |
 

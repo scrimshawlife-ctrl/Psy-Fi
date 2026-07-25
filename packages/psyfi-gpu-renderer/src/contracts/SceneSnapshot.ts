@@ -62,6 +62,7 @@ export interface SceneSnapshotV1 {
   post: Record<string, boolean>
   safety?: Record<string, number>
   assets?: {
+    /** Optional binary refs: `{ id, url, role? }` — empty by default from Python. */
     gltf: unknown[]
     ktx2: unknown[]
     splats: unknown[]

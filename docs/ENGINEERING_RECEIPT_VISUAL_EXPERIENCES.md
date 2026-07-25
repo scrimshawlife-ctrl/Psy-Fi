@@ -47,7 +47,7 @@ python3 scripts/build_experience_catalog.py
 ### Frontend
 - `psyfi_api/static/viz/experiencePlayer.js` — multi-engine Canvas field + safety pass
 - Live Experience panel alongside simulation workspace
-- Service worker precache includes experience player (`psyfi-shell-v25`)
+- Service worker precache includes experience player (`psyfi-shell-v26`)
 
 ### Tests
 ```text
@@ -80,7 +80,7 @@ pytest tests/ -q
 
 ## Known limitations
 
-- Renderer is Canvas (CPU fbm), low internal resolution upscaled — not WebGL/Metal yet
+- Legacy Live Experience: Canvas (CPU fractal fold + fbm) + optional WebGL ParameterField (Mandelbox fold, orbit trap, chroma/edge/trail); Prefer WebGL on by default
 - No live camera/sensor adapters in this slice
 - Modular per-engine JS files still live inside `experiencePlayer.js`
 - 5-MeO / mescaline / ketamine overlays are seed-heavy (few scraped samples)

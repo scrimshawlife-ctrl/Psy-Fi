@@ -30,6 +30,9 @@ uniform float u_complex;
 uniform float u_void;
 uniform float u_attr;
 uniform float u_energy;
+uniform float u_chroma;
+uniform float u_edge;
+uniform float u_trail;
 uniform float u_wR;
 uniform float u_wK;
 uniform float u_wF;
@@ -61,12 +64,114 @@ float noise(vec2 p) {
 float fbm(vec2 p) {
   float s = 0.0;
   float a = 0.5;
-  for (int i = 0; i < 5; i++) {
+  for (int i = 0; i < 6; i++) {
     s += a * noise(p);
-    p *= 2.0;
+    p *= 2.03;
     a *= 0.5;
   }
   return s;
+}
+
+float tanh1(float x) {
+  float e = exp(clamp(2.0 * x, -12.0, 12.0));
+  return (e - 1.0) / (e + 1.0);
+}
+
+vec2 tanh2(vec2 v) {
+  return vec2(tanh1(v.x), tanh1(v.y));
+}
+
+vec2 kaleido(vec2 uv, float symmetry, float w) {
+  float ang = atan(uv.y, uv.x);
+  float rad = length(uv);
+  float seg = 3.14159265 / max(2.0, symmetry);
+  float ka = abs(mod(ang, 2.0 * seg) - seg);
+  vec2 kuv = vec2(cos(ka), sin(ka)) * rad;
+  return mix(uv, kuv, clamp(w, 0.0, 1.0));
+}
+
+vec2 fractalFold(vec2 p) {
+  float scale = 1.35 + u_recursion * 0.85;
+  vec2 c = vec2(
+    sin(u_time * 0.11 + u_seed * 0.001) * (0.28 + u_feedback * 0.45),
+    cos(u_time * 0.09) * (0.22 + u_depth * 0.4)
+  );
+  float spin = u_time * (0.08 + u_feedback * 0.25);
+  float cs = cos(spin);
+  float sn = sin(spin);
+  vec2 z = p;
+  for (int i = 0; i < 6; i++) {
+    if (float(i) >= 3.0 + u_recursion * 5.0) break;
+    z = abs(z);
+    if (z.x > 1.0) z.x = 2.0 - z.x;
+    if (z.y > 1.0) z.y = 2.0 - z.y;
+    vec2 r = vec2(z.x * cs - z.y * sn, z.x * sn + z.y * cs) * scale + c;
+    float r2 = dot(r, r);
+    if (r2 < 0.5) r *= 2.0;
+    else if (r2 < 1.0) r *= 1.0 / max(r2, 0.0001);
+    z = r;
+  }
+  float warp = 0.12 + u_recursion * 0.18;
+  return mix(p, tanh2(z * 0.35), warp);
+}
+
+// Returns vec3(v, organic, lattice)
+vec3 fieldAt(vec2 uv) {
+  uv = kaleido(uv, u_symmetry, u_wK);
+
+  float z = 1.0 + u_zoom * 1.8 * sin(u_time * (0.4 + u_recursion));
+  uv *= z;
+  float spin = u_time * (0.15 + u_feedback * 0.5);
+  float cs = cos(spin); float sn = sin(spin);
+  uv = mix(uv, vec2(uv.x * cs - uv.y * sn, uv.x * sn + uv.y * cs), clamp(u_wR, 0.0, 1.0));
+
+  float foldAmt = clamp(u_wR * (0.35 + u_recursion * 0.85 + u_feedback * 0.4), 0.0, 1.0);
+  vec2 folded = fractalFold(uv);
+  uv = mix(uv, folded, foldAmt);
+
+  vec2 flow = vec2(
+    fbm(uv * 2.2 + vec2(u_time * 0.15, 0.0)) - 0.5,
+    fbm(uv * 2.2 + vec2(5.2, u_time * 0.12)) - 0.5
+  );
+  uv += flow * u_disp * (0.9 + u_trail * 0.55) * u_wF;
+  uv += flow * u_trail * 0.22 * u_wR;
+
+  float organic = pow(fbm(uv * 1.4 + vec2(0.0, u_time * 0.08)), 1.2 - u_complex * 0.4);
+  float vein = fbm(uv * 4.2 - vec2(0.0, u_time * 0.05));
+  organic = organic * 0.72 + vein * 0.28;
+
+  float r = length(uv);
+  float voidF = exp(-pow((r - (0.15 + u_depth * 0.35 + mod(u_time * 0.03, 0.4))) * 3.5, 2.0)) * (0.4 + u_void);
+
+  float lx = sin(uv.x * (18.0 + u_complex * 40.0) + u_time * (1.0 + u_entropy));
+  float ly = cos(uv.y * (18.0 + u_complex * 40.0) - u_time * 0.8);
+  float lz = sin((uv.x + uv.y) * (22.0 + u_complex * 30.0) + u_time * 1.3);
+  float base = pow(abs(lx * ly * lz), 0.35 + (1.0 - u_complex) * 0.4);
+  float scale = 7.0 + u_complex * 26.0;
+  vec2 h = vec2(uv.x * scale, uv.y * scale * 1.1547005);
+  vec2 g = h - floor(h + 0.5);
+  float hex = exp(-length(g) * (3.2 + u_edge * 5.0));
+  float ang = atan(uv.y, uv.x);
+  float petals = 0.5 + 0.5 * cos(ang * (3.0 + floor(u_complex * 9.0)) + u_time * 1.1);
+  float rings = pow(abs(sin(r * (10.0 + u_complex * 18.0) - u_time)), 2.2);
+  float lattice = clamp(base * 0.5 + hex * 0.32 + petals * base * 0.22 + rings * 0.12 * u_wE, 0.0, 1.0);
+
+  float orbit = exp(-abs(length(folded) - (0.55 + u_depth * 0.35)) * (3.2 + u_complex * 5.0));
+  float feedbackF = fbm(uv * (3.0 + u_recursion * 6.0) - vec2(0.0, u_time * u_feedback));
+  feedbackF = feedbackF * (0.55 + u_recursion * 0.2) + orbit * (0.35 + u_feedback * 0.35)
+    + fbm(uv * 7.5 + vec2(u_time * 0.2, 0.0)) * u_recursion * 0.25;
+
+  float v = feedbackF * u_wR + organic * u_wO + voidF * u_wV + lattice * u_wE + fbm(uv * 1.1) * u_wF * 0.5;
+  if (u_attr > 0.2) {
+    v *= 0.75 + 0.55 * exp(-r * (1.5 + u_attr * 2.0));
+    v += u_attr * 0.15 * pow(max(0.0, 1.0 - r * 2.0), 2.0);
+  }
+
+  float sharpened = smoothstep(0.22, 0.78, v);
+  v = mix(v, sharpened, clamp(u_edge * 0.75, 0.0, 0.85));
+  v += u_edge * 0.12 * abs(lattice - organic);
+  v = clamp(v * (0.7 + u_energy * 0.8), 0.0, 1.0);
+  return vec3(v, organic, lattice);
 }
 
 void main() {
@@ -81,58 +186,45 @@ void main() {
     return;
   }
 
-  // kaleidoscope
-  float ang = atan(uv.y, uv.x);
-  float rad = length(uv);
-  float seg = 3.14159265 / max(2.0, u_symmetry);
-  float ka = abs(mod(ang, 2.0 * seg) - seg);
-  vec2 kuv = vec2(cos(ka), sin(ka)) * rad;
-  uv = mix(uv, kuv, clamp(u_wK, 0.0, 1.0));
-
-  // recursive spin/zoom
-  float z = 1.0 + u_zoom * 1.8 * sin(u_time * (0.4 + u_recursion));
-  uv *= z;
-  float spin = u_time * (0.15 + u_feedback * 0.5);
-  float cs = cos(spin); float sn = sin(spin);
-  uv = mix(uv, vec2(uv.x * cs - uv.y * sn, uv.x * sn + uv.y * cs), clamp(u_wR, 0.0, 1.0));
-
-  // flow
-  vec2 flow = vec2(
-    fbm(uv * 2.2 + vec2(u_time * 0.15, 0.0)) - 0.5,
-    fbm(uv * 2.2 + vec2(5.2, u_time * 0.12)) - 0.5
-  );
-  uv += flow * u_disp * 0.9 * u_wF;
-
-  float organic = pow(fbm(uv * 1.4 + vec2(0.0, u_time * 0.08)), 1.2 - u_complex * 0.4);
-  float r = length(uv);
-  float voidF = exp(-pow((r - (0.15 + u_depth * 0.35 + mod(u_time * 0.03, 0.4))) * 3.5, 2.0)) * (0.4 + u_void);
-  float lx = sin(uv.x * (18.0 + u_complex * 40.0) + u_time * (1.0 + u_entropy));
-  float ly = cos(uv.y * (18.0 + u_complex * 40.0) - u_time * 0.8);
-  float lz = sin((uv.x + uv.y) * (22.0 + u_complex * 30.0) + u_time * 1.3);
-  float lattice = pow(abs(lx * ly * lz), 0.35 + (1.0 - u_complex) * 0.4);
-  float feedbackF = fbm(uv * (3.0 + u_recursion * 6.0) - vec2(0.0, u_time * u_feedback));
-
-  float v = feedbackF * u_wR + organic * u_wO + voidF * u_wV + lattice * u_wE + fbm(uv * 1.1) * u_wF * 0.5;
-  if (u_attr > 0.2) {
-    v *= 0.75 + 0.55 * exp(-r * (1.5 + u_attr * 2.0));
-    v += u_attr * 0.15 * pow(max(0.0, 1.0 - r * 2.0), 2.0);
+  vec3 f0 = fieldAt(uv);
+  float v = f0.x;
+  float organic = f0.y;
+  float lattice = f0.z;
+  float chroma = clamp(u_chroma, 0.0, 1.0);
+  float vR = v;
+  float vB = v;
+  if (chroma > 0.02) {
+    vec2 dir = normalize(uv + vec2(0.001));
+    float off = chroma * 0.045;
+    vR = fieldAt(uv + dir * off).x;
+    vB = fieldAt(uv - dir * off).x;
   }
-  v = clamp(v * (0.7 + u_energy * 0.8), 0.0, 1.0);
 
-  // Optional last-sim magnitude plane (soft blend before safety ceiling).
   if (u_sourceMix > 0.001) {
     float src = texture2D(u_source, v_uv).r;
-    v = mix(v, src, clamp(u_sourceMix, 0.0, 1.0) * 0.85);
+    float sm = clamp(u_sourceMix, 0.0, 1.0) * 0.85;
+    v = mix(v, src, sm);
+    vR = mix(vR, src, sm);
+    vB = mix(vB, src, sm);
   }
 
-  vec3 col = u_palette * v * (0.45 + v);
-  col.g += organic * 0.15;
-  col.b += lattice * 0.3;
+  vec3 col;
+  col.r = u_palette.r * vR * (0.45 + vR);
+  col.g = u_palette.g * v * (0.5 + v * 0.35) + organic * 0.14 * u_wO;
+  col.b = u_palette.b * vB * (0.48 + vB * 0.55) + lattice * 0.28 * u_wE;
+
+  col.g += (v * 0.12 + organic * 0.08) * (0.6 + u_energy * 0.4);
+  col.r += chroma * 0.08 * abs(vR - vB);
+
   float bAmt = u_bloom * v * v;
-  col = mix(col, vec3(1.0), bAmt * 0.85);
-  // Mandatory peak clamp + flash/luma attenuator (SafetyPass parity)
-  float m = max(col.r, max(col.g, col.b));
-  if (m > 0.96) col *= 0.96 / m;
+  col = mix(col, vec3(1.0), bAmt * 0.72);
+  col += vec3(0.02, 0.06, 0.08) * bAmt;
+
+  float vig = smoothstep(1.35, 0.35, length(uv));
+  col *= 0.72 + 0.28 * vig;
+
+  float peak = max(col.r, max(col.g, col.b));
+  if (peak > 0.96) col *= 0.96 / peak;
   col = mix(vec3(0.047, 0.047, 0.055), col, clamp(u_safetyAtten, 0.0, 1.0));
   gl_FragColor = vec4(col, 1.0);
 }`;
@@ -140,7 +232,7 @@ void main() {
   class ParameterFieldWebGL {
     constructor(canvas) {
       this.canvas = canvas;
-      this.gl = canvas.getContext('webgl', { alpha: false, antialias: false, preserveDrawingBuffer: true });
+      this.gl = canvas.getContext('webgl', { alpha: false, antialias: true, preserveDrawingBuffer: true });
       this.ok = !!this.gl;
       this.program = null;
       this.frame = null;
@@ -260,8 +352,8 @@ void main() {
       const f = this.frame || {};
       const p = f.parameters || {};
       const eng = f.engines || {};
-      const pal = (global.PsyFiViz.math && global.PsyFiViz.math.hexToRgb((f.palette && f.palette.tracers) || '#63F3E8')) || {
-        r: 99, g: 243, b: 232,
+      const pal = (global.PsyFiViz.math && global.PsyFiViz.math.hexToRgb((f.palette && f.palette.tracers) || '#3ee7f2')) || {
+        r: 62, g: 231, b: 242,
       };
       const time = (now - this.t0) / 1000;
       gl.useProgram(this.program);
@@ -287,6 +379,9 @@ void main() {
       set('u_void', p.void_bias || 0);
       set('u_attr', p.attractor_bias || 0);
       set('u_energy', (f.palette && f.palette.energy) || p.palette_energy || 0.5);
+      set('u_chroma', p.chromatic_aberration || 0.1);
+      set('u_edge', p.edge_gain || 0.4);
+      set('u_trail', p.trail_length || 0.35);
       set('u_wR', eng.recursive_feedback || 0.3);
       set('u_wK', eng.kaleidoscope || 0.2);
       set('u_wF', eng.flow_field || 0.2);

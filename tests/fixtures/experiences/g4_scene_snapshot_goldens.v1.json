@@ -7,8 +7,8 @@
       "mode": "open",
       "seed": 42,
       "intensity": 0.75,
-      "parameter_field_hash": "d471e921df21aebe",
-      "fingerprint": "05fa84b01946a557085bc8b5493acf10e1ef770d13cb1a2b349829d81995f3c6",
+      "parameter_field_hash": "126d9f00440f9a21",
+      "fingerprint": "86561394d1e840d1649a95fcc50e32bb34399cb3f39810da797ae6e97792db96",
       "counts": {
         "glyphs": 6,
         "sdf_nodes": 1,
@@ -23,15 +23,15 @@
       "mode": "attractor",
       "seed": 7,
       "intensity": 0.6,
-      "parameter_field_hash": "eb3f6fc259cb417b",
-      "fingerprint": "069db387b104cea45c4e93e2382eaa991d8f1e6b46724f33f915f21168a10a9d",
+      "parameter_field_hash": "81e82f10dc541f80",
+      "fingerprint": "7136a4b77bdd9cadfc05d126edd2b022d6b8aa61e4c489857b27ac779027ca5a",
       "counts": {
         "glyphs": 5,
         "sdf_nodes": 1,
         "ribbons": 1,
         "metaballs": 4,
         "volumetric_symbols": 1,
-        "crystals": 3
+        "crystals": 2
       }
     },
     "dmt:void:99": {
@@ -39,10 +39,10 @@
       "mode": "void",
       "seed": 99,
       "intensity": 0.85,
-      "parameter_field_hash": "78edf35a3ca3f92e",
-      "fingerprint": "0046d00501e7b76076e93dee22781284c7ce2ee0db217496a521692fa1670746",
+      "parameter_field_hash": "129d9dd9504ab092",
+      "fingerprint": "567ec7a925df857d6438c18cae77f94b031c0ae5cec844fa05a2880798e9336b",
       "counts": {
-        "glyphs": 7,
+        "glyphs": 6,
         "sdf_nodes": 1,
         "ribbons": 1,
         "metaballs": 2,

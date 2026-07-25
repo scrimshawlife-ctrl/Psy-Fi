@@ -106,7 +106,25 @@ def test_substance_overlays_drive_distinct_engines():
     lsd = map_parameters(substance="lsd", mode="open", seed=11, intensity=0.8, phase_t=0.5)
     psilo = map_parameters(substance="psilocybin", mode="open", seed=11, intensity=0.8, phase_t=0.5)
     dmt = map_parameters(substance="dmt", mode="open", seed=11, intensity=0.8, phase_t=0.5)
+    mdma = map_parameters(substance="mdma", mode="open", seed=11, intensity=0.8, phase_t=0.5)
+    ketamine = map_parameters(substance="ketamine", mode="open", seed=11, intensity=0.8, phase_t=0.5)
     assert lsd.hash != psilo.hash != dmt.hash
+    assert mdma.hash != lsd.hash
+    assert ketamine.hash != lsd.hash
     assert lsd.engines.get("kaleidoscope", 0) >= psilo.engines.get("kaleidoscope", 0) * 0.6
     assert psilo.engines.get("organic_bloom", 0) >= lsd.engines.get("organic_bloom", 0)
     assert dmt.engines.get("entity_lattice", 0) >= lsd.engines.get("entity_lattice", 0)
+    assert mdma.engines.get("organic_bloom", 0) >= lsd.engines.get("organic_bloom", 0)
+    assert mdma.palette["tracers"] != lsd.palette["tracers"]
+    assert ketamine.engines.get("flow_field", 0) >= lsd.engines.get("flow_field", 0) * 0.9
+
+
+def test_catalog_covers_secondary_substances():
+    catalog = load_catalog()
+    for substance in ("mdma", "2c-b", "eth-lad", "jhana", "dxm"):
+        recipes = catalog.list(substance=substance, valence=None)
+        assert recipes, substance
+        overlay = catalog.overlay(substance)
+        assert overlay, substance
+        assert overlay.get("tracers_color")
+        assert overlay["tracers_color"] != "#63F3E8" or substance == "baseline"

@@ -8,55 +8,57 @@
   },
   "channels": {
     "body_somatic": {
-      "mean": 0.312,
+      "mean": 0.445,
       "max": 1.0,
-      "recipe_count": 42
+      "recipe_count": 52
     },
     "color_light": {
-      "mean": 0.411,
+      "mean": 0.515,
       "max": 1.0,
-      "recipe_count": 46
+      "recipe_count": 57
     },
     "entities": {
-      "mean": 0.205,
+      "mean": 0.411,
       "max": 1.0,
       "recipe_count": 28
     },
     "geometry": {
-      "mean": 0.334,
-      "max": 0.9,
-      "recipe_count": 48
+      "mean": 0.403,
+      "max": 1.0,
+      "recipe_count": 61
     },
     "machines": {
-      "mean": 0.11,
-      "max": 0.85,
-      "recipe_count": 31
-    },
-    "nature": {
-      "mean": 0.291,
-      "max": 1.0,
-      "recipe_count": 37
-    },
-    "space_void": {
-      "mean": 0.349,
-      "max": 1.0,
-      "recipe_count": 39
-    },
-    "time_memory": {
-      "mean": 0.316,
+      "mean": 0.241,
       "max": 1.0,
       "recipe_count": 33
+    },
+    "nature": {
+      "mean": 0.349,
+      "max": 1.0,
+      "recipe_count": 40
+    },
+    "space_void": {
+      "mean": 0.514,
+      "max": 1.0,
+      "recipe_count": 45
+    },
+    "time_memory": {
+      "mean": 0.464,
+      "max": 1.0,
+      "recipe_count": 36
     }
   },
   "hooks_by_substance": {
     "2c-b": [
       "crisp ornamental geometry with tactile color pop and stable attractors",
       "textile-like neon lattice with playful chroma without void overwhelm",
+      "playful chroma pop; tactile neon geometry with stable attractors",
       "beautiful textile-like geometry, neon tracers, stable attractors, amazing color salience and lucid ornamental clarity."
     ],
     "2c-e": [
       "longer-held deep patterns; high complexity with deliberate pacing",
       "analytic mosaic geometry with lucid attentional grip",
+      "long attentional hold on analytic mosaic; pacing over flash",
       "deep analytic patterns held for long stretches, complex mosaics, cosmic geometry, profound focus and awe without terror."
     ],
     "5-meo-dmt": [
@@ -67,6 +69,7 @@
     "al-lad": [
       "lsd-adjacent soft lattice with gentler comeup geometry",
       "pastel recursive drift; ornamental but less abrasive than peak LSD",
+      "gentler lysergic comeup; pastel geometry before full recursion",
       "soft lysergic lattice, pastel recursion, gentle kaleidoscope, beautiful colors and calm geometric drift."
     ],
     "dmt": [
@@ -78,6 +81,18 @@
       "Anthropomorphic entities were rushing towards these beams and when they entered the beams their limbs multiplied and they became hyper-spiders.",
       "I tried a couple of moderately succesful yage journeys which had shown me the potentials of the mindspaces available through DMT.",
       "I put some dry tobacco in the body of the pipe along with some spice and held it over a candle to heat the pipe."
+    ],
+    "dxm": [
+      "plateau soft drift; muted dissociative corridors with intensity cap",
+      "blurred architectural soften; low chroma chaos and floating depth"
+    ],
+    "eth-lad": [
+      "ornate high-complexity recursion; lysergic sibling with denser lattice",
+      "violet tracer lattice with lucid ornamental hold"
+    ],
+    "jhana": [
+      "luminous stillness; low turbulence, high coherence, minimal ornament",
+      "coherent soft glow without pattern aggression; calm attentional field"
     ],
     "ketamine": [
       "smooth depth corridors, reduced chroma chaos, floating stability",
@@ -96,11 +111,14 @@
     ],
     "mda": [
       "luminous empathic field; elevated glow with soft organic motion",
+      "rose-gold visionary glow with soft ornamental hints, not hard lattice",
       "luminous empathy, glowing organic bloom, music-driven color, profound warmth and positive awe."
     ],
     "mdma": [
       "warm connective glow; soft edges and elevated palette energy without panic",
       "pulse-coupled bloom with lucid social warmth and low lattice aggression",
+      "music-coupled tactile warmth; bloom over lattice; soft social chroma",
+      "gentle afterglow haze; low edge gain and lingering empathic bloom",
       "warm euphoric glow, deep empathy, soft edges, beautiful colors without fear, heartbeat sync with music, life-affirming connection and peaceful awe.",
       "positive emotional openness, neon warmth, gentle visual bloom, music becomes tactile light, profound love and calm clarity."
     ],
@@ -112,13 +130,14 @@
     "mxe": [
       "soft dissociative mosaic; muted chroma and floating depth",
       "warm-hole corridor drift with gentle somatic detach",
+      "muted float chamber; sparse chroma and soft dissociative depth",
       "soft dissociative corridors, warm floating drift, muted colorful mosaic, peaceful detachment and smooth void depth."
     ],
     "pcp": [
       "experimental low-intensity edge ambiguity; intensity capped",
       "We went a few blocks down the street to a wooded area to smoke some weed that one of them had brought.",
       "I could see a black and white carousel through the trees, complete with horses and lights and everything, but no sound.",
-      "I knew something was wrong because I smoked a fair bit of pot on a regular basis at that time, and shouldn't have been very high after 2 hits."
+      "I also found myself touching the ground, because it felt 'fuzzy', and I realized that my friends were also behaving oddly."
     ],
     "psilocybin": [
       "closed-eye dancing fractals behind a soft veil toward oneness",

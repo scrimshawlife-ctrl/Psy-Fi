@@ -32,7 +32,7 @@ Scope: web app / PWA / API — native iOS deferred (`IOS_MIGRATION.md`).
 | CI | pytest + hallmark + gpu test/typecheck/build | **done** | `.github/workflows/ci.yml` |
 | QA | Device capability matrix | **filled** | human + simulated Ultra rows — 2026-07-25 |
 | QA | Phase 4 usability log | **filled** | 2026-07-25 evidence rows |
-| QA | Simulated P0 Ultra desktop QA | **passed** | `SIMULATED_ULTRA_QA.md` (hardware fps optional) |
+| QA | Simulated P0 Ultra desktop QA | **passed** | `SIMULATED_ULTRA_QA.md` (synthetic fps matrix; hardware measured optional) |
 | Out of scope | Native iOS | deferred | `docs/IOS_MIGRATION.md` |
 | Out of scope | Azure / Render one-click | removed | `#28` |
 
@@ -60,7 +60,7 @@ Canonical queue: [`CONTINUATION_PLAN.md`](CONTINUATION_PLAN.md).
 | --- | --- | --- |
 | **P0** | Ultra auto-tier QA (NVIDIA / AMD / Intel) | **simulated pass** · hardware fps optional |
 | **P1** | G0–G4 ship polish (HUD, assets, goldens, PWA route) | **done** |
-| **P2** | Full R3F WebGPU stills on a GPU CI runner | optional |
+| **P2** | Lock full R3F WebGPU still SHAs on a GPU CI runner | optional (API landed) |
 | **P2** | Vendor real Draco WASM / Basis transcoder | **done** | `/gpu/vendor/` · SceneAssetLayer async |
 | **P2** | Re-measure device matrix fps after major UI changes | living QA |
 | **P2** | Legacy WebGL 1:1 shaders; future CUDA workers | opportunistic |

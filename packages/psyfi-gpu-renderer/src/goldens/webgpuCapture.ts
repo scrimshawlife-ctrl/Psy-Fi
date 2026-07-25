@@ -15,7 +15,12 @@ import { PF_CYAN } from '../styles/tokens'
 import type { PixelFrame } from './pixelTypes'
 import { PIXEL_GOLDEN_SIZE, softPresentSnapshot } from './softPresent'
 
-export type CaptureMode = 'soft' | 'webgpu-palette' | 'webgpu-unavailable'
+export type CaptureMode =
+  | 'soft'
+  | 'webgpu-palette'
+  | 'webgpu-unavailable'
+  | 'r3f-deferred'
+  | 'r3f-webgpu'
 
 function parseHexColor(hex: string): [number, number, number] {
   const s = String(hex || PF_CYAN).replace('#', '')

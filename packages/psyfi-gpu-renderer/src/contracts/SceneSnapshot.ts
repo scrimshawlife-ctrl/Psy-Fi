@@ -67,6 +67,8 @@ export interface SceneSnapshotV1 {
     ktx2: unknown[]
     splats: unknown[]
   }
+  /** Optional product art pack id (`psyfi.asset_pack.v1`); null/omit = procedural only. */
+  asset_pack_id?: string | null
   authority?: Record<string, string | null | undefined>
   provenance_id?: string | null
   note?: string

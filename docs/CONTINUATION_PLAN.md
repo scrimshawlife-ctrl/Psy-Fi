@@ -47,6 +47,10 @@ Board: [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md)
 - [x] Vendored Draco/Basis wired for browser decode; SceneAssetLayer async BasisLZ path
 - [x] Fixture KTX2 emission (`include_fixture_assets` / `PSYFI_SCENE_ASSETS`) + soft-present layers
 - [x] OffscreenCanvas present flag (`?offscreen=1`, same-thread scaffold)
+- [x] Worker OffscreenCanvas remoting protocol (`?offscreen=worker` · stub worker)
+- [x] R3F still capture API (`r3f-deferred` without GPU CI harness)
+- [x] Product art pack schema + `asset_pack_id` attach (empty CI registry)
+- [x] Hardware Ultra fps matrix scaffold (synthetic CI samples)
 - [x] Simulated P0 Ultra QA ([`SIMULATED_ULTRA_QA.md`](SIMULATED_ULTRA_QA.md))
 
 ## Recommended next steps (priority order)
@@ -65,10 +69,11 @@ Board: [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md)
 
 ### Optional — hardware Ultra fps
 
-Simulated stand-in already passed. When a discrete desktop is available:
+Synthetic fps matrix already in CI (`ultraFpsMatrix.ts`). When a discrete desktop is available:
 
 1. NVIDIA / AMD / Intel → `/gpu/` HUD: adapter · band ultra · tier ultra · fps/budget **ok**
-2. Promote matrix Notes from `simulated` → measured fps
+2. Replace `fixtures/qa/ultra_fps_matrix.synthetic.v1.json` samples with `source: measured`
+3. Promote matrix Notes from `simulated` → measured fps
 
 Guide: [`DESKTOP_GPU.md`](DESKTOP_GPU.md).
 
@@ -76,7 +81,7 @@ Guide: [`DESKTOP_GPU.md`](DESKTOP_GPU.md).
 
 | Item | Notes |
 | --- | --- |
-| Full R3F WebGPU stills | Needs GPU CI runner; soft-present goldens already in CI |
+| Full R3F WebGPU still SHAs | API landed (`r3f-deferred`); GPU CI runner still needed to lock `r3f-webgpu` |
 | Vendor Draco WASM / Basis transcoder | **done** — `public/vendor/{draco,basis}` · `draco3d` decode · Basis init |
 | GPU PresentPipeline dispose on tier rebuild | **done** — dispose effect RTs; quantize particle budgets; worker abort listener cleanup |
 | Legacy WebGL 1:1 shaders | Only if keeping `/` long-term parity |

@@ -4,6 +4,7 @@ Status: **CI-active** (soft-present) · hardware WebGPU capture optional locally
 
 Soft-present layers (not full R3F): crystals · glyphs · metaballs · ribbons · flow particles · optional fixture KTX2 ground band.  
 `capturePixelFrame` modes: `soft` (default golden) · `webgpu-palette` (smoke) · `webgpu-unavailable`.  
+R3F stills: `captureR3fStill` → `soft` / `r3f-deferred` in CI; `r3f-webgpu` reserved for GPU CI harness (`fixtures/pixel-goldens/g4_r3f_stills.v1.json`).  
 Related: [`G4_CUTOVER.md`](G4_CUTOVER.md), [`GPU_PERFORMANCE_BUDGET.md`](GPU_PERFORMANCE_BUDGET.md)
 
 ## What runs in CI

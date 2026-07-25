@@ -17,6 +17,8 @@ export interface GpuLaunchParams {
   fixtureAssets: boolean
   /** Opt-in OffscreenCanvas present target (same-thread scaffold). */
   offscreen: boolean
+  /** Prefer dedicated present-worker remoting (`?offscreen=worker`). */
+  offscreenWorker: boolean
 }
 
 function truthyParam(q: URLSearchParams, key: string): boolean {
@@ -48,7 +50,8 @@ export function readGpuLaunchParams(
     experienceId,
     fromShell,
     fixtureAssets: truthyParam(q, 'fixtures') || truthyParam(q, 'fixture_assets'),
-    offscreen: truthyParam(q, 'offscreen'),
+    offscreen: truthyParam(q, 'offscreen') || (q.get('offscreen') || '').toLowerCase() === 'worker',
+    offscreenWorker: (q.get('offscreen') || '').toLowerCase() === 'worker',
   }
 }
 

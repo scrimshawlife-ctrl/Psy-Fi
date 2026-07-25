@@ -238,6 +238,7 @@ export function App() {
             snapshot={snapshot}
             tier={effectiveTier}
             preferOffscreen={launch.offscreen}
+            preferWorker={launch.offscreenWorker}
             onPresentMode={setPresentMode}
           />
         ) : (

@@ -1,0 +1,11 @@
+{
+  "schema": "psyfi.asset_pack.v1",
+  "id": "empty_stub",
+  "version": "0.0.0",
+  "procedural_fallback": true,
+  "license": "internal",
+  "status": "stub",
+  "gltf": [],
+  "ktx2": [],
+  "splats": []
+}

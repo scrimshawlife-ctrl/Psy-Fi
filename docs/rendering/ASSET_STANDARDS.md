@@ -41,6 +41,7 @@ SceneRoot
   └─ SceneAssetLayer (snapshot.assets.ktx2 → DataTexture plane)
        · default empty arrays (procedural authority)
        · opt-in fixtures: include_fixture_assets / PSYFI_SCENE_ASSETS=fixtures
+       · product packs: asset_pack_id → psyfi.asset_pack.v1 (empty registry in CI)
        · public/assets/fixtures/ground_rgba8.ktx2
 Main / OffscreenCanvas renderer
         ▲ GpuAssetUploader (writeTexture / writeBuffer)

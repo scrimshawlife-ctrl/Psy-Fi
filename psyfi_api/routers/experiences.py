@@ -76,6 +76,7 @@ class SceneSnapshotRequest(BaseModel):
     sequence: int = Field(default=1, ge=1)
     include_simulation: bool = True
     include_fixture_assets: bool = False
+    asset_pack_id: str | None = None
     width: int = Field(default=32, ge=8, le=128)
     height: int = Field(default=32, ge=8, le=128)
     sim_steps: int = Field(default=4, ge=1, le=64)
@@ -411,6 +412,7 @@ async def scene_snapshot(body: SceneSnapshotRequest) -> dict[str, Any]:
         quality_tier=body.quality_tier,
         sequence=body.sequence,
         include_fixture_assets=body.include_fixture_assets,
+        asset_pack_id=body.asset_pack_id,
     )
     snap["kind"] = "scene_snapshot"
     snap["substance"] = substance

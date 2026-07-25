@@ -17,7 +17,7 @@
     {
       "id": "gpu-shell",
       "ok": true,
-      "detail": "mounted status=200 bytes=806"
+      "detail": "mounted status=200 bytes=1122"
     },
     {
       "id": "snapshot-lsd",
@@ -38,12 +38,17 @@
       "id": "neutral-clamps-post",
       "ok": true,
       "detail": "ssr/ssao off under Neutral"
+    },
+    {
+      "id": "ultra-fps-matrix",
+      "ok": true,
+      "detail": "synthetic samples=8 (hardware measured pending)"
     }
   ],
   "summary": {
-    "total": 7,
-    "passed": 7,
+    "total": 8,
+    "passed": 8,
     "failed": 0
   },
-  "note": "Simulated stand-in for P0 human Ultra QA on NVIDIA/AMD/Intel desktops. Adapter\u2192tier classification is covered by gpu:test simulateUltraQa; this report covers API + /gpu/ mount + G4 ultra snapshots + Neutral clamp."
+  "note": "Simulated stand-in for P0 human Ultra QA on NVIDIA/AMD/Intel desktops. Adapter\u2192tier + synthetic fps matrix covered by gpu:test; this report covers API + /gpu/ mount + G4 ultra snapshots + Neutral + fps fixture."
 }

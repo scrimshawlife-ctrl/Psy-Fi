@@ -47,4 +47,10 @@ describe('GPU Lab launch params', () => {
     expect(p.offscreen).toBe(true)
     expect(readGpuLaunchParams('').fixtureAssets).toBe(false)
   })
+
+  it('parses offscreen=worker as remoting prefer', () => {
+    const p = readGpuLaunchParams('?offscreen=worker')
+    expect(p.offscreen).toBe(true)
+    expect(p.offscreenWorker).toBe(true)
+  })
 })

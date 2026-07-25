@@ -105,6 +105,19 @@ def test_simulated_ultra_qa_api_and_gpu_shell() -> None:
     assert nbody["post"].get("ssao") is False
     checks.append({"id": "neutral-clamps-post", "ok": True, "detail": "ssr/ssao off under Neutral"})
 
+    fps_fixture = ROOT / "packages" / "psyfi-gpu-renderer" / "fixtures" / "qa" / "ultra_fps_matrix.synthetic.v1.json"
+    fps_doc = json.loads(fps_fixture.read_text(encoding="utf-8"))
+    assert fps_doc["schema"] == "psyfi.ultra_fps_matrix.v1"
+    assert fps_doc["mode"] == "synthetic"
+    assert len(fps_doc["samples"]) >= 8
+    checks.append(
+        {
+            "id": "ultra-fps-matrix",
+            "ok": True,
+            "detail": f"synthetic samples={len(fps_doc['samples'])} (hardware measured pending)",
+        }
+    )
+
     report = {
         "schema": "psyfi.simulated_ultra_qa.v1",
         "date": "2026-07-25",
@@ -118,8 +131,8 @@ def test_simulated_ultra_qa_api_and_gpu_shell() -> None:
         },
         "note": (
             "Simulated stand-in for P0 human Ultra QA on NVIDIA/AMD/Intel desktops. "
-            "Adapter→tier classification is covered by gpu:test simulateUltraQa; "
-            "this report covers API + /gpu/ mount + G4 ultra snapshots + Neutral clamp."
+            "Adapter→tier + synthetic fps matrix covered by gpu:test; "
+            "this report covers API + /gpu/ mount + G4 ultra snapshots + Neutral + fps fixture."
         ),
     }
     assert report["summary"]["failed"] == 0

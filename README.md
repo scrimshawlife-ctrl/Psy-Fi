@@ -457,6 +457,7 @@ Psy-Fi/
 │   ├── main.py                 # Main app
 │   ├── routers/
 │   │   ├── simulate.py         # Simulation endpoint
+│   │   ├── presets.py          # Substance preset catalog
 │   │   └── midi.py             # MIDI control endpoints
 │   ├── templates/
 │   │   └── index.html          # Web UI

@@ -10,18 +10,19 @@ The installable PWA is PsyFi's first mobile application surface. It is not descr
 
 ### Implemented now (existing web shell)
 
-1. Configure grid size / steps / seed, or choose a quick size preset.
+1. Configure grid size / steps / seed, choose a quick size preset, or pick a substance preset.
 2. Run a server-backed simulation while online.
-3. Inspect metrics plus seed / provenance / module chain.
-4. Save/restore the last versioned session via `localStorage`.
+3. Inspect metrics, provenance, and a Canvas magnitude heatmap.
+4. Save/restore sessions via IndexedDB history (with `localStorage` last-session fallback).
 5. Export the last session as JSON.
+6. View in-browser capability diagnostics (`/#capabilities`).
 
 ### Planned (not yet in the client)
 
 - Cancel an in-flight simulation.
-- IndexedDB session history with migrations.
 - Offline compute parity with the Python engine.
-- Full capability diagnostics UI for camera/motion/MIDI/audio/haptics/WebGPU.
+- WebGPU acceleration and Worker offload.
+- Camera/motion/audio/haptic adapters beyond detection.
 
 Camera, motion, MIDI, audio, haptics, WebGPU, persistent storage, and installability remain progressive enhancements. Unsupported capabilities must produce an explicit fallback state and must not block the core online workflow.
 

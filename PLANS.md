@@ -42,14 +42,18 @@ Exit gate: a user can configure, run, inspect, save, restore, and export a simul
 
 ### Phase 2 — Visualization Runtime
 
-- [ ] Define a renderer-independent visualization schema.
-- [ ] Implement Canvas/WebGL visualization before adopting WebGPU-only features.
+- [x] Define a renderer-independent visualization schema.
+- [x] Implement Canvas visualization (WebGL/WebGPU optional path deferred).
+- [x] Phenomenology catalog → immutable parameter field → multi-engine Live Experience UI.
+- [x] Safety pass (flash/luminance clamp), Reduce Motion, Neutral View, provenance panel.
 - [ ] Add WebGPU as an optional accelerated path with a tested fallback.
 - [ ] Move expensive browser work to Web Workers.
 - [ ] Evaluate WebAssembly only where profiling proves material benefit.
-- [ ] Establish frame-time, memory, battery, and thermal budgets.
+- [ ] Establish frame-time, memory, battery, and thermal budgets on device matrix.
 
 Exit gate: representative simulations meet documented visual fidelity and performance budgets on supported devices.
+
+**Partial exit (2026-07-24):** vertical slice shipped — see `docs/ENGINEERING_RECEIPT_VISUAL_EXPERIENCES.md`.
 
 ### Phase 3 — PWA and Mobile-Web Hardening
 
@@ -92,7 +96,7 @@ Priority 0:
 Priority 1:
 - Simulation workspace redesign.
 - Results/provenance inspector.
-- Visualization schema and renderer prototype.
+- [x] Visualization schema and renderer prototype (Live Experience + catalog).
 - IndexedDB history and import/export.
 - Browser capability matrix.
 

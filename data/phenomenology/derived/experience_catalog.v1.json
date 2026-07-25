@@ -1,0 +1,2958 @@
+{
+  "schema_version": "1.0.0",
+  "generator": "scripts/build_experience_catalog.py",
+  "disclaimer": "Modeled phenomenological recipes for research/visualization only. Not medical, diagnostic, or therapeutic advice. Narrative hooks are short derived motifs, not republication of full source texts.",
+  "recipe_count": 33,
+  "recipes": [
+    {
+      "id": "exp_lsd_floral_geometry",
+      "schema_version": "1.0.0",
+      "title": "Floral Geometric Lattice",
+      "substance": "lsd",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "curated_seed",
+          "note": "Grounded in aggregate positive phenomenology motifs"
+        }
+      ],
+      "motifs": {
+        "geometry": 0.9,
+        "color_light": 0.75,
+        "nature": 0.55
+      },
+      "narrative_hooks": [
+        "floral geometric designs glimmer as light dances on patterned texture"
+      ],
+      "modes": [
+        "attractor",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "kaleidoscope",
+          "recursive_feedback"
+        ],
+        "secondary_engines": [
+          "organic_bloom"
+        ],
+        "mode_default": "attractor",
+        "palette": {
+          "tracers": "#3EE7F2",
+          "energy": 0.75,
+          "contrast": 0.8200000000000001
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.845,
+          "feedback_strength": 0.805,
+          "recursion_gain": 0.795,
+          "turbulence": 0.2,
+          "trail_length": 0.675,
+          "edge_gain": 0.755,
+          "zoom_velocity": 0.05,
+          "displacement": 0.343,
+          "stability": 0.7,
+          "entropy": 0.25,
+          "palette_energy": 0.812,
+          "pattern_complexity": 0.89,
+          "depth_distortion": 0.3,
+          "bloom": 0.5
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.15,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.45,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.25,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.15,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
+      }
+    },
+    {
+      "id": "exp_lsd_color_salience",
+      "schema_version": "1.0.0",
+      "title": "Color Salience Aura Field",
+      "substance": "lsd",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "curated_seed",
+          "note": "Grounded in aggregate positive phenomenology motifs"
+        }
+      ],
+      "motifs": {
+        "color_light": 0.95,
+        "geometry": 0.4,
+        "body_somatic": 0.35
+      },
+      "narrative_hooks": [
+        "colors become emotionally salient; glow and aura intensify without panic"
+      ],
+      "modes": [
+        "open",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "recursive_feedback"
+        ],
+        "secondary_engines": [
+          "organic_bloom",
+          "flow_field"
+        ],
+        "mode_default": "open",
+        "palette": {
+          "tracers": "#3EE7F2",
+          "energy": 0.95,
+          "contrast": 0.67
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.57,
+          "feedback_strength": 0.58,
+          "recursion_gain": 0.52,
+          "turbulence": 0.27,
+          "trail_length": 0.775,
+          "edge_gain": 0.53,
+          "zoom_velocity": 0.05,
+          "displacement": 0.15,
+          "stability": 0.7,
+          "entropy": 0.25,
+          "palette_energy": 0.922,
+          "pattern_complexity": 0.59,
+          "depth_distortion": 0.3,
+          "bloom": 0.58
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.15,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.45,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.25,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.15,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
+      }
+    },
+    {
+      "id": "exp_lsd_cosmic_geometry",
+      "schema_version": "1.0.0",
+      "title": "Physics-Edge Cosmic Geometry",
+      "substance": "lsd",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "curated_seed",
+          "note": "Grounded in aggregate positive phenomenology motifs"
+        }
+      ],
+      "motifs": {
+        "geometry": 0.85,
+        "space_void": 0.7,
+        "time_memory": 0.5
+      },
+      "narrative_hooks": [
+        "structured cosmic geometry at the edge of scale and recursion"
+      ],
+      "modes": [
+        "power",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "recursive_feedback",
+          "entity_lattice"
+        ],
+        "secondary_engines": [
+          "kaleidoscope"
+        ],
+        "mode_default": "power",
+        "palette": {
+          "tracers": "#3EE7F2",
+          "energy": 0.6,
+          "contrast": 0.805
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.818,
+          "feedback_strength": 0.782,
+          "recursion_gain": 0.768,
+          "turbulence": 0.2,
+          "trail_length": 0.3,
+          "edge_gain": 0.732,
+          "zoom_velocity": 0.295,
+          "displacement": 0.15,
+          "stability": 0.595,
+          "entropy": 0.6,
+          "palette_energy": 0.4,
+          "pattern_complexity": 0.86,
+          "depth_distortion": 0.685,
+          "bloom": 0.2
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.15,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.45,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.25,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.15,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
+      }
+    },
+    {
+      "id": "exp_lsd_soft_room",
+      "schema_version": "1.0.0",
+      "title": "Soft Room Glow",
+      "substance": "lsd",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "curated_seed",
+          "note": "Grounded in aggregate positive phenomenology motifs"
+        }
+      ],
+      "motifs": {
+        "color_light": 0.7,
+        "nature": 0.35,
+        "body_somatic": 0.4
+      },
+      "narrative_hooks": [
+        "room softens; gentle pattern crawl and warm chromatic lift"
+      ],
+      "modes": [
+        "open",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "organic_bloom",
+          "recursive_feedback"
+        ],
+        "secondary_engines": [
+          "flow_field"
+        ],
+        "mode_default": "open",
+        "palette": {
+          "tracers": "#3EE7F2",
+          "energy": 0.7,
+          "contrast": 0.55
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.35,
+          "feedback_strength": 0.4,
+          "recursion_gain": 0.3,
+          "turbulence": 0.28,
+          "trail_length": 0.65,
+          "edge_gain": 0.35,
+          "zoom_velocity": 0.05,
+          "displacement": 0.272,
+          "stability": 0.7,
+          "entropy": 0.25,
+          "palette_energy": 0.785,
+          "pattern_complexity": 0.35,
+          "depth_distortion": 0.3,
+          "bloom": 0.48
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.15,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.45,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.25,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.15,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
+      }
+    },
+    {
+      "id": "exp_psilocybin_veil_fractals",
+      "schema_version": "1.0.0",
+      "title": "Veil Fractals CEV",
+      "substance": "psilocybin",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "curated_seed",
+          "note": "Grounded in aggregate positive phenomenology motifs"
+        }
+      ],
+      "motifs": {
+        "geometry": 0.7,
+        "nature": 0.6,
+        "space_void": 0.45
+      },
+      "narrative_hooks": [
+        "closed-eye dancing fractals behind a soft veil toward oneness"
+      ],
+      "modes": [
+        "open",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "organic_bloom",
+          "recursive_feedback"
+        ],
+        "secondary_engines": [
+          "void_expansion"
+        ],
+        "mode_default": "open",
+        "palette": {
+          "tracers": "#8F7BFF",
+          "energy": 0.6,
+          "contrast": 0.76
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.735,
+          "feedback_strength": 0.715,
+          "recursion_gain": 0.685,
+          "turbulence": 0.2,
+          "trail_length": 0.3,
+          "edge_gain": 0.665,
+          "zoom_velocity": 0.208,
+          "displacement": 0.36,
+          "stability": 0.632,
+          "entropy": 0.475,
+          "palette_energy": 0.4,
+          "pattern_complexity": 0.77,
+          "depth_distortion": 0.547,
+          "bloom": 0.2
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.15,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.45,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.25,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.15,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
+      }
+    },
+    {
+      "id": "exp_psilocybin_breath_bloom",
+      "schema_version": "1.0.0",
+      "title": "Organic Breath Bloom",
+      "substance": "psilocybin",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "curated_seed",
+          "note": "Grounded in aggregate positive phenomenology motifs"
+        }
+      ],
+      "motifs": {
+        "nature": 0.85,
+        "body_somatic": 0.55,
+        "color_light": 0.6
+      },
+      "narrative_hooks": [
+        "organic bloom pulses with breath; edges soften into living texture"
+      ],
+      "modes": [
+        "open",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "organic_bloom",
+          "flow_field"
+        ],
+        "secondary_engines": [
+          "recursive_feedback"
+        ],
+        "mode_default": "open",
+        "palette": {
+          "tracers": "#8F7BFF",
+          "energy": 0.6,
+          "contrast": 0.55
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.35,
+          "feedback_strength": 0.4,
+          "recursion_gain": 0.3,
+          "turbulence": 0.31,
+          "trail_length": 0.6,
+          "edge_gain": 0.35,
+          "zoom_velocity": 0.05,
+          "displacement": 0.448,
+          "stability": 0.7,
+          "entropy": 0.25,
+          "palette_energy": 0.73,
+          "pattern_complexity": 0.35,
+          "depth_distortion": 0.3,
+          "bloom": 0.44
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.15,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.45,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.25,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.15,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
+      }
+    },
+    {
+      "id": "exp_psilocybin_synesthetic_drift",
+      "schema_version": "1.0.0",
+      "title": "Synesthetic Palette Drift",
+      "substance": "psilocybin",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "curated_seed",
+          "note": "Grounded in aggregate positive phenomenology motifs"
+        }
+      ],
+      "motifs": {
+        "color_light": 0.9,
+        "time_memory": 0.4,
+        "nature": 0.4
+      },
+      "narrative_hooks": [
+        "color-emotion coupling drifts the palette with slow certainty"
+      ],
+      "modes": [
+        "attractor",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "organic_bloom"
+        ],
+        "secondary_engines": [
+          "flow_field",
+          "kaleidoscope"
+        ],
+        "mode_default": "attractor",
+        "palette": {
+          "tracers": "#8F7BFF",
+          "energy": 0.9,
+          "contrast": 0.55
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.35,
+          "feedback_strength": 0.4,
+          "recursion_gain": 0.3,
+          "turbulence": 0.2,
+          "trail_length": 0.75,
+          "edge_gain": 0.35,
+          "zoom_velocity": 0.05,
+          "displacement": 0.29,
+          "stability": 0.7,
+          "entropy": 0.25,
+          "palette_energy": 0.895,
+          "pattern_complexity": 0.35,
+          "depth_distortion": 0.3,
+          "bloom": 0.56
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.15,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.45,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.25,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.15,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
+      }
+    },
+    {
+      "id": "exp_dmt_tunnel_entry",
+      "schema_version": "1.0.0",
+      "title": "Chrysanthemum Tunnel Entry",
+      "substance": "dmt",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "curated_seed",
+          "note": "Grounded in aggregate positive phenomenology motifs"
+        }
+      ],
+      "motifs": {
+        "space_void": 0.9,
+        "geometry": 0.8,
+        "machines": 0.55
+      },
+      "narrative_hooks": [
+        "rapid tunnel/chrysanthemum entry into high-frequency structure"
+      ],
+      "modes": [
+        "power",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "recursive_feedback",
+          "entity_lattice"
+        ],
+        "secondary_engines": [
+          "void_expansion"
+        ],
+        "mode_default": "power",
+        "palette": {
+          "tracers": "#FF42C1",
+          "energy": 0.6,
+          "contrast": 0.79
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.79,
+          "feedback_strength": 0.76,
+          "recursion_gain": 0.795,
+          "turbulence": 0.42,
+          "trail_length": 0.3,
+          "edge_gain": 0.71,
+          "zoom_velocity": 0.365,
+          "displacement": 0.26,
+          "stability": 0.372,
+          "entropy": 0.7,
+          "palette_energy": 0.4,
+          "pattern_complexity": 0.83,
+          "depth_distortion": 0.795,
+          "bloom": 0.2
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.15,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.45,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.25,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.15,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 1.5,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
+      }
+    },
+    {
+      "id": "exp_dmt_lattice_presence",
+      "schema_version": "1.0.0",
+      "title": "Hyperdimensional Lattice Presence",
+      "substance": "dmt",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "curated_seed",
+          "note": "Grounded in aggregate positive phenomenology motifs"
+        }
+      ],
+      "motifs": {
+        "machines": 0.85,
+        "geometry": 0.9,
+        "entities": 0.7
+      },
+      "narrative_hooks": [
+        "abstract lattice presence without figurative creatures"
+      ],
+      "modes": [
+        "attractor",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "entity_lattice",
+          "recursive_feedback"
+        ],
+        "secondary_engines": [
+          "kaleidoscope"
+        ],
+        "mode_default": "attractor",
+        "palette": {
+          "tracers": "#FF42C1",
+          "energy": 0.6,
+          "contrast": 0.8200000000000001
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.845,
+          "feedback_strength": 0.805,
+          "recursion_gain": 0.795,
+          "turbulence": 0.54,
+          "trail_length": 0.3,
+          "edge_gain": 0.755,
+          "zoom_velocity": 0.05,
+          "displacement": 0.32,
+          "stability": 0.402,
+          "entropy": 0.675,
+          "palette_energy": 0.4,
+          "pattern_complexity": 0.89,
+          "depth_distortion": 0.3,
+          "bloom": 0.2
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.15,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.45,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.25,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.15,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 1.5,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
+      }
+    },
+    {
+      "id": "exp_dmt_chaos_to_peace",
+      "schema_version": "1.0.0",
+      "title": "Breakthrough Stabilization",
+      "substance": "dmt",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "curated_seed",
+          "note": "Grounded in aggregate positive phenomenology motifs"
+        }
+      ],
+      "motifs": {
+        "space_void": 0.75,
+        "machines": 0.6,
+        "body_somatic": 0.4
+      },
+      "narrative_hooks": [
+        "beautiful chaos resolves toward ecstasy and peace across phases"
+      ],
+      "modes": [
+        "power",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "entity_lattice",
+          "recursive_feedback"
+        ],
+        "secondary_engines": [
+          "organic_bloom"
+        ],
+        "mode_default": "power",
+        "palette": {
+          "tracers": "#FF42C1",
+          "energy": 0.6,
+          "contrast": 0.55
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.35,
+          "feedback_strength": 0.67,
+          "recursion_gain": 0.713,
+          "turbulence": 0.44,
+          "trail_length": 0.3,
+          "edge_gain": 0.35,
+          "zoom_velocity": 0.312,
+          "displacement": 0.27,
+          "stability": 0.378,
+          "entropy": 0.625,
+          "palette_energy": 0.4,
+          "pattern_complexity": 0.71,
+          "depth_distortion": 0.713,
+          "bloom": 0.2
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.15,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.45,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.25,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.15,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 1.5,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
+      }
+    },
+    {
+      "id": "exp_5meodmt_luminous_void",
+      "schema_version": "1.0.0",
+      "title": "Luminous Void Dissolve",
+      "substance": "5-meo-dmt",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "curated_seed",
+          "note": "Grounded in aggregate positive phenomenology motifs"
+        }
+      ],
+      "motifs": {
+        "space_void": 0.95,
+        "body_somatic": 0.5,
+        "color_light": 0.35
+      },
+      "narrative_hooks": [
+        "minimal form, luminous depth, dissolve rather than ornate pattern"
+      ],
+      "modes": [
+        "void",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "void_expansion"
+        ],
+        "secondary_engines": [
+          "organic_bloom"
+        ],
+        "mode_default": "void",
+        "palette": {
+          "tracers": "#FFFFFF",
+          "energy": 0.35,
+          "contrast": 0.55
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.35,
+          "feedback_strength": 0.4,
+          "recursion_gain": 0.823,
+          "turbulence": 0.3,
+          "trail_length": 0.475,
+          "edge_gain": 0.35,
+          "zoom_velocity": 0.382,
+          "displacement": 0.15,
+          "stability": 0.557,
+          "entropy": 0.725,
+          "palette_energy": 0.593,
+          "pattern_complexity": 0.35,
+          "depth_distortion": 0.823,
+          "bloom": 0.34
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.15,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.45,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.25,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.15,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.28,
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
+      }
+    },
+    {
+      "id": "exp_mescaline_golden_clarity",
+      "schema_version": "1.0.0",
+      "title": "Golden Ornamental Clarity",
+      "substance": "mescaline",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "curated_seed",
+          "note": "Grounded in aggregate positive phenomenology motifs"
+        }
+      ],
+      "motifs": {
+        "geometry": 0.8,
+        "color_light": 0.75,
+        "nature": 0.45
+      },
+      "narrative_hooks": [
+        "warm ornamental geometry with lucid contrast"
+      ],
+      "modes": [
+        "attractor",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "kaleidoscope",
+          "recursive_feedback"
+        ],
+        "secondary_engines": [
+          "organic_bloom"
+        ],
+        "mode_default": "attractor",
+        "palette": {
+          "tracers": "#FFB547",
+          "energy": 0.75,
+          "contrast": 0.79
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.79,
+          "feedback_strength": 0.76,
+          "recursion_gain": 0.74,
+          "turbulence": 0.2,
+          "trail_length": 0.675,
+          "edge_gain": 0.71,
+          "zoom_velocity": 0.05,
+          "displacement": 0.307,
+          "stability": 0.7,
+          "entropy": 0.25,
+          "palette_energy": 0.812,
+          "pattern_complexity": 0.83,
+          "depth_distortion": 0.3,
+          "bloom": 0.5
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.15,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.45,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.25,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.15,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
+      }
+    },
+    {
+      "id": "exp_ketamine_smooth_corridor",
+      "schema_version": "1.0.0",
+      "title": "Smooth Dissociative Corridor",
+      "substance": "ketamine",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "curated_seed",
+          "note": "Grounded in aggregate positive phenomenology motifs"
+        }
+      ],
+      "motifs": {
+        "space_void": 0.8,
+        "body_somatic": 0.45,
+        "geometry": 0.3
+      },
+      "narrative_hooks": [
+        "smooth depth corridors, reduced chroma chaos, floating stability"
+      ],
+      "modes": [
+        "void",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "flow_field",
+          "void_expansion"
+        ],
+        "secondary_engines": [
+          "recursive_feedback"
+        ],
+        "mode_default": "void",
+        "palette": {
+          "tracers": "#7EC8E3",
+          "energy": 0.6,
+          "contrast": 0.64
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.515,
+          "feedback_strength": 0.535,
+          "recursion_gain": 0.74,
+          "turbulence": 0.29,
+          "trail_length": 0.3,
+          "edge_gain": 0.485,
+          "zoom_velocity": 0.33,
+          "displacement": 0.15,
+          "stability": 0.58,
+          "entropy": 0.65,
+          "palette_energy": 0.4,
+          "pattern_complexity": 0.53,
+          "depth_distortion": 0.74,
+          "bloom": 0.2
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.15,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.45,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.25,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.15,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
+      }
+    },
+    {
+      "id": "exp_pcp_pareidolic_edge",
+      "schema_version": "1.0.0",
+      "title": "Experimental Pareidolic Edge",
+      "substance": "pcp",
+      "valence": "mixed",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "curated_seed",
+          "note": "Grounded in aggregate positive phenomenology motifs"
+        }
+      ],
+      "motifs": {
+        "entities": 0.55,
+        "nature": 0.4,
+        "geometry": 0.35
+      },
+      "narrative_hooks": [
+        "experimental low-intensity edge ambiguity; intensity capped"
+      ],
+      "modes": [
+        "open",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "flow_field",
+          "recursive_feedback"
+        ],
+        "secondary_engines": [
+          "organic_bloom"
+        ],
+        "mode_default": "open",
+        "palette": {
+          "tracers": "#A0FF9A",
+          "energy": 0.6,
+          "contrast": 0.655
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.298,
+          "feedback_strength": 0.306,
+          "recursion_gain": 0.271,
+          "turbulence": 0.11,
+          "trail_length": 0.165,
+          "edge_gain": 0.279,
+          "zoom_velocity": 0.028,
+          "displacement": 0.16,
+          "stability": 0.385,
+          "entropy": 0.138,
+          "palette_energy": 0.22,
+          "pattern_complexity": 0.308,
+          "depth_distortion": 0.165,
+          "bloom": 0.11
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.15,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.45,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.25,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.15,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 1.5,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true,
+        "intensity_cap": 0.55
+      }
+    },
+    {
+      "id": "exp_src_dmt_19bf15e5",
+      "schema_version": "1.0.0",
+      "title": "Derived: DMT - Erowid Exp - 'First Breakthrough in Eight Years - Machine World'",
+      "substance": "dmt",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "erowid",
+          "id_hash": "sha256:19bf15e540b38516",
+          "title_hash": "sha256:b2bfd0ae3b47d588",
+          "url_host": "erowid.org"
+        }
+      ],
+      "motifs": {
+        "geometry": 0.0,
+        "entities": 1.0,
+        "color_light": 0.75,
+        "space_void": 1.0,
+        "body_somatic": 0.125,
+        "time_memory": 0.625,
+        "nature": 0.125,
+        "machines": 0.5
+      },
+      "narrative_hooks": [
+        "DMT - Erowid Exp - 'First Breakthrough in Eight Years - Machine World' --- <br>Get the Erowid \"Words\" T-shirt<br>Contribute $50 and show support for accurate dr",
+        "\"First Breakthrough in Eight Years - Machine World: An Experience with DMT (exp117473)\".",
+        "Anthropomorphic entities were rushing towards these beams and when they entered the beams their limbs multiplied and they became hyper-spiders."
+      ],
+      "modes": [
+        "power",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "recursive_feedback",
+          "entity_lattice"
+        ],
+        "secondary_engines": [
+          "kaleidoscope"
+        ],
+        "mode_default": "power",
+        "palette": {
+          "tracers": "#FF42C1",
+          "energy": 0.75,
+          "contrast": 0.5
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.35,
+          "feedback_strength": 0.625,
+          "recursion_gain": 0.85,
+          "turbulence": 0.4,
+          "trail_length": 0.675,
+          "edge_gain": 0.35,
+          "zoom_velocity": 0.4,
+          "displacement": 0.294,
+          "stability": 0.375,
+          "entropy": 0.75,
+          "palette_energy": 0.812,
+          "pattern_complexity": 0.65,
+          "depth_distortion": 0.85,
+          "bloom": 0.5
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.15,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.45,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.25,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.15,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true
+      }
+    },
+    {
+      "id": "exp_src_dmt_b69ce971",
+      "schema_version": "1.0.0",
+      "title": "Derived: DMT - Erowid Exp - 'Amazing Airbulb Invention'",
+      "substance": "dmt",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "erowid",
+          "id_hash": "sha256:b69ce97179c97777",
+          "title_hash": "sha256:64db4e5ba7ff7687",
+          "url_host": "erowid.org"
+        }
+      ],
+      "motifs": {
+        "geometry": 0.0,
+        "entities": 0.375,
+        "color_light": 0.125,
+        "space_void": 0.375,
+        "body_somatic": 0.25,
+        "time_memory": 0.5,
+        "nature": 0.125,
+        "machines": 0.125
+      },
+      "narrative_hooks": [
+        "I tried a couple of moderately succesful yage journeys which had shown me the potentials of the mindspaces available through DMT.",
+        "I put some dry tobacco in the body of the pipe along with some spice and held it over a candle to heat the pipe.",
+        "At one point a vicious gun turret on the back of a plane with jutting machine barrels."
+      ],
+      "modes": [
+        "power",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "recursive_feedback",
+          "entity_lattice"
+        ],
+        "secondary_engines": [
+          "kaleidoscope"
+        ],
+        "mode_default": "power",
+        "palette": {
+          "tracers": "#FF42C1",
+          "energy": 0.4,
+          "contrast": 0.5
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.35,
+          "feedback_strength": 0.456,
+          "recursion_gain": 0.506,
+          "turbulence": 0.25,
+          "trail_length": 0.362,
+          "edge_gain": 0.35,
+          "zoom_velocity": 0.181,
+          "displacement": 0.219,
+          "stability": 0.6,
+          "entropy": 0.438,
+          "palette_energy": 0.469,
+          "pattern_complexity": 0.425,
+          "depth_distortion": 0.506,
+          "bloom": 0.25
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.15,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.45,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.25,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.15,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true
+      }
+    },
+    {
+      "id": "exp_src_dmt_04c6a3a7",
+      "schema_version": "1.0.0",
+      "title": "Derived: DMT - Erowid Exp - 'Into the Mind of God'",
+      "substance": "dmt",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "erowid",
+          "id_hash": "sha256:04c6a3a70920b594",
+          "title_hash": "sha256:99fcb8207062a738",
+          "url_host": "erowid.org"
+        }
+      ],
+      "motifs": {
+        "geometry": 0.0,
+        "entities": 0.625,
+        "color_light": 0.125,
+        "space_void": 0.0,
+        "body_somatic": 0.875,
+        "time_memory": 0.875,
+        "nature": 0.25,
+        "machines": 0.0
+      },
+      "narrative_hooks": [
+        "\"Into the Mind of God: An Experience with DMT (exp96614)\".",
+        "The first two experiences produced only mild psychedelic effects: electric sensations flowing through the body and visuals a kin to LSD or mushrooms.",
+        "My ego had been left completely intact in both cases, and I had never really left the rooms from which I attempted to launch."
+      ],
+      "modes": [
+        "power",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "recursive_feedback",
+          "entity_lattice"
+        ],
+        "secondary_engines": [
+          "kaleidoscope"
+        ],
+        "mode_default": "power",
+        "palette": {
+          "tracers": "#FF42C1",
+          "energy": 0.4,
+          "contrast": 0.5
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.35,
+          "feedback_strength": 0.4,
+          "recursion_gain": 0.3,
+          "turbulence": 0.375,
+          "trail_length": 0.362,
+          "edge_gain": 0.35,
+          "zoom_velocity": 0.05,
+          "displacement": 0.237,
+          "stability": 0.7,
+          "entropy": 0.25,
+          "palette_energy": 0.469,
+          "pattern_complexity": 0.35,
+          "depth_distortion": 0.3,
+          "bloom": 0.25
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.15,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.45,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.25,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.15,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true
+      }
+    },
+    {
+      "id": "exp_src_lsd_30c65b28",
+      "schema_version": "1.0.0",
+      "title": "Derived: LSD - Erowid Exp - 'This is Fine'",
+      "substance": "lsd",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "erowid",
+          "id_hash": "sha256:30c65b28d2010c1c",
+          "title_hash": "sha256:92cef0b8ea474996",
+          "url_host": "erowid.org"
+        }
+      ],
+      "motifs": {
+        "geometry": 0.625,
+        "entities": 0.25,
+        "color_light": 0.375,
+        "space_void": 0.25,
+        "body_somatic": 0.25,
+        "time_memory": 1.0,
+        "nature": 0.125,
+        "machines": 0.0
+      },
+      "narrative_hooks": [
+        "Obtaining the acid was easy enough, however, this time it came with a warning.",
+        "Being somewhat experienced, or so I thought, I thanked him for his time and shrugged off his suggestion for taking a smaller dose to start off with.",
+        "While I had tripped several times on acid prior to this, D had only done it twice at this point."
+      ],
+      "modes": [
+        "attractor",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "kaleidoscope",
+          "recursive_feedback"
+        ],
+        "secondary_engines": [
+          "organic_bloom"
+        ],
+        "mode_default": "attractor",
+        "palette": {
+          "tracers": "#3EE7F2",
+          "energy": 0.4,
+          "contrast": 0.6875
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.694,
+          "feedback_strength": 0.681,
+          "recursion_gain": 0.644,
+          "turbulence": 0.25,
+          "trail_length": 0.487,
+          "edge_gain": 0.631,
+          "zoom_velocity": 0.138,
+          "displacement": 0.194,
+          "stability": 0.662,
+          "entropy": 0.375,
+          "palette_energy": 0.606,
+          "pattern_complexity": 0.725,
+          "depth_distortion": 0.438,
+          "bloom": 0.35
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.15,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.45,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.25,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.15,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true
+      }
+    },
+    {
+      "id": "exp_src_lsd_7eafa1c4",
+      "schema_version": "1.0.0",
+      "title": "Derived: LSD - Erowid Exp - 'Searching for the Peak of Hedonism'",
+      "substance": "lsd",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "erowid",
+          "id_hash": "sha256:7eafa1c4128eda76",
+          "title_hash": "sha256:fba5e9e8ef63013c",
+          "url_host": "erowid.org"
+        }
+      ],
+      "motifs": {
+        "geometry": 0.625,
+        "entities": 0.375,
+        "color_light": 0.5,
+        "space_void": 0.125,
+        "body_somatic": 0.375,
+        "time_memory": 0.625,
+        "nature": 0.375,
+        "machines": 0.0
+      },
+      "narrative_hooks": [
+        "Everything adorned with intricate patterns etched into a thick clay-like texture.",
+        "Floral geometric designs like Fleur-de-lis glimmered all around as though the light was dancing and highlighting reflective patterns hidden on every surface.",
+        "When I closed my eyes, bright earthy palettes danced on my eyelids."
+      ],
+      "modes": [
+        "attractor",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "kaleidoscope",
+          "recursive_feedback"
+        ],
+        "secondary_engines": [
+          "organic_bloom"
+        ],
+        "mode_default": "attractor",
+        "palette": {
+          "tracers": "#3EE7F2",
+          "energy": 0.5,
+          "contrast": 0.6875
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.694,
+          "feedback_strength": 0.681,
+          "recursion_gain": 0.644,
+          "turbulence": 0.275,
+          "trail_length": 0.55,
+          "edge_gain": 0.631,
+          "zoom_velocity": 0.094,
+          "displacement": 0.281,
+          "stability": 0.681,
+          "entropy": 0.312,
+          "palette_energy": 0.675,
+          "pattern_complexity": 0.725,
+          "depth_distortion": 0.369,
+          "bloom": 0.4
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.15,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.45,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.25,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.15,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true
+      }
+    },
+    {
+      "id": "exp_src_lsd_f03e2c2f",
+      "schema_version": "1.0.0",
+      "title": "Derived: LSD - Erowid Exp - 'Physics at the Edge of the Universe'",
+      "substance": "lsd",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "erowid",
+          "id_hash": "sha256:f03e2c2f62fd6a2b",
+          "title_hash": "sha256:925f21bb92ee6c54",
+          "url_host": "erowid.org"
+        }
+      ],
+      "motifs": {
+        "geometry": 0.0,
+        "entities": 0.125,
+        "color_light": 1.0,
+        "space_void": 0.75,
+        "body_somatic": 0.125,
+        "time_memory": 0.875,
+        "nature": 0.625,
+        "machines": 0.0
+      },
+      "narrative_hooks": [
+        "\"Physics at the Edge of the Universe: An Experience with LSD (exp69866)\".",
+        "I considered myself a fairly seasoned psychonaut at the time, and I recognized the initial onset of the condition roughly fifteen minutes later.",
+        "Colors became sharper, and sounds took on a strange ethereal quality."
+      ],
+      "modes": [
+        "void",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "void_expansion",
+          "flow_field"
+        ],
+        "secondary_engines": [
+          "organic_bloom"
+        ],
+        "mode_default": "void",
+        "palette": {
+          "tracers": "#3EE7F2",
+          "energy": 1.0,
+          "contrast": 0.5
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.35,
+          "feedback_strength": 0.4,
+          "recursion_gain": 0.713,
+          "turbulence": 0.225,
+          "trail_length": 0.8,
+          "edge_gain": 0.35,
+          "zoom_velocity": 0.312,
+          "displacement": 0.369,
+          "stability": 0.587,
+          "entropy": 0.625,
+          "palette_energy": 0.95,
+          "pattern_complexity": 0.35,
+          "depth_distortion": 0.713,
+          "bloom": 0.6
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.15,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.45,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.25,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.15,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true
+      }
+    },
+    {
+      "id": "exp_src_lsd_3d36cf2f",
+      "schema_version": "1.0.0",
+      "title": "Derived: LSD - Erowid Exp - 'Intense Learning Experience'",
+      "substance": "lsd",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "erowid",
+          "id_hash": "sha256:3d36cf2f079f441f",
+          "title_hash": "sha256:33fd937c307db6df",
+          "url_host": "erowid.org"
+        }
+      ],
+      "motifs": {
+        "geometry": 0.0,
+        "entities": 0.0,
+        "color_light": 0.125,
+        "space_void": 0.0,
+        "body_somatic": 0.25,
+        "time_memory": 0.75,
+        "nature": 0.25,
+        "machines": 0.0
+      },
+      "narrative_hooks": [
+        "I had been raped about 4 years ago and at this time during my trip I started telling my boyfriend that I felt like that had no importance and effect on me any l",
+        "I was so happy and realized how much I enjoyed my life that all of my past eventually became entirely unimportant to me.",
+        "Nothing was melting at this point, but I became very in love with colors."
+      ],
+      "modes": [
+        "open",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "organic_bloom",
+          "recursive_feedback"
+        ],
+        "secondary_engines": [
+          "flow_field",
+          "void_expansion"
+        ],
+        "mode_default": "open",
+        "palette": {
+          "tracers": "#3EE7F2",
+          "energy": 0.4,
+          "contrast": 0.5
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.35,
+          "feedback_strength": 0.4,
+          "recursion_gain": 0.3,
+          "turbulence": 0.25,
+          "trail_length": 0.362,
+          "edge_gain": 0.35,
+          "zoom_velocity": 0.05,
+          "displacement": 0.237,
+          "stability": 0.7,
+          "entropy": 0.25,
+          "palette_energy": 0.469,
+          "pattern_complexity": 0.35,
+          "depth_distortion": 0.3,
+          "bloom": 0.25
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.15,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.45,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.25,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.15,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true
+      }
+    },
+    {
+      "id": "exp_src_lsd_7bd3db5c",
+      "schema_version": "1.0.0",
+      "title": "Derived: LSD - Erowid Exp - 'Somatic Vision and Cosmic Consciousness'",
+      "substance": "lsd",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "erowid",
+          "id_hash": "sha256:7bd3db5cfdadd2dd",
+          "title_hash": "sha256:9b67853dcad5ce72",
+          "url_host": "erowid.org"
+        }
+      ],
+      "motifs": {
+        "geometry": 0.25,
+        "entities": 0.125,
+        "color_light": 0.125,
+        "space_void": 0.0,
+        "body_somatic": 1.0,
+        "time_memory": 0.25,
+        "nature": 0.5,
+        "machines": 0.0
+      },
+      "narrative_hooks": [
+        "\"Somatic Vision and Cosmic Consciousness: An Experience with LSD (exp77462)\".",
+        "I've taken one dose of what was indicated to be 100\u00b5g from this source before, and this time took two as that experience was pleasant but never left ++ territor",
+        "200\u00b5g (approx) in tapwater-brewed 'Splashdown' tea in the back yard with L\u2013."
+      ],
+      "modes": [
+        "open",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "organic_bloom",
+          "recursive_feedback"
+        ],
+        "secondary_engines": [
+          "flow_field",
+          "void_expansion"
+        ],
+        "mode_default": "open",
+        "palette": {
+          "tracers": "#3EE7F2",
+          "energy": 0.4,
+          "contrast": 0.575
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.487,
+          "feedback_strength": 0.513,
+          "recursion_gain": 0.438,
+          "turbulence": 0.4,
+          "trail_length": 0.362,
+          "edge_gain": 0.462,
+          "zoom_velocity": 0.05,
+          "displacement": 0.325,
+          "stability": 0.7,
+          "entropy": 0.25,
+          "palette_energy": 0.469,
+          "pattern_complexity": 0.5,
+          "depth_distortion": 0.3,
+          "bloom": 0.25
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.15,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.45,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.25,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.15,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true
+      }
+    },
+    {
+      "id": "exp_src_pcp_6d99000a",
+      "schema_version": "1.0.0",
+      "title": "Derived: PCP & Cannabis - Erowid Exp - 'A Visual Trip'",
+      "substance": "pcp",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "erowid",
+          "id_hash": "sha256:6d99000a139c8047",
+          "title_hash": "sha256:db2ae0e8afc63192",
+          "url_host": "erowid.org"
+        }
+      ],
+      "motifs": {
+        "geometry": 0.0,
+        "entities": 0.25,
+        "color_light": 0.0,
+        "space_void": 0.125,
+        "body_somatic": 0.375,
+        "time_memory": 0.625,
+        "nature": 1.0,
+        "machines": 0.0
+      },
+      "narrative_hooks": [
+        "We went a few blocks down the street to a wooded area to smoke some weed that one of them had brought.",
+        "I could see a black and white carousel through the trees, complete with horses and lights and everything, but no sound.",
+        "I knew something was wrong because I smoked a fair bit of pot on a regular basis at that time, and shouldn't have been very high after 2 hits."
+      ],
+      "modes": [
+        "open",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "organic_bloom",
+          "recursive_feedback"
+        ],
+        "secondary_engines": [
+          "flow_field",
+          "void_expansion"
+        ],
+        "mode_default": "open",
+        "palette": {
+          "tracers": "#A0FF9A",
+          "energy": 0.4,
+          "contrast": 0.5
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.35,
+          "feedback_strength": 0.4,
+          "recursion_gain": 0.369,
+          "turbulence": 0.275,
+          "trail_length": 0.3,
+          "edge_gain": 0.35,
+          "zoom_velocity": 0.094,
+          "displacement": 0.5,
+          "stability": 0.681,
+          "entropy": 0.312,
+          "palette_energy": 0.4,
+          "pattern_complexity": 0.35,
+          "depth_distortion": 0.369,
+          "bloom": 0.2
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.15,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.45,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.25,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.15,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true
+      }
+    },
+    {
+      "id": "exp_src_psilocybin_41161848",
+      "schema_version": "1.0.0",
+      "title": "Derived: Mushrooms - P. cubensis (Hillbilly Magic) - Erowid Exp - 'Touching the Veil'",
+      "substance": "psilocybin",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "erowid",
+          "id_hash": "sha256:4116184863d41495",
+          "title_hash": "sha256:a811a8fa264bebc0",
+          "url_host": "erowid.org"
+        }
+      ],
+      "motifs": {
+        "geometry": 0.125,
+        "entities": 0.25,
+        "color_light": 0.125,
+        "space_void": 0.125,
+        "body_somatic": 0.25,
+        "time_memory": 0.0,
+        "nature": 1.0,
+        "machines": 0.0
+      },
+      "narrative_hooks": [
+        "\"Touching the Veil: An Experience with Mushrooms - P.",
+        "The ritual I discovered said that I should bring in fresh flowers, light white candles and copal incense, include a picture of St.",
+        "Martin de Caballero, who is said to represent Chikon-Tokoxo, the Lord of the Mountain, on my altar, and \u201csmudge\u201d the room with palo santo to purify it."
+      ],
+      "modes": [
+        "open",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "organic_bloom",
+          "recursive_feedback"
+        ],
+        "secondary_engines": [
+          "flow_field",
+          "void_expansion"
+        ],
+        "mode_default": "open",
+        "palette": {
+          "tracers": "#8F7BFF",
+          "energy": 0.4,
+          "contrast": 0.5375
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.419,
+          "feedback_strength": 0.456,
+          "recursion_gain": 0.369,
+          "turbulence": 0.25,
+          "trail_length": 0.362,
+          "edge_gain": 0.406,
+          "zoom_velocity": 0.094,
+          "displacement": 0.5,
+          "stability": 0.681,
+          "entropy": 0.312,
+          "palette_energy": 0.469,
+          "pattern_complexity": 0.425,
+          "depth_distortion": 0.369,
+          "bloom": 0.25
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.15,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.45,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.25,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.15,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true
+      }
+    },
+    {
+      "id": "exp_src_psilocybin_fe3ce66e",
+      "schema_version": "1.0.0",
+      "title": "Derived: Mushrooms - P. cubensis - Erowid Exp - 'The Universe Felt Sorry, Then Made Love ",
+      "substance": "psilocybin",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "erowid",
+          "id_hash": "sha256:fe3ce66ea9df2d8b",
+          "title_hash": "sha256:d4d694c4603a5014",
+          "url_host": "erowid.org"
+        }
+      ],
+      "motifs": {
+        "geometry": 0.0,
+        "entities": 0.125,
+        "color_light": 0.0,
+        "space_void": 0.5,
+        "body_somatic": 0.125,
+        "time_memory": 0.5,
+        "nature": 0.125,
+        "machines": 0.0
+      },
+      "narrative_hooks": [
+        "\"The Universe Felt Sorry, Then Made Love to Itself: An Experience with Mushrooms - P.",
+        "The time was 8:14, and it seemed unlikely that the small initial dose would have a noticeable kick so soon.",
+        "Anytime I tried to sit down, I couldn't stay put even for a minute."
+      ],
+      "modes": [
+        "open",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "organic_bloom",
+          "recursive_feedback"
+        ],
+        "secondary_engines": [
+          "flow_field",
+          "void_expansion"
+        ],
+        "mode_default": "open",
+        "palette": {
+          "tracers": "#8F7BFF",
+          "energy": 0.4,
+          "contrast": 0.5
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.35,
+          "feedback_strength": 0.4,
+          "recursion_gain": 0.575,
+          "turbulence": 0.225,
+          "trail_length": 0.3,
+          "edge_gain": 0.35,
+          "zoom_velocity": 0.225,
+          "displacement": 0.194,
+          "stability": 0.625,
+          "entropy": 0.5,
+          "palette_energy": 0.4,
+          "pattern_complexity": 0.35,
+          "depth_distortion": 0.575,
+          "bloom": 0.2
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.15,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.45,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.25,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.15,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true
+      }
+    },
+    {
+      "id": "exp_src_psilocybin_02bc1113",
+      "schema_version": "1.0.0",
+      "title": "Derived: Mushrooms - P. cubensis - Erowid Exp - 'An Unexpected Interruption'",
+      "substance": "psilocybin",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "erowid",
+          "id_hash": "sha256:02bc1113f68e55b9",
+          "title_hash": "sha256:0865cb554dabcb72",
+          "url_host": "erowid.org"
+        }
+      ],
+      "motifs": {
+        "geometry": 0.0,
+        "entities": 0.5,
+        "color_light": 0.375,
+        "space_void": 0.125,
+        "body_somatic": 0.375,
+        "time_memory": 0.375,
+        "nature": 0.375,
+        "machines": 0.0
+      },
+      "narrative_hooks": [
+        "During that first trip, I recovered from a lifetime of psychological pain.",
+        "I experience deep correlations between colors, emotions, people, and days of the week.",
+        "Colors aren\u2019t just visual experiences for me; they\u2019re intertwined with feelings and time itself."
+      ],
+      "modes": [
+        "open",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "organic_bloom",
+          "recursive_feedback"
+        ],
+        "secondary_engines": [
+          "flow_field",
+          "void_expansion"
+        ],
+        "mode_default": "open",
+        "palette": {
+          "tracers": "#8F7BFF",
+          "energy": 0.4,
+          "contrast": 0.5
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.35,
+          "feedback_strength": 0.4,
+          "recursion_gain": 0.369,
+          "turbulence": 0.275,
+          "trail_length": 0.487,
+          "edge_gain": 0.35,
+          "zoom_velocity": 0.094,
+          "displacement": 0.281,
+          "stability": 0.681,
+          "entropy": 0.312,
+          "palette_energy": 0.606,
+          "pattern_complexity": 0.35,
+          "depth_distortion": 0.369,
+          "bloom": 0.35
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.15,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.45,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.25,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.15,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true
+      }
+    },
+    {
+      "id": "exp_src_lsd_d223a056",
+      "schema_version": "1.0.0",
+      "title": "Derived: Beautiful 300ug Trip",
+      "substance": "lsd",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "reddit",
+          "id_hash": "sha256:d223a056fb4920c7",
+          "title_hash": "sha256:37e9db3c16aa0603",
+          "url_host": "reddit"
+        }
+      ],
+      "motifs": {
+        "geometry": 0.25,
+        "entities": 0.0,
+        "color_light": 0.0,
+        "space_void": 0.0,
+        "body_somatic": 0.0,
+        "time_memory": 0.0,
+        "nature": 0.25,
+        "machines": 0.0
+      },
+      "narrative_hooks": [
+        "derived visual motifs from curated positive phenomenology"
+      ],
+      "modes": [
+        "attractor",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "kaleidoscope",
+          "recursive_feedback"
+        ],
+        "secondary_engines": [
+          "organic_bloom"
+        ],
+        "mode_default": "attractor",
+        "palette": {
+          "tracers": "#3EE7F2",
+          "energy": 0.4,
+          "contrast": 0.575
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.487,
+          "feedback_strength": 0.513,
+          "recursion_gain": 0.438,
+          "turbulence": 0.2,
+          "trail_length": 0.3,
+          "edge_gain": 0.462,
+          "zoom_velocity": 0.05,
+          "displacement": 0.237,
+          "stability": 0.7,
+          "entropy": 0.25,
+          "palette_energy": 0.4,
+          "pattern_complexity": 0.5,
+          "depth_distortion": 0.3,
+          "bloom": 0.2
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.15,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.45,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.25,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.15,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true
+      }
+    },
+    {
+      "id": "exp_src_dmt_095e4580",
+      "schema_version": "1.0.0",
+      "title": "Derived: x_dmt_3",
+      "substance": "dmt",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "x",
+          "id_hash": "sha256:095e458048161e97",
+          "title_hash": "sha256:ca9432f64bdf514e",
+          "url_host": "x"
+        }
+      ],
+      "motifs": {
+        "geometry": 0.0,
+        "entities": 0.0,
+        "color_light": 0.0,
+        "space_void": 0.0,
+        "body_somatic": 0.0,
+        "time_memory": 0.125,
+        "nature": 0.0,
+        "machines": 0.0
+      },
+      "narrative_hooks": [
+        "The first time I did enough was fucking insane."
+      ],
+      "modes": [
+        "power",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "recursive_feedback",
+          "entity_lattice"
+        ],
+        "secondary_engines": [
+          "kaleidoscope"
+        ],
+        "mode_default": "power",
+        "palette": {
+          "tracers": "#FF42C1",
+          "energy": 0.4,
+          "contrast": 0.5
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.35,
+          "feedback_strength": 0.4,
+          "recursion_gain": 0.3,
+          "turbulence": 0.2,
+          "trail_length": 0.3,
+          "edge_gain": 0.35,
+          "zoom_velocity": 0.05,
+          "displacement": 0.15,
+          "stability": 0.7,
+          "entropy": 0.25,
+          "palette_energy": 0.4,
+          "pattern_complexity": 0.35,
+          "depth_distortion": 0.3,
+          "bloom": 0.2
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.15,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.45,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.25,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.15,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true
+      }
+    },
+    {
+      "id": "exp_src_dmt_6e5b784d",
+      "schema_version": "1.0.0",
+      "title": "Derived: x_dmt_4",
+      "substance": "dmt",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "x",
+          "id_hash": "sha256:6e5b784ded434e09",
+          "title_hash": "sha256:8279e39317eca0d3",
+          "url_host": "x"
+        }
+      ],
+      "motifs": {
+        "geometry": 0.0,
+        "entities": 0.25,
+        "color_light": 0.0,
+        "space_void": 0.125,
+        "body_somatic": 0.0,
+        "time_memory": 0.0,
+        "nature": 0.0,
+        "machines": 0.0
+      },
+      "narrative_hooks": [
+        "I traveled in this super fast wormhole, I visited another lush green beautiful planet, I saw how stars are born, I saw a golden entity of pure love comforting m"
+      ],
+      "modes": [
+        "power",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "recursive_feedback",
+          "entity_lattice"
+        ],
+        "secondary_engines": [
+          "kaleidoscope"
+        ],
+        "mode_default": "power",
+        "palette": {
+          "tracers": "#FF42C1",
+          "energy": 0.4,
+          "contrast": 0.5
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.35,
+          "feedback_strength": 0.4,
+          "recursion_gain": 0.369,
+          "turbulence": 0.2,
+          "trail_length": 0.3,
+          "edge_gain": 0.35,
+          "zoom_velocity": 0.094,
+          "displacement": 0.15,
+          "stability": 0.681,
+          "entropy": 0.312,
+          "palette_energy": 0.4,
+          "pattern_complexity": 0.35,
+          "depth_distortion": 0.369,
+          "bloom": 0.2
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.15,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.45,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.25,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.15,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true
+      }
+    },
+    {
+      "id": "exp_src_lsd_98dbf01e",
+      "schema_version": "1.0.0",
+      "title": "Derived: x_lsd_1",
+      "substance": "lsd",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "x",
+          "id_hash": "sha256:98dbf01e9143f078",
+          "title_hash": "sha256:0dbc9dd03056d0d5",
+          "url_host": "x"
+        }
+      ],
+      "motifs": {
+        "geometry": 0.0,
+        "entities": 0.125,
+        "color_light": 0.0,
+        "space_void": 0.0,
+        "body_somatic": 0.0,
+        "time_memory": 0.0,
+        "nature": 0.0,
+        "machines": 0.0
+      },
+      "narrative_hooks": [
+        "then i got hungry and ate a pbj and went \u2018oh my god they don\u2019t have THIS in the womb this is AMAZING\u2019 and honestly it changed something."
+      ],
+      "modes": [
+        "open",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "recursive_feedback",
+          "flow_field"
+        ],
+        "secondary_engines": [
+          "organic_bloom"
+        ],
+        "mode_default": "open",
+        "palette": {
+          "tracers": "#3EE7F2",
+          "energy": 0.4,
+          "contrast": 0.5
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.35,
+          "feedback_strength": 0.4,
+          "recursion_gain": 0.3,
+          "turbulence": 0.2,
+          "trail_length": 0.3,
+          "edge_gain": 0.35,
+          "zoom_velocity": 0.05,
+          "displacement": 0.15,
+          "stability": 0.7,
+          "entropy": 0.25,
+          "palette_energy": 0.4,
+          "pattern_complexity": 0.35,
+          "depth_distortion": 0.3,
+          "bloom": 0.2
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.15,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.45,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.25,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.15,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true
+      }
+    },
+    {
+      "id": "exp_src_lsd_d0e6ffd7",
+      "schema_version": "1.0.0",
+      "title": "Derived: x_lsd_2",
+      "substance": "lsd",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "x",
+          "id_hash": "sha256:d0e6ffd7d736f307",
+          "title_hash": "sha256:010eef49f5a6a1c4",
+          "url_host": "x"
+        }
+      ],
+      "motifs": {
+        "geometry": 0.125,
+        "entities": 0.125,
+        "color_light": 0.0,
+        "space_void": 0.0,
+        "body_somatic": 0.0,
+        "time_memory": 0.0,
+        "nature": 0.0,
+        "machines": 0.0
+      },
+      "narrative_hooks": [
+        "Detailed trip report: High-dose acid experience involving a beautiful rotating mandala on the TV that opened into a vision of a blue Hindu mythology being."
+      ],
+      "modes": [
+        "open",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "recursive_feedback",
+          "flow_field"
+        ],
+        "secondary_engines": [
+          "organic_bloom"
+        ],
+        "mode_default": "open",
+        "palette": {
+          "tracers": "#3EE7F2",
+          "energy": 0.4,
+          "contrast": 0.5375
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.419,
+          "feedback_strength": 0.456,
+          "recursion_gain": 0.369,
+          "turbulence": 0.2,
+          "trail_length": 0.3,
+          "edge_gain": 0.406,
+          "zoom_velocity": 0.05,
+          "displacement": 0.15,
+          "stability": 0.7,
+          "entropy": 0.25,
+          "palette_energy": 0.4,
+          "pattern_complexity": 0.425,
+          "depth_distortion": 0.3,
+          "bloom": 0.2
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.15,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.45,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.25,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.15,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true
+      }
+    },
+    {
+      "id": "exp_src_psilocybin_77df5e92",
+      "schema_version": "1.0.0",
+      "title": "Derived: x_psilocybin_5",
+      "substance": "psilocybin",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "x",
+          "id_hash": "sha256:77df5e92a7fb10a6",
+          "title_hash": "sha256:f24a78dcadfa69f9",
+          "url_host": "x"
+        }
+      ],
+      "motifs": {
+        "geometry": 0.0,
+        "entities": 0.0,
+        "color_light": 0.0,
+        "space_void": 0.0,
+        "body_somatic": 0.0,
+        "time_memory": 0.125,
+        "nature": 0.0,
+        "machines": 0.0
+      },
+      "narrative_hooks": [
+        "unbridled enthusiasm for the future of existence."
+      ],
+      "modes": [
+        "open",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "organic_bloom",
+          "recursive_feedback"
+        ],
+        "secondary_engines": [
+          "flow_field",
+          "void_expansion"
+        ],
+        "mode_default": "open",
+        "palette": {
+          "tracers": "#8F7BFF",
+          "energy": 0.4,
+          "contrast": 0.5
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.35,
+          "feedback_strength": 0.4,
+          "recursion_gain": 0.3,
+          "turbulence": 0.2,
+          "trail_length": 0.3,
+          "edge_gain": 0.35,
+          "zoom_velocity": 0.05,
+          "displacement": 0.15,
+          "stability": 0.7,
+          "entropy": 0.25,
+          "palette_energy": 0.4,
+          "pattern_complexity": 0.35,
+          "depth_distortion": 0.3,
+          "bloom": 0.2
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.15,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.45,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.25,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.15,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true
+      }
+    },
+    {
+      "id": "exp_src_psilocybin_092a6fb8",
+      "schema_version": "1.0.0",
+      "title": "Derived: x_psilocybin_6",
+      "substance": "psilocybin",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "x",
+          "id_hash": "sha256:092a6fb830b861a6",
+          "title_hash": "sha256:5f3084e6567badb5",
+          "url_host": "x"
+        }
+      ],
+      "motifs": {
+        "geometry": 0.0,
+        "entities": 0.0,
+        "color_light": 0.0,
+        "space_void": 0.0,
+        "body_somatic": 0.125,
+        "time_memory": 0.0,
+        "nature": 0.0,
+        "machines": 0.0
+      },
+      "narrative_hooks": [
+        "derived visual motifs from curated positive phenomenology"
+      ],
+      "modes": [
+        "open",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "organic_bloom",
+          "recursive_feedback"
+        ],
+        "secondary_engines": [
+          "flow_field",
+          "void_expansion"
+        ],
+        "mode_default": "open",
+        "palette": {
+          "tracers": "#8F7BFF",
+          "energy": 0.4,
+          "contrast": 0.5
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.35,
+          "feedback_strength": 0.4,
+          "recursion_gain": 0.3,
+          "turbulence": 0.225,
+          "trail_length": 0.3,
+          "edge_gain": 0.35,
+          "zoom_velocity": 0.05,
+          "displacement": 0.15,
+          "stability": 0.7,
+          "entropy": 0.25,
+          "palette_energy": 0.4,
+          "pattern_complexity": 0.35,
+          "depth_distortion": 0.3,
+          "bloom": 0.2
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.15,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.45,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.25,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.15,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true
+      }
+    }
+  ]
+}

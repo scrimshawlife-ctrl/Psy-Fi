@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from psyfi_api.routers import simulate, midi
+from psyfi_api.routers import experiences, midi, simulate
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -33,6 +33,7 @@ templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 # Include routers
 app.include_router(simulate.router)
 app.include_router(midi.router)
+app.include_router(experiences.router)
 
 
 @app.get("/")

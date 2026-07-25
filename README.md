@@ -44,7 +44,7 @@ Full board: [`docs/PRODUCTION_READINESS.md`](docs/PRODUCTION_READINESS.md).
 | Live Experience + safety           | **ready**        | Neutral View · ParameterField authority         |
 | GPU platform G0–G2                 | **ready**        | `/gpu/` compute · TAA · asset worker decode     |
 | GPU G3 premium desktop stack       | **ready**        | AO · SSR · fog · DoF · motion blur · chroma     |
-| NVIDIA desktop (RTX 5060 class)    | **ready**        | WebGPU Ultra auto · `docs/NVIDIA_GPU.md`        |
+| Desktop GPU Ultra (30/40/50 + peers) | **ready**     | NVIDIA · AMD RX · Intel Arc · `docs/DESKTOP_GPU.md` |
 | Device matrix                      | **filled**       | 2026-07-25 human QA — living thereafter         |
 | Phase 4 usability                  | **filled**       | 2026-07-25 evidence log                         |
 | Native iOS                         | deferred         | `docs/IOS_MIGRATION.md`                         |
@@ -153,7 +153,8 @@ Canonical browser API is **`/api/v1`** (**hard-frozen**). Legacy `/api/*` and `/
 | Doc                                                                                | Purpose                    |
 | ---------------------------------------------------------------------------------- | -------------------------- |
 | [`docs/PRODUCTION_READINESS.md`](docs/PRODUCTION_READINESS.md)                     | Production readiness board |
-| [`docs/NVIDIA_GPU.md`](docs/NVIDIA_GPU.md)                                         | NVIDIA / RTX WebGPU setup  |
+| [`docs/DESKTOP_GPU.md`](docs/DESKTOP_GPU.md)                                       | Multi-vendor WebGPU Ultra  |
+| [`docs/NVIDIA_GPU.md`](docs/NVIDIA_GPU.md)                                         | NVIDIA drivers + Compose   |
 | [`PLANS.md`](PLANS.md)                                                             | Product phases + gates     |
 | [`docs/CONTINUATION_PLAN.md`](docs/CONTINUATION_PLAN.md)                           | Web-track next steps       |
 | [`docs/VISUAL_EXPERIENCES.md`](docs/VISUAL_EXPERIENCES.md)                         | Live Experience guide      |

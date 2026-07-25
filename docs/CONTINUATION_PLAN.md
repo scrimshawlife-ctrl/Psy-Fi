@@ -38,11 +38,12 @@ Board: [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md)
 - [x] Atmosphere fog / DoF / motion blur / chromatic aberration
 - [x] Device matrix + Phase 4 human evidence (2026-07-25)
 
-### Done — NVIDIA desktop path
+### Done — multi-vendor desktop Ultra path
 
 - [x] High-performance WebGPU adapter (`powerPreference`)
-- [x] RTX 30/40/50 (incl. **5060**) → recommended **Ultra**
-- [x] HUD adapter label + `docs/NVIDIA_GPU.md`
+- [x] NVIDIA RTX 30/40/50 (incl. **5060**) → **Ultra**
+- [x] AMD RX 6000/7000/9000 · Intel Arc · Apple Pro/Max → **Ultra**
+- [x] HUD adapter / vendor / perf-band + `docs/DESKTOP_GPU.md` · `docs/NVIDIA_GPU.md`
 - [x] Compose `--profile nvidia` + `scripts/check_nvidia_host.sh`
 
 ### Optional next
@@ -54,7 +55,7 @@ Board: [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md)
 
 ## Recommended next slice
 
-1. On your RTX 5060 machine: `./scripts/check_nvidia_host.sh` then open `/gpu/` in Chrome/Edge.
+1. On a high-end discrete desktop: open `/gpu/` in Chrome/Edge (NVIDIA: `./scripts/check_nvidia_host.sh`).
 2. Optional: Draco/KTX2 GPU upload or `/gpu/` profiling HUD polish.
 
 ## Commands

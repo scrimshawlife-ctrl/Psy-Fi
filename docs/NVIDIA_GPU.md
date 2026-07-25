@@ -1,6 +1,7 @@
 # NVIDIA GPU Integration (WebGPU desktop)
 
 Status: supported for **browser WebGPU** on NVIDIA discrete GPUs (RTX 20/30/40/**50** including **RTX 5060**)  
+Multi-vendor peers (AMD RX 6000/7000/9000, Intel Arc, Apple Pro/Max): see [`DESKTOP_GPU.md`](DESKTOP_GPU.md).  
 Related: [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md), [`rendering/GPU_PERFORMANCE_BUDGET.md`](rendering/GPU_PERFORMANCE_BUDGET.md), `/gpu/`
 
 ## How PsyFi uses your NVIDIA card
@@ -11,7 +12,7 @@ Related: [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md), [`rendering/GPU_P
 | Legacy Live Experience (`/`) | No | Optional via WebGL |
 | GPU platform (`/gpu/`) | No | **Yes — WebGPU** (Chrome/Edge → D3D12/Vulkan → your RTX) |
 
-PsyFi does **not** require CUDA toolkit install for the web product. Your **RTX 5060** accelerates the `/gpu/` WebGPU present path (compute particles, GTAO, SSR, etc.) inside the browser.
+PsyFi does **not** require CUDA toolkit install for the web product. Your **RTX 5060** (and other RTX 30/40/50 cards) accelerates the `/gpu/` WebGPU present path inside the browser.
 
 ## Host setup (Windows + RTX 5060)
 
@@ -25,14 +26,15 @@ PsyFi does **not** require CUDA toolkit install for the web product. Your **RTX 
    docker compose up -d --build
    # or: python3 scripts/run_dev_server.py
    ```
-5. Confirm the HUD shows your adapter (e.g. `NVIDIA GeForce RTX 5060`) and tier **ultra** (auto-selected for high-end NVIDIA).
+5. Confirm the HUD shows your adapter (e.g. `NVIDIA GeForce RTX 5060`) and tier **ultra** (auto-selected for RTX 30/40/50).
 
 ## Quality tier behavior
 
 | Adapter | Default recommended tier |
 | --- | --- |
 | High-end NVIDIA (RTX 30/40/**50**, incl. **5060**) | **Ultra** |
-| Other NVIDIA / discrete AMD | **High** |
+| AMD RX 6000/7000/9000 · Intel Arc · Apple Pro/Max | **Ultra** (see [`DESKTOP_GPU.md`](DESKTOP_GPU.md)) |
+| Other NVIDIA / mid discrete (RTX 20, GTX 16) | **High** |
 | iGPU / unknown | **Balanced** |
 | No WebGPU | Legacy `/` shell |
 
@@ -54,7 +56,8 @@ The API container does **not** run CUDA kernels today. The Compose **`nvidia` pr
 
 ```bash
 # Host check
-nvidia-smi
+./scripts/check_nvidia_host.sh
+# or: nvidia-smi
 
 # API with GPU reservation
 docker compose --profile nvidia up -d --build
@@ -73,7 +76,7 @@ Browse **`http://localhost:8000/gpu/`** from the NVIDIA-equipped machine (WebGPU
 | --- | --- |
 | HUD says no WebGPU | Update Chrome/Edge; check `chrome://gpu`; update NVIDIA driver |
 | Runs on Intel iGPU | Force High-performance GPU for the browser (see above) |
-| Tier stuck on Balanced | Confirm adapter string contains `RTX` / `GeForce`; disable Battery Saver |
+| Tier stuck on Balanced | Confirm adapter string contains `RTX` 30/40/50; disable Battery Saver |
 | Docker `nvidia` profile fails | Install Container Toolkit; restart Docker; `nvidia-smi` must work on host |
 
 ## Non-claims

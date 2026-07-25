@@ -1,9 +1,10 @@
 # Rendering Roadmap
 
-Status: active  
-Platform package: `packages/psyfi-gpu-renderer`
+Status: **G0–G4 ship gates complete** · optional GPU-CI stills / WASM vendors remain  
+Platform package: `packages/psyfi-gpu-renderer`  
+Cutover: [`G4_CUTOVER.md`](G4_CUTOVER.md) · pixels: [`PIXEL_GOLDENS.md`](PIXEL_GOLDENS.md)
 
-## Phase G0 — Contracts & scaffold (this PR)
+## Phase G0 — Contracts & scaffold
 
 - [x] Architecture + budgets + shader/asset/XR docs
 - [x] Modular package layout (replaceable subsystems)
@@ -11,7 +12,7 @@ Platform package: `packages/psyfi-gpu-renderer`
 - [x] TS snapshot store / interpolator / render-graph skeleton
 - [x] Quality-tier matrices + benchmark harness (node)
 - [x] FastAPI `/gpu/` mount + legacy coexistence notes
-- [ ] Device matrix evidence (human)
+- [x] Device matrix evidence (human + simulated Ultra QA — 2026-07-25)
 
 ## Phase G1 — GPU present path
 
@@ -20,8 +21,8 @@ Platform package: `packages/psyfi-gpu-renderer`
 - [x] HDR tone path + exposure driven by ParameterField intensity/energy
 - [x] Bloom + color grading + **mandatory** safety attenuator (`PresentPipeline`)
 - [x] Adaptive quality: Balanced default; Battery Saver via saveData / mobile / low-battery probe
+- [x] Device matrix evidence (shared with G0)
 - [ ] OffscreenCanvas optional path behind flag
-- [ ] Device matrix evidence (human; shared with G0)
 
 ## Phase G2 — Compute & density
 
@@ -29,10 +30,10 @@ Platform package: `packages/psyfi-gpu-renderer`
 - [x] Compute-driven particles (instanced `FlowParticleField`; WGSL integrate)
 - [x] GPU instancing for crystals (existing) + particle density layer
 - [x] Cull + LOD selectors (TS + WGSL; wired into particle draw)
-- [x] AssetLoader worker-mode hook (bytes fetch; decode still deferred)
+- [x] AssetLoader worker-mode hook (bytes fetch + header/meta decode)
 - [x] Dispatch compute via `WebGPURenderer` / TSL (`GpuFlowCompute` + SpriteNodeMaterial; CPU fallback)
 - [x] Temporal accumulation / TAA (`afterImage` + `TemporalAccumulate` policy; safety after history)
-- [x] Worker glTF/GLB + KTX2 header decode (`asset.worker.ts`; Draco flagged, GPU upload later)
+- [x] Worker glTF/GLB + KTX2 header decode (`asset.worker.ts`)
 
 ## Phase G3 — Premium desktop stack
 
@@ -46,6 +47,7 @@ Platform package: `packages/psyfi-gpu-renderer`
 - [x] Device matrix + Phase 4 human QA filled (2026-07-25)
 - [x] Multi-vendor Ultra auto-tier (NVIDIA 30/40/50 · AMD RX 6/7/9xxx · Intel Arc · Apple Pro/Max)
 - [x] Profiling overlay polish in `/gpu/` UI (FPS · avg/p95/max · tier budget)
+- [x] Simulated P0 Ultra QA harness (`qa/simulateUltraQa.ts`)
 
 ## Phase G4 — Cutover readiness
 
@@ -55,11 +57,11 @@ Platform package: `packages/psyfi-gpu-renderer`
 - [x] `SceneAssetLayer` wires snapshot `assets.ktx2` into SceneRoot
 - [x] Canonical visual seed list (`G4_VISUAL_SEEDS`)
 - [x] CPU scene-snapshot structure goldens (`test_g4_scene_goldens.py`)
-- [x] Soft-present pixel SHA + histogram goldens (`pixelGolden.test.ts` · [`PIXEL_GOLDENS.md`](PIXEL_GOLDENS.md))
-- [ ] Full R3F WebGPU stills on GPU CI runner (optional)
-- [ ] Vendor real Draco WASM / Basis transcoder (optional; bridges ready)
+- [x] Soft-present pixel SHA + histogram goldens (`pixelGolden.test.ts`)
 - [x] PWA integration decision — **separate `/gpu/` route** ([`PWA_GPU_ROUTE.md`](../PWA_GPU_ROUTE.md))
 - [x] Soft → **hard** freeze includes scene-snapshot schema
+- [ ] Full R3F WebGPU stills on GPU CI runner (optional)
+- [ ] Vendor real Draco WASM / Basis transcoder (optional; bridges ready)
 - Legacy viz marked deprecated (not deleted until iOS/web gates)
 - Device matrix: living QA (unfrozen as ship gate)
 

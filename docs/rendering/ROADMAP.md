@@ -25,12 +25,14 @@ Platform package: `packages/psyfi-gpu-renderer`
 
 ## Phase G2 — Compute & density
 
-- GPU flow fields (compute)
-- Compute-driven particles (instanced)
-- GPU instancing for glyphs / crystals
-- GPU culling + LOD
-- Temporal accumulation / TAA
-- Worker glTF/Draco/KTX2 loader
+- [x] Flow-field kernels (TS reference + WGSL `flow_advect`)
+- [x] Compute-driven particles (instanced `FlowParticleField`; WGSL integrate)
+- [x] GPU instancing for crystals (existing) + particle density layer
+- [x] Cull + LOD selectors (TS + WGSL; wired into particle draw)
+- [x] AssetLoader worker-mode hook (bytes fetch; decode still deferred)
+- [ ] Dispatch compute via `WebGPURenderer` / TSL (replace CPU integrate on capable devices)
+- [ ] Temporal accumulation / TAA
+- [ ] Worker glTF/Draco/KTX2 decode
 
 ## Phase G3 — Premium desktop stack
 

@@ -29,6 +29,11 @@ export interface RenderPassNode {
   execute: (ctx: FrameContext) => void
 }
 
+/**
+ * Logical pass graph. G2 compute kernels live in `src/compute/*` (CPU reference)
+ * and `shaders/wgsl/compute/*` (WGSL). Scene wiring uses FlowParticleField;
+ * execute hooks remain side-effect free for graph budgeting tests.
+ */
 export function buildDefaultRenderGraph(): RenderPassNode[] {
   return [
     {
@@ -42,7 +47,7 @@ export function buildDefaultRenderGraph(): RenderPassNode[] {
       id: 'compute.particles',
       reads: [],
       writes: [],
-      enabled: () => true,
+      enabled: (t) => t !== 'battery',
       execute: () => {},
     },
     {

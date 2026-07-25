@@ -1,60 +1,67 @@
 # PsyFi Web Continuation Plan
 
-Status: active (P0–P2 engineering slice landed; human gates remain)  
+Status: active (P0–P2 in #30; G2 compute density in flight; human gates remain)  
 Scope: **web app / PWA / API only** — native iOS remains deferred (`docs/IOS_MIGRATION.md`).  
 Deploy: **Docker only** (`DEPLOYMENT.md`); Azure/Render paths removed (#28).
 
-## Baseline (on this branch / next `main`)
+## Baseline
 
 | Area | State |
 | --- | --- |
 | `/api/v1` + soft freeze | Done (`psyfi-api-v1-soft-2026-07-25`) |
 | Legacy Live Experience (Canvas/WebGL) | Done + last-sim source plane (#25) |
-| Phenomenology overlays | Expanded (13 overlay substances; MDMA / 2C-x / AL-LAD / MXE / MDA packs) |
-| GPU platform G0→G1 | Present path: bloom / grade / exposure + mandatory safety; Battery probe |
-| Hallmark README + design skill | Done (#24, #19) |
-| CI | pytest + OpenAPI path gate + hallmark + `gpu:test` / `gpu:typecheck` / `gpu:build` |
-| Docker | Multi-stage bake of `@psyfi/gpu-renderer` `dist/`; urllib healthcheck |
-| Modulators | Camera / motion / MIDI / **audio** / **haptics** (ParameterField-only) |
+| Phenomenology overlays | Expanded (13 overlay substances) — #30 |
+| GPU platform G0→G1 | Present path + safety — #30 |
+| GPU G2 (start) | Flow particles + cull/LOD kernels + asset worker hook |
+| CI / Docker GPU dist | #30 |
+| Modulators | Camera / motion / MIDI / audio / haptics |
 | Human gates | Device matrix + Phase 4 usability still open |
+
+## What is the “device matrix”?
+
+[`docs/BROWSER_CAPABILITY_MATRIX.md`](BROWSER_CAPABILITY_MATRIX.md) is a **manual checklist**: someone runs PsyFi on Safari iOS, Chrome Android, and desktop browsers and records whether install, service worker, jobs cancel, Live Experience, `/gpu/`, Neutral View, and reduce-motion behave correctly. CI cannot substitute for those rows. Together with [`PHASE4_USABILITY.md`](PHASE4_USABILITY.md), it blocks **hard** freeze only (soft freeze already landed).
 
 ## Human gates (block hard freeze)
 
-1. Fill physical-device rows in `docs/BROWSER_CAPABILITY_MATRIX.md` (Safari iOS, Chrome Android, Chrome/Edge/Firefox desktop)
+1. Fill physical-device rows in `docs/BROWSER_CAPABILITY_MATRIX.md`
 2. Fill evidence log in `docs/PHASE4_USABILITY.md`
-3. Then promote soft freeze → **hard freeze** in `docs/contracts/frozen/`
+3. Promote soft freeze → **hard freeze** in `docs/contracts/frozen/`
 
 ## Engineering queue
 
-### P0 — done
+### Done (P0–P2 / #30)
 
-1. ~~Wire GPU safety clamp~~ — mandatory `uSafety` attenuator on WebGPU present path (`PresentPipeline`)
-2. ~~Fix Compose healthcheck~~ — `docker-compose.yml` uses Python urllib (no curl)
+- GPU safety attenuator; Compose urllib healthcheck
+- G1 bloom / grade / exposure / battery probe
+- CI `gpu:build` + Docker `dist/`; freeze body equality
+- Phenomenology packs; audio/haptics modulators
 
-### P1 — done
+### In progress — G2 compute & density
 
-3. ~~GPU G1 present path~~ — bloom + color grading + exposure + Battery/Balanced probe
-4. ~~CI `gpu:build` + Docker `dist/`~~ — workflow + multi-stage Dockerfile
-5. ~~Stronger freeze drift tests~~ — living↔frozen body equality for OpenAPI + scene/field/frame + overlays
+- [x] Portable TS flow / particle / cull / LOD kernels + vitest
+- [x] WGSL compute shaders aligned to those kernels
+- [x] `FlowParticleField` in scene (disabled on battery / Neutral)
+- [x] AssetLoader worker-mode hook (fetch off main when Worker available)
+- [ ] Dispatch real WebGPU compute pipelines from `WebGPURenderer` (next)
+- [ ] Temporal accumulation / TAA wiring
+- [ ] Worker glTF/Draco/KTX2 decode (bytes-only fetch is in place)
 
-### P2 — mostly done (automation)
+### Deferred / human
 
-6. ~~More positive phenomenology packs~~ — underrepresented presets seeded + catalog rebuilt
-7. Legacy WebGL 1:1 engine shaders — optional; still deferred (do not block GPU track)
-8. ~~Optional audio / haptics modulators~~ — API + shell + ParameterField mapping
-9. Phase 4 structured usability → hard freeze — **human**
+- Legacy WebGL 1:1 engine shaders (optional)
+- Device matrix + Phase 4 → hard freeze
 
 ### Explicitly out of scope now
 
-- Native iOS (`docs/IOS_MIGRATION.md`)
+- Native iOS
 - Patching legacy `experiencePlayer.js` toward the GPU stack
 - Azure / Render / Fly / Railway one-click hosts
 
 ## Recommended next slice
 
-**Human gates:** device matrix rows + Phase 4 usability evidence, then hard freeze.
-
-Optional engineering: G2 compute density, or legacy WebGL 1:1 shaders if product still needs them.
+1. **Merge #30** (P0–P2) when ready.
+2. **Human:** fill device matrix + Phase 4 on real phones/desktops.
+3. **Engineering:** finish G2 WebGPU compute dispatch + TAA; then G3 premium passes.
 
 ## Commands
 

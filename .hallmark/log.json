@@ -119,6 +119,18 @@
       "footer": "Ft2",
       "designed_as_app": true,
       "notes": "UX density: phase Advance+Speed; compact control rows; drawers for seed/options/sensors/I/O/provenance; workspace preset select; data-tip tooltips; SW v24"
+    },
+    {
+      "date": "2026-07-25",
+      "target": "Results/History/Presets density + tip a11y + launch drawer",
+      "verb": "fix",
+      "genre": "atmospheric",
+      "macrostructure": "Photographic\u2192Workbench",
+      "theme": "design.md",
+      "nav": "N9",
+      "footer": "Ft2",
+      "designed_as_app": true,
+      "notes": "Neutral label fix; metric/history/substance hairlines; tip aria-describedby; drawer 44px; launch scan drawer; header credit merge; SW v25"
     }
   ]
 }

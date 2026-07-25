@@ -29,6 +29,8 @@ def test_template_wires_cancel_recovery_and_renderer() -> None:
     assert 'id="gridPresetSelect"' in html
     assert 'data-tip=' in html
     assert 'id="sensorEnableSelect"' in html
+    assert 'launch-scan-drawer' in html
+    assert 'id="sensorEnableBtn"' in html
     assert 'id="sourcePlaneChk"' in html
     assert 'id="sourcePlaneMix"' in html
     assert 'id="bridgeSimBtn"' in html
@@ -55,7 +57,7 @@ def test_template_wires_cancel_recovery_and_renderer() -> None:
 
 def test_service_worker_precaches_renderer_assets() -> None:
     sw = (STATIC / "sw.js").read_text(encoding="utf-8")
-    assert "psyfi-shell-v24" in sw
+    assert "psyfi-shell-v25" in sw
     assert ".woff2" in sw
     assert "/assets/icons/pf-icon-reset-24.svg" in sw
     assert "/assets/icons/pf-icon-valence-meter-24.svg" in sw
@@ -196,6 +198,8 @@ def test_app_uses_abort_controller_and_worker_renderer() -> None:
     assert "phaseAdvanceChk" in app_js
     assert "phaseSpeedSelect" in app_js
     assert "PsyFiTips" in app_js
+    assert "setButtonLabel" in app_js
+    assert "aria-describedby" in app_js
     assert "Monitor / display" in app_js
     assert "GPU adapter" in app_js
     gl_js = (STATIC / "viz" / "parameterFieldWebGL.js").read_text(encoding="utf-8")

@@ -16,6 +16,7 @@ window.PsyFiTips = {
             tip.id = 'pfTip';
             tip.className = 'pf-tip';
             tip.setAttribute('role', 'tooltip');
+            tip.setAttribute('aria-hidden', 'true');
             document.body.appendChild(tip);
         }
         let showTimer = 0;
@@ -36,6 +37,8 @@ window.PsyFiTips = {
                 if (active !== el) return;
                 tip.textContent = text;
                 tip.dataset.open = 'true';
+                tip.setAttribute('aria-hidden', 'false');
+                el.setAttribute('aria-describedby', 'pfTip');
                 place(el);
             };
             if (immediate) run();
@@ -44,23 +47,45 @@ window.PsyFiTips = {
                 showTimer = setTimeout(run, 900);
             }
         };
-        const hide = () => {
+        const hide = (el) => {
             clearTimeout(showTimer);
             hideTimer = setTimeout(() => {
+                if (el && el.getAttribute('aria-describedby') === 'pfTip') {
+                    el.removeAttribute('aria-describedby');
+                }
                 tip.dataset.open = 'false';
+                tip.setAttribute('aria-hidden', 'true');
                 active = null;
             }, 80);
         };
+        const targets = [];
         host.querySelectorAll('[data-tip]').forEach((el) => {
-            if (el.dataset.tipBound === '1') return;
-            el.dataset.tipBound = '1';
+            // Prefer the focusable control inside a labeled tip host.
+            const control = el.matches('input,select,button,textarea,a,summary')
+                ? el
+                : el.querySelector('input,select,button,textarea,a,summary') || el;
+            if (control.dataset.tipBound === '1') return;
+            control.dataset.tipBound = '1';
+            if (!control.getAttribute('data-tip') && el.getAttribute('data-tip')) {
+                control.setAttribute('data-tip', el.getAttribute('data-tip'));
+            }
+            targets.push(control);
+        });
+        targets.forEach((el) => {
             el.addEventListener('pointerenter', () => show(el, false));
-            el.addEventListener('pointerleave', hide);
+            el.addEventListener('pointerleave', () => hide(el));
             el.addEventListener('focus', () => show(el, true));
-            el.addEventListener('blur', hide);
+            el.addEventListener('blur', () => hide(el));
         });
     },
 };
+
+function setButtonLabel(btn, label) {
+    if (!btn) return;
+    const textSpan = btn.querySelector('span:not(.pf-icon)');
+    if (textSpan) textSpan.textContent = label;
+    else btn.textContent = label;
+}
 
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('simulationForm');
@@ -506,7 +531,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 card.className = 'substance-card';
                 card.innerHTML = `
                     <span class="preset-name">${preset.name}</span>
-                    <span class="preset-desc">${preset.substance_class}</span>
+                    <span class="preset-desc">· ${preset.substance_class}</span>
                 `;
                 card.addEventListener('click', () => {
                     substanceSelect.value = preset.id;
@@ -1129,7 +1154,7 @@ document.addEventListener('DOMContentLoaded', () => {
     neutralBtn.addEventListener('click', () => {
         neutralOn = !neutralOn;
         player.neutral(neutralOn);
-        neutralBtn.textContent = neutralOn ? 'Exit Neutral' : 'Neutral View';
+        setButtonLabel(neutralBtn, neutralOn ? 'Exit Neutral' : 'Neutral');
         statusEl.textContent = neutralOn ? 'Neutral view enabled' : 'Field restored';
     });
 
@@ -1412,7 +1437,7 @@ document.addEventListener('DOMContentLoaded', () => {
         loadBtn.disabled = true;
         statusEl.textContent = 'Loading timeline…';
         neutralOn = false;
-        neutralBtn.textContent = 'Neutral View';
+        setButtonLabel(neutralBtn, 'Neutral');
         if (typeof player.neutral === 'function') player.neutral(false);
         syncModulators();
         try {
@@ -1461,10 +1486,6 @@ document.addEventListener('DOMContentLoaded', () => {
             neutralBtn.click();
         }
     });
-
-    if (window.PsyFiTips && typeof window.PsyFiTips.bind === 'function') {
-        window.PsyFiTips.bind(document.getElementById('experiencePanel') || document);
-    }
 
     loadSubstances()
         .then(loadExperiences)

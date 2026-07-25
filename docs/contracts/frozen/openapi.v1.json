@@ -60,6 +60,11 @@
             "title": "Recommend Only",
             "type": "boolean"
           },
+          "recommend_top_n": {
+            "default": 5,
+            "title": "Recommend Top N",
+            "type": "integer"
+          },
           "substance": {
             "default": "lsd",
             "title": "Substance",
@@ -292,6 +297,14 @@
             "title": "Recommend Only",
             "type": "boolean"
           },
+          "recommend_top_n": {
+            "default": 5,
+            "description": "How many ranked formula alternatives to include.",
+            "maximum": 12.0,
+            "minimum": 1.0,
+            "title": "Recommend Top N",
+            "type": "integer"
+          },
           "reduce_motion": {
             "default": false,
             "title": "Reduce Motion",
@@ -379,6 +392,14 @@
             "description": "Analyze + recommend catalog formula without conditioning pixels.",
             "title": "Recommend Only",
             "type": "boolean"
+          },
+          "recommend_top_n": {
+            "default": 5,
+            "description": "How many ranked formula alternatives to include.",
+            "maximum": 12.0,
+            "minimum": 1.0,
+            "title": "Recommend Top N",
+            "type": "integer"
           },
           "substance": {
             "default": "lsd",

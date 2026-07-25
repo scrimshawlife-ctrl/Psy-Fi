@@ -358,29 +358,62 @@ def score_experience_for_features(
     return round(score, 4)
 
 
-def recommend_experience(
+def rank_experiences(
     candidates: list[dict[str, Any]] | None,
     features: dict[str, Any],
     suggested_mode: str,
-) -> dict[str, Any] | None:
-    """Pick best catalog recipe for image features. Returns summary or None."""
+    *,
+    top_n: int = 5,
+) -> list[dict[str, Any]]:
+    """Rank catalog recipes for image features. Includes ``recipe`` for Pass-1 use."""
     if not candidates:
-        return None
+        return []
+    n = max(1, min(int(top_n), 12))
     ranked: list[tuple[float, dict[str, Any]]] = []
     for recipe in candidates:
         if not isinstance(recipe, dict) or not recipe.get("id"):
             continue
         ranked.append((score_experience_for_features(recipe, features, suggested_mode), recipe))
     if not ranked:
-        return None
+        return []
     ranked.sort(key=lambda pair: (-pair[0], str(pair[1].get("id"))))
-    best_score, best = ranked[0]
+    out: list[dict[str, Any]] = []
+    for i, (score, recipe) in enumerate(ranked[:n]):
+        out.append(
+            {
+                "rank": i + 1,
+                "experience_id": recipe.get("id"),
+                "title": recipe.get("title") or recipe.get("name"),
+                "mode_default": (
+                    (recipe.get("visual_recipe") or {}).get("mode_default") or suggested_mode
+                ),
+                "score": score,
+                "recipe": recipe,
+            }
+        )
+    return out
+
+
+def recommend_experience(
+    candidates: list[dict[str, Any]] | None,
+    features: dict[str, Any],
+    suggested_mode: str,
+    *,
+    top_n: int = 1,
+) -> dict[str, Any] | None:
+    """Pick best catalog recipe for image features. Returns summary or None."""
+    ranked = rank_experiences(candidates, features, suggested_mode, top_n=max(1, top_n))
+    return ranked[0] if ranked else None
+
+
+def _public_alternative(entry: dict[str, Any]) -> dict[str, Any]:
+    """Strip internal recipe object from a ranked entry for API payloads."""
     return {
-        "experience_id": best.get("id"),
-        "title": best.get("title") or best.get("name"),
-        "mode_default": ((best.get("visual_recipe") or {}).get("mode_default") or suggested_mode),
-        "score": best_score,
-        "recipe": best,
+        "rank": entry.get("rank"),
+        "experience_id": entry.get("experience_id"),
+        "title": entry.get("title"),
+        "mode_default": entry.get("mode_default"),
+        "score": entry.get("score"),
     }
 
 
@@ -399,6 +432,7 @@ def build_image_seed(
     recipe_candidates: list[dict[str, Any]] | None = None,
     prefer_recommended_experience: bool = False,
     recommend_only: bool = False,
+    recommend_top_n: int = 5,
 ) -> dict[str, Any]:
     """Run Pass 1 and return psyfi.image_seed.v1 payload.
 
@@ -422,11 +456,15 @@ def build_image_seed(
     rgba = _resize_max_edge(rgba, _MAX_EDGE)
     features = analyze_features(rgba)
     recommended = recommend_mode_intensity(features, mode, intensity)
-    rec_exp = recommend_experience(
+    suggested_mode = str(recommended.get("mode") or mode)
+    ranked = rank_experiences(
         recipe_candidates,
         features,
-        str(recommended.get("mode") or mode),
+        suggested_mode,
+        top_n=recommend_top_n,
     )
+    rec_exp = ranked[0] if ranked else None
+    alternatives = [_public_alternative(entry) for entry in ranked]
     # Condition with explicit experience, else recommended (when preferred / missing).
     use_experience = experience
     if prefer_recommended_experience and rec_exp and rec_exp.get("recipe"):
@@ -462,6 +500,7 @@ def build_image_seed(
             "conditioned_texture_png_base64": None,
             "texture_asset": None,
             "recommended": recommended,
+            "recommended_alternatives": alternatives,
             "recommend_only": True,
             "note": (
                 "Recommend-only Pass-1 preview (no pixel conditioning). "
@@ -492,6 +531,7 @@ def build_image_seed(
         "conditioned_texture_png_base64": tex_b64,
         "texture_asset": texture_asset_ref(tex_b64),
         "recommended": recommended,
+        "recommended_alternatives": alternatives,
         "recommend_only": False,
         "note": (
             "Pass-1 experience-conditioned image seed. "

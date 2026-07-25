@@ -1223,8 +1223,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const imageSeedRecommend = document.getElementById('imageSeedRecommend');
     const imageSeedRecommendTitle = document.getElementById('imageSeedRecommendTitle');
     const imageSeedRecommendMeta = document.getElementById('imageSeedRecommendMeta');
+    const imageSeedAltSelect = document.getElementById('imageSeedAltSelect');
     let imageSeedLocalUrl = null;
     let imageSeedSuggest = null;
+    let imageSeedAlternatives = [];
 
     function imageInfluence() {
         return imageSeedInfluence ? Number(imageSeedInfluence.value) : 0;
@@ -1238,6 +1240,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (imageSeedSuggestBtn) imageSeedSuggestBtn.disabled = busy;
         if (imageSeedJourneyBtn) imageSeedJourneyBtn.disabled = busy;
         if (imageSeedFile) imageSeedFile.disabled = busy;
+        if (imageSeedAltSelect) imageSeedAltSelect.disabled = busy;
     }
 
     function revokeImageSeedLocalUrl() {
@@ -1274,38 +1277,106 @@ document.addEventListener('DOMContentLoaded', () => {
         showImageSeedPreview(imageSeedLocalUrl, { isObjectUrl: true });
     }
 
-    function renderImageSeedRecommend(body) {
+    function selectedAlternative() {
+        if (!imageSeedAltSelect || !imageSeedAltSelect.value) return null;
+        return (
+            imageSeedAlternatives.find((a) => a.experience_id === imageSeedAltSelect.value) || null
+        );
+    }
+
+    function topRecommendedId(body) {
+        return body?.recommended?.experience_id || body?.applied_experience_id || null;
+    }
+
+    function shouldApplyRecommendedWinner(body) {
+        if (!imageSeedApplyRecommended?.checked) return false;
+        const alt = selectedAlternative();
+        const topId = topRecommendedId(body || imageSeedSuggest || imageSeedState);
+        if (!alt || !topId) return true;
+        return alt.experience_id === topId;
+    }
+
+    function populateAlternativeSelect(body, { preferId = null } = {}) {
+        imageSeedAlternatives = Array.isArray(body?.recommended_alternatives)
+            ? body.recommended_alternatives
+            : [];
+        if (!imageSeedAltSelect) return;
+        imageSeedAltSelect.innerHTML = '';
+        if (!imageSeedAlternatives.length) {
+            imageSeedAltSelect.hidden = true;
+            return;
+        }
+        imageSeedAltSelect.hidden = false;
+        for (const alt of imageSeedAlternatives) {
+            const opt = document.createElement('option');
+            opt.value = alt.experience_id || '';
+            const score =
+                alt.score != null ? ` · ${Number(alt.score).toFixed(2)}` : '';
+            opt.textContent = `#${alt.rank || '?'} ${alt.title || alt.experience_id}${score}`;
+            imageSeedAltSelect.appendChild(opt);
+        }
+        const want =
+            preferId ||
+            body?.applied_experience_id ||
+            body?.recommended?.experience_id ||
+            imageSeedAlternatives[0]?.experience_id;
+        if (want) imageSeedAltSelect.value = want;
+    }
+
+    function renderImageSeedRecommend(body, { syncAlt = true } = {}) {
+        const alt = selectedAlternative();
         const rec = body?.recommended || {};
         const title =
-            rec.experience_title || body?.applied_experience_id || rec.experience_id || 'Open field';
-        const mode = body?.applied_mode || rec.mode || modeSelect.value || 'open';
+            alt?.title ||
+            rec.experience_title ||
+            body?.applied_experience_id ||
+            rec.experience_id ||
+            'Open field';
+        const mode =
+            alt?.mode_default ||
+            body?.applied_mode ||
+            rec.mode ||
+            modeSelect.value ||
+            'open';
         const intensity =
             body?.applied_intensity != null ? body.applied_intensity : rec.intensity;
-        const score = rec.experience_score;
+        const score = alt?.score != null ? alt.score : rec.experience_score;
         if (imageSeedRecommendTitle) imageSeedRecommendTitle.textContent = title;
         if (imageSeedRecommendMeta) {
             const parts = [`mode ${mode}`];
             if (intensity != null) parts.push(`intensity ${Number(intensity).toFixed(2)}`);
             if (score != null) parts.push(`score ${Number(score).toFixed(2)}`);
+            if (alt?.rank) parts.push(`rank #${alt.rank}`);
             imageSeedRecommendMeta.textContent = parts.join(' · ');
         }
+        if (syncAlt) populateAlternativeSelect(body);
         if (imageSeedRecommend) imageSeedRecommend.hidden = false;
     }
 
     function clearImageSeedRecommend() {
         imageSeedSuggest = null;
+        imageSeedAlternatives = [];
         if (imageSeedRecommend) imageSeedRecommend.hidden = true;
         if (imageSeedRecommendTitle) imageSeedRecommendTitle.textContent = '';
         if (imageSeedRecommendMeta) imageSeedRecommendMeta.textContent = '';
+        if (imageSeedAltSelect) {
+            imageSeedAltSelect.innerHTML = '';
+            imageSeedAltSelect.hidden = true;
+        }
     }
 
-    function applyRecommendedControls(body) {
-        const recExp = body.applied_experience_id || body.recommended?.experience_id;
+    function applyRecommendedControls(body, { fromAlt = null } = {}) {
+        const alt = fromAlt || selectedAlternative();
+        const recExp =
+            alt?.experience_id ||
+            body.applied_experience_id ||
+            body.recommended?.experience_id;
         if (recExp && experienceSelect) {
             const hasOpt = [...experienceSelect.options].some((o) => o.value === recExp);
             if (hasOpt) experienceSelect.value = recExp;
         }
-        if (body.applied_mode) modeSelect.value = body.applied_mode;
+        if (alt?.mode_default) modeSelect.value = alt.mode_default;
+        else if (body.applied_mode) modeSelect.value = body.applied_mode;
         else if (body.recommended?.mode) modeSelect.value = body.recommended.mode;
         const intensity =
             body.applied_intensity != null
@@ -1315,6 +1386,16 @@ document.addEventListener('DOMContentLoaded', () => {
             intensityRange.value = String(intensity);
             intensityValue.textContent = Number(intensity).toFixed(2);
         }
+    }
+
+    function imageSeedRequestFlags(body) {
+        const useWinner = shouldApplyRecommendedWinner(body);
+        return {
+            apply_recommended: useWinner,
+            experience_id: useWinner
+                ? null
+                : experienceSelect.value || selectedAlternative()?.experience_id || null,
+        };
     }
 
     function fileToBase64(file) {
@@ -1370,16 +1451,23 @@ document.addEventListener('DOMContentLoaded', () => {
             fd.append('include_source_field', 'false');
             fd.append('apply_recommended', 'true');
             fd.append('recommend_only', 'true');
+            fd.append('recommend_top_n', '5');
             const res = await fetch('/api/v1/visualize/image-seed', { method: 'POST', body: fd });
             const body = await res.json().catch(() => ({}));
             if (!res.ok) {
                 throw new Error(body.detail || res.statusText || 'suggest failed');
             }
             imageSeedSuggest = body;
-            renderImageSeedRecommend(body);
+            renderImageSeedRecommend(body, { syncAlt: true });
             if (imageSeedApplyRecommended?.checked) applyRecommendedControls(body);
+            const n = (body.recommended_alternatives || []).length;
             const title = body.recommended?.experience_title || body.applied_experience_id || 'formula';
-            setImageSeedUiState('success', `Suggested · ${title} — confirm, then Condition & load`);
+            setImageSeedUiState(
+                'success',
+                n > 1
+                    ? `Suggested · ${title} (+${n - 1} alts) — pick, then Condition & load`
+                    : `Suggested · ${title} — confirm, then Condition & load`,
+            );
         } catch (err) {
             console.error(err);
             setImageSeedUiState('error', err.message || String(err));
@@ -1428,29 +1516,33 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         setImageSeedUiState('loading', 'Conditioning image (Pass 1)…');
+        const flags = imageSeedRequestFlags(imageSeedSuggest);
         const fd = new FormData();
         fd.append('file', file);
         fd.append('substance', substanceSelect.value || 'lsd');
-        if (experienceSelect.value) fd.append('experience_id', experienceSelect.value);
+        if (flags.experience_id) fd.append('experience_id', flags.experience_id);
         fd.append('mode', modeSelect.value || 'open');
         fd.append('intensity', String(Number(intensityRange.value)));
         fd.append('influence', String(imageInfluence()));
         fd.append('include_preview', 'true');
         fd.append('include_source_field', 'true');
-        fd.append('apply_recommended', imageSeedApplyRecommended?.checked ? 'true' : 'false');
+        fd.append('apply_recommended', flags.apply_recommended ? 'true' : 'false');
         fd.append('recommend_only', 'false');
+        fd.append('recommend_top_n', '5');
         try {
             const res = await fetch('/api/v1/visualize/image-seed', { method: 'POST', body: fd });
             const body = await res.json().catch(() => ({}));
             if (!res.ok) {
                 throw new Error(body.detail || res.statusText || 'image-seed failed');
             }
+            const pickedId = flags.experience_id || body.applied_experience_id;
             imageSeedState = body;
-            imageSeedSuggest = null;
+            imageSeedSuggest = body;
             persistImageSeedHandoff(body);
             seedInput.value = String(body.master_seed >>> 0);
-            if (imageSeedApplyRecommended?.checked) applyRecommendedControls(body);
-            renderImageSeedRecommend(body);
+            renderImageSeedRecommend(body, { syncAlt: true });
+            if (pickedId && imageSeedAltSelect) imageSeedAltSelect.value = pickedId;
+            applyRecommendedControls(body, { fromAlt: selectedAlternative() });
             if (typeof player.setImageHints === 'function') {
                 player.setImageHints(body.parameter_hints || null);
             }
@@ -1492,17 +1584,19 @@ document.addEventListener('DOMContentLoaded', () => {
         setImageSeedUiState('loading', 'Building seed → journey package…');
         try {
             const b64 = await fileToBase64(file);
+            const flags = imageSeedRequestFlags(imageSeedSuggest || imageSeedState);
             const res = await fetch('/api/v1/visualize/image-seed-journey', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     image_base64: b64,
                     substance: substanceSelect.value || 'lsd',
-                    experience_id: experienceSelect.value || null,
+                    experience_id: flags.experience_id,
                     mode: modeSelect.value || 'open',
                     intensity: Number(intensityRange.value),
                     influence: imageInfluence(),
-                    apply_recommended: !!imageSeedApplyRecommended?.checked,
+                    apply_recommended: flags.apply_recommended,
+                    recommend_top_n: 5,
                     include_preview: false,
                     include_source_field: false,
                     steps: 12,
@@ -1517,10 +1611,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             imageSeedState = body.image_seed || null;
             if (imageSeedState) {
+                imageSeedSuggest = imageSeedState;
                 persistImageSeedHandoff(imageSeedState);
                 seedInput.value = String(imageSeedState.master_seed >>> 0);
-                if (imageSeedApplyRecommended?.checked) applyRecommendedControls(imageSeedState);
-                renderImageSeedRecommend(imageSeedState);
+                renderImageSeedRecommend(imageSeedState, { syncAlt: true });
+                applyRecommendedControls(imageSeedState, { fromAlt: selectedAlternative() });
                 if (typeof player.setImageHints === 'function') {
                     player.setImageHints(imageSeedState.parameter_hints || null);
                 }
@@ -1549,6 +1644,16 @@ document.addEventListener('DOMContentLoaded', () => {
             setImageSeedUiState('error', err.message || String(err));
         }
     }
+
+    imageSeedAltSelect?.addEventListener('change', () => {
+        const src = imageSeedSuggest || imageSeedState;
+        if (!src) return;
+        const alt = selectedAlternative();
+        applyRecommendedControls(src, { fromAlt: alt });
+        renderImageSeedRecommend(src, { syncAlt: false });
+        const title = alt?.title || src.recommended?.experience_title || 'formula';
+        setImageSeedUiState('success', `Selected · ${title} — Condition & load when ready`);
+    });
 
     imageSeedSuggestBtn?.addEventListener('click', () => {
         suggestImageSeedFormula();

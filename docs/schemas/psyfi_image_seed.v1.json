@@ -68,6 +68,20 @@
         "experience_score": { "type": ["number", "null"] }
       }
     },
+    "recommended_alternatives": {
+      "type": "array",
+      "description": "Top-N ranked catalog formula matches (winner first).",
+      "items": {
+        "type": "object",
+        "properties": {
+          "rank": { "type": "integer", "minimum": 1 },
+          "experience_id": { "type": "string" },
+          "title": { "type": ["string", "null"] },
+          "mode_default": { "type": ["string", "null"] },
+          "score": { "type": "number" }
+        }
+      }
+    },
     "applied_experience_id": { "type": ["string", "null"] },
     "applied_mode": { "type": ["string", "null"] },
     "applied_intensity": { "type": ["number", "null"] },

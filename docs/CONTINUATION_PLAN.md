@@ -1,6 +1,6 @@
 # PsyFi Web Continuation Plan
 
-Status: active (P0–P2 in #30; G2 compute density in flight; human gates remain)  
+Status: active (P0–P2 + G2 compute/TAA/asset-decode on `main`; human gates remain)  
 Scope: **web app / PWA / API only** — native iOS remains deferred (`docs/IOS_MIGRATION.md`).  
 Deploy: **Docker only** (`DEPLOYMENT.md`); Azure/Render paths removed (#28).
 
@@ -12,7 +12,7 @@ Deploy: **Docker only** (`DEPLOYMENT.md`); Azure/Render paths removed (#28).
 | Legacy Live Experience (Canvas/WebGL) | Done + last-sim source plane (#25) |
 | Phenomenology overlays | Expanded (13 overlay substances) — #30 |
 | GPU platform G0→G1 | Present path + safety — #30 |
-| GPU G2 (start) | Flow particles + cull/LOD kernels + asset worker hook |
+| GPU G2 | Compute particles, TAA, worker glTF/KTX2 header decode — done |
 | CI / Docker GPU dist | #30 |
 | Modulators | Camera / motion / MIDI / audio / haptics |
 | Human gates | Device matrix + Phase 4 usability still open |
@@ -36,7 +36,7 @@ Deploy: **Docker only** (`DEPLOYMENT.md`); Azure/Render paths removed (#28).
 - CI `gpu:build` + Docker `dist/`; freeze body equality
 - Phenomenology packs; audio/haptics modulators
 
-### In progress — G2 compute & density
+### Done — G2 compute & density
 
 - [x] Portable TS flow / particle / cull / LOD kernels + vitest
 - [x] WGSL compute shaders aligned to those kernels

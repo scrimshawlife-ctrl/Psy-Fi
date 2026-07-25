@@ -61,7 +61,7 @@ Cutover: [`G4_CUTOVER.md`](G4_CUTOVER.md) · pixels: [`PIXEL_GOLDENS.md`](PIXEL_
 - [x] PWA integration decision — **separate `/gpu/` route** ([`PWA_GPU_ROUTE.md`](../PWA_GPU_ROUTE.md))
 - [x] Soft → **hard** freeze includes scene-snapshot schema
 - [ ] Full R3F WebGPU stills on GPU CI runner (optional)
-- [ ] Vendor real Draco WASM / Basis transcoder (optional; bridges ready)
+- [x] Vendor real Draco WASM / Basis transcoder (`public/vendor/` · `draco3d` · Basis init)
 - Legacy viz marked deprecated (not deleted until iOS/web gates)
 - Device matrix: living QA (unfrozen as ship gate)
 

@@ -10,11 +10,13 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
     "bench": "vitest run benchmarks",
-    "goldens:pixel": "PSYFI_UPDATE_PIXEL_GOLDENS=1 vitest run src/goldens/pixelGolden.test.ts"
+    "goldens:pixel": "PSYFI_UPDATE_PIXEL_GOLDENS=1 vitest run src/goldens/pixelGolden.test.ts",
+    "vendor:codecs": "bash ../../scripts/vendor_gpu_codecs.sh"
   },
   "dependencies": {
     "@react-three/drei": "^10.0.0",
     "@react-three/fiber": "^9.0.0",
+    "draco3d": "^1.5.7",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "three": "^0.175.0"

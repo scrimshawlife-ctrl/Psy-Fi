@@ -66,7 +66,7 @@ Guide: [`DESKTOP_GPU.md`](DESKTOP_GPU.md).
 | Item | Notes |
 | --- | --- |
 | Full R3F WebGPU stills | Needs GPU CI runner; soft-present goldens already in CI |
-| Vendor Draco WASM / Basis transcoder | Bridges ready; not required for ship |
+| Vendor Draco WASM / Basis transcoder | **done** — `public/vendor/{draco,basis}` · `draco3d` decode · Basis init |
 | GPU PresentPipeline dispose on tier rebuild | **done** — dispose effect RTs; quantize particle budgets; worker abort listener cleanup |
 | Legacy WebGL 1:1 shaders | Only if keeping `/` long-term parity |
 | CUDA/HIP workers | Compose `nvidia` profile already reserves GPU |

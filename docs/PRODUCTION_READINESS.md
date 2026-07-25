@@ -21,7 +21,7 @@ Scope: web app / PWA / API — native iOS deferred (`IOS_MIGRATION.md`).
 | GPU | G3 premium desktop stack | **done** | GTAO · SSR · ContactShadows · fog · DoF · motion blur · chroma |
 | GPU | Desktop discrete Ultra path | **done** | NVIDIA 30/40/50 · AMD RX 6/7/9xxx · Intel Arc · `DESKTOP_GPU.md` |
 | GPU | Profiling HUD (FPS / avg / p95 / budget) | **done** | `/gpu/` DebugHud |
-| GPU | Draco/KTX2 upload + SceneAssetLayer | **done** | bridges ready; Basis/real Draco WASM optional |
+| GPU | Draco/KTX2 upload + SceneAssetLayer | **done** | vendored Draco/Basis under `/gpu/vendor/` · `draco3d` |
 | GPU | G4 cutover ship gates | **done** | parity CI · structure goldens · soft pixel goldens · `G4_CUTOVER.md` |
 | GPU | Present/FX dispose + particle budget quantize | **done** | Ultra leak hardening · worker abort listener cleanup |
 | PWA | Installable shell + SW + IndexedDB | **done** | device QA 2026-07-25 · root-scoped `/sw.js` (v11) |

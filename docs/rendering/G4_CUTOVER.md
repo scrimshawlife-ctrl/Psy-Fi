@@ -7,9 +7,9 @@ Related: [`ROADMAP.md`](ROADMAP.md), [`PIXEL_GOLDENS.md`](PIXEL_GOLDENS.md), [`.
 
 - [x] Worker + main header decode for glTF / KTX2
 - [x] KTX2 level-index parse + uncompressed RGBA8 → `GPUTexture` upload
-- [x] Draco WASM decoder bridge (stub + test passthrough; real WASM when vendored)
+- [x] Draco WASM decoder bridge (`draco3d` + vendored glTF WASM under `/gpu/vendor/draco/gltf/`)
 - [x] Wire uploaded textures into `SceneRoot` via `SceneAssetLayer` when `assets.ktx2[]` has `{ id, url }`
-- [ ] Vendor `draco_decoder.wasm` / Basis transcoder assets into package (optional runtime)
+- [x] Vendor `draco_decoder.wasm` / Basis transcoder assets (`public/vendor/` · `scripts/vendor_gpu_codecs.sh`)
 - [ ] Populate Python `assets.*` in snapshots when productized packs exist
 
 ## Feature parity vs legacy Live Experience (`/`)
@@ -24,7 +24,7 @@ Canonical data: `packages/psyfi-gpu-renderer/src/contracts/g4Parity.ts` (CI-test
 | Modulators (cam/motion/MIDI/audio/haptics) | yes | partial | MIDI/haptics still legacy-primary |
 | Reduce motion | yes | yes | snapshot flag |
 | Offline / PWA | yes | partial | `/gpu/` **separate route (decided)** — [`PWA_GPU_ROUTE.md`](../PWA_GPU_ROUTE.md) |
-| KTX2 / Draco optional assets | n/a | partial | SceneAssetLayer; Python arrays empty by default |
+| KTX2 / Draco optional assets | n/a | ready | Vendored codecs; SceneAssetLayer; Python arrays empty by default until packs |
 
 ## PWA decision
 

@@ -37,6 +37,10 @@ def test_template_wires_cancel_recovery_and_renderer() -> None:
     assert 'id="sourcePlaneChk"' in html
     assert 'id="sourcePlaneMix"' in html
     assert 'id="bridgeSimBtn"' in html
+    assert 'id="imageSeedSuggestBtn"' in html
+    assert 'id="imageSeedJourneyBtn"' in html
+    assert 'id="imageSeedRecommend"' in html
+    assert 'id="copyT2vPromptBtn"' in html
     assert 'id="modAudio"' in html
     assert 'id="modHaptics"' in html
     assert 'id="enableAudioBtn"' in html

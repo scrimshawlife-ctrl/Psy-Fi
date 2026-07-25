@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "runs": [
+    {
+      "date": "2026-07-25",
+      "target": "psyfi_api/templates/index.html + psyfi_api/static/style.css",
+      "verb": "redesign",
+      "genre": "atmospheric",
+      "macrostructure": "Workbench",
+      "theme": "design.md",
+      "nav": "N9",
+      "footer": "Ft2",
+      "designed_as_app": true
+    }
+  ]
+}

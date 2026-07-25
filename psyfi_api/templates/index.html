@@ -17,21 +17,23 @@
     <link rel="stylesheet" href="/static/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
         <header class="header">
-            <div class="sigil">
-                <div class="sigil-inner">
-                    <span class="sigil-symbol">⬡</span>
+            <div class="brand-row">
+                <div class="sigil" aria-hidden="true">
+                    <div class="sigil-inner"></div>
+                </div>
+                <div class="brand-copy">
+                    <h1 class="title">
+                        <span class="title-main">PsyFi</span>
+                        <span class="title-version">v0.1.0</span>
+                    </h1>
+                    <p class="subtitle">Consciousness field simulation engine</p>
                 </div>
             </div>
-            <h1 class="title">
-                <span class="title-main">PsyFi</span>
-                <span class="title-version">v0.1.0</span>
-            </h1>
-            <p class="subtitle">Consciousness Field Simulation Engine</p>
             <div class="lab-credit">Applied Alchemy Labs</div>
             <p class="disclaimer">Modeled simulation outputs — not medical findings.</p>
         </header>
@@ -112,7 +114,6 @@
                         </div>
                         <div class="run-actions">
                             <button type="submit" class="btn-primary" id="runButton">
-                                <span class="btn-icon">▶</span>
                                 <span>Run Simulation</span>
                             </button>
                             <button type="button" class="btn-secondary" id="cancelButton" hidden>Cancel</button>
@@ -173,7 +174,7 @@
                             <label for="seedInput">Seed</label>
                             <div class="seed-row">
                                 <input type="number" id="seedInput" value="42" min="0">
-                                <button type="button" class="btn-secondary" id="regenSeedBtn" title="Regenerate seed">↻</button>
+                                <button type="button" class="btn-secondary" id="regenSeedBtn" title="Regenerate seed">Regen</button>
                             </div>
                         </div>
                         <div class="input-group">
@@ -206,7 +207,6 @@
                         </details>
                         <div class="session-actions">
                             <button type="button" class="btn-primary" id="loadExperienceBtn">
-                                <span class="btn-icon">◎</span>
                                 <span>Load Experience</span>
                             </button>
                             <button type="button" class="btn-secondary" id="bridgeSimBtn">Bridge from sim</button>

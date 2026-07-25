@@ -687,6 +687,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const reduceMotionChk = document.getElementById('reduceMotionChk');
     const dimFlashChk = document.getElementById('dimFlashChk');
     const preferWebGLChk = document.getElementById('preferWebGLChk');
+    const sourcePlaneChk = document.getElementById('sourcePlaneChk');
+    const sourcePlaneMix = document.getElementById('sourcePlaneMix');
+    const sourcePlaneMixValue = document.getElementById('sourcePlaneMixValue');
+    const sourcePlaneMixGroup = document.getElementById('sourcePlaneMixGroup');
     const loadBtn = document.getElementById('loadExperienceBtn');
     const playBtn = document.getElementById('playExperienceBtn');
     const pauseBtn = document.getElementById('pauseExperienceBtn');
@@ -696,6 +700,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const modCamera = document.getElementById('modCamera');
     const modMotion = document.getElementById('modMotion');
     const modMidi = document.getElementById('modMidi');
+    let lastBridgeField = null;
+
+    function syncSourcePlaneUI() {
+        const on = !!(sourcePlaneChk && sourcePlaneChk.checked && lastBridgeField);
+        if (sourcePlaneMixGroup) sourcePlaneMixGroup.hidden = !on;
+        if (!on) {
+            player.clearSourcePlane();
+            return;
+        }
+        const mix = sourcePlaneMix ? Number(sourcePlaneMix.value) : 0.32;
+        if (sourcePlaneMixValue) sourcePlaneMixValue.textContent = mix.toFixed(2);
+        player.setSourcePlane(lastBridgeField, mix);
+    }
 
     const player = new PsyFiViz.ExperiencePlayer({
         canvas,
@@ -774,6 +791,19 @@ document.addEventListener('DOMContentLoaded', () => {
     preferWebGLChk?.addEventListener('change', () => {
         player.setPreferWebGL(!!preferWebGLChk.checked);
         statusEl.textContent = `Renderer preference: ${player.backend}`;
+    });
+
+    sourcePlaneChk?.addEventListener('change', () => {
+        syncSourcePlaneUI();
+        statusEl.textContent = sourcePlaneChk.checked
+            ? 'Sim source plane enabled'
+            : 'Sim source plane cleared';
+    });
+    sourcePlaneMix?.addEventListener('input', () => {
+        if (sourcePlaneMixValue) sourcePlaneMixValue.textContent = Number(sourcePlaneMix.value).toFixed(2);
+        if (sourcePlaneChk?.checked && lastBridgeField) {
+            player.setSourceMix(Number(sourcePlaneMix.value));
+        }
     });
 
     phaseScrub?.addEventListener('input', () => {
@@ -861,13 +891,21 @@ document.addEventListener('DOMContentLoaded', () => {
                     player.play();
                 }
             }
+            lastBridgeField = data.simulation?.visualization?.field || null;
+            if (lastBridgeField && sourcePlaneChk) {
+                sourcePlaneChk.checked = true;
+            }
+            syncSourcePlaneUI();
             provenanceEl.innerHTML = `
               <div><strong>Bridge</strong> simulation → ParameterField</div>
               <div><strong>Provenance</strong> ${data.simulation?.provenance_id || '—'}</div>
               <div><strong>Field hash</strong> ${data.parameter_field?.hash || '—'}</div>
+              <div><strong>Source plane</strong> ${lastBridgeField && sourcePlaneChk?.checked ? 'on' : 'off'}</div>
               <div class="muted">${data.note || ''}</div>
             `;
-            statusEl.textContent = 'Simulation bridge loaded';
+            statusEl.textContent = lastBridgeField && sourcePlaneChk?.checked
+                ? 'Simulation bridge loaded · source plane active'
+                : 'Simulation bridge loaded';
         } catch (err) {
             console.error(err);
             statusEl.textContent = 'Bridge failed';

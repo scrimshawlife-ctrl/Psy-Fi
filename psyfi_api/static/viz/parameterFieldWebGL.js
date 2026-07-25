@@ -39,6 +39,8 @@ uniform float u_wE;
 uniform float u_neutral;
 uniform vec3 u_palette;
 uniform float u_seed;
+uniform sampler2D u_source;
+uniform float u_sourceMix;
 
 float hash(vec2 p) {
   return fract(sin(dot(p + u_seed * 0.001, vec2(127.1, 311.7))) * 43758.5453);
@@ -114,6 +116,12 @@ void main() {
   }
   v = clamp(v * (0.7 + u_energy * 0.8), 0.0, 1.0);
 
+  // Optional last-sim magnitude plane (soft blend before safety ceiling).
+  if (u_sourceMix > 0.001) {
+    float src = texture2D(u_source, v_uv).r;
+    v = mix(v, src, clamp(u_sourceMix, 0.0, 1.0) * 0.85);
+  }
+
   vec3 col = u_palette * v * (0.45 + v);
   col.g += organic * 0.15;
   col.b += lattice * 0.3;
@@ -132,10 +140,40 @@ void main() {
       this.ok = !!this.gl;
       this.program = null;
       this.frame = null;
+      this.sourcePlane = null;
+      this.sourceTex = null;
       this.t0 = performance.now();
       this.running = false;
       this.raf = 0;
       if (this.ok) this._init();
+    }
+
+    setSourcePlane(plane) {
+      this.sourcePlane = plane && plane.mix > 0 ? plane : null;
+      if (!this.ok || !this.gl) return;
+      const gl = this.gl;
+      if (!this.sourcePlane) {
+        this._sourceMix = 0;
+        return;
+      }
+      if (!this.sourceTex) this.sourceTex = gl.createTexture();
+      const { width, height, data, mix } = this.sourcePlane;
+      const rgba = new Uint8Array(width * height * 4);
+      for (let i = 0; i < width * height; i++) {
+        const v = Math.max(0, Math.min(255, Math.round(data[i] * 255)));
+        const o = i * 4;
+        rgba[o] = v;
+        rgba[o + 1] = v;
+        rgba[o + 2] = v;
+        rgba[o + 3] = 255;
+      }
+      gl.bindTexture(gl.TEXTURE_2D, this.sourceTex);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, rgba);
+      this._sourceMix = mix;
     }
 
     _init() {
@@ -248,7 +286,30 @@ void main() {
       const pl = gl.getUniformLocation(this.program, 'u_palette');
       if (pl) gl.uniform3f(pl, pal.r / 255, pal.g / 255, pal.b / 255);
 
+      const mix = this.sourcePlane ? this.sourcePlane.mix || this._sourceMix || 0 : 0;
+      set('u_sourceMix', mix);
+      const srcLoc = gl.getUniformLocation(this.program, 'u_source');
+      if (srcLoc != null) {
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, this.sourceTex || this._fallbackTex());
+        gl.uniform1i(srcLoc, 0);
+      }
+
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    }
+
+    _fallbackTex() {
+      if (this._blackTex) return this._blackTex;
+      const gl = this.gl;
+      const t = gl.createTexture();
+      gl.bindTexture(gl.TEXTURE_2D, t);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([0, 0, 0, 255]));
+      this._blackTex = t;
+      return t;
     }
 
     static supported() {

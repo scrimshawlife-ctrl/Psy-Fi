@@ -8,6 +8,44 @@
   const math = () => global.PsyFiViz.math;
   const engines = () => global.PsyFiViz.engines;
 
+  /** Flatten visualization.field ({values[][], width, height}) for sampling. */
+  function packSourceField(field, mix) {
+    if (!field || !field.values || !field.width || !field.height) return null;
+    const m = Number(mix);
+    if (!(m > 0)) return null;
+    const width = field.width | 0;
+    const height = field.height | 0;
+    const data = new Float32Array(width * height);
+    for (let y = 0; y < height; y++) {
+      const row = field.values[y];
+      if (!row) continue;
+      for (let x = 0; x < width; x++) {
+        const v = Number(row[x]);
+        data[y * width + x] = Number.isFinite(v) ? Math.min(1, Math.max(0, v)) : 0;
+      }
+    }
+    return { width, height, data, mix: Math.min(1, Math.max(0, m)) };
+  }
+
+  function sampleSourcePlane(plane, nx, ny) {
+    if (!plane) return 0;
+    const x = Math.min(1, Math.max(0, nx)) * (plane.width - 1);
+    const y = Math.min(1, Math.max(0, ny)) * (plane.height - 1);
+    const x0 = Math.floor(x);
+    const y0 = Math.floor(y);
+    const x1 = Math.min(plane.width - 1, x0 + 1);
+    const y1 = Math.min(plane.height - 1, y0 + 1);
+    const fx = x - x0;
+    const fy = y - y0;
+    const i00 = plane.data[y0 * plane.width + x0];
+    const i10 = plane.data[y0 * plane.width + x1];
+    const i01 = plane.data[y1 * plane.width + x0];
+    const i11 = plane.data[y1 * plane.width + x1];
+    const a = i00 * (1 - fx) + i10 * fx;
+    const b = i01 * (1 - fx) + i11 * fx;
+    return a * (1 - fy) + b * fy;
+  }
+
   class ExperienceRenderer {
     constructor(canvas) {
       this.canvas = canvas;
@@ -16,6 +54,7 @@
       this.h = canvas.height;
       this.safety = new global.PsyFiViz.SafetyPass();
       this.frame = null;
+      this.sourcePlane = null;
       this.t0 = performance.now();
       this.running = false;
       this.raf = 0;
@@ -26,6 +65,10 @@
 
     setFrame(frame) {
       this.frame = frame;
+    }
+
+    setSourcePlane(plane) {
+      this.sourcePlane = plane || null;
     }
 
     resize(w, h) {
@@ -147,6 +190,12 @@
 
           v = clamp(v * (0.7 + energy * 0.8) + engineCtx.turb * (rnd() - 0.5) * 0.08, 0, 1);
 
+          // Optional last-sim magnitude plane (before SafetyPass; never replaces ParameterField).
+          if (!neutral && this.sourcePlane && this.sourcePlane.mix > 0) {
+            const src = sampleSourcePlane(this.sourcePlane, x / Math.max(1, iw - 1), y / Math.max(1, ih - 1));
+            v = clamp(v * (1 - this.sourcePlane.mix * 0.85) + src * this.sourcePlane.mix, 0, 1);
+          }
+
           let rC, gC, bC;
           if (neutral) {
             rC = 10 + v * 30;
@@ -214,7 +263,36 @@
       this.renderer.onFrameInfo = (info) => this._status(info);
       this.modulators = { camera: 0, motion: 0, midi: 0 };
       this.fieldBridge = null;
+      this.sourcePlane = null;
       this.setPreferWebGL(this.preferWebGL);
+    }
+
+    /**
+     * Optional simulation magnitude texture as a soft source plane.
+     * @param {object|null} field visualization.field ({values,width,height}) or null to clear
+     * @param {number} [mix=0.32]
+     */
+    setSourcePlane(field, mix) {
+      const plane = packSourceField(field, mix == null ? 0.32 : mix);
+      this.sourcePlane = plane;
+      this.renderer.setSourcePlane(plane);
+      if (this.webgl && typeof this.webgl.setSourcePlane === 'function') {
+        this.webgl.setSourcePlane(plane);
+      }
+    }
+
+    clearSourcePlane() {
+      this.setSourcePlane(null, 0);
+    }
+
+    setSourceMix(mix) {
+      if (!this.sourcePlane) return;
+      const m = Math.min(1, Math.max(0, Number(mix) || 0));
+      this.sourcePlane = { ...this.sourcePlane, mix: m };
+      this.renderer.setSourcePlane(this.sourcePlane);
+      if (this.webgl && typeof this.webgl.setSourcePlane === 'function') {
+        this.webgl.setSourcePlane(this.sourcePlane);
+      }
     }
 
     _syncCanvasVisibility() {

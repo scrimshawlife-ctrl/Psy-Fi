@@ -43,7 +43,7 @@ Full board: [`docs/PRODUCTION_READINESS.md`](docs/PRODUCTION_READINESS.md).
 | Docker deploy                      | **ready**        | Compose + urllib healthcheck + GPU `dist/` bake |
 | Live Experience + safety           | **ready**        | Neutral View · ParameterField authority         |
 | GPU platform G0–G2                 | **ready**        | `/gpu/` compute · TAA · asset worker decode     |
-| GPU G3 premium AO                  | **in progress**  | GTAO on desktop tiers                           |
+| GPU G3 premium AO/SSR              | **in progress**  | GTAO · SSR · contact shadows                    |
 | Device matrix                      | **unfrozen**     | living QA — not a ship blocker                  |
 | Phase 4 usability                  | **living**       | recommended continuous evidence                 |
 | Native iOS                         | deferred         | `docs/IOS_MIGRATION.md`                         |

@@ -34,8 +34,9 @@ Board: [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md)
 - [x] GTAO ambient occlusion on tiers with `post.ssao`
 - [x] Crystal materials via MaterialSystem descriptors
 - [x] CI budget smoke for tier passes / frame profiler
-- [ ] SSR / contact shadows / volumetric fog
-- [ ] Full Ultra/High premium stack + profiling overlay in `/gpu/` UI
+- [x] SSR (ultra/high) + ContactShadows
+- [ ] Volumetric fog / DoF / motion blur
+- [ ] Profiling overlay polish in `/gpu/` UI
 
 ### Living QA (non-blocking)
 

@@ -43,8 +43,8 @@ Deploy: **Docker only** (`DEPLOYMENT.md`); Azure/Render paths removed (#28).
 - [x] `FlowParticleField` in scene (disabled on battery / Neutral)
 - [x] AssetLoader worker-mode hook (fetch off main when Worker available)
 - [x] WebGPU TSL compute dispatch (`GpuFlowCompute`) with CPU InstancedMesh fallback
-- [ ] Temporal accumulation / TAA wiring (next)
-- [ ] Worker glTF/Draco/KTX2 decode (bytes-only fetch is in place)
+- [x] Temporal accumulation / TAA wiring (`PresentPipeline` + policy helper)
+- [ ] Worker glTF/Draco/KTX2 decode (bytes-only fetch is in place) — next
 
 ### Deferred / human
 
@@ -59,9 +59,8 @@ Deploy: **Docker only** (`DEPLOYMENT.md`); Azure/Render paths removed (#28).
 
 ## Recommended next slice
 
-1. **Merge #30** then **#31** (G2 compute) when ready.
-2. **Human:** fill device matrix on **newer Mac (Apple Silicon) / newer Windows 11 PC** + current phones.
-3. **Engineering:** TAA / temporal accumulation; then G3 premium passes.
+1. **Human:** fill device matrix on **newer Mac (Apple Silicon) / newer Windows 11 PC** + current phones → hard freeze.
+2. **Engineering:** worker glTF/Draco/KTX2 decode; then G3 premium passes (SSAO/SSR/PBR).
 
 ## Commands
 

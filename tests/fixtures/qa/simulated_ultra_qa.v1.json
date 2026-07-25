@@ -12,12 +12,12 @@
     {
       "id": "ready",
       "ok": true,
-      "detail": "200"
+      "detail": "status=200 gpu_shell_mounted=True"
     },
     {
       "id": "gpu-shell",
       "ok": true,
-      "detail": "status=200 bytes=758"
+      "detail": "mounted status=200 bytes=758"
     },
     {
       "id": "snapshot-lsd",

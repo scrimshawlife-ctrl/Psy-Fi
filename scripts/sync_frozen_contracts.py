@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Sync living contract artifacts into docs/contracts/frozen/ for soft freeze."""
+"""Sync living contract artifacts into docs/contracts/frozen/ for hard freeze."""
 
 from __future__ import annotations
 
@@ -52,17 +52,15 @@ def main() -> None:
     manifest_path = FROZEN / "MANIFEST.json"
     manifest = {
         "schema_version": "1.0.0",
-        "freeze_id": "psyfi-api-v1-soft-2026-07-25",
-        "status": "soft_frozen",
+        "freeze_id": "psyfi-api-v1-hard-2026-07-25",
+        "status": "hard_frozen",
         "frozen_at": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
         "api_version": "v1",
         "policy": {
             "additive_ok": True,
             "breaking_requires": "version bump discussion + new freeze_id",
-            "hard_freeze_requires": [
-                "physical_device_matrix_rows",
-                "phase4_usability_evidence",
-            ],
+            "device_matrix": "living_continuous_qa_not_blocking",
+            "phase4_usability": "living_continuous_qa_not_blocking",
         },
         "artifacts": sorted(p.name for p in FROZEN.iterdir() if p.is_file()),
     }

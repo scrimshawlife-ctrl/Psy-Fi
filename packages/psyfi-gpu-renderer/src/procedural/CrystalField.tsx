@@ -1,5 +1,6 @@
 import { Instances, Instance } from '@react-three/drei'
 import type { ProceduralNode } from '../contracts/SceneSnapshot'
+import { materialForKind } from '../MaterialSystem'
 
 export function CrystalField({
   nodes,
@@ -11,6 +12,7 @@ export function CrystalField({
   engines: Record<string, number>
 }) {
   const lattice = engines.entity_lattice ?? 0.1
+  const mat = materialForKind('crystal')
   const items = nodes.flatMap((n, ni) => {
     const budget = Math.min(48, Number(n.instance_budget) || 32)
     const seed = Number(n.seed) || ni
@@ -28,7 +30,12 @@ export function CrystalField({
   return (
     <Instances limit={512} range={items.length}>
       <icosahedronGeometry args={[1, 0]} />
-      <meshStandardMaterial color={color} metalness={0.55} roughness={0.25} />
+      <meshStandardMaterial
+        color={color}
+        metalness={mat.metalness}
+        roughness={mat.roughness}
+        envMapIntensity={1.15}
+      />
       {items.map((it) => (
         <Instance key={it.key} position={it.position} scale={it.scale} />
       ))}

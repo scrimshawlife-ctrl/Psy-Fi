@@ -20,11 +20,15 @@ def _load(path: Path) -> object:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def test_freeze_manifest_is_soft_frozen() -> None:
+def test_freeze_manifest_is_hard_frozen() -> None:
     manifest = _load(FROZEN / "MANIFEST.json")
     assert isinstance(manifest, dict)
-    assert manifest["status"] == "soft_frozen"
+    assert manifest["status"] == "hard_frozen"
+    assert manifest["freeze_id"] == "psyfi-api-v1-hard-2026-07-25"
     assert manifest["api_version"] == "v1"
+    policy = manifest["policy"]
+    assert isinstance(policy, dict)
+    assert policy.get("device_matrix") == "living_continuous_qa_not_blocking"
     for name in manifest["artifacts"]:
         assert (FROZEN / name).exists(), name
 

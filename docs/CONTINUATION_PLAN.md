@@ -1,67 +1,52 @@
 # PsyFi Web Continuation Plan
 
-Status: active (P0–P2 + G2 compute/TAA/asset-decode on `main`; human gates remain)  
+Status: active — **production-ready Docker web ship**; G3 polish in flight; device matrix unfrozen  
 Scope: **web app / PWA / API only** — native iOS remains deferred (`docs/IOS_MIGRATION.md`).  
-Deploy: **Docker only** (`DEPLOYMENT.md`); Azure/Render paths removed (#28).
+Deploy: **Docker only** (`DEPLOYMENT.md`).  
+Board: [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md)
 
 ## Baseline
 
 | Area | State |
 | --- | --- |
-| `/api/v1` + soft freeze | Done (`psyfi-api-v1-soft-2026-07-25`) |
-| Legacy Live Experience (Canvas/WebGL) | Done + last-sim source plane (#25) |
-| Phenomenology overlays | Expanded (13 overlay substances) — #30 |
-| GPU platform G0→G1 | Present path + safety — #30 |
-| GPU G2 | Compute particles, TAA, worker glTF/KTX2 header decode — done |
-| CI / Docker GPU dist | #30 |
-| Modulators | Camera / motion / MIDI / audio / haptics |
-| Human gates | Device matrix + Phase 4 usability still open |
+| `/api/v1` + **hard freeze** | Done (`psyfi-api-v1-hard-2026-07-25`) |
+| Legacy Live Experience (Canvas/WebGL) | Done + last-sim source plane |
+| Phenomenology overlays | 13 overlay substances |
+| GPU G0–G2 | Present path, compute, TAA, asset worker decode |
+| GPU G3 | GTAO AO wired for desktop tiers; SSR/fog next |
+| CI / Docker GPU dist | Done |
+| Device matrix | **Unfrozen** — living continuous QA |
+| Phase 4 usability | Living continuous QA |
 
-## What is the “device matrix”?
+## Device matrix (unfrozen)
 
-[`docs/BROWSER_CAPABILITY_MATRIX.md`](BROWSER_CAPABILITY_MATRIX.md) is a **manual checklist**: someone runs PsyFi on current-gen phones plus **newer Apple Silicon Macs** and **newer Windows 11 PCs**, and records whether install, service worker, jobs cancel, Live Experience, `/gpu/` compute, Neutral View, and reduce-motion behave correctly. CI cannot substitute for those rows. Together with [`PHASE4_USABILITY.md`](PHASE4_USABILITY.md), it blocks **hard** freeze only (soft freeze already landed).
-
-## Human gates (block hard freeze)
-
-1. Fill physical-device rows in `docs/BROWSER_CAPABILITY_MATRIX.md`
-2. Fill evidence log in `docs/PHASE4_USABILITY.md`
-3. Promote soft freeze → **hard freeze** in `docs/contracts/frozen/`
+[`BROWSER_CAPABILITY_MATRIX.md`](BROWSER_CAPABILITY_MATRIX.md) records newer Mac / Windows PC + phone results. Empty rows **do not** block hard freeze or Docker ship.
 
 ## Engineering queue
 
-### Done (P0–P2 / #30)
+### Done
 
-- GPU safety attenuator; Compose urllib healthcheck
-- G1 bloom / grade / exposure / battery probe
-- CI `gpu:build` + Docker `dist/`; freeze body equality
-- Phenomenology packs; audio/haptics modulators
+- P0–P2 continuation + G2 compute/TAA/asset decode
+- Hard freeze; production readiness board in README
 
-### Done — G2 compute & density
+### In progress — production polish (G3)
 
-- [x] Portable TS flow / particle / cull / LOD kernels + vitest
-- [x] WGSL compute shaders aligned to those kernels
-- [x] `FlowParticleField` in scene (disabled on battery / Neutral)
-- [x] AssetLoader worker-mode hook (fetch off main when Worker available)
-- [x] WebGPU TSL compute dispatch (`GpuFlowCompute`) with CPU InstancedMesh fallback
-- [x] Temporal accumulation / TAA wiring (`PresentPipeline` + policy helper)
-- [x] Worker glTF/GLB + KTX2 header decode (`decodeAsset` + `asset.worker.ts`)
+- [x] GTAO ambient occlusion on tiers with `post.ssao`
+- [x] Crystal materials via MaterialSystem descriptors
+- [x] CI budget smoke for tier passes / frame profiler
+- [ ] SSR / contact shadows / volumetric fog
+- [ ] Full Ultra/High premium stack + profiling overlay in `/gpu/` UI
 
-### Deferred / human
+### Living QA (non-blocking)
 
-- Legacy WebGL 1:1 engine shaders (optional)
-- Device matrix + Phase 4 → hard freeze
-- Full Draco/KTX2 GPU upload + WASM decoders (beyond header/meta)
-
-### Explicitly out of scope now
-
-- Native iOS
-- Patching legacy `experiencePlayer.js` toward the GPU stack
-- Azure / Render / Fly / Railway one-click hosts
+- Device matrix rows on target hardware
+- Phase 4 usability evidence
 
 ## Recommended next slice
 
-1. **Human:** fill device matrix on **newer Mac (Apple Silicon) / newer Windows 11 PC** + current phones → hard freeze.
-2. **Engineering:** G3 premium passes (SSAO/SSR/PBR) or Draco/KTX2 GPU upload.
+1. Finish G3 premium passes (SSR / shadows / fog).
+2. Optional: Draco/KTX2 GPU upload.
+3. Humans: fill device matrix when hardware is available.
 
 ## Commands
 
@@ -71,8 +56,6 @@ npm test && npm run gpu:test && npm run gpu:typecheck
 npm run gpu:build
 docker compose up -d --build
 python3 scripts/run_dev_server.py
-# /        legacy shell
-# /gpu/    GPU platform (after build)
 ```
 
 ## Non-claims

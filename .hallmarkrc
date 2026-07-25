@@ -5,7 +5,6 @@
     "MOBILE_PWA_GUIDE.md",
     "DEPLOYMENT.md",
     "QUICK_DEPLOY.md",
-    "RENDER_DEPLOY.md",
     "CHANGELOG.md",
     "packages/**",
     "apps/**"

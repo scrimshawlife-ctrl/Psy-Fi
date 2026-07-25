@@ -16,7 +16,7 @@ Both consume the same authoritative `/api/v1` contracts. The GPU client’s sole
 
 | Criterion | Existing constraint | Implication |
 |---|---|---|
-| Deployment model | FastAPI serves UI + API together | Mount GPU `dist/` at `/gpu/`; no separate host required |
+| Deployment model | Docker + FastAPI serve UI + API together | Mount GPU `dist/` at `/gpu/`; no Azure/Render host required |
 | Contributor skill / repo shape | Python-first + growing TS package | Workspace under `packages/`; Python stays simulation authority |
 | Bundle/runtime cost | Legacy remains zero-build | GPU build is opt-in (`npm run gpu:build`) |
 | API coupling | Soft-frozen `/api/v1` | Additive `scene-snapshot` route; shared ParameterField |

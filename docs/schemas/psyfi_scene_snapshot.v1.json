@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "psyfi_scene_snapshot.v1.json",
+  "title": "PsyFiSceneSnapshot.v1",
+  "description": "Immutable GPU scene description. Analysis publishes; renderer interpolates and discards stale sequences.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "snapshot_id",
+    "sequence",
+    "published_at",
+    "quality_tier",
+    "parameter_field",
+    "procedural",
+    "camera",
+    "post"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "const": "psyfi.scene_snapshot.v1" },
+    "snapshot_id": { "type": "string" },
+    "sequence": { "type": "integer", "minimum": 1 },
+    "published_at": { "type": "string" },
+    "quality_tier": {
+      "type": "string",
+      "enum": ["ultra", "high", "balanced", "battery"]
+    },
+    "parameter_field": { "$ref": "psyfi_parameter_field.v1.json" },
+    "simulation": { "type": ["object", "null"] },
+    "magnitude_field": { "type": ["object", "null"] },
+    "procedural": {
+      "type": "object",
+      "required": ["glyphs", "sdf_nodes", "ribbons", "metaballs", "volumetric_symbols", "crystals"],
+      "properties": {
+        "glyphs": { "type": "array" },
+        "sdf_nodes": { "type": "array" },
+        "ribbons": { "type": "array" },
+        "metaballs": { "type": "array" },
+        "volumetric_symbols": { "type": "array" },
+        "crystals": { "type": "array" }
+      }
+    },
+    "camera": { "type": "object" },
+    "lighting": { "type": "object" },
+    "post": { "type": "object" },
+    "safety": { "type": "object" },
+    "assets": { "type": "object" },
+    "authority": { "type": "object" },
+    "provenance_id": { "type": ["string", "null"] },
+    "note": { "type": "string" }
+  }
+}

@@ -27,6 +27,7 @@ def test_template_wires_cancel_recovery_and_renderer() -> None:
     assert 'id="sourcePlaneChk"' in html
     assert 'id="sourcePlaneMix"' in html
     assert 'id="bridgeSimBtn"' in html
+    assert 'href="/gpu/"' in html
     assert 'src="/static/renderer.js"' in html
     assert 'src="/static/viz/parameterFieldWebGL.js"' in html
     assert 'src="/static/app.js"' in html

@@ -726,6 +726,122 @@
         "title": "PsyFiVisualization",
         "type": "object"
       },
+      "SceneSnapshotRequest": {
+        "description": "Immutable GPU scene snapshot \u2014 analysis publish surface for the WebGPU client.",
+        "properties": {
+          "dim_flashing": {
+            "default": false,
+            "title": "Dim Flashing",
+            "type": "boolean"
+          },
+          "experience_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Experience Id"
+          },
+          "height": {
+            "default": 32,
+            "maximum": 128.0,
+            "minimum": 8.0,
+            "title": "Height",
+            "type": "integer"
+          },
+          "include_simulation": {
+            "default": true,
+            "title": "Include Simulation",
+            "type": "boolean"
+          },
+          "intensity": {
+            "default": 0.7,
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Intensity",
+            "type": "number"
+          },
+          "mode": {
+            "default": "open",
+            "enum": [
+              "open",
+              "attractor",
+              "void",
+              "power"
+            ],
+            "title": "Mode",
+            "type": "string"
+          },
+          "modulators": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Modulators"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "neutral_view": {
+            "default": false,
+            "title": "Neutral View",
+            "type": "boolean"
+          },
+          "quality_tier": {
+            "default": "balanced",
+            "title": "Quality Tier",
+            "type": "string"
+          },
+          "reduce_motion": {
+            "default": false,
+            "title": "Reduce Motion",
+            "type": "boolean"
+          },
+          "seed": {
+            "default": 42,
+            "minimum": 0.0,
+            "title": "Seed",
+            "type": "integer"
+          },
+          "sequence": {
+            "default": 1,
+            "minimum": 1.0,
+            "title": "Sequence",
+            "type": "integer"
+          },
+          "sim_steps": {
+            "default": 4,
+            "maximum": 64.0,
+            "minimum": 1.0,
+            "title": "Sim Steps",
+            "type": "integer"
+          },
+          "steps": {
+            "default": 12,
+            "maximum": 128.0,
+            "minimum": 2.0,
+            "title": "Steps",
+            "type": "integer"
+          },
+          "substance": {
+            "default": "lsd",
+            "title": "Substance",
+            "type": "string"
+          },
+          "width": {
+            "default": 32,
+            "maximum": 128.0,
+            "minimum": 8.0,
+            "title": "Width",
+            "type": "integer"
+          }
+        },
+        "title": "SceneSnapshotRequest",
+        "type": "object"
+      },
       "SessionMetrics": {
         "description": "Public metric bundle aligned with SimulateResponse.",
         "properties": {
@@ -2831,6 +2947,50 @@
           }
         },
         "summary": "Parameter Timeline",
+        "tags": [
+          "experiences"
+        ]
+      }
+    },
+    "/api/v1/visualize/scene-snapshot": {
+      "post": {
+        "description": "Publish an immutable GPU scene snapshot (analysis \u2192 renderer contract).",
+        "operationId": "scene_snapshot_api_v1_visualize_scene_snapshot_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SceneSnapshotRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Scene Snapshot Api V1 Visualize Scene Snapshot Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Scene Snapshot",
         "tags": [
           "experiences"
         ]

@@ -38,6 +38,7 @@ REQUIRED_PATHS = {
     "/api/v1/substances",
     "/api/v1/visualize/parameter-timeline",
     "/api/v1/visualize/field-frame",
+    "/api/v1/visualize/scene-snapshot",
 }
 
 

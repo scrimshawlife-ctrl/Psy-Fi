@@ -1,5 +1,6 @@
 """PsyFi API - Main FastAPI application."""
 
+import os
 from pathlib import Path
 
 from fastapi import FastAPI, Request
@@ -37,6 +38,11 @@ app.mount(
     StaticFiles(directory=str(REPO_ROOT / "docs" / "icons")),
     name="icons",
 )
+# Optional GPU platform build (packages/psyfi-gpu-renderer). Legacy shell stays at /.
+_GPU_DIST = REPO_ROOT / "packages" / "psyfi-gpu-renderer" / "dist"
+_SERVE_GPU = os.environ.get("PSYFI_SERVE_GPU", "1") != "0"
+if _SERVE_GPU and _GPU_DIST.is_dir() and (_GPU_DIST / "index.html").exists():
+    app.mount("/gpu", StaticFiles(directory=str(_GPU_DIST), html=True), name="gpu")
 templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 
 # Legacy compatibility mounts
@@ -102,6 +108,9 @@ async def ready() -> dict:
     checks["visual_overlays"] = (
         REPO_ROOT / "data" / "phenomenology" / "derived" / "substance_visual_overlays.v1.json"
     ).exists()
+    checks["scene_snapshot_schema"] = (
+        REPO_ROOT / "docs" / "schemas" / "psyfi_scene_snapshot.v1.json"
+    ).exists()
 
     ready_ok = all(checks.values())
     return {
@@ -110,6 +119,9 @@ async def ready() -> dict:
         "version": app.version,
         "api_version": "v1",
         "checks": checks,
+        "gpu_shell_mounted": bool(
+            _SERVE_GPU and _GPU_DIST.is_dir() and (_GPU_DIST / "index.html").exists()
+        ),
         "telemetry_server_enabled": TELEMETRY_ENABLED,
         "timestamp": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
     }

@@ -15,6 +15,7 @@ from psyfi_core.experiences.parameter_mapper import (
     build_parameter_timeline,
     map_parameters,
 )
+from psyfi_core.visualization.scene_snapshot import build_scene_snapshot
 
 router = APIRouter(prefix="/api/v1", tags=["experiences"])
 
@@ -55,6 +56,27 @@ class FieldFrameRequest(BaseModel):
     substance: str | None = None
     mode: ModeName = "open"
     intensity: float = Field(default=0.7, ge=0.0, le=1.0)
+
+
+class SceneSnapshotRequest(BaseModel):
+    """Immutable GPU scene snapshot — analysis publish surface for the WebGPU client."""
+
+    substance: str = "lsd"
+    experience_id: str | None = None
+    mode: ModeName = "open"
+    intensity: float = Field(default=0.7, ge=0.0, le=1.0)
+    seed: int = Field(default=42, ge=0)
+    steps: int = Field(default=12, ge=2, le=128)
+    quality_tier: str = "balanced"
+    reduce_motion: bool = False
+    dim_flashing: bool = False
+    neutral_view: bool = False
+    sequence: int = Field(default=1, ge=1)
+    include_simulation: bool = True
+    width: int = Field(default=32, ge=8, le=128)
+    height: int = Field(default=32, ge=8, le=128)
+    sim_steps: int = Field(default=4, ge=1, le=64)
+    modulators: Modulators | None = None
 
 
 @router.get("/experiences")
@@ -236,6 +258,86 @@ async def field_frame(body: FieldFrameRequest) -> dict[str, Any]:
             "ParameterField is authoritative for Live Experience rendering."
         ),
     }
+
+
+@router.post("/visualize/scene-snapshot")
+async def scene_snapshot(body: SceneSnapshotRequest) -> dict[str, Any]:
+    """Publish an immutable GPU scene snapshot (analysis → renderer contract)."""
+    substance = body.substance.lower().replace("_", "-")
+    catalog = get_default_catalog()
+    experience = catalog.get(body.experience_id) if body.experience_id else None
+    modulators = body.modulators.model_dump() if body.modulators else None
+    timeline = build_parameter_timeline(
+        substance=substance,
+        mode=body.mode,
+        intensity=body.intensity,
+        seed=body.seed,
+        steps=body.steps,
+        experience=experience,
+        modulators=modulators,
+        reduce_motion=body.reduce_motion,
+        dim_flashing=body.dim_flashing,
+        quality_tier=body.quality_tier,
+    )
+    frames = timeline.get("frames") or []
+    if frames:
+        parameter_field = dict(frames[len(frames) // 2])
+    else:
+        parameter_field = map_parameters(
+            substance=substance,
+            mode=body.mode,
+            intensity=body.intensity,
+            seed=body.seed,
+            phase_t=0.5,
+            experience=experience,
+            modulators=modulators,
+            reduce_motion=body.reduce_motion,
+            dim_flashing=body.dim_flashing,
+            quality_tier=body.quality_tier,
+            neutral_view=body.neutral_view,
+        ).to_dict()
+    if body.neutral_view:
+        parameter_field = dict(parameter_field)
+        parameter_field["neutral_view"] = True
+
+    simulation = None
+    if body.include_simulation:
+        try:
+            sim = run_simulation(
+                width=body.width,
+                height=body.height,
+                steps=body.sim_steps,
+                seed=body.seed,
+                preset=substance if substance != "baseline" else None,
+            )
+        except PresetNotFoundError as exc:
+            raise HTTPException(status_code=404, detail=str(exc)) from exc
+        simulation = {
+            "width": sim.get("width"),
+            "height": sim.get("height"),
+            "metrics": {
+                "valence": sim.get("valence"),
+                "coherence": sim.get("coherence"),
+                "symmetry": sim.get("symmetry"),
+                "roughness": sim.get("roughness"),
+                "richness": sim.get("richness"),
+            },
+            "visualization": sim.get("visualization"),
+            "provenance_id": sim.get("provenance_id"),
+            "api_version": sim.get("api_version"),
+        }
+
+    snap = build_scene_snapshot(
+        parameter_field=parameter_field,
+        simulation=simulation,
+        quality_tier=body.quality_tier,
+        sequence=body.sequence,
+    )
+    snap["kind"] = "scene_snapshot"
+    snap["substance"] = substance
+    snap["experience_id"] = body.experience_id
+    snap["timeline_hash"] = timeline.get("timeline_hash")
+    return snap
 
 
 @router.post("/experiences/reload-catalog")

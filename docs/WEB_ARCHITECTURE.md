@@ -34,26 +34,25 @@ PsyFi deterministic core
 Preferred longer-term layout:
 
 ```text
-apps/
-  web/                  # frontend product surface (future)
 packages/
-  contracts/            # optional extracted contract package (future)
-  design-tokens/        # optional extracted token package (future)
-psyfi_api/               # FastAPI application + current web shell
-psyfi_core/              # deterministic Python authority + session models/schemas
+  psyfi-gpu-renderer/   # R3F + WebGPU platform (optional /gpu/)
+psyfi_api/               # FastAPI + legacy web shell at /
+psyfi_core/              # deterministic Python authority + session/scene snapshots
 tests/
 docs/
+  rendering/             # GPU architecture, budgets, migration
 ```
 
 Migration is incremental and reuses current infrastructure first:
 
-- contracts live as Pydantic models (`psyfi_core/models/session.py`) and exported schemas (`psyfi_core/schemas/`)
+- contracts live as Pydantic models (`psyfi_core/models/session.py`) and exported schemas (`psyfi_core/schemas/`, `docs/schemas/`)
 - OpenAPI snapshots export from the live FastAPI app into `docs/contracts/`
 - design tokens alias onto existing `docs/style` / `psyfi_api/static` CSS variables
 - icons are served from existing `docs/icons`
-- frontend boundary decision: progressive enhancement of the current shell (`docs/FRONTEND_BOUNDARY.md`)
+- frontend boundary: legacy shell + optional GPU platform (`docs/FRONTEND_BOUNDARY.md`, `docs/rendering/`)
+- GPU renderer consumes `POST /api/v1/visualize/scene-snapshot` only (no inference in the client)
 
-Existing static assets remain operational until a dedicated frontend reaches feature parity.
+Existing static assets remain operational until GPU cutover gates pass (`docs/rendering/MIGRATION_PLAN.md`).
 
 ## Frontend Selection Gate
 
@@ -99,7 +98,9 @@ Minimum schema concepts:
 - renderer capability requirements;
 - accessibility description and reduced-motion alternative.
 
-Start with Canvas 2D or WebGL where sufficient. Add WebGPU as progressive enhancement, not as the compatibility baseline.
+Legacy Live Experience uses Canvas 2D / WebGL as the compatibility baseline.
+The production-grade path is the modular WebGPU platform in `packages/psyfi-gpu-renderer`
+(see `docs/rendering/ARCHITECTURE.md`): immutable scene snapshots, render graph, adaptive quality.
 
 ## Browser Capability Adapters
 

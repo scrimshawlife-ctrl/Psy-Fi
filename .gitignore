@@ -1,5 +1,7 @@
-# Node (hallmark README tooling)
+# Node (hallmark + workspaces)
 node_modules/
+packages/psyfi-gpu-renderer/dist/
+*.tsbuildinfo
 
 # Python
 __pycache__/

@@ -6,7 +6,9 @@
     "DEPLOYMENT.md",
     "QUICK_DEPLOY.md",
     "RENDER_DEPLOY.md",
-    "CHANGELOG.md"
+    "CHANGELOG.md",
+    "packages/**",
+    "apps/**"
   ],
   "validateLinks": true,
   "paddedTable": true

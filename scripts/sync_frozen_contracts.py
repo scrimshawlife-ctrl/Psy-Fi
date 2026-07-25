@@ -27,6 +27,10 @@ COPIES = [
         FROZEN / "psyfi_visual_frame.v1.json",
     ),
     (
+        ROOT / "docs" / "schemas" / "psyfi_scene_snapshot.v1.json",
+        FROZEN / "psyfi_scene_snapshot.v1.json",
+    ),
+    (
         ROOT / "tests" / "fixtures" / "experiences" / "substance_overlay_goldens.v1.json",
         FROZEN / "substance_overlay_goldens.v1.json",
     ),

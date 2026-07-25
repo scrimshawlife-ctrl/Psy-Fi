@@ -32,7 +32,7 @@ def test_template_wires_cancel_recovery_and_renderer() -> None:
     assert 'id="enableAudioBtn"' in html
     assert 'id="enableHapticsBtn"' in html
     assert 'id="enableAvailableSensorsBtn"' in html
-    assert 'id="sensorChipRow"' in html
+    assert 'id="sensorChipRow"' not in html
     assert 'id="launchSplash"' in html
     assert 'id="launchEnterBtn"' in html
     assert 'id="loadingDismissBtn"' in html
@@ -50,7 +50,7 @@ def test_template_wires_cancel_recovery_and_renderer() -> None:
 
 def test_service_worker_precaches_renderer_assets() -> None:
     sw = (STATIC / "sw.js").read_text(encoding="utf-8")
-    assert "psyfi-shell-v22" in sw
+    assert "psyfi-shell-v23" in sw
     assert ".woff2" in sw
     assert "/assets/icons/pf-icon-reset-24.svg" in sw
     assert "/assets/icons/pf-icon-valence-meter-24.svg" in sw

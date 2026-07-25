@@ -75,6 +75,20 @@
         ? global.PsyFiViz.probeSensorCapabilities()
         : {};
     const canvas = document.createElement('canvas');
+    let gpuProbePromise = null;
+    const getGpuProbe = () => {
+      if (!gpuProbePromise) {
+        gpuProbePromise =
+          global.PsyFiViz && typeof global.PsyFiViz.probeGpu === 'function'
+            ? global.PsyFiViz.probeGpu()
+            : Promise.resolve({
+                ok: !!(navigator.gpu && typeof navigator.gpu.requestAdapter === 'function'),
+                webgpu: !!(navigator.gpu && typeof navigator.gpu.requestAdapter === 'function'),
+                detail: 'feature probe only',
+              });
+      }
+      return gpuProbePromise;
+    };
     return [
       {
         id: 'api',
@@ -96,15 +110,7 @@
       {
         id: 'gpu',
         label: 'GPU adapter',
-        run: async () => {
-          if (global.PsyFiViz && typeof global.PsyFiViz.probeGpu === 'function') {
-            return global.PsyFiViz.probeGpu();
-          }
-          return {
-            ok: !!(navigator.gpu && typeof navigator.gpu.requestAdapter === 'function'),
-            detail: 'feature probe only',
-          };
-        },
+        run: async () => getGpuProbe(),
       },
       {
         id: 'canvas2d',
@@ -123,13 +129,11 @@
         id: 'webgpu',
         label: 'WebGPU / GPU Lab',
         run: async () => {
-          const gpu =
-            global.PsyFiViz && typeof global.PsyFiViz.probeGpu === 'function'
-              ? await global.PsyFiViz.probeGpu()
-              : { webgpu: !!(navigator.gpu && navigator.gpu.requestAdapter) };
+          const gpu = await getGpuProbe();
           return {
             ok: !!gpu.webgpu,
             detail: gpu.webgpu ? '/gpu/ adapter ready' : 'optional separate route',
+            webgpu: !!gpu.webgpu,
           };
         },
       },

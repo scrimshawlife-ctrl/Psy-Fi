@@ -499,29 +499,7 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             tbody.appendChild(tr);
         });
-        renderSensorChips(sensors);
         syncSensorButtons(sensors);
-    }
-
-    function renderSensorChips(sensors) {
-        const row = document.getElementById('sensorChipRow');
-        if (!row) return;
-        const chips = [
-            ['Camera', sensors.camera],
-            ['Mic', sensors.microphone],
-            ['Motion', sensors.deviceMotion],
-            ['Orientation', sensors.deviceOrientation],
-            ['Web MIDI', sensors.webMidi],
-            ['Gamepad', sensors.gamepad],
-            ['Ambient', sensors.ambientLight],
-            ['Haptics', sensors.vibrate],
-        ];
-        row.innerHTML = chips
-            .map(
-                ([label, ok]) =>
-                    `<span class="sensor-chip" data-ok="${!!ok}">${label}: ${ok ? 'available' : 'unavailable'}</span>`,
-            )
-            .join('');
     }
 
     function syncSensorButtons(sensors) {

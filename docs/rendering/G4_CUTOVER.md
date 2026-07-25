@@ -29,7 +29,7 @@ Canonical data: `packages/psyfi-gpu-renderer/src/contracts/g4Parity.ts` (CI-test
 ## PWA decision
 
 - [x] Keep `/gpu/` as separate route — **decided**; do not embed in the shell
-- [x] `MOBILE_PWA_GUIDE.md` + SW v22 network-first for `/gpu/`
+- [x] `MOBILE_PWA_GUIDE.md` + SW v23 network-first for `/gpu/`
 - [x] Manifest shortcut + capabilities panel link to GPU Lab
 
 ## Visual regression

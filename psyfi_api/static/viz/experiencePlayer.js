@@ -121,7 +121,7 @@
       const f = this.frame || {};
       const p = f.parameters || {};
       const eng = f.engines || {};
-      const pal = hexToRgb((f.palette && f.palette.tracers) || '#63F3E8');
+      const pal = hexToRgb((f.palette && f.palette.tracers) || '#3ee7f2');
       const seed = (f.master_seed || 42) >>> 0;
       const rnd = mulberry32(hash32(seed + 17));
       const time = (now - this.t0) / 1000;
@@ -226,7 +226,7 @@
       this._offCtx.putImageData(img, 0, 0);
       ctx.imageSmoothingEnabled = true;
       ctx.imageSmoothingQuality = 'high';
-      ctx.fillStyle = '#07070B';
+      ctx.fillStyle = '#0a0e14';
       ctx.fillRect(0, 0, w, h);
       ctx.drawImage(this._off, 0, 0, w, h);
 
@@ -348,7 +348,7 @@
             ? global.PsyFiViz.probeMonitor()
             : { width: global.screen && global.screen.width, height: global.screen && global.screen.height };
         const bw = Math.max(320, Math.min(3840, Number(mon.width) || w));
-        const bh = Math.max(200, Math.round(bw * (h / w)));
+        const bh = Math.max(200, Math.min(2160, Number(mon.height) || h));
         opts = { bufferW: bw, bufferH: bh };
       } else if (/^\d+x\d+$/.test(mode)) {
         const parts = mode.split('x');

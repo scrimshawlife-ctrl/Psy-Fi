@@ -95,6 +95,18 @@
       "footer": "Ft2",
       "designed_as_app": true,
       "notes": "GPU stamp instrument-bar; launch PsyFi h1; preset/metric lists; input focus outline; :active/:disabled; Ft2 credit; GPU tokens/states/favicon; SW v21"
+    },
+    {
+      "date": "2026-07-25",
+      "target": "launch fold + resolution polish + GPU motion/focus",
+      "verb": "fix",
+      "genre": "atmospheric",
+      "macrostructure": "Photographic\u2192Workbench",
+      "theme": "design.md",
+      "nav": "N9",
+      "footer": "Ft2",
+      "designed_as_app": true,
+      "notes": "CTA-first launch; scan hairlines; sensor chips removed; input 2-col; viewport under advanced; GPU probe once; native monitor buffer; reduced-motion snap; SW v23"
     }
   ]
 }

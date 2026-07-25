@@ -58,7 +58,8 @@ export function App() {
         const pending = store.takePending()
         if (pending) {
           interpolator.setTarget(pending)
-          setSnapshot(interpolator.sample())
+          const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+          setSnapshot(reduceMotion ? interpolator.snap() : interpolator.sample())
         }
         setStatus(`Snapshot ${snap.sequence} · ${snap.snapshot_id.slice(0, 8)}`)
       }
@@ -93,14 +94,24 @@ export function App() {
     let raf = 0
     let last = performance.now()
     let hudAcc = 0
+    const reduceMotion = () =>
+      !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
     const loop = (now: number) => {
       const frameStart = performance.now()
       const dt = Math.min(0.05, (now - last) / 1000)
       last = now
       const pending = store.takePending()
-      if (pending) interpolator.setTarget(pending)
-      const sample = interpolator.tick(dt)
-      if (sample) setSnapshot(sample)
+      if (pending) {
+        interpolator.setTarget(pending)
+        if (reduceMotion()) {
+          const snapped = interpolator.snap()
+          if (snapped) setSnapshot(snapped)
+        }
+      }
+      if (!reduceMotion()) {
+        const sample = interpolator.tick(dt)
+        if (sample) setSnapshot(sample)
+      }
       const st = store.stats()
       setStats(st)
       const cpuMs = Math.max(0.01, performance.now() - frameStart)

@@ -47,6 +47,18 @@
       "footer": "Ft2",
       "designed_as_app": true,
       "notes": "Launch grain+sigil; scan/shell/field motion; metric icons; SW v17; GPU fonts/chrome already in source (Docker rebuilds dist)"
+    },
+    {
+      "date": "2026-07-25",
+      "target": "launch splash (Photographic) + /gpu/ Workbench chrome",
+      "verb": "redesign",
+      "genre": "atmospheric",
+      "macrostructure": "Photographic\u2192Workbench",
+      "theme": "design.md",
+      "nav": "N9",
+      "footer": "Ft2",
+      "designed_as_app": true,
+      "notes": "Full-bleed field hero on launch; GPU instrument controls collapsed; SW v18"
     }
   ]
 }

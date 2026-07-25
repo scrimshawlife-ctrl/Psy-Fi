@@ -55,6 +55,9 @@
 .gpu-header label {
   font-size: 13px;
   color: var(--pf-text-muted);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 
 .gpu-header select,
@@ -86,6 +89,48 @@
   color: var(--pf-cyan);
   text-decoration: none;
   white-space: nowrap;
+}
+
+.gpu-controls {
+  position: relative;
+}
+
+.gpu-controls > summary {
+  cursor: pointer;
+  list-style: none;
+  font-size: 13px;
+  color: var(--pf-text-muted);
+  border: 1px solid var(--pf-border-subtle);
+  border-radius: 4px;
+  padding: 0.4rem 0.65rem;
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  background: var(--pf-bg-0);
+}
+
+.gpu-controls > summary::-webkit-details-marker {
+  display: none;
+}
+
+.gpu-controls[open] > summary {
+  border-color: var(--pf-cyan);
+  color: var(--pf-text-main);
+}
+
+.gpu-controls-grid {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 20;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: 0.65rem;
+  min-width: min(28rem, 80vw);
+  padding: 0.75rem;
+  border: 1px solid var(--pf-border-subtle);
+  border-radius: 4px;
+  background: var(--pf-bg-1);
 }
 
 .gpu-stage {

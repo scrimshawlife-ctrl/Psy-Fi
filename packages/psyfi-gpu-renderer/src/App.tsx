@@ -129,61 +129,66 @@ export function App() {
       <header className="gpu-header">
         <strong className="gpu-brand">PsyFi GPU</strong>
         <span className="gpu-status">{status}</span>
-        <label>
-          Substance{' '}
-          <select value={substance} onChange={(e) => setSubstance(e.target.value)}>
-            {['lsd', 'psilocybin', 'dmt', 'mescaline', 'ketamine', '5-meo-dmt', 'mdma', '2c-b', '2c-e', 'al-lad', 'mxe'].map((s) => (
-              <option key={s} value={s}>
-                {s}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label>
-          Mode{' '}
-          <select value={mode} onChange={(e) => setMode(e.target.value)}>
-            {['open', 'attractor', 'void', 'power'].map((m) => (
-              <option key={m} value={m}>
-                {m}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label>
-          Intensity{' '}
-          <input
-            type="range"
-            min={0}
-            max={1}
-            step={0.01}
-            value={intensity}
-            onChange={(e) => setIntensity(Number(e.target.value))}
-          />
-        </label>
-        <label>
-          Seed{' '}
-          <input className="gpu-seed-input" type="number" value={seed} onChange={(e) => setSeed(Number(e.target.value) || 0)} />
-        </label>
-        <label>
-          Tier{' '}
-          <select
-            value={tier}
-            onChange={(e) => setTier(normalizeTier(e.target.value))}
-          >
-            {['ultra', 'high', 'balanced', 'battery'].map((t) => (
-              <option key={t} value={t}>
-                {t}
-              </option>
-            ))}
-          </select>
-        </label>
         <button type="button" onClick={() => void refresh()}>
           Publish snapshot
         </button>
         <button type="button" onClick={() => setShowHud((v) => !v)}>
           HUD
         </button>
-        <a href="/">Legacy shell</a>
+        <details className="gpu-controls">
+          <summary>Instrument</summary>
+          <div className="gpu-controls-grid">
+            <label>
+              Substance{' '}
+              <select value={substance} onChange={(e) => setSubstance(e.target.value)}>
+                {['lsd', 'psilocybin', 'dmt', 'mescaline', 'ketamine', '5-meo-dmt', 'mdma', '2c-b', '2c-e', 'al-lad', 'mxe'].map((s) => (
+                  <option key={s} value={s}>
+                    {s}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label>
+              Mode{' '}
+              <select value={mode} onChange={(e) => setMode(e.target.value)}>
+                {['open', 'attractor', 'void', 'power'].map((m) => (
+                  <option key={m} value={m}>
+                    {m}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label>
+              Intensity{' '}
+              <input
+                type="range"
+                min={0}
+                max={1}
+                step={0.01}
+                value={intensity}
+                onChange={(e) => setIntensity(Number(e.target.value))}
+              />
+            </label>
+            <label>
+              Seed{' '}
+              <input className="gpu-seed-input" type="number" value={seed} onChange={(e) => setSeed(Number(e.target.value) || 0)} />
+            </label>
+            <label>
+              Tier{' '}
+              <select
+                value={tier}
+                onChange={(e) => setTier(normalizeTier(e.target.value))}
+              >
+                {['ultra', 'high', 'balanced', 'battery'].map((t) => (
+                  <option key={t} value={t}>
+                    {t}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+        </details>
+        <a href="/">Shell</a>
       </header>
       <div className="gpu-stage">
         {caps.webgpu ? (

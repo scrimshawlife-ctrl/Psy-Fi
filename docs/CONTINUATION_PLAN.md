@@ -50,6 +50,7 @@ Board: [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md)
 - [x] `/gpu/` profiling HUD (FPS · avg/p95/max · tier budget · full pass list)
 - [x] Draco/KTX2 GPU upload path (uncompressed KTX2 + Draco WASM bridge) · `G4_CUTOVER.md`
 - [x] SceneAssetLayer + G4 parity matrix / visual seed list in CI
+- [x] G4 scene-snapshot structure goldens (canonical seeds)
 
 ## Recommended next steps (priority order)
 

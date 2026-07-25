@@ -54,6 +54,7 @@ Platform package: `packages/psyfi-gpu-renderer`
 - [x] Feature parity matrix in CI (`g4Parity.ts`) — no ship blockers
 - [x] `SceneAssetLayer` wires snapshot `assets.ktx2` into SceneRoot
 - [x] Canonical visual seed list (`G4_VISUAL_SEEDS`)
+- [x] CPU scene-snapshot structure goldens (`test_g4_scene_goldens.py`)
 - [ ] Pixel / histogram goldens on WebGPU CI runner
 - [ ] Vendor real Draco WASM / Basis transcoder (optional; bridges ready)
 - [ ] PWA integration decision (embed vs route)

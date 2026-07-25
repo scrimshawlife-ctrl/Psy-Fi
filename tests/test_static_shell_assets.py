@@ -24,6 +24,11 @@ def test_template_wires_cancel_recovery_and_renderer() -> None:
     assert 'id="loadingStatus"' in html
     assert 'id="experienceCanvasGL"' in html
     assert 'id="phaseScrub"' in html
+    assert 'id="phaseAdvanceChk"' in html
+    assert 'id="phaseSpeedSelect"' in html
+    assert 'id="gridPresetSelect"' in html
+    assert 'data-tip=' in html
+    assert 'id="sensorEnableSelect"' in html
     assert 'id="sourcePlaneChk"' in html
     assert 'id="sourcePlaneMix"' in html
     assert 'id="bridgeSimBtn"' in html
@@ -50,7 +55,7 @@ def test_template_wires_cancel_recovery_and_renderer() -> None:
 
 def test_service_worker_precaches_renderer_assets() -> None:
     sw = (STATIC / "sw.js").read_text(encoding="utf-8")
-    assert "psyfi-shell-v23" in sw
+    assert "psyfi-shell-v24" in sw
     assert ".woff2" in sw
     assert "/assets/icons/pf-icon-reset-24.svg" in sw
     assert "/assets/icons/pf-icon-valence-meter-24.svg" in sw
@@ -182,9 +187,15 @@ def test_app_uses_abort_controller_and_worker_renderer() -> None:
     player_res = (STATIC / "viz" / "experiencePlayer.js").read_text(encoding="utf-8")
     assert "setViewportResolution" in player_res
     assert "viewportResolution" in player_res
+    assert "setPhaseAdvance" in player_res
+    assert "setPhaseSpeed" in player_res
+    assert "phaseAdvance" in player_res
     app_js = (STATIC / "app.js").read_text(encoding="utf-8")
     assert "resolutionSelect" in app_js
     assert "viewportResolutionSelect" in app_js
+    assert "phaseAdvanceChk" in app_js
+    assert "phaseSpeedSelect" in app_js
+    assert "PsyFiTips" in app_js
     assert "Monitor / display" in app_js
     assert "GPU adapter" in app_js
     gl_js = (STATIC / "viz" / "parameterFieldWebGL.js").read_text(encoding="utf-8")

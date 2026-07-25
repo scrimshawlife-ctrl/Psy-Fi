@@ -273,7 +273,23 @@
       this.fieldBridge = null;
       this.sourcePlane = null;
       this.viewportResolution = 'auto';
+      this.phaseAdvance = true;
+      this.phaseSpeed = 1;
+      this._phaseBaseMs = 900;
       this.setPreferWebGL(this.preferWebGL);
+    }
+
+    setPhaseAdvance(on) {
+      this.phaseAdvance = !!on;
+      if (this._phaseTimer) clearInterval(this._phaseTimer);
+      if (this.playing && this.phaseAdvance) this._tickPhases();
+    }
+
+    setPhaseSpeed(mult) {
+      const n = Number(mult);
+      this.phaseSpeed = Number.isFinite(n) && n > 0 ? n : 1;
+      if (this._phaseTimer) clearInterval(this._phaseTimer);
+      if (this.playing && this.phaseAdvance) this._tickPhases();
     }
 
     /**
@@ -511,7 +527,7 @@
       if (this.backend === 'webgl' && this.webgl) this.webgl.start();
       else this.renderer.start();
       if (this._phaseTimer) clearInterval(this._phaseTimer);
-      this._tickPhases();
+      if (this.phaseAdvance) this._tickPhases();
     }
 
     pause() {
@@ -578,17 +594,19 @@
     }
 
     _tickPhases() {
-      if (!this.playing || !this.timeline || !this.timeline.frames) return;
+      if (!this.playing || !this.phaseAdvance || !this.timeline || !this.timeline.frames) return;
       const frames = this.timeline.frames;
+      const speed = this.phaseSpeed > 0 ? this.phaseSpeed : 1;
+      const intervalMs = Math.max(120, Math.round((this._phaseBaseMs || 900) / speed));
       this._phaseTimer = setInterval(() => {
-        if (!this.playing) {
+        if (!this.playing || !this.phaseAdvance) {
           clearInterval(this._phaseTimer);
           return;
         }
         this.idx = (this.idx + 1) % frames.length;
         this._applyFrameForIndex(this.idx);
         if (typeof this.onPhaseIndex === 'function') this.onPhaseIndex(this.idx, frames.length);
-      }, 900);
+      }, intervalMs);
     }
 
     _status(info) {

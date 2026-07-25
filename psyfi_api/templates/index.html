@@ -117,107 +117,158 @@
                         <canvas id="experienceCanvas" aria-label="PsyFi visual field (Canvas)"></canvas>
                         <canvas id="experienceCanvasGL" aria-label="PsyFi visual field (WebGL)" hidden></canvas>
                         <div class="experience-chrome">
-                            <button type="button" class="btn-danger btn-with-icon" id="neutralBtn" title="Emergency neutral view"><span class="pf-icon pf-icon-reset" aria-hidden="true"></span><span>Neutral</span></button>
-                            <button type="button" class="btn-secondary btn-with-icon" id="playExperienceBtn"><span class="pf-icon pf-icon-field-grid" aria-hidden="true"></span><span>Play Field</span></button>
-                            <button type="button" class="btn-secondary btn-with-icon" id="pauseExperienceBtn"><span class="pf-icon pf-icon-binding" aria-hidden="true"></span><span>Pause</span></button>
+                            <button type="button" class="btn-danger btn-with-icon" id="neutralBtn" data-tip="Emergency calm frame. Safety pass stays authoritative."><span class="pf-icon pf-icon-reset" aria-hidden="true"></span><span>Neutral</span></button>
+                            <button type="button" class="btn-secondary btn-with-icon" id="playExperienceBtn" data-tip="Start the field render loop. Phase advance is separate."><span class="pf-icon pf-icon-field-grid" aria-hidden="true"></span><span>Play</span></button>
+                            <button type="button" class="btn-secondary btn-with-icon" id="pauseExperienceBtn" data-tip="Pause field render and phase advance."><span class="pf-icon pf-icon-binding" aria-hidden="true"></span><span>Pause</span></button>
                         </div>
                     </div>
                     <div class="experience-controls">
-                        <div class="input-group">
-                            <label for="substanceSelect">Substance</label>
-                            <select id="substanceSelect"></select>
-                        </div>
-                        <div class="input-group">
-                            <label for="experienceSelect">Experience recipe</label>
-                            <select id="experienceSelect"></select>
-                        </div>
-                        <div class="input-group">
-                            <label for="modeSelect">Mode</label>
-                            <select id="modeSelect">
-                                <option value="open">Open</option>
-                                <option value="attractor">Attractor</option>
-                                <option value="void">Void</option>
-                                <option value="power">Power</option>
-                            </select>
-                        </div>
-                        <div class="input-group">
-                            <label for="intensityRange">Intensity <span id="intensityValue">0.70</span></label>
-                            <input type="range" id="intensityRange" min="0" max="1" step="0.01" value="0.7">
-                        </div>
-                        <div class="input-group">
-                            <label for="seedInput">Seed</label>
-                            <div class="seed-row">
-                                <input type="number" id="seedInput" value="42" min="0">
-                                <button type="button" class="btn-secondary btn-with-icon" id="regenSeedBtn" title="Regenerate seed"><span class="pf-icon pf-icon-reset" aria-hidden="true"></span><span>Regen</span></button>
+                        <div class="control-row">
+                            <div class="input-group">
+                                <label for="substanceSelect">Substance</label>
+                                <select id="substanceSelect" data-tip="Substance recipe that seeds ParameterField coupling."></select>
+                            </div>
+                            <div class="input-group">
+                                <label for="experienceSelect">Recipe</label>
+                                <select id="experienceSelect" data-tip="Experience timeline recipe for the selected substance."></select>
                             </div>
                         </div>
-                        <div class="input-group">
-                            <label for="phaseScrub">Phase timeline <span id="phaseLabel">peak</span></label>
-                            <input type="range" id="phaseScrub" min="0" max="19" step="1" value="8" disabled>
+                        <div class="control-row">
+                            <div class="input-group">
+                                <label for="modeSelect">Mode</label>
+                                <select id="modeSelect" data-tip="Open / Attractor / Void / Power — shapes ParameterField coupling, not a substance claim.">
+                                    <option value="open">Open</option>
+                                    <option value="attractor">Attractor</option>
+                                    <option value="void">Void</option>
+                                    <option value="power">Power</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label for="intensityRange">Intensity <span id="intensityValue">0.70</span></label>
+                                <input type="range" id="intensityRange" min="0" max="1" step="0.01" value="0.7" data-tip="0–1 drive into the field engines; still safety-clamped.">
+                            </div>
                         </div>
-                        <details class="experience-advanced">
+
+                        <div class="phase-transport" role="group" aria-labelledby="phaseTransportLabel">
+                            <div class="phase-transport-head">
+                                <span id="phaseTransportLabel">Phase</span>
+                                <span class="phase-label" id="phaseLabel">—</span>
+                            </div>
+                            <input type="range" id="phaseScrub" min="0" max="19" step="1" value="0" disabled aria-describedby="phaseHint" data-tip="Jump to a timeline frame. Load an experience first.">
+                            <p class="input-hint" id="phaseHint">Load an experience to scrub phases.</p>
+                            <div class="phase-transport-controls">
+                                <label class="toggle-row" for="phaseAdvanceChk" data-tip="When on, step through phases while the field plays.">
+                                    <input type="checkbox" id="phaseAdvanceChk" checked>
+                                    <span>Advance</span>
+                                </label>
+                                <div class="input-group phase-speed-group">
+                                    <label for="phaseSpeedSelect">Speed</label>
+                                    <select id="phaseSpeedSelect" data-tip="Phase step rate. Field render loop is independent.">
+                                        <option value="0.5">0.5×</option>
+                                        <option value="1" selected>1×</option>
+                                        <option value="2">2×</option>
+                                        <option value="4">4×</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn-primary btn-with-icon" id="loadExperienceBtn" data-tip="Materialize timeline for the selected recipe and seed.">
+                            <span class="pf-icon pf-icon-psychedelic" aria-hidden="true"></span>
+                            <span>Load Experience</span>
+                        </button>
+
+                        <details class="control-drawer">
+                            <summary>Seed</summary>
+                            <div class="seed-row">
+                                <input type="number" id="seedInput" value="42" min="0" data-tip="Master seed for timeline materialization.">
+                                <button type="button" class="btn-secondary btn-with-icon" id="regenSeedBtn" data-tip="Roll a new random seed."><span class="pf-icon pf-icon-reset" aria-hidden="true"></span><span>Regen</span></button>
+                            </div>
+                        </details>
+
+                        <details class="control-drawer experience-advanced">
                             <summary>Field options</summary>
                             <div class="input-group">
-                                <label for="viewportResolutionSelect">Viewport resolution</label>
-                                <select id="viewportResolutionSelect">
+                                <label for="viewportResolutionSelect">Viewport</label>
+                                <select id="viewportResolutionSelect" data-tip="Internal buffer size. Auto fits the panel with DPR capped.">
                                     <option value="auto" selected>Auto (fit · DPR cap)</option>
                                     <option value="640x400">640 × 400</option>
                                     <option value="960x540">960 × 540</option>
                                     <option value="1280x720">1280 × 720</option>
                                     <option value="1920x1080">1920 × 1080</option>
-                                    <option value="native">Native monitor pixels</option>
+                                    <option value="native">Native monitor</option>
                                 </select>
                             </div>
-                            <div class="checkbox-row">
-                                <label><input type="checkbox" id="reduceMotionChk"> Reduce motion</label>
-                                <label><input type="checkbox" id="dimFlashChk"> Dim flashing</label>
-                                <label><input type="checkbox" id="preferWebGLChk"> Prefer WebGL field</label>
-                                <label><input type="checkbox" id="sourcePlaneChk"> Sim field as source plane</label>
+                            <div class="checkbox-row compact-checks">
+                                <label data-tip="Prefer quieter motion cues when available."><input type="checkbox" id="reduceMotionChk"> Reduce motion</label>
+                                <label data-tip="Attenuate high-flash frames via the safety pass."><input type="checkbox" id="dimFlashChk"> Dim flashing</label>
+                                <label data-tip="GPU field path when available; Canvas fallback otherwise."><input type="checkbox" id="preferWebGLChk"> Prefer WebGL</label>
+                                <label data-tip="Blend last Workspace sim magnitude under ParameterField."><input type="checkbox" id="sourcePlaneChk"> Sim source plane</label>
                             </div>
                             <div class="input-group" id="sourcePlaneMixGroup" hidden>
-                                <label for="sourcePlaneMix">Source plane mix <span id="sourcePlaneMixValue">0.32</span></label>
-                                <input type="range" id="sourcePlaneMix" min="0" max="1" step="0.01" value="0.32">
-                                <p class="input-hint">Blends last workspace simulation magnitude under the ParameterField engines (still safety-clamped).</p>
+                                <label for="sourcePlaneMix">Source mix <span id="sourcePlaneMixValue">0.32</span></label>
+                                <input type="range" id="sourcePlaneMix" min="0" max="1" step="0.01" value="0.32" data-tip="Blend strength for the sim source plane (safety-clamped).">
                             </div>
                         </details>
-                        <details class="modulator-panel">
-                            <summary>Device sensors → consciousness field</summary>
-                            <p class="input-hint">
-                                Scans this device for available sensors. Opt-in meters feed the ParameterField
-                                (never direct-to-shader, never stored). Safety pass + Neutral View stay authoritative.
-                            </p>
+
+                        <details class="control-drawer modulator-panel">
+                            <summary>Sensors</summary>
+                            <p class="input-hint">Opt-in meters feed ParameterField only — never stored, never direct-to-shader.</p>
                             <div class="session-actions sensor-actions">
-                                <button type="button" class="btn-primary" id="enableAvailableSensorsBtn">Use available sensors</button>
-                                <button type="button" class="btn-secondary" id="disableSensorsBtn">Stop sensors</button>
+                                <button type="button" class="btn-primary" id="enableAvailableSensorsBtn" data-tip="Enable every sensor this browser exposes (still gesture-gated where required).">Use available</button>
+                                <button type="button" class="btn-secondary" id="disableSensorsBtn" data-tip="Stop all sensor meters.">Stop</button>
                             </div>
-                            <label>Camera / ambient <input type="range" id="modCamera" min="0" max="1" step="0.01" value="0"></label>
-                            <label>Motion / orientation / gamepad <input type="range" id="modMotion" min="0" max="1" step="0.01" value="0"></label>
-                            <label>MIDI intensity <input type="range" id="modMidi" min="0" max="1" step="0.01" value="0"></label>
-                            <label>Audio level <input type="range" id="modAudio" min="0" max="1" step="0.01" value="0"></label>
-                            <label>Haptics pulse <input type="range" id="modHaptics" min="0" max="1" step="0.01" value="0"></label>
-                            <div class="session-actions sensor-actions">
-                                <button type="button" class="btn-secondary" id="enableCameraBtn">Camera</button>
-                                <button type="button" class="btn-secondary" id="enableMotionBtn">Motion</button>
-                                <button type="button" class="btn-secondary" id="enableAudioBtn">Mic</button>
-                                <button type="button" class="btn-secondary" id="enableMidiBtn">Web MIDI</button>
-                                <button type="button" class="btn-secondary" id="enableGamepadBtn">Gamepad</button>
-                                <button type="button" class="btn-secondary" id="enableAmbientBtn">Ambient light</button>
-                                <button type="button" class="btn-secondary" id="enableHapticsBtn">Haptics</button>
+                            <div class="control-row">
+                                <div class="input-group">
+                                    <label for="sensorEnableSelect">Enable</label>
+                                    <select id="sensorEnableSelect" data-tip="Pick one sensor to enable.">
+                                        <option value="">Select sensor…</option>
+                                        <option value="camera">Camera</option>
+                                        <option value="motion">Motion</option>
+                                        <option value="audio">Mic</option>
+                                        <option value="midi">Web MIDI</option>
+                                        <option value="gamepad">Gamepad</option>
+                                        <option value="ambient">Ambient light</option>
+                                        <option value="haptics">Haptics</option>
+                                    </select>
+                                </div>
+                                <button type="button" class="btn-secondary" id="sensorEnableBtn">Enable</button>
+                            </div>
+                            <div class="mod-meter-grid">
+                                <label>Camera <input type="range" id="modCamera" min="0" max="1" step="0.01" value="0"></label>
+                                <label>Motion <input type="range" id="modMotion" min="0" max="1" step="0.01" value="0"></label>
+                                <label>MIDI <input type="range" id="modMidi" min="0" max="1" step="0.01" value="0"></label>
+                                <label>Audio <input type="range" id="modAudio" min="0" max="1" step="0.01" value="0"></label>
+                                <label>Haptics <input type="range" id="modHaptics" min="0" max="1" step="0.01" value="0"></label>
+                            </div>
+                            <!-- Hidden legacy hooks kept for tests / progressive enhancement -->
+                            <div class="sensor-legacy-btns" hidden>
+                                <button type="button" id="enableCameraBtn">Camera</button>
+                                <button type="button" id="enableMotionBtn">Motion</button>
+                                <button type="button" id="enableAudioBtn">Mic</button>
+                                <button type="button" id="enableMidiBtn">Web MIDI</button>
+                                <button type="button" id="enableGamepadBtn">Gamepad</button>
+                                <button type="button" id="enableAmbientBtn">Ambient light</button>
+                                <button type="button" id="enableHapticsBtn">Haptics</button>
                             </div>
                         </details>
-                        <div class="session-actions">
-                            <button type="button" class="btn-primary btn-with-icon" id="loadExperienceBtn">
-                                <span class="pf-icon pf-icon-psychedelic" aria-hidden="true"></span>
-                                <span>Load Experience</span>
-                            </button>
-                            <button type="button" class="btn-secondary" id="bridgeSimBtn">Bridge from sim</button>
-                            <button type="button" class="btn-secondary" id="exportTimelineBtn">Export timeline</button>
-                            <button type="button" class="btn-secondary" id="exportViewportBtn">Export viewport</button>
-                        </div>
-                        <div class="provenance-panel" id="experienceProvenancePanel">
-                            <div class="muted">Load an experience to inspect provenance.</div>
-                        </div>
-                        <p class="disclaimer">Modeled phenomenology for research/visualization only. Not medical, diagnostic, or therapeutic advice. Interpretation is speculative.</p>
+
+                        <details class="control-drawer">
+                            <summary>I/O</summary>
+                            <div class="session-actions dense-actions">
+                                <button type="button" class="btn-secondary" id="bridgeSimBtn" data-tip="Pull last Workspace magnitude under the live engines.">Bridge from sim</button>
+                                <button type="button" class="btn-secondary" id="exportTimelineBtn" data-tip="Download the loaded timeline JSON.">Export timeline</button>
+                                <button type="button" class="btn-secondary" id="exportViewportBtn" data-tip="Capture the current field viewport as PNG.">Export viewport</button>
+                            </div>
+                        </details>
+
+                        <details class="control-drawer">
+                            <summary>Provenance</summary>
+                            <div class="provenance-panel" id="experienceProvenancePanel">
+                                <div class="muted">Load an experience to inspect provenance.</div>
+                            </div>
+                        </details>
+                        <p class="disclaimer compact-disclaimer">Modeled phenomenology for research/visualization only. Not medical advice.</p>
                     </div>
                 </div>
             </section>
@@ -227,84 +278,79 @@
                     <h2>Simulation Workspace</h2>
                 </div>
                 <div class="panel-body">
-                    <form id="simulationForm">
-                        <div class="preset-selector">
-                            <label>Grid presets</label>
-                            <div class="preset-buttons">
-                                <button type="button" class="preset-btn" data-preset="quick">
-                                    <span class="preset-name"><span class="pf-icon pf-icon-preset" aria-hidden="true"></span>Quick Test</span>
-                                    <span class="preset-desc">32×32, 10 steps</span>
-                                </button>
-                                <button type="button" class="preset-btn" data-preset="standard">
-                                    <span class="preset-name"><span class="pf-icon pf-icon-preset" aria-hidden="true"></span>Standard</span>
-                                    <span class="preset-desc">64×64, 20 steps</span>
-                                </button>
-                                <button type="button" class="preset-btn" data-preset="detailed">
-                                    <span class="preset-name"><span class="pf-icon pf-icon-preset" aria-hidden="true"></span>Detailed</span>
-                                    <span class="preset-desc">128×128, 50 steps</span>
-                                </button>
-                                <button type="button" class="preset-btn" data-preset="deep">
-                                    <span class="preset-name"><span class="pf-icon pf-icon-preset" aria-hidden="true"></span>Deep Dive</span>
-                                    <span class="preset-desc">256×256, 100 steps</span>
-                                </button>
+                    <form id="simulationForm" class="workspace-form dense-form">
+                        <div class="input-grid workspace-grid">
+                            <div class="input-group">
+                                <label for="gridPresetSelect">Grid preset</label>
+                                <select id="gridPresetSelect" data-tip="Sets resolution and step count together.">
+                                    <option value="quick">Quick — 32×32 · 10 steps</option>
+                                    <option value="standard" selected>Standard — 64×64 · 20 steps</option>
+                                    <option value="detailed">Detailed — 128×128 · 50 steps</option>
+                                    <option value="deep">Deep — 256×256 · 100 steps</option>
+                                    <option value="custom">Custom resolution…</option>
+                                </select>
                             </div>
-                        </div>
-
-                        <div class="divider"></div>
-
-                        <div class="input-grid">
                             <div class="input-group">
                                 <label for="resolutionSelect">Field resolution</label>
-                                <select id="resolutionSelect">
-                                    <option value="32x32">32 × 32 — Quick</option>
-                                    <option value="64x64" selected>64 × 64 — Standard</option>
-                                    <option value="128x128">128 × 128 — Detailed</option>
-                                    <option value="256x256">256 × 256 — Deep</option>
-                                    <option value="512x512">512 × 512 — Max</option>
-                                    <option value="custom">Custom (width × height below)</option>
+                                <select id="resolutionSelect" data-tip="Simulation grid size. Custom unlocks width/height.">
+                                    <option value="32x32">32 × 32</option>
+                                    <option value="64x64" selected>64 × 64</option>
+                                    <option value="128x128">128 × 128</option>
+                                    <option value="256x256">256 × 256</option>
+                                    <option value="512x512">512 × 512</option>
+                                    <option value="custom">Custom</option>
                                 </select>
-                                <p class="input-hint">Chooses the simulation grid. Custom unlocks the width/height fields.</p>
                             </div>
-                            <div class="input-group">
-                                <label for="width">Field Width</label>
+                            <div class="input-group custom-size-group" id="customSizeGroup" hidden>
+                                <label for="width">Width</label>
                                 <input type="number" id="width" name="width" value="64" min="8" max="512" required>
                             </div>
-                            <div class="input-group">
-                                <label for="height">Field Height</label>
+                            <div class="input-group custom-size-group" id="customHeightGroup" hidden>
+                                <label for="height">Height</label>
                                 <input type="number" id="height" name="height" value="64" min="8" max="512" required>
                             </div>
                             <div class="input-group">
-                                <label for="steps">Evolution Steps</label>
-                                <input type="number" id="steps" name="steps" value="20" min="1" max="1000" required>
+                                <label for="steps">Steps</label>
+                                <input type="number" id="steps" name="steps" value="20" min="1" max="1000" required data-tip="Evolution steps for the consciousness field.">
                             </div>
                             <div class="input-group">
                                 <label for="seed">Seed</label>
                                 <input type="number" id="seed" name="seed" value="1337" min="0" max="4294967295" required>
                             </div>
                             <div class="input-group">
-                                <label for="substancePreset">Substance Preset</label>
-                                <select id="substancePreset" name="substancePreset">
-                                    <option value="">None (baseline coupling)</option>
+                                <label for="substancePreset">Substance</label>
+                                <select id="substancePreset" name="substancePreset" data-tip="Optional substance coupling for the simulation.">
+                                    <option value="">None (baseline)</option>
                                 </select>
                             </div>
                         </div>
+                        <!-- Legacy preset buttons retained for progressive enhancement / tests -->
+                        <div class="preset-buttons" hidden>
+                            <button type="button" class="preset-btn" data-preset="quick">Quick</button>
+                            <button type="button" class="preset-btn" data-preset="standard">Standard</button>
+                            <button type="button" class="preset-btn" data-preset="detailed">Detailed</button>
+                            <button type="button" class="preset-btn" data-preset="deep">Deep</button>
+                        </div>
                         <div class="run-actions">
-                            <button type="submit" class="btn-primary btn-with-icon" id="runButton">
+                            <button type="submit" class="btn-primary btn-with-icon" id="runButton" data-tip="Run the consciousness field simulation on the server.">
                                 <span class="pf-icon pf-icon-field-grid" aria-hidden="true"></span>
                                 <span>Run Simulation</span>
                             </button>
-                            <button type="button" class="btn-secondary" id="cancelButton" hidden>Cancel</button>
+                            <button type="button" class="btn-secondary" id="cancelButton" hidden data-tip="Request server-side job cancellation.">Cancel</button>
                         </div>
-                        <label class="checkbox-row" for="preferWebGPU">
-                            <input type="checkbox" id="preferWebGPU" checked>
-                            Prefer WebGPU when available (Canvas 2D fallback)
-                        </label>
-                        <label class="checkbox-row" for="telemetryOptIn">
-                            <input type="checkbox" id="telemetryOptIn">
-                            Opt in to local diagnostic telemetry (off unless server enables it)
-                        </label>
-                        <p class="network-status" id="networkStatus" data-state="online" aria-live="polite">Online — server computation available</p>
-                        <p class="input-hint">Esc or Cancel requests server-side job cancellation.</p>
+                        <details class="control-drawer">
+                            <summary>Run options</summary>
+                            <label class="checkbox-row" for="preferWebGPU" data-tip="Prefer WebGPU heatmap when available.">
+                                <input type="checkbox" id="preferWebGPU" checked>
+                                Prefer WebGPU when available
+                            </label>
+                            <label class="checkbox-row" for="telemetryOptIn" data-tip="Local diagnostic telemetry; off unless the server enables it.">
+                                <input type="checkbox" id="telemetryOptIn">
+                                Opt in to local diagnostic telemetry
+                            </label>
+                            <p class="network-status" id="networkStatus" data-state="online" aria-live="polite">Online — server computation available</p>
+                            <p class="input-hint">Esc or Cancel requests server-side job cancellation.</p>
+                        </details>
                     </form>
                 </div>
             </section>

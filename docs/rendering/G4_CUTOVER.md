@@ -37,6 +37,7 @@ Canonical seeds (also in `g4Parity.ts`):
 | dmt | void | 99 | 0.85 |
 
 - [x] Canonical seed list checked into CI (`g4Parity.test.ts`)
+- [x] CPU scene-snapshot structure goldens (`tests/fixtures/experiences/g4_scene_snapshot_goldens.v1.json`)
 - [ ] Capture `/gpu/` stills or histogram hashes in CI (needs WebGPU runner)
 - [ ] Document intentional deltas vs Canvas/WebGL legacy
 

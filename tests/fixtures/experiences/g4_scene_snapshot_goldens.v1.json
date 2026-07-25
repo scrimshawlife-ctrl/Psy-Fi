@@ -1,0 +1,54 @@
+{
+  "schema": "psyfi.g4_scene_snapshot_goldens.v1",
+  "quality_tier": "balanced",
+  "cases": {
+    "lsd:open:42": {
+      "substance": "lsd",
+      "mode": "open",
+      "seed": 42,
+      "intensity": 0.75,
+      "parameter_field_hash": "d471e921df21aebe",
+      "fingerprint": "05fa84b01946a557085bc8b5493acf10e1ef770d13cb1a2b349829d81995f3c6",
+      "counts": {
+        "glyphs": 6,
+        "sdf_nodes": 1,
+        "ribbons": 1,
+        "metaballs": 3,
+        "volumetric_symbols": 1,
+        "crystals": 2
+      }
+    },
+    "psilocybin:attractor:7": {
+      "substance": "psilocybin",
+      "mode": "attractor",
+      "seed": 7,
+      "intensity": 0.6,
+      "parameter_field_hash": "eb3f6fc259cb417b",
+      "fingerprint": "069db387b104cea45c4e93e2382eaa991d8f1e6b46724f33f915f21168a10a9d",
+      "counts": {
+        "glyphs": 5,
+        "sdf_nodes": 1,
+        "ribbons": 1,
+        "metaballs": 4,
+        "volumetric_symbols": 1,
+        "crystals": 3
+      }
+    },
+    "dmt:void:99": {
+      "substance": "dmt",
+      "mode": "void",
+      "seed": 99,
+      "intensity": 0.85,
+      "parameter_field_hash": "78edf35a3ca3f92e",
+      "fingerprint": "0046d00501e7b76076e93dee22781284c7ce2ee0db217496a521692fa1670746",
+      "counts": {
+        "glyphs": 7,
+        "sdf_nodes": 1,
+        "ribbons": 1,
+        "metaballs": 2,
+        "volumetric_symbols": 1,
+        "crystals": 4
+      }
+    }
+  }
+}

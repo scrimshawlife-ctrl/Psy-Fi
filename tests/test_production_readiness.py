@@ -39,6 +39,9 @@ def test_g4_cutover_checklist_exists() -> None:
     assert "KTX2" in doc
     assert "Draco" in doc
     assert "parity" in doc.lower()
+    goldens = ROOT / "tests" / "fixtures" / "experiences" / "g4_scene_snapshot_goldens.v1.json"
+    assert goldens.exists()
+    assert "lsd:open:42" in goldens.read_text(encoding="utf-8")
 
 
 def test_production_readiness_board_doc() -> None:

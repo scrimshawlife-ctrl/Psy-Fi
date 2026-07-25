@@ -44,6 +44,24 @@ def test_g4_cutover_checklist_exists() -> None:
     assert "lsd:open:42" in goldens.read_text(encoding="utf-8")
 
 
+def test_pixel_goldens_fixture_exists() -> None:
+    pixel_doc = (ROOT / "docs" / "rendering" / "PIXEL_GOLDENS.md").read_text(encoding="utf-8")
+    assert "soft-present" in pixel_doc.lower()
+    fixture = (
+        ROOT
+        / "packages"
+        / "psyfi-gpu-renderer"
+        / "fixtures"
+        / "pixel-goldens"
+        / "g4_pixel_goldens.v1.json"
+    )
+    assert fixture.exists()
+    text = fixture.read_text(encoding="utf-8")
+    assert "psyfi.g4_pixel_goldens.v1" in text
+    assert "lsd_open_42" in text
+    assert "sha256" in text
+
+
 def test_production_readiness_board_doc() -> None:
     board = (ROOT / "docs" / "PRODUCTION_READINESS.md").read_text(encoding="utf-8")
     assert "Production Readiness Board" in board

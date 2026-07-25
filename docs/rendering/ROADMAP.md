@@ -55,7 +55,8 @@ Platform package: `packages/psyfi-gpu-renderer`
 - [x] `SceneAssetLayer` wires snapshot `assets.ktx2` into SceneRoot
 - [x] Canonical visual seed list (`G4_VISUAL_SEEDS`)
 - [x] CPU scene-snapshot structure goldens (`test_g4_scene_goldens.py`)
-- [ ] Pixel / histogram goldens on WebGPU CI runner
+- [x] Soft-present pixel SHA + histogram goldens (`pixelGolden.test.ts` · [`PIXEL_GOLDENS.md`](PIXEL_GOLDENS.md))
+- [ ] Full R3F WebGPU stills on GPU CI runner (optional)
 - [ ] Vendor real Draco WASM / Basis transcoder (optional; bridges ready)
 - [x] PWA integration decision — **separate `/gpu/` route** ([`PWA_GPU_ROUTE.md`](../PWA_GPU_ROUTE.md))
 - [x] Soft → **hard** freeze includes scene-snapshot schema

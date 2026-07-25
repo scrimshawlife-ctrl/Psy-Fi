@@ -1,0 +1,279 @@
+{
+  "schema_version": "psyfi.scene_snapshot.v1",
+  "snapshot_id": "pixel-golden",
+  "sequence": 1,
+  "quality_tier": "balanced",
+  "parameter_field": {
+    "master_seed": 7,
+    "mode": "attractor",
+    "substance": "psilocybin",
+    "intensity": 0.6,
+    "neutral_view": false,
+    "parameters": {
+      "attractor_bias": 0.85,
+      "bloom": 0.2047,
+      "chromatic_aberration": 0.0682,
+      "color_enhancement": 0.3494,
+      "depth_distortion": 0.2607,
+      "displacement": 0.1481,
+      "edge_gain": 0.3931,
+      "entropy": 0.1536,
+      "feedback_strength": 0.3863,
+      "flash_energy": 0.0341,
+      "palette_energy": 0.3665,
+      "pattern_complexity": 0.2812,
+      "peripheral_flow": 0.1706,
+      "power_bias": 0.0,
+      "recursion_gain": 0.3276,
+      "recursive_zoom": 0.1024,
+      "stability": 0.9315,
+      "symmetry_order": 0.657,
+      "trail_length": 0.3583,
+      "turbulence": 0.0792,
+      "void_bias": 0.0,
+      "zoom_velocity": 0.0362
+    },
+    "engines": {
+      "entity_lattice": 0.0,
+      "flow_field": 0.1485,
+      "kaleidoscope": 0.3344,
+      "neutral_view": 0.0,
+      "organic_bloom": 0.2706,
+      "recursive_feedback": 0.1677,
+      "void_expansion": 0.0786
+    },
+    "palette": {
+      "tracers": "#8F7BFF",
+      "energy": 0.3665,
+      "contrast": 0.6072
+    },
+    "safety": {
+      "max_flash_hz": 2.0,
+      "max_luminance_delta": 0.35,
+      "reduced_motion": false,
+      "dim_flashing": false
+    },
+    "hash": "eb3f6fc259cb417b"
+  },
+  "procedural": {
+    "glyphs": [
+      {
+        "id": "glyph_0",
+        "kind": "vector_glyph",
+        "seed": 7,
+        "scale": 0.3321325223851326,
+        "orbit": [
+          0.64,
+          0.17896443528099087,
+          0.0
+        ],
+        "weight": 0.41875999999999997
+      },
+      {
+        "id": "glyph_1",
+        "kind": "vector_glyph",
+        "seed": 24,
+        "scale": 0.3829174463946645,
+        "orbit": [
+          -0.08246047634913577,
+          -0.03258742125066637,
+          0.6346654786895799
+        ],
+        "weight": 0.41875999999999997
+      },
+      {
+        "id": "glyph_2",
+        "kind": "vector_glyph",
+        "seed": 41,
+        "scale": 0.4495093478820076,
+        "orbit": [
+          -0.6187508432508552,
+          0.2362814320102989,
+          -0.16354630529717198
+        ],
+        "weight": 0.41875999999999997
+      },
+      {
+        "id": "glyph_3",
+        "kind": "vector_glyph",
+        "seed": 58,
+        "scale": 0.4942119668922881,
+        "orbit": [
+          0.24190575533630734,
+          0.275397059641638,
+          -0.5925213966897488
+        ],
+        "weight": 0.41875999999999997
+      },
+      {
+        "id": "glyph_4",
+        "kind": "vector_glyph",
+        "seed": 75,
+        "scale": 0.20969610179534556,
+        "orbit": [
+          0.5564143938238882,
+          -0.21571128580619378,
+          0.3162325447287092
+        ],
+        "weight": 0.41875999999999997
+      }
+    ],
+    "sdf_nodes": [
+      {
+        "id": "sdf_field",
+        "kind": "sdf_union",
+        "blend": 0.15,
+        "children": [
+          "glyph_0",
+          "glyph_1",
+          "glyph_2",
+          "glyph_3",
+          "meta_0",
+          "meta_1",
+          "meta_2"
+        ]
+      }
+    ],
+    "ribbons": [
+      {
+        "id": "ribbon_0",
+        "kind": "spline_ribbon",
+        "seed": 107,
+        "thickness": 0.07916351393311366,
+        "turbulence": 0.0792,
+        "flow": 0.1485
+      }
+    ],
+    "metaballs": [
+      {
+        "id": "meta_0",
+        "kind": "metaball",
+        "center": [
+          -0.183074053675652,
+          -0.06168910035902847,
+          0.15323074908303805
+        ],
+        "radius": 0.13344423776921915,
+        "hardness": 0.85
+      },
+      {
+        "id": "meta_1",
+        "kind": "metaball",
+        "center": [
+          -0.5847979838225986,
+          -0.3085228295085306,
+          0.19306180404803291
+        ],
+        "radius": 0.37773805119859477,
+        "hardness": 0.85
+      },
+      {
+        "id": "meta_2",
+        "kind": "metaball",
+        "center": [
+          -0.6634970066983944,
+          0.16258482347768377,
+          -0.3475216117332507
+        ],
+        "radius": 0.21483727689828663,
+        "hardness": 0.85
+      },
+      {
+        "id": "meta_3",
+        "kind": "metaball",
+        "center": [
+          0.11098671593027806,
+          0.07782166418103076,
+          0.388425325203786
+        ],
+        "radius": 0.12197779597993423,
+        "hardness": 0.85
+      }
+    ],
+    "volumetric_symbols": [
+      {
+        "id": "symbol_volume",
+        "kind": "volumetric_symbol",
+        "density": 0.08144000000000001,
+        "scatter": 0.2047,
+        "enabled_tiers": [
+          "ultra",
+          "high"
+        ]
+      }
+    ],
+    "crystals": [
+      {
+        "id": "crystal_0",
+        "kind": "procedural_crystal",
+        "seed": 507,
+        "lod_levels": 3,
+        "instance_budget": 227,
+        "sharpness": 0.4
+      },
+      {
+        "id": "crystal_1",
+        "kind": "procedural_crystal",
+        "seed": 508,
+        "lod_levels": 3,
+        "instance_budget": 227,
+        "sharpness": 0.4
+      },
+      {
+        "id": "crystal_2",
+        "kind": "procedural_crystal",
+        "seed": 509,
+        "lod_levels": 3,
+        "instance_budget": 227,
+        "sharpness": 0.4
+      }
+    ]
+  },
+  "post": {
+    "taa": true,
+    "ssao": true,
+    "ssr": false,
+    "bloom": true,
+    "volumetric_fog": false,
+    "contact_shadows": true,
+    "motion_blur": false,
+    "depth_of_field": true,
+    "chromatic_aberration": false,
+    "color_grading": true,
+    "hdr": true
+  },
+  "safety": {
+    "max_flash_hz": 2.0,
+    "max_luminance_delta": 0.35,
+    "reduced_motion": false,
+    "dim_flashing": false
+  },
+  "assets": {
+    "gltf": [],
+    "ktx2": [],
+    "splats": []
+  },
+  "magnitude_field": null,
+  "camera": {
+    "position": [
+      0.0,
+      0.35,
+      2.4
+    ],
+    "target": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "fov_deg": 45.0,
+    "exposure": 1.0,
+    "near": 0.05,
+    "far": 80.0
+  },
+  "lighting": {
+    "ambient_intensity": 0.24162499999999998,
+    "key_intensity": 1.2,
+    "ibl_intensity": 0.8,
+    "exposure_mode": "physically_based"
+  }
+}

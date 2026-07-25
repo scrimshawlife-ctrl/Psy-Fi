@@ -13,6 +13,7 @@ Next steps: [`../CONTINUATION_PLAN.md`](../CONTINUATION_PLAN.md) · desktop setu
 | [`GPU_PERFORMANCE_BUDGET.md`](GPU_PERFORMANCE_BUDGET.md) | Ultra / High / Balanced / Battery Saver budgets |
 | [`../DESKTOP_GPU.md`](../DESKTOP_GPU.md) | Multi-vendor WebGPU Ultra (NVIDIA / AMD / Intel / Apple) |
 | [`G4_CUTOVER.md`](G4_CUTOVER.md) | Cutover parity checklist + asset GPU upload status |
+| [`PIXEL_GOLDENS.md`](PIXEL_GOLDENS.md) | Soft-present / WebGPU pixel golden harness |
 | [`SHADER_ORGANIZATION.md`](SHADER_ORGANIZATION.md) | WGSL / TSL layout and naming |
 | [`ASSET_STANDARDS.md`](ASSET_STANDARDS.md) | glTF 2.0, Draco, KTX2, optional Gaussian Splats |
 | [`RENDER_GRAPH.md`](RENDER_GRAPH.md) | Pass graph diagrams and replaceable nodes |

@@ -1,0 +1,95 @@
+{
+  "schema_version": "1.0.0",
+  "overlays": {
+    "lsd": {
+      "motif_means": {
+        "geometry": 0.335,
+        "color_light": 0.377,
+        "nature": 0.252,
+        "body_somatic": 0.229,
+        "space_void": 0.152,
+        "time_memory": 0.333,
+        "entities": 0.094,
+        "machines": 0.0
+      },
+      "sample_count": 12,
+      "tracers_color": "#3EE7F2",
+      "recommended_mode": "attractor"
+    },
+    "psilocybin": {
+      "motif_means": {
+        "geometry": 0.103,
+        "nature": 0.419,
+        "space_void": 0.15,
+        "body_somatic": 0.178,
+        "color_light": 0.25,
+        "time_memory": 0.175,
+        "entities": 0.109,
+        "machines": 0.0
+      },
+      "sample_count": 8,
+      "tracers_color": "#8F7BFF",
+      "recommended_mode": "open"
+    },
+    "dmt": {
+      "motif_means": {
+        "space_void": 0.394,
+        "geometry": 0.213,
+        "machines": 0.328,
+        "entities": 0.369,
+        "body_somatic": 0.206,
+        "color_light": 0.125,
+        "time_memory": 0.266,
+        "nature": 0.062
+      },
+      "sample_count": 8,
+      "tracers_color": "#FF42C1",
+      "recommended_mode": "power"
+    },
+    "5-meo-dmt": {
+      "motif_means": {
+        "space_void": 0.95,
+        "body_somatic": 0.5,
+        "color_light": 0.35
+      },
+      "sample_count": 1,
+      "tracers_color": "#FFFFFF",
+      "recommended_mode": "void"
+    },
+    "mescaline": {
+      "motif_means": {
+        "geometry": 0.8,
+        "color_light": 0.75,
+        "nature": 0.45
+      },
+      "sample_count": 1,
+      "tracers_color": "#FFB547",
+      "recommended_mode": "attractor"
+    },
+    "ketamine": {
+      "motif_means": {
+        "space_void": 0.8,
+        "body_somatic": 0.45,
+        "geometry": 0.3
+      },
+      "sample_count": 1,
+      "tracers_color": "#7EC8E3",
+      "recommended_mode": "void"
+    },
+    "pcp": {
+      "motif_means": {
+        "entities": 0.4,
+        "nature": 0.7,
+        "geometry": 0.175,
+        "color_light": 0.0,
+        "space_void": 0.062,
+        "body_somatic": 0.188,
+        "time_memory": 0.312,
+        "machines": 0.0
+      },
+      "sample_count": 2,
+      "tracers_color": "#A0FF9A",
+      "recommended_mode": "open"
+    }
+  }
+}

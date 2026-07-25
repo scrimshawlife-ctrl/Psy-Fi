@@ -8,6 +8,7 @@ Web-first **Live Experience** runtime:
 - Immutable `PsyFiParameterField` snapshots (mode / substance / intensity / phase)
 - Canvas field renderer with multi-engine blend + non-bypassable safety pass
 - Quiet UI chrome: substance, recipe, Open/Attractor/Void/Power, intensity, seed, Neutral View, provenance
+- Optional **sim source plane**: last workspace `visualization.field` blended under ParameterField engines (Canvas + WebGL), still safety-clamped; toggle + mix on Live Experience after **Bridge from sim**
 
 ## Run
 

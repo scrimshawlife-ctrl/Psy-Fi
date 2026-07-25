@@ -183,6 +183,12 @@
                             <label><input type="checkbox" id="reduceMotionChk"> Reduce motion</label>
                             <label><input type="checkbox" id="dimFlashChk"> Dim flashing</label>
                             <label><input type="checkbox" id="preferWebGLChk"> Prefer WebGL field</label>
+                            <label><input type="checkbox" id="sourcePlaneChk"> Sim field as source plane</label>
+                        </div>
+                        <div class="input-group" id="sourcePlaneMixGroup" hidden>
+                            <label for="sourcePlaneMix">Source plane mix <span id="sourcePlaneMixValue">0.32</span></label>
+                            <input type="range" id="sourcePlaneMix" min="0" max="1" step="0.01" value="0.32">
+                            <p class="input-hint">Blends last workspace simulation magnitude under the ParameterField engines (still safety-clamped).</p>
                         </div>
                         <details class="modulator-panel">
                             <summary>Optional modulators (ParameterField only)</summary>

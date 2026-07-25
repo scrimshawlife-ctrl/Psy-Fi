@@ -18,7 +18,7 @@ Scope: **web app / PWA / API only** — native iOS remains deferred (`docs/IOS_M
 
 ## Next engineering slices (optional)
 
-1. Feed last-sim visualization texture into Canvas/WebGL as an optional source plane (bridge already reuses last sim metadata)
+1. [x] Feed last-sim visualization texture into Canvas/WebGL as an optional source plane (bridge already reuses last sim metadata)
 2. Per-engine WebGL shader modules matching Canvas kernels 1:1
 3. More scraped positive packs for underrepresented substances
 4. Structured usability sessions → Phase 4 exit

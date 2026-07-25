@@ -42,6 +42,7 @@
           },
           "seed": {
             "default": 42,
+            "maximum": 4294967295.0,
             "minimum": 0.0,
             "title": "Seed",
             "type": "integer"
@@ -816,6 +817,7 @@
           },
           "seed": {
             "default": 42,
+            "maximum": 4294967295.0,
             "minimum": 0.0,
             "title": "Seed",
             "type": "integer"

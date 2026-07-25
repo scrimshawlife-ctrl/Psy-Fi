@@ -53,7 +53,7 @@ class FieldFrameRequest(BaseModel):
     width: int = Field(default=32, ge=8, le=128)
     height: int = Field(default=32, ge=8, le=128)
     steps: int = Field(default=4, ge=1, le=64)
-    seed: int = Field(default=42, ge=0)
+    seed: int = Field(default=42, ge=0, le=2**32 - 1)
     preset: str | None = None
     substance: str | None = None
     mode: ModeName = "open"
@@ -67,7 +67,7 @@ class SceneSnapshotRequest(BaseModel):
     experience_id: str | None = None
     mode: ModeName = "open"
     intensity: float = Field(default=0.7, ge=0.0, le=1.0)
-    seed: int = Field(default=42, ge=0)
+    seed: int = Field(default=42, ge=0, le=2**32 - 1)
     steps: int = Field(default=12, ge=2, le=128)
     quality_tier: str = "balanced"
     reduce_motion: bool = False
@@ -79,6 +79,23 @@ class SceneSnapshotRequest(BaseModel):
     height: int = Field(default=32, ge=8, le=128)
     sim_steps: int = Field(default=4, ge=1, le=64)
     modulators: Modulators | None = None
+
+
+def _capped_intensity(
+    *,
+    substance: str,
+    intensity: float,
+    experience: dict[str, Any] | None,
+) -> float:
+    """Apply catalog/experience safety intensity caps (ParameterField authority)."""
+    catalog = get_default_catalog()
+    overlay = catalog.overlay(substance) or {}
+    cap = float(
+        (experience or {}).get("safety", {}).get("intensity_cap")
+        or overlay.get("safety", {}).get("intensity_cap")
+        or 1.0
+    )
+    return min(float(intensity), cap)
 
 
 @router.get("/experiences")
@@ -168,13 +185,11 @@ async def parameter_timeline(body: TimelineRequest) -> dict[str, Any]:
     else:
         substance = body.substance
 
-    overlay = catalog.overlay(substance) or {}
-    cap = float(
-        (experience or {}).get("safety", {}).get("intensity_cap")
-        or overlay.get("safety", {}).get("intensity_cap")
-        or 1.0
+    intensity = _capped_intensity(
+        substance=substance,
+        intensity=body.intensity,
+        experience=experience,
     )
-    intensity = min(body.intensity, cap)
     modulators = body.modulators.model_dump() if body.modulators else None
 
     if body.phase_t is not None:
@@ -217,6 +232,7 @@ async def parameter_timeline(body: TimelineRequest) -> dict[str, Any]:
 async def field_frame(body: FieldFrameRequest) -> dict[str, Any]:
     """Run a bounded simulation and pair it with a ParameterField snapshot."""
     substance = (body.substance or body.preset or "lsd").lower().replace("_", "-")
+    intensity = _capped_intensity(substance=substance, intensity=body.intensity, experience=None)
     try:
         sim = run_simulation(
             width=body.width,
@@ -231,7 +247,7 @@ async def field_frame(body: FieldFrameRequest) -> dict[str, Any]:
     snap = map_parameters(
         substance=substance,
         mode=body.mode,
-        intensity=body.intensity,
+        intensity=intensity,
         seed=body.seed,
         phase_t=0.5,
     )
@@ -269,10 +285,15 @@ async def scene_snapshot(body: SceneSnapshotRequest) -> dict[str, Any]:
     catalog = get_default_catalog()
     experience = catalog.get(body.experience_id) if body.experience_id else None
     modulators = body.modulators.model_dump() if body.modulators else None
+    intensity = _capped_intensity(
+        substance=substance,
+        intensity=body.intensity,
+        experience=experience,
+    )
     timeline = build_parameter_timeline(
         substance=substance,
         mode=body.mode,
-        intensity=body.intensity,
+        intensity=intensity,
         seed=body.seed,
         steps=body.steps,
         experience=experience,
@@ -282,13 +303,32 @@ async def scene_snapshot(body: SceneSnapshotRequest) -> dict[str, Any]:
         quality_tier=body.quality_tier,
     )
     frames = timeline.get("frames") or []
-    if frames:
+    # Rematerialize through map_parameters when Neutral is requested. A flag-only
+    # overwrite left expressive engines/params in place and bypassed calm policy.
+    if body.neutral_view:
+        phase_t = 0.5
+        if frames:
+            phase_t = float(frames[len(frames) // 2].get("phase_t", 0.5))
+        parameter_field = map_parameters(
+            substance=substance,
+            mode=body.mode,
+            intensity=intensity,
+            seed=body.seed,
+            phase_t=phase_t,
+            experience=experience,
+            modulators=modulators,
+            reduce_motion=body.reduce_motion,
+            dim_flashing=body.dim_flashing,
+            quality_tier=body.quality_tier,
+            neutral_view=True,
+        ).to_dict()
+    elif frames:
         parameter_field = dict(frames[len(frames) // 2])
     else:
         parameter_field = map_parameters(
             substance=substance,
             mode=body.mode,
-            intensity=body.intensity,
+            intensity=intensity,
             seed=body.seed,
             phase_t=0.5,
             experience=experience,
@@ -296,11 +336,8 @@ async def scene_snapshot(body: SceneSnapshotRequest) -> dict[str, Any]:
             reduce_motion=body.reduce_motion,
             dim_flashing=body.dim_flashing,
             quality_tier=body.quality_tier,
-            neutral_view=body.neutral_view,
+            neutral_view=False,
         ).to_dict()
-    if body.neutral_view:
-        parameter_field = dict(parameter_field)
-        parameter_field["neutral_view"] = True
 
     simulation = None
     if body.include_simulation:

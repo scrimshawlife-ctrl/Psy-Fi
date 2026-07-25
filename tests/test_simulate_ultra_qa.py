@@ -99,6 +99,8 @@ def test_simulated_ultra_qa_api_and_gpu_shell() -> None:
     assert neutral.status_code == 200
     nbody = neutral.json()
     assert nbody["parameter_field"].get("neutral_view") is True
+    assert nbody["parameter_field"]["engines"].get("neutral_view", 0) >= 0.99
+    assert float(nbody["parameter_field"]["parameters"].get("flash_energy", 1)) == 0.0
     assert nbody["post"].get("ssr") is False
     assert nbody["post"].get("ssao") is False
     checks.append({"id": "neutral-clamps-post", "ok": True, "detail": "ssr/ssao off under Neutral"})

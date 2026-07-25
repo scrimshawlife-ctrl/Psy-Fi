@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0.0",
+  "freeze_id": "psyfi-api-v1-soft-2026-07-25",
+  "status": "soft_frozen",
+  "frozen_at": "2026-07-25T03:06:44.259291Z",
+  "api_version": "v1",
+  "policy": {
+    "additive_ok": true,
+    "breaking_requires": "version bump discussion + new freeze_id",
+    "hard_freeze_requires": [
+      "physical_device_matrix_rows",
+      "phase4_usability_evidence"
+    ]
+  },
+  "artifacts": [
+    "API_V1_FREEZE.md",
+    "MANIFEST.json",
+    "openapi.v1.json",
+    "psyfi_experience_recipe.v1.json",
+    "psyfi_parameter_field.v1.json",
+    "psyfi_visual_frame.v1.json",
+    "session.schema.v1.json",
+    "substance_overlay_goldens.v1.json",
+    "substance_visual_overlays.v1.json"
+  ]
+}

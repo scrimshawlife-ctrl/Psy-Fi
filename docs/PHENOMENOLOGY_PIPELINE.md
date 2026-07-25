@@ -11,10 +11,14 @@ experience_catalog.v1.json
         ↓
 aggregate per substance → substance_visual_overlays.v1.json
   (visual_signature, engine_weights, parameter_bias, palette, phase, safety)
+        +
+motif_lexicon.v1.json (channel means + sample hooks)
         ↓
 parameter_mapper.map_parameters / build_parameter_timeline
         ↓
-API (/api/v1/substances, /api/v1/visualize/...) + Canvas ExperiencePlayer
+API (/api/v1/substances, /api/v1/visualize/...) + Canvas/WebGL ExperiencePlayer
+        ↓
+soft-frozen snapshots in docs/contracts/frozen/
 ```
 
 ## Rebuild catalog

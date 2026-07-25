@@ -137,6 +137,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function showResults(data) {
         lastPayload = data;
+        window.PsyFiLastSim = {
+            payload: data,
+            width: data.width,
+            height: data.height,
+            seed: data.seed,
+            preset: data.preset || null,
+            substance: data.preset || data.session?.preset || null,
+            provenance_id: data.provenance_id,
+            visualization: data.visualization || null,
+        };
         setHidden(resultsEmpty, true);
         setHidden(resultsContent, false);
 
@@ -786,26 +796,70 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('bridgeSimBtn')?.addEventListener('click', async () => {
         statusEl.textContent = 'Bridging simulation field…';
+        const last = window.PsyFiLastSim;
         try {
-            const data = await player.loadFieldBridge({
-                width: 32,
-                height: 32,
-                steps: 4,
-                seed: Number(seedInput.value) || 42,
-                substance: substanceSelect.value || 'lsd',
-                preset: substanceSelect.value || 'lsd',
-                mode: modeSelect.value || 'open',
-                intensity: Number(intensityRange.value),
-            });
-            if (data.parameter_field) {
-                player.timeline = {
-                    frames: [data.parameter_field],
-                    timeline_hash: data.parameter_field.hash,
-                    seed: data.seed,
-                    experience_id: null,
+            let data;
+            if (last?.visualization && last?.payload) {
+                // Prefer last completed workspace simulation (no extra compute).
+                const substance = last.substance || substanceSelect.value || 'lsd';
+                if (substanceSelect && substance) substanceSelect.value = substance;
+                const timeline = await player.loadTimeline({
+                    substance,
+                    experience_id: experienceSelect.value || null,
+                    mode: modeSelect.value || 'open',
+                    intensity: Number(intensityRange.value),
+                    seed: Number(last.seed ?? seedInput.value) || 42,
+                    steps: 12,
+                    reduce_motion: !!reduceMotionChk.checked,
+                    dim_flashing: !!dimFlashChk.checked,
+                    quality_tier: 'balanced',
+                });
+                data = {
+                    kind: 'field_frame',
+                    seed: last.seed,
+                    substance,
+                    simulation: {
+                        width: last.width,
+                        height: last.height,
+                        visualization: last.visualization,
+                        provenance_id: last.provenance_id,
+                        api_version: last.payload.api_version,
+                        metrics: {
+                            valence: last.payload.valence,
+                            coherence: last.payload.coherence,
+                            symmetry: last.payload.symmetry,
+                            roughness: last.payload.roughness,
+                            richness: last.payload.richness,
+                        },
+                    },
+                    parameter_field: timeline.frames?.[0] || timeline.frame,
+                    note: 'Bridged from last workspace simulation (cached visualization + fresh ParameterField).',
                 };
-                player.setFrame(data.parameter_field);
-                player.play();
+                if (data.parameter_field) {
+                    player.setFrame(data.parameter_field);
+                    player.play();
+                }
+            } else {
+                data = await player.loadFieldBridge({
+                    width: 32,
+                    height: 32,
+                    steps: 4,
+                    seed: Number(seedInput.value) || 42,
+                    substance: substanceSelect.value || 'lsd',
+                    preset: substanceSelect.value || 'lsd',
+                    mode: modeSelect.value || 'open',
+                    intensity: Number(intensityRange.value),
+                });
+                if (data.parameter_field) {
+                    player.timeline = {
+                        frames: [data.parameter_field],
+                        timeline_hash: data.parameter_field.hash,
+                        seed: data.seed,
+                        experience_id: null,
+                    };
+                    player.setFrame(data.parameter_field);
+                    player.play();
+                }
             }
             provenanceEl.innerHTML = `
               <div><strong>Bridge</strong> simulation → ParameterField</div>

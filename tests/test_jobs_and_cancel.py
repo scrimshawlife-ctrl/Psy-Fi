@@ -4,6 +4,7 @@ import time
 
 from fastapi.testclient import TestClient
 
+from psyfi_api.jobs import SimulationJob
 from psyfi_api.main import app
 from psyfi_core.abx_core.errors import SimulationCancelled
 from psyfi_core.engines import ConsciousnessOmegaParams, evolve_consciousness_omega
@@ -68,6 +69,25 @@ def test_job_create_complete_and_cancel() -> None:
                 break
             time.sleep(0.05)
         assert status == "cancelled"
+
+
+def test_finalize_after_run_prefers_cancel_over_completed() -> None:
+    """Cancel that lands after the worker returns must not publish completed."""
+    job = SimulationJob(id="job_race", status="running", request={"width": 8})
+    job.cancel_event.set()
+    outcome = job.finalize_after_run({"seed": 1, "valence": 0.1})
+    assert outcome == "cancelled"
+    assert job.status == "cancelled"
+    assert job.result is None
+
+
+def test_service_worker_root_scope_headers() -> None:
+    with TestClient(app) as client:
+        res = client.get("/sw.js")
+        assert res.status_code == 200
+        assert res.headers.get("service-worker-allowed") == "/"
+        assert "psyfi-shell-v11" in res.text
+        assert "isGpuRoute" in res.text
 
 
 def test_ready_and_telemetry_gates() -> None:

@@ -35,11 +35,14 @@ def test_template_wires_cancel_recovery_and_renderer() -> None:
     assert 'src="/static/renderer.js"' in html
     assert 'src="/static/viz/parameterFieldWebGL.js"' in html
     assert 'src="/static/app.js"' in html
+    # Root-scoped SW registration (not /static/sw.js — that cannot control `/`).
+    assert "serviceWorker.register('/sw.js'" in html
+    assert "scope: '/'" in html
 
 
 def test_service_worker_precaches_renderer_assets() -> None:
     sw = (STATIC / "sw.js").read_text(encoding="utf-8")
-    assert "psyfi-shell-v10" in sw
+    assert "psyfi-shell-v11" in sw
     assert "/static/renderer.js" in sw
     assert "/static/render_worker.js" in sw
     assert "/static/viz/math.js" in sw

@@ -27,6 +27,7 @@ Related: [`MOBILE_PWA_GUIDE.md`](../MOBILE_PWA_GUIDE.md), [`rendering/G4_CUTOVER
 - Manifest `start_url` remains `/` (standalone install opens the shell).
 - Optional manifest **shortcut** “GPU Lab” → `/gpu/` for Chromium install menus.
 - Offline: `/gpu/` navigation falls back to the cached shell (`/`), not a broken GPU SPA.
+- Service worker is registered from **`/sw.js`** with `{ scope: '/' }` and served with `Service-Worker-Allowed: /` (scripts under `/static/` cannot control `/` or `/gpu/`).
 
 ## Non-goals
 

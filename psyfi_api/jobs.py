@@ -28,15 +28,38 @@ class SimulationJob:
     result: dict[str, Any] | None = None
     error: str | None = None
     cancel_event: threading.Event = field(default_factory=threading.Event)
+    _lock: threading.Lock = field(default_factory=threading.Lock, repr=False)
 
     def touch(self) -> None:
         self.updated_at = _utc_now()
 
     def request_cancel(self) -> None:
-        self.cancel_event.set()
-        if self.status in {"queued", "running"}:
-            self.status = "cancelled"
+        with self._lock:
+            self.cancel_event.set()
+            if self.status in {"queued", "running"}:
+                self.status = "cancelled"
+                self.error = self.error or "Simulation cancelled"
+                self.result = None
+                self.touch()
+
+    def finalize_after_run(self, result: dict[str, Any]) -> JobStatus:
+        """Commit completed vs cancelled under the same lock as request_cancel.
+
+        Prevents a TOCTOU where cancel lands after `cancel_event` was checked
+        false but before status is written, which previously left cancelled
+        jobs as `completed` with a full result.
+        """
+        with self._lock:
+            if self.cancel_event.is_set():
+                self.status = "cancelled"
+                self.error = self.error or "Simulation cancelled"
+                self.result = None
+                self.touch()
+                return "cancelled"
+            self.result = result
+            self.status = "completed"
             self.touch()
+            return "completed"
 
 
 class JobStore:

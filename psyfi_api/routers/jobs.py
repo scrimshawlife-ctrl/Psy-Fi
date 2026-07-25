@@ -53,15 +53,10 @@ def _run_job(job_id: str) -> None:
             preset=job.request.get("preset"),
             should_cancel=job.cancel_event.is_set,
         )
-        # Prefer cancel if it was requested at any point during the run.
-        if job.cancel_event.is_set():
-            job.status = "cancelled"
-            job.error = job.error or "Simulation cancelled"
-            job.result = None
+        outcome = job.finalize_after_run(result)
+        if outcome == "cancelled":
             telemetry.emit("simulate_cancelled", mode="job", job_id=job.id)
         else:
-            job.result = result
-            job.status = "completed"
             telemetry.emit(
                 "simulate_completed",
                 mode="job",
@@ -71,17 +66,22 @@ def _run_job(job_id: str) -> None:
                 steps=job.request["steps"],
             )
     except SimulationCancelled as exc:
-        job.status = "cancelled"
-        job.error = str(exc)
+        with job._lock:
+            job.status = "cancelled"
+            job.error = str(exc)
+            job.result = None
+            job.touch()
         telemetry.emit("simulate_cancelled", mode="job", job_id=job.id)
     except PresetNotFoundError as exc:
-        job.status = "failed"
-        job.error = str(exc)
+        with job._lock:
+            job.status = "failed"
+            job.error = str(exc)
+            job.touch()
     except Exception as exc:  # noqa: BLE001 - surface worker failures to clients
-        job.status = "failed"
-        job.error = str(exc)
-    finally:
-        job.touch()
+        with job._lock:
+            job.status = "failed"
+            job.error = str(exc)
+            job.touch()
 
 
 @router.post("/simulate", response_model=JobSummary)

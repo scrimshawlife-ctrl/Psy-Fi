@@ -77,6 +77,7 @@ Do not use a single cache-first strategy for every resource.
 | Versioned static assets | cache-first with immutable hashes |
 | HTML/navigation | network-first with cached fallback |
 | `/gpu/` Lab (HTML + assets) | network-first; opportunistic asset cache; offline → shell `/` |
+| Service worker script | `/sw.js` (root scope · `Service-Worker-Allowed: /` · not `/static/sw.js`) |
 | API simulation requests | network-only unless an explicitly versioned local compute path exists |
 | Preset/catalog metadata | stale-while-revalidate where safe |
 | Saved sessions/results | IndexedDB, not service-worker cache |

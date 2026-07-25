@@ -3097,6 +3097,23 @@
           "simulation"
         ]
       }
+    },
+    "/sw.js": {
+      "get": {
+        "description": "Serve the PWA service worker with a root scope allowlist.\n\nScripts under `/static/` default to max scope `/static/`, which cannot\nintercept `/` or `/gpu/` navigations. `Service-Worker-Allowed: /` plus\nregistration `{ scope: '/' }` makes the documented offline shell real.",
+        "operationId": "service_worker_sw_js_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Service Worker"
+      }
     }
   }
 }

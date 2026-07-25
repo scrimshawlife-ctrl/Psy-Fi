@@ -109,6 +109,13 @@
   background: var(--pf-bg-0);
 }
 
+.gpu-controls > summary:hover,
+.gpu-controls > summary:focus-visible {
+  border-color: var(--pf-cyan);
+  color: var(--pf-text-main);
+  outline: none;
+}
+
 .gpu-controls > summary::-webkit-details-marker {
   display: none;
 }

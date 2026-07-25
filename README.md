@@ -59,6 +59,11 @@ python3 scripts/sync_frozen_contracts.py
 # Tests
 python3 -m pytest tests/ -q
 npm test   # hallmark README lint
+npm run gpu:test
+
+# Optional GPU platform (R3F + WebGPU)
+npm run gpu:build
+# → served at /gpu/ when the API runs
 
 # Dev server
 python3 scripts/run_dev_server.py
@@ -126,6 +131,7 @@ Canonical browser API is **`/api/v1`** (soft-frozen). Legacy `/api/*` and `/simu
 | [`PLANS.md`](PLANS.md)                                                             | Product phases + gates |
 | [`docs/CONTINUATION_PLAN.md`](docs/CONTINUATION_PLAN.md)                           | Web-track next steps   |
 | [`docs/VISUAL_EXPERIENCES.md`](docs/VISUAL_EXPERIENCES.md)                         | Live Experience guide  |
+| [`docs/rendering/README.md`](docs/rendering/README.md)                             | WebGPU platform docs   |
 | [`docs/PHENOMENOLOGY_PIPELINE.md`](docs/PHENOMENOLOGY_PIPELINE.md)                 | Scraped → overlays     |
 | [`docs/BROWSER_CAPABILITY_MATRIX.md`](docs/BROWSER_CAPABILITY_MATRIX.md)           | Device QA matrix       |
 | [`docs/contracts/frozen/API_V1_FREEZE.md`](docs/contracts/frozen/API_V1_FREEZE.md) | Contract soft freeze   |

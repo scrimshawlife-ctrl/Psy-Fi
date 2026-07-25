@@ -126,7 +126,11 @@ See [`docs/CONTINUATION_PLAN.md`](docs/CONTINUATION_PLAN.md). P0–P2 scaffoldin
 - [x] Enriched 5-MeO / mescaline / ketamine seed recipes; sim↔experience bridge
 - [x] Optional camera/motion/MIDI modulators + export + Phase 4 checklist draft
 - [x] Soft freeze of `/api/v1` contracts (`docs/contracts/frozen/`)
+<<<<<<< HEAD
 - [x] Last-sim visualization as optional Canvas/WebGL source plane
+=======
+- [x] GPU rendering platform scaffold (`packages/psyfi-gpu-renderer`, `docs/rendering/`, scene-snapshot API)
+>>>>>>> b5129fe (Scaffold WebGPU render platform integrated with /api/v1)
 - [ ] Human physical-device evidence rows → hard freeze
 
 ## Definition of Done

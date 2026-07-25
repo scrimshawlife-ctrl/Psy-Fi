@@ -25,6 +25,7 @@ Synced via `python3 scripts/sync_frozen_contracts.py`:
 | `psyfi_experience_recipe.v1.json` | Experience catalog recipe |
 | `psyfi_parameter_field.v1.json` | Immutable visual authority |
 | `psyfi_visual_frame.v1.json` | Snapshot/timeline/field_frame envelope |
+| `psyfi_scene_snapshot.v1.json` | Immutable GPU scene description |
 | `substance_overlay_goldens.v1.json` | Distinctness hashes |
 | `substance_visual_overlays.v1.json` | Distilled substance visuals |
 
@@ -37,6 +38,7 @@ Synced via `python3 scripts/sync_frozen_contracts.py`:
 - `GET /api/v1/substances`
 - `POST /api/v1/visualize/parameter-timeline`
 - `POST /api/v1/visualize/field-frame`
+- `POST /api/v1/visualize/scene-snapshot`
 - `GET/POST /api/v1/telemetry/*`
 - `GET /health`, `GET /ready`
 

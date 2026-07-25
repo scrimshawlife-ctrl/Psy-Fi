@@ -1,0 +1,53 @@
+import { useFrame } from '@react-three/fiber'
+import { useMemo, useRef } from 'react'
+import type { Group } from 'three'
+import type { SceneSnapshotV1 } from '../contracts/SceneSnapshot'
+import type { QualityTier } from '../contracts/QualityTier'
+import { CrystalField } from '../procedural/CrystalField'
+import { MetaballField } from '../procedural/MetaballField'
+import { RibbonField } from '../procedural/RibbonField'
+import { GlyphField } from '../procedural/GlyphField'
+import { MagnitudePlane } from '../procedural/MagnitudePlane'
+import { LightingRig } from '../Lighting/LightingRig'
+import { PostStack } from '../PostProcessing/PostStack'
+
+export function SceneRoot({
+  snapshot,
+  tier,
+}: {
+  snapshot: SceneSnapshotV1 | null
+  tier: QualityTier
+}) {
+  const root = useRef<Group>(null)
+  const engines = snapshot?.parameter_field.engines || {}
+  const intensity = snapshot?.parameter_field.intensity ?? 0.5
+  const neutral = !!snapshot?.parameter_field.neutral_view
+
+  const palette = useMemo(() => {
+    const tracers = (snapshot?.parameter_field.palette?.tracers as string) || '#63F3E8'
+    return tracers
+  }, [snapshot?.parameter_field.palette])
+
+  useFrame((_, dt) => {
+    if (!root.current || neutral) return
+    root.current.rotation.y += dt * (0.15 + intensity * 0.35)
+  })
+
+  if (!snapshot) return null
+
+  return (
+    <>
+      <LightingRig snapshot={snapshot} tier={tier} />
+      <group ref={root}>
+        {!neutral && <CrystalField nodes={snapshot.procedural.crystals} color={palette} engines={engines} />}
+        {!neutral && <MetaballField nodes={snapshot.procedural.metaballs} color={palette} />}
+        {!neutral && <RibbonField nodes={snapshot.procedural.ribbons} color={palette} />}
+        {!neutral && <GlyphField nodes={snapshot.procedural.glyphs} color={palette} />}
+        {snapshot.magnitude_field ? (
+          <MagnitudePlane field={snapshot.magnitude_field} mix={neutral ? 0 : 0.35} />
+        ) : null}
+      </group>
+      <PostStack snapshot={snapshot} tier={tier} />
+    </>
+  )
+}

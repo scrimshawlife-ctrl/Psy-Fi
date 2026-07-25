@@ -1,15 +1,22 @@
 {
   "name": "psyfi",
   "private": true,
-  "description": "PsyFi web shell markdown tooling (Python package lives in pyproject.toml)",
+  "description": "PsyFi monorepo root — Python package in pyproject.toml; GPU renderer in packages/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/scrimshawlife-ctrl/Psy-Fi.git"
   },
+  "workspaces": [
+    "packages/psyfi-gpu-renderer"
+  ],
   "scripts": {
     "test": "hallmark lint README.md",
     "markdown:lint": "hallmark lint README.md",
-    "markdown:fix": "hallmark fix README.md"
+    "markdown:fix": "hallmark fix README.md",
+    "gpu:dev": "npm run dev -w @psyfi/gpu-renderer",
+    "gpu:build": "npm run build -w @psyfi/gpu-renderer",
+    "gpu:test": "npm run test -w @psyfi/gpu-renderer",
+    "gpu:typecheck": "npm run typecheck -w @psyfi/gpu-renderer"
   },
   "devDependencies": {
     "hallmark": "^5.0.2"
@@ -22,7 +29,9 @@
       "DEPLOYMENT.md",
       "QUICK_DEPLOY.md",
       "RENDER_DEPLOY.md",
-      "CHANGELOG.md"
+      "CHANGELOG.md",
+      "packages/**",
+      "apps/**"
     ],
     "validateLinks": true,
     "paddedTable": true

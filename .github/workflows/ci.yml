@@ -28,3 +28,7 @@ jobs:
         run: |
           npm ci
           npm test
+      - name: GPU renderer unit tests
+        run: npm run gpu:test
+      - name: GPU renderer typecheck
+        run: npm run gpu:typecheck

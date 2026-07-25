@@ -31,6 +31,7 @@ def test_frozen_openapi_matches_living_and_live_app() -> None:
         "/api/v1/substances",
         "/api/v1/visualize/parameter-timeline",
         "/api/v1/visualize/field-frame",
+        "/api/v1/visualize/scene-snapshot",
         "/api/v1/jobs/simulate",
     ):
         assert required in frozen["paths"]

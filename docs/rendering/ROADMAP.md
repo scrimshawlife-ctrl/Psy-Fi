@@ -30,7 +30,7 @@ Platform package: `packages/psyfi-gpu-renderer`
 - [x] GPU instancing for crystals (existing) + particle density layer
 - [x] Cull + LOD selectors (TS + WGSL; wired into particle draw)
 - [x] AssetLoader worker-mode hook (bytes fetch; decode still deferred)
-- [ ] Dispatch compute via `WebGPURenderer` / TSL (replace CPU integrate on capable devices)
+- [x] Dispatch compute via `WebGPURenderer` / TSL (`GpuFlowCompute` + SpriteNodeMaterial; CPU fallback)
 - [ ] Temporal accumulation / TAA
 - [ ] Worker glTF/Draco/KTX2 decode
 

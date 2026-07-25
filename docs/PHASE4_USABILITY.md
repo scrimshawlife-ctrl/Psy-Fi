@@ -31,12 +31,13 @@ Agents and CI cannot fill this table honestly — someone must click through on 
 
 | Date | Browser / device | Workflow | Result | Notes |
 |---|---|---|---|---|
-| _pending_ | Safari iOS | Live Experience + Neutral | | human |
-| _pending_ | Chrome Android | Install + jobs cancel | | human |
-| _pending_ | Desktop Chrome | Phase scrub + export | | human |
-| _pending_ | Firefox | Capability fallbacks | | human |
-| _pending_ | Edge | PWA shell | | human |
-| _pending_ | Any WebGPU desktop | `/gpu/` snapshot + Neutral | | human |
+| _pending_ | Safari iOS (current gen) | Live Experience + Neutral | | human |
+| _pending_ | Chrome Android (current gen) | Install + jobs cancel | | human |
+| _pending_ | Chrome on newer Apple Silicon Mac | Phase scrub + export + `/gpu/` compute | | human — record Mac model |
+| _pending_ | Safari on newer Apple Silicon Mac | Live Experience + `/gpu/` if WebGPU | | human — record Mac model |
+| _pending_ | Chrome on newer Windows 11 PC | Phase scrub + export + `/gpu/` compute | | human — record CPU/GPU |
+| _pending_ | Edge on newer Windows 11 PC | PWA shell + `/gpu/` | | human — record CPU/GPU |
+| _pending_ | Firefox on newer Mac or PC | Capability fallbacks | | human |
 
 ## Exit toward freeze
 

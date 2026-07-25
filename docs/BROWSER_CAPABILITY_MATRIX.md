@@ -9,6 +9,16 @@ A **manual QA log** of PsyFi on real browsers and phones. CI proves APIs and wir
 
 Fill a row only after you personally run the workflows below on that browser/device. Do not invent results.
 
+## Target devices (what to test on)
+
+| Class | Target hardware | Notes |
+|---|---|---|
+| Desktop Mac | **Newer Apple Silicon Mac** (M1 or later preferred; M2/M3/M4 ideal), macOS 14+ | Safari + Chrome; WebGPU on Safari/Chrome as available |
+| Desktop PC | **Newer Windows 11 PC** (recent Intel/AMD CPU + modern iGPU, or discrete GPU from ~2020+) | Chrome + Edge primary; Firefox secondary |
+| Phone | Current-generation Safari iOS and Chrome Android | Install / A2HS + touch Neutral View |
+
+Skip aging machines (pre-2018 Intel Macs, HD 4000–class PCs) for freeze evidence — they are best-effort only, not gate hardware.
+
 ## Runtime capability expectations
 
 The web shell detects support in the current browser. Optional capabilities never block the core online workflow.
@@ -17,7 +27,7 @@ The web shell detects support in the current browser. Optional capabilities neve
 |---|---|---|---|
 | Canvas 2D | Required for Live Experience + heatmap | Metrics + provenance text only | No |
 | WebGL | Optional ParameterField path | Canvas 2D engines | No |
-| WebGPU | Optional heatmap + `/gpu/` platform | Canvas/WebGL legacy shell | No |
+| WebGPU | Optional heatmap + `/gpu/` platform + G2 compute particles | Canvas/WebGL legacy shell; CPU particle integrate | No |
 | Web Workers | Heatmap rasterize off main thread | Main-thread Canvas | No |
 | IndexedDB | Preferred history store | `localStorage` last session | No |
 | Service Worker | Installable shell caching | Online-only static hosting | No |
@@ -35,21 +45,23 @@ The web shell detects support in the current browser. Optional capabilities neve
 2. On the target browser/device, exercise:
    - **Core:** configure → run/cancel job → inspect → export/save  
    - **Live Experience (`/`):** substance → recipe → mode → intensity → play → Neutral View → phase scrub  
-   - **GPU (`/gpu/`)** if WebGPU is available: load snapshot, change substance/tier, confirm Neutral / safety still calm
-3. Mark each checklist cell ✅ / ❌ / n/a and add a short Notes cell (OS version, fail detail, PR link).
+   - **GPU (`/gpu/`)** if WebGPU is available: load snapshot, change substance/tier, confirm Neutral / safety still calm; note whether compute particles stay smooth
+3. Mark each checklist cell ✅ / ❌ / n/a and add a short Notes cell (exact model, OS/browser versions, fail detail, PR link).
 4. Mirror notable results into [`PHASE4_USABILITY.md`](PHASE4_USABILITY.md) evidence log.
 5. Failures that change product fallbacks must update this table **and** in-app capability copy.
 
 ## Device verification checklist
 
-| Browser / device | Date | Version | Install / A2HS | SW update OK | Jobs cancel | Live Experience | `/gpu/` (if WebGPU) | Neutral ≤ intent | Reduce motion | Notes |
+| Browser / device | Date | Version | Install / A2HS | SW update OK | Jobs cancel | Live Experience | `/gpu/` + compute | Neutral ≤ intent | Reduce motion | Notes |
 |---|---|---|---|---|---|---|---|---|---|---|
 | CI (Ubuntu / pytest + static wiring) | 2026-07-25 | 3.12 | n/a | ✅ SW asset list | ✅ API | ✅ API/player modules | ✅ build/typecheck | ✅ unit | ✅ unit | Automated only — not a device substitute |
-| Safari iOS | | | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | **human required** |
-| Chrome Android | | | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | **human required** |
-| Chrome desktop | | | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | **human required** |
-| Edge desktop | | | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | **human required** |
-| Firefox desktop | | | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | **human required** |
+| Safari iOS (current gen) | | | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | **human required** |
+| Chrome Android (current gen) | | | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | **human required** |
+| Chrome — newer Mac (Apple Silicon) | | | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | **human required** — record Mac model |
+| Safari — newer Mac (Apple Silicon) | | | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | **human required** — record Mac model |
+| Chrome — newer Windows 11 PC | | | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | **human required** — record CPU/GPU |
+| Edge — newer Windows 11 PC | | | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | **human required** — record CPU/GPU |
+| Firefox — newer Mac or PC | | | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | **human required** — WebGPU may be limited |
 
 ## Automation coverage (CI)
 

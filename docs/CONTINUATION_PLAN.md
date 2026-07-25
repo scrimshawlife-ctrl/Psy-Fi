@@ -42,8 +42,8 @@ Deploy: **Docker only** (`DEPLOYMENT.md`); Azure/Render paths removed (#28).
 - [x] WGSL compute shaders aligned to those kernels
 - [x] `FlowParticleField` in scene (disabled on battery / Neutral)
 - [x] AssetLoader worker-mode hook (fetch off main when Worker available)
-- [ ] Dispatch real WebGPU compute pipelines from `WebGPURenderer` (next)
-- [ ] Temporal accumulation / TAA wiring
+- [x] WebGPU TSL compute dispatch (`GpuFlowCompute`) with CPU InstancedMesh fallback
+- [ ] Temporal accumulation / TAA wiring (next)
 - [ ] Worker glTF/Draco/KTX2 decode (bytes-only fetch is in place)
 
 ### Deferred / human
@@ -59,9 +59,9 @@ Deploy: **Docker only** (`DEPLOYMENT.md`); Azure/Render paths removed (#28).
 
 ## Recommended next slice
 
-1. **Merge #30** (P0–P2) when ready.
-2. **Human:** fill device matrix + Phase 4 on real phones/desktops.
-3. **Engineering:** finish G2 WebGPU compute dispatch + TAA; then G3 premium passes.
+1. **Merge #30** then **#31** (G2 compute) when ready.
+2. **Human:** fill device matrix on **newer Mac (Apple Silicon) / newer Windows 11 PC** + current phones.
+3. **Engineering:** TAA / temporal accumulation; then G3 premium passes.
 
 ## Commands
 

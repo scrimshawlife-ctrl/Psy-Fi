@@ -1,5 +1,5 @@
-import { useFrame } from '@react-three/fiber'
-import { useLayoutEffect, useMemo, useRef } from 'react'
+import { useFrame, useThree } from '@react-three/fiber'
+import { useLayoutEffect, useMemo, useRef, useState } from 'react'
 import * as THREE from 'three'
 import type { QualityTier } from '../contracts/QualityTier'
 import { tierConfig } from '../contracts/QualityTier'
@@ -12,10 +12,15 @@ import {
 } from '../compute/ParticleSystem'
 import { cullInstances } from '../compute/InstanceCull'
 import { lodScale, selectLod } from '../compute/LodSelect'
+import { resolveComputeBackend } from '../compute/gpuComputeSupport'
+import {
+  createGpuFlowCompute,
+  dispatchFlowCompute,
+  type GpuFlowComputePipeline,
+} from '../compute/GpuFlowCompute'
 
 /**
- * G2 density layer: CPU-integrated flow particles (portable reference for WGSL compute).
- * Mutates InstancedMesh matrices each frame — no React re-render per tick.
+ * G2 density layer: WebGPU TSL compute when available, CPU InstancedMesh fallback.
  */
 export function FlowParticleField({
   snapshot,
@@ -24,6 +29,7 @@ export function FlowParticleField({
   snapshot: SceneSnapshotV1
   tier: QualityTier
 }) {
+  const { gl } = useThree()
   const cfg = tierConfig(tier)
   const intensity = snapshot.parameter_field.intensity ?? 0.5
   const turbulence = Number(snapshot.parameter_field.parameters?.turbulence ?? 0.25)
@@ -31,7 +37,103 @@ export function FlowParticleField({
   const seed = Number(snapshot.procedural.crystals[0]?.seed ?? 7)
   const count = particleBudgetForTier(Math.min(cfg.particleBudget, 2048), intensity)
   const color = (snapshot.parameter_field.palette?.tracers as string) || '#63F3E8'
+  const backend = resolveComputeBackend(gl, tier !== 'battery')
 
+  if (backend === 'webgpu') {
+    return (
+      <GpuFlowParticles
+        count={count}
+        seed={seed}
+        color={color}
+        intensity={intensity}
+        turbulence={turbulence}
+        peripheral={peripheral}
+      />
+    )
+  }
+
+  return (
+    <CpuFlowParticles
+      count={count}
+      seed={seed}
+      color={color}
+      intensity={intensity}
+      turbulence={turbulence}
+      peripheral={peripheral}
+      maxDrawCalls={cfg.maxDrawCalls}
+    />
+  )
+}
+
+function GpuFlowParticles({
+  count,
+  seed,
+  color,
+  intensity,
+  turbulence,
+  peripheral,
+}: {
+  count: number
+  seed: number
+  color: string
+  intensity: number
+  turbulence: number
+  peripheral: number
+}) {
+  const { gl } = useThree()
+  const [pipeline, setPipeline] = useState<GpuFlowComputePipeline | null>(null)
+  const keyRef = useRef(`${count}_${seed}_${color}`)
+
+  useLayoutEffect(() => {
+    const key = `${count}_${seed}_${color}`
+    keyRef.current = key
+    let pipe: GpuFlowComputePipeline
+    try {
+      pipe = createGpuFlowCompute(count, seed, color)
+    } catch {
+      setPipeline(null)
+      return
+    }
+    setPipeline(pipe)
+    return () => {
+      pipe.dispose()
+      setPipeline((cur) => (cur === pipe ? null : cur))
+    }
+  }, [count, seed, color])
+
+  useFrame((state, dt) => {
+    if (!pipeline) return
+    pipeline.setUniforms({
+      turbulence,
+      intensity,
+      peripheralFlow: peripheral,
+      time: state.clock.elapsedTime,
+      dt: Math.min(dt, 0.05),
+    })
+    dispatchFlowCompute(gl as never, pipeline)
+  })
+
+  if (!pipeline) return null
+  return <primitive object={pipeline.object} />
+}
+
+function CpuFlowParticles({
+  count,
+  seed,
+  color,
+  intensity,
+  turbulence,
+  peripheral,
+  maxDrawCalls,
+}: {
+  count: number
+  seed: number
+  color: string
+  intensity: number
+  turbulence: number
+  peripheral: number
+  maxDrawCalls: number
+}) {
   const meshRef = useRef<THREE.InstancedMesh>(null)
   const particles = useRef<Particle[]>([])
   const dummy = useMemo(() => new THREE.Object3D(), [])
@@ -62,7 +164,7 @@ export function FlowParticleField({
       radius: 0.04,
     }))
     const kept = cullInstances(spheres, { x: cam.x, y: cam.y, z: cam.z }, 6.5)
-    const drawBudget = Math.min(cfg.maxDrawCalls * 8, kept.length, count)
+    const drawBudget = Math.min(maxDrawCalls * 8, kept.length, count)
     let written = 0
     for (let drawIndex = 0; drawIndex < drawBudget; drawIndex++) {
       const idx = kept[drawIndex]

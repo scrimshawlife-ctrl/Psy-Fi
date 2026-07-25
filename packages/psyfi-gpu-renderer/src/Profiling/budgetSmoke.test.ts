@@ -50,5 +50,9 @@ describe('G3 production budget smoke', () => {
     }
     expect(profiler.averageCpuMs()).toBeLessThan(target)
     expect(profiler.latest()?.drawCalls).toBe(20)
+    const summary = profiler.summary(target)
+    expect(summary.overBudget).toBe(false)
+    expect(summary.fps).toBeGreaterThan(60)
+    expect(summary.p95CpuMs).toBeLessThanOrEqual(target)
   })
 })

@@ -4,12 +4,14 @@ import { SnapshotStore } from './bridge/SnapshotStore'
 import { SnapshotInterpolator } from './bridge/SnapshotInterpolator'
 import { PsyFiGPUCanvas } from './Renderer/PsyFiGPUCanvas'
 import { DebugHud } from './DebugOverlay/DebugHud'
+import { FrameProfiler, type FrameProfilerSummary } from './Profiling/FrameProfiler'
 import {
   normalizeTier,
   probeDeviceCaps,
   recommendedTier,
   refineDeviceCaps,
   resolveTier,
+  tierConfig,
   type DeviceCaps,
   type QualityTier,
 } from './contracts/QualityTier'
@@ -33,9 +35,12 @@ export function App() {
   const [seed, setSeed] = useState(42)
   const [showHud, setShowHud] = useState(true)
   const [stats, setStats] = useState(store.stats())
+  const profiler = useMemo(() => new FrameProfiler(), [])
+  const [profile, setProfile] = useState<FrameProfilerSummary | null>(null)
 
   const effectiveTier = resolveTier(tier, caps)
   const passes = enabledPasses(effectiveTier, caps)
+  const tierCfg = tierConfig(effectiveTier)
 
   const refresh = useCallback(async () => {
     setStatus('Publishing scene snapshot…')
@@ -67,7 +72,7 @@ export function App() {
   useEffect(() => {
     void refineDeviceCaps(probeDeviceCaps()).then((next) => {
       setCaps(next)
-      // Auto-select Ultra on high-end NVIDIA (e.g. RTX 5060) unless user already picked.
+      // Auto-select Ultra/High on high-end discrete unless user already picked.
       setTier((prev) => {
         const suggested = recommendedTier(next)
         if (prev === 'balanced' && (suggested === 'ultra' || suggested === 'high')) {
@@ -83,21 +88,41 @@ export function App() {
   }, [refresh])
 
   useEffect(() => {
+    profiler.reset()
+    setProfile(null)
     let raf = 0
     let last = performance.now()
+    let hudAcc = 0
     const loop = (now: number) => {
+      const frameStart = performance.now()
       const dt = Math.min(0.05, (now - last) / 1000)
       last = now
       const pending = store.takePending()
       if (pending) interpolator.setTarget(pending)
       const sample = interpolator.tick(dt)
       if (sample) setSnapshot(sample)
-      setStats(store.stats())
+      const st = store.stats()
+      setStats(st)
+      const cpuMs = Math.max(0.01, performance.now() - frameStart)
+      // Prefer wall-clock frame spacing for FPS when RAF is the clock.
+      const wallMs = Math.max(cpuMs, dt * 1000)
+      profiler.push({
+        cpuMs: wallMs,
+        snapshotLagMs: 0,
+        droppedStale: st.droppedStale,
+        drawCalls: passes.length,
+      })
+      hudAcc += wallMs
+      // Refresh HUD stats ~4×/sec to avoid React thrash.
+      if (hudAcc >= 250) {
+        hudAcc = 0
+        setProfile(profiler.summary(tierCfg.targetFrameMs))
+      }
       raf = requestAnimationFrame(loop)
     }
     raf = requestAnimationFrame(loop)
     return () => cancelAnimationFrame(raf)
-  }, [store, interpolator])
+  }, [store, interpolator, profiler, passes.length, tierCfg.targetFrameMs])
 
   return (
     <div style={{ display: 'grid', gridTemplateRows: 'auto 1fr', height: '100%' }}>
@@ -193,6 +218,8 @@ export function App() {
             adapterLabel={caps.adapter.description || caps.adapter.device || caps.adapter.vendor}
             vendorLabel={caps.adapter.vendor}
             perfBand={caps.adapter.perfBand}
+            profile={profile}
+            particleBudget={tierCfg.particleBudget}
           />
         ) : null}
       </div>

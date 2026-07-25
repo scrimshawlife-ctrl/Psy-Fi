@@ -47,6 +47,7 @@ Board: [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md)
 - [x] AMD RX 6000/7000/9000 · Intel Arc · Apple Pro/Max → **Ultra**
 - [x] HUD adapter / vendor / perf-band + `docs/DESKTOP_GPU.md` · `docs/NVIDIA_GPU.md`
 - [x] Compose `--profile nvidia` + `scripts/check_nvidia_host.sh`
+- [x] `/gpu/` profiling HUD (FPS · avg/p95/max · tier budget · full pass list)
 
 ## Recommended next steps (priority order)
 
@@ -54,7 +55,7 @@ Board: [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md)
 
 Ship code is ready; confirm Ultra auto-select and frame comfort on at least one card per vendor band:
 
-1. **NVIDIA RTX 30/40/50** — `./scripts/check_nvidia_host.sh` → Chrome/Edge → `/gpu/` → HUD shows adapter + tier **ultra** + band **ultra**.
+1. **NVIDIA RTX 30/40/50** — `./scripts/check_nvidia_host.sh` → Chrome/Edge → `/gpu/` → HUD shows adapter + tier **ultra** + band **ultra** + fps/budget **ok**.
 2. **AMD RX 6000/7000/9000** — Adrenalin drivers · force high-perf GPU · same `/gpu/` check.
 3. **Intel Arc** (if available) — Arc drivers · force dGPU on hybrid · Ultra band.
 4. Spot-check **Battery Saver** clamp (low charge / saveData) still drops Ultra → Balanced.
@@ -66,7 +67,7 @@ Guide: [`DESKTOP_GPU.md`](DESKTOP_GPU.md).
 
 | Priority | Item | Why |
 | --- | --- | --- |
-| 1 | `/gpu/` profiling HUD polish | Makes P0 frame validation measurable (ms / pass list) |
+| 1 | `/gpu/` profiling HUD polish | **done** — FPS · avg/p95/max ms · budget vs tier target · full pass list |
 | 2 | Draco/KTX2 **WASM GPU upload** | Asset path already decodes headers; upload unlocks denser scenes |
 | 3 | G4 cutover smoke | Feature-parity checklist vs legacy `/` + visual goldens for canonical seeds |
 

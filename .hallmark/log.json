@@ -23,6 +23,18 @@
       "footer": "Ft2",
       "designed_as_app": true,
       "notes": "Cleared aurora chrome, regenerated cyan-only icons/PWA marks, self-hosted fonts, field-first Workbench, marketing SVG rewrite, GPU token align"
+    },
+    {
+      "date": "2026-07-25",
+      "target": "shell + /gpu/ chrome + brand icons + SW fonts",
+      "verb": "fix",
+      "genre": "atmospheric",
+      "macrostructure": "Workbench",
+      "theme": "design.md",
+      "nav": "N9",
+      "footer": "Ft2",
+      "designed_as_app": true,
+      "notes": "GPU fonts+token CSS; field stage widen; icon pack wired; SW v16 woff2; tracer default #3ee7f2; soft-present paper; modulator demoted"
     }
   ]
 }

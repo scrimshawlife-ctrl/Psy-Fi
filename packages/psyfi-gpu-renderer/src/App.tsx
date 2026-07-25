@@ -125,23 +125,10 @@ export function App() {
   }, [store, interpolator, profiler, passes.length, tierCfg.targetFrameMs])
 
   return (
-    <div style={{ display: 'grid', gridTemplateRows: 'auto 1fr', height: '100%' }}>
-      <header
-        style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: 10,
-          alignItems: 'center',
-          padding: '10px 14px',
-          borderBottom: '1px solid #2a3344',
-          background: '#121820',
-          fontFamily: '"IBM Plex Sans", system-ui, sans-serif',
-        }}
-      >
-        <strong style={{ letterSpacing: '-0.02em', fontFamily: '"Space Grotesk", "IBM Plex Sans", sans-serif' }}>
-          PsyFi GPU
-        </strong>
-        <span style={{ color: '#9aa6b8', fontSize: 13 }}>{status}</span>
+    <div className="gpu-app">
+      <header className="gpu-header">
+        <strong className="gpu-brand">PsyFi GPU</strong>
+        <span className="gpu-status">{status}</span>
         <label>
           Substance{' '}
           <select value={substance} onChange={(e) => setSubstance(e.target.value)}>
@@ -175,7 +162,7 @@ export function App() {
         </label>
         <label>
           Seed{' '}
-          <input type="number" value={seed} onChange={(e) => setSeed(Number(e.target.value) || 0)} style={{ width: 90 }} />
+          <input className="gpu-seed-input" type="number" value={seed} onChange={(e) => setSeed(Number(e.target.value) || 0)} />
         </label>
         <label>
           Tier{' '}
@@ -196,15 +183,13 @@ export function App() {
         <button type="button" onClick={() => setShowHud((v) => !v)}>
           HUD
         </button>
-        <a href="/" style={{ marginLeft: 'auto', fontSize: 13 }}>
-          Legacy shell
-        </a>
+        <a href="/">Legacy shell</a>
       </header>
-      <div style={{ position: 'relative', minHeight: 0 }}>
+      <div className="gpu-stage">
         {caps.webgpu ? (
           <PsyFiGPUCanvas snapshot={snapshot} tier={effectiveTier} />
         ) : (
-          <div style={{ padding: 24, color: '#9aa6b8' }}>
+          <div className="gpu-fallback">
             <p>WebGPU is not available in this browser.</p>
             <p>
               On discrete desktops (NVIDIA RTX 30/40/50, AMD RX 6000/7000/9000, Intel Arc), use

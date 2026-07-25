@@ -10,9 +10,9 @@
 [![CI](https://img.shields.io/github/actions/workflow/status/scrimshawlife-ctrl/Psy-Fi/ci.yml?branch=main\&label=CI)](https://github.com/scrimshawlife-ctrl/Psy-Fi/actions/workflows/ci.yml)
 [![Python](https://img.shields.io/badge/python-3.10+-3776AB?logo=python\&logoColor=white)](https://www.python.org/downloads/)
 [![ABX-Core](https://img.shields.io/badge/ABX--Core-v1.3-3EE7F2)](psyfi_core/abx_core)
-[![API](https://img.shields.io/badge/api-/api/v1-FF42C1)](docs/contracts/frozen/API_V1_FREEZE.md)
+[![API](https://img.shields.io/badge/api-/api/v1-3EE7F2)](docs/contracts/frozen/API_V1_FREEZE.md)
 [![License: MIT](https://img.shields.io/badge/license-MIT-informational)](LICENSE)
-[![PWA](https://img.shields.io/badge/PWA-installable-8F7BFF)](MOBILE_PWA_GUIDE.md)
+[![PWA](https://img.shields.io/badge/PWA-installable-3EE7F2)](MOBILE_PWA_GUIDE.md)
 [![Markdown Style Guide](https://img.shields.io/badge/hallmark-informational?logo=markdown)](https://github.com/vweevers/hallmark)
 
 [Install](#install) · [Usage](#usage) · [Live Experience](#live-experience) · [Production readiness](#production-readiness) · [API](#api) · [Documentation](#documentation) · [Contributing](#contributing)

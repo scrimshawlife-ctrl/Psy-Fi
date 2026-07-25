@@ -2,11 +2,19 @@
 // Strategies follow MOBILE_PWA_GUIDE.md + docs/PWA_GPU_ROUTE.md.
 // Decision: /gpu/ is a separate route (not embedded); not shell-precached.
 
-const CACHE_NAME = 'psyfi-shell-v15';
+const CACHE_NAME = 'psyfi-shell-v16';
 const SHELL_URLS = [
   '/',
   '/static/style.css',
   '/static/fonts/fonts.css',
+  '/static/fonts/-F63fjptAgt5VM-kVkqdyU8n1i8q1w.woff2',
+  '/static/fonts/-F63fjptAgt5VM-kVkqdyU8n1iEq129k.woff2',
+  '/static/fonts/-F6qfjptAgt5VM-kVkqdyU8n3twJwl5FgtIU.woff2',
+  '/static/fonts/-F6qfjptAgt5VM-kVkqdyU8n3twJwlBFgg.woff2',
+  '/static/fonts/V8mDoQDjQSkFtoMM3T6r8E7mPb94C-s0.woff2',
+  '/static/fonts/V8mDoQDjQSkFtoMM3T6r8E7mPbF4Cw.woff2',
+  '/static/fonts/zYXzKVElMYYaJe8bpLHnCwDKr932-G7dytD-Dmu1syxQKYbABA.woff2',
+  '/static/fonts/zYXzKVElMYYaJe8bpLHnCwDKr932-G7dytD-Dmu1syxeKYY.woff2',
   '/static/app.js',
   '/static/renderer.js',
   '/static/render_worker.js',
@@ -21,6 +29,15 @@ const SHELL_URLS = [
   '/static/icon-192.png',
   '/static/icon-512.png',
   '/static/apple-touch-icon.png',
+  '/assets/icons/pf-icon-reset-24.svg',
+  '/assets/icons/pf-icon-field-grid-24.svg',
+  '/assets/icons/pf-icon-binding-24.svg',
+  '/assets/icons/pf-icon-psychedelic-24.svg',
+  '/assets/icons/pf-icon-preset-24.svg',
+  '/assets/icons/pf-icon-console-24.svg',
+  '/assets/icons/pf-icon-ethics-24.svg',
+  '/assets/icons/pf-icon-core-sigil-24.svg',
+  '/assets/icons/pf-icon-core-sigil-48.svg',
 ];
 
 self.addEventListener('install', (event) => {

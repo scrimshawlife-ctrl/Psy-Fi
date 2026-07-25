@@ -55,7 +55,7 @@
         <nav class="workspace-nav" aria-label="Workspace sections">
             <a href="#experiencePanel" class="nav-link">Live Experience</a>
             <a href="#workspace" class="nav-link">Workspace</a>
-            <a href="/gpu/" class="nav-link" title="WebGPU GPU Lab — separate /gpu/ route (not embedded in this shell)">GPU Lab</a>
+            <a href="/gpu/" class="nav-link nav-link-icon" title="WebGPU GPU Lab — separate /gpu/ route (not embedded in this shell)"><span class="pf-icon pf-icon-console" aria-hidden="true"></span><span>GPU Lab</span></a>
             <a href="#presets" class="nav-link">Presets</a>
             <a href="#results" class="nav-link">Results</a>
             <a href="#history" class="nav-link">History</a>
@@ -83,9 +83,9 @@
                         <canvas id="experienceCanvas" aria-label="PsyFi visual field (Canvas)"></canvas>
                         <canvas id="experienceCanvasGL" aria-label="PsyFi visual field (WebGL)" hidden></canvas>
                         <div class="experience-chrome">
-                            <button type="button" class="btn-danger" id="neutralBtn" title="Emergency neutral view">Neutral View</button>
-                            <button type="button" class="btn-secondary" id="playExperienceBtn">Play Field</button>
-                            <button type="button" class="btn-secondary" id="pauseExperienceBtn">Pause</button>
+                            <button type="button" class="btn-danger btn-with-icon" id="neutralBtn" title="Emergency neutral view"><span class="pf-icon pf-icon-reset" aria-hidden="true"></span><span>Neutral</span></button>
+                            <button type="button" class="btn-secondary btn-with-icon" id="playExperienceBtn"><span class="pf-icon pf-icon-field-grid" aria-hidden="true"></span><span>Play Field</span></button>
+                            <button type="button" class="btn-secondary btn-with-icon" id="pauseExperienceBtn"><span class="pf-icon pf-icon-binding" aria-hidden="true"></span><span>Pause</span></button>
                         </div>
                     </div>
                     <div class="experience-controls">
@@ -114,26 +114,29 @@
                             <label for="seedInput">Seed</label>
                             <div class="seed-row">
                                 <input type="number" id="seedInput" value="42" min="0">
-                                <button type="button" class="btn-secondary" id="regenSeedBtn" title="Regenerate seed">Regen</button>
+                                <button type="button" class="btn-secondary btn-with-icon" id="regenSeedBtn" title="Regenerate seed"><span class="pf-icon pf-icon-reset" aria-hidden="true"></span><span>Regen</span></button>
                             </div>
                         </div>
                         <div class="input-group">
                             <label for="phaseScrub">Phase timeline <span id="phaseLabel">peak</span></label>
                             <input type="range" id="phaseScrub" min="0" max="19" step="1" value="8" disabled>
                         </div>
-                        <div class="checkbox-row">
-                            <label><input type="checkbox" id="reduceMotionChk"> Reduce motion</label>
-                            <label><input type="checkbox" id="dimFlashChk"> Dim flashing</label>
-                            <label><input type="checkbox" id="preferWebGLChk"> Prefer WebGL field</label>
-                            <label><input type="checkbox" id="sourcePlaneChk"> Sim field as source plane</label>
-                        </div>
-                        <div class="input-group" id="sourcePlaneMixGroup" hidden>
-                            <label for="sourcePlaneMix">Source plane mix <span id="sourcePlaneMixValue">0.32</span></label>
-                            <input type="range" id="sourcePlaneMix" min="0" max="1" step="0.01" value="0.32">
-                            <p class="input-hint">Blends last workspace simulation magnitude under the ParameterField engines (still safety-clamped).</p>
-                        </div>
-                        <details class="modulator-panel" open>
-                            <summary>Device sensors → consciousness field (ParameterField only)</summary>
+                        <details class="experience-advanced">
+                            <summary>Field options</summary>
+                            <div class="checkbox-row">
+                                <label><input type="checkbox" id="reduceMotionChk"> Reduce motion</label>
+                                <label><input type="checkbox" id="dimFlashChk"> Dim flashing</label>
+                                <label><input type="checkbox" id="preferWebGLChk"> Prefer WebGL field</label>
+                                <label><input type="checkbox" id="sourcePlaneChk"> Sim field as source plane</label>
+                            </div>
+                            <div class="input-group" id="sourcePlaneMixGroup" hidden>
+                                <label for="sourcePlaneMix">Source plane mix <span id="sourcePlaneMixValue">0.32</span></label>
+                                <input type="range" id="sourcePlaneMix" min="0" max="1" step="0.01" value="0.32">
+                                <p class="input-hint">Blends last workspace simulation magnitude under the ParameterField engines (still safety-clamped).</p>
+                            </div>
+                        </details>
+                        <details class="modulator-panel">
+                            <summary>Device sensors → consciousness field</summary>
                             <p class="input-hint">
                                 Scans this device for available sensors. Opt-in meters feed the ParameterField
                                 (never direct-to-shader, never stored). Safety pass + Neutral View stay authoritative.
@@ -159,7 +162,8 @@
                             </div>
                         </details>
                         <div class="session-actions">
-                            <button type="button" class="btn-primary" id="loadExperienceBtn">
+                            <button type="button" class="btn-primary btn-with-icon" id="loadExperienceBtn">
+                                <span class="pf-icon pf-icon-psychedelic" aria-hidden="true"></span>
                                 <span>Load Experience</span>
                             </button>
                             <button type="button" class="btn-secondary" id="bridgeSimBtn">Bridge from sim</button>
@@ -174,7 +178,7 @@
                 </div>
             </section>
 
-<section class="panel control-panel" id="workspace">
+            <section class="panel control-panel" id="workspace">
                 <div class="panel-header">
                     <h2>Simulation Workspace</h2>
                 </div>
@@ -184,19 +188,19 @@
                             <label>Grid presets</label>
                             <div class="preset-buttons">
                                 <button type="button" class="preset-btn" data-preset="quick">
-                                    <span class="preset-name">Quick Test</span>
+                                    <span class="preset-name"><span class="pf-icon pf-icon-preset" aria-hidden="true"></span>Quick Test</span>
                                     <span class="preset-desc">32×32, 10 steps</span>
                                 </button>
                                 <button type="button" class="preset-btn" data-preset="standard">
-                                    <span class="preset-name">Standard</span>
+                                    <span class="preset-name"><span class="pf-icon pf-icon-preset" aria-hidden="true"></span>Standard</span>
                                     <span class="preset-desc">64×64, 20 steps</span>
                                 </button>
                                 <button type="button" class="preset-btn" data-preset="detailed">
-                                    <span class="preset-name">Detailed</span>
+                                    <span class="preset-name"><span class="pf-icon pf-icon-preset" aria-hidden="true"></span>Detailed</span>
                                     <span class="preset-desc">128×128, 50 steps</span>
                                 </button>
                                 <button type="button" class="preset-btn" data-preset="deep">
-                                    <span class="preset-name">Deep Dive</span>
+                                    <span class="preset-name"><span class="pf-icon pf-icon-preset" aria-hidden="true"></span>Deep Dive</span>
                                     <span class="preset-desc">256×256, 100 steps</span>
                                 </button>
                             </div>
@@ -229,7 +233,8 @@
                             </div>
                         </div>
                         <div class="run-actions">
-                            <button type="submit" class="btn-primary" id="runButton">
+                            <button type="submit" class="btn-primary btn-with-icon" id="runButton">
+                                <span class="pf-icon pf-icon-field-grid" aria-hidden="true"></span>
                                 <span>Run Simulation</span>
                             </button>
                             <button type="button" class="btn-secondary" id="cancelButton" hidden>Cancel</button>
@@ -358,9 +363,7 @@
                 <span class="separator">•</span>
                 <a href="https://github.com/scrimshawlife-ctrl/Psy-Fi" target="_blank">GitHub</a>
                 <span class="separator">•</span>
-                <a href="/assets/icons/pf-icon-core-sigil-48.svg" target="_blank">Icons</a>
-                <span class="separator">•</span>
-                <span class="abx-badge">ABX-Core v1.3</span>
+                <span class="abx-badge"><span class="pf-icon pf-icon-ethics" aria-hidden="true"></span>ABX-Core v1.3</span>
             </div>
         </footer>
     </div>

@@ -10,6 +10,8 @@ export default defineConfig({
       '/api': 'http://127.0.0.1:8000',
       '/health': 'http://127.0.0.1:8000',
       '/ready': 'http://127.0.0.1:8000',
+      '/static': 'http://127.0.0.1:8000',
+      '/assets': 'http://127.0.0.1:8000',
     },
   },
   build: {

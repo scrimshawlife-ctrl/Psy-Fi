@@ -346,11 +346,22 @@ document.addEventListener('DOMContentLoaded', () => {
             { name: 'Canvas 2D', supported: !!(canvas2d && canvas2d.getContext), fallback: 'Metrics/provenance text only' },
             { name: 'Web Worker rasterizer', supported: !!renderer.workerSupported, fallback: 'Main-thread Canvas rasterize' },
             { name: 'WebGL', supported: !!document.createElement('canvas').getContext('webgl'), fallback: 'Canvas 2D baseline renderer' },
-            { name: 'WebGPU', supported: !!renderer.webgpuSupported, fallback: 'Worker + Canvas 2D' },
+            {
+                name: 'WebGPU',
+                supported: !!renderer.webgpuSupported,
+                fallback: renderer.webgpuSupported
+                    ? 'Open <a href="/gpu/">GPU Lab</a> (separate /gpu/ route)'
+                    : 'Worker + Canvas 2D · GPU Lab unavailable',
+            },
             { name: 'IndexedDB', supported: !!window.indexedDB, fallback: 'localStorage last-session only' },
             { name: 'Service Worker', supported: 'serviceWorker' in navigator, fallback: 'Online-only shell caching' },
             { name: 'Web MIDI', supported: !!navigator.requestMIDIAccess, fallback: 'REST MIDI routes when server has devices' },
             { name: 'AbortController cancel', supported: typeof AbortController !== 'undefined', fallback: 'Wait for request completion' },
+            {
+                name: 'GPU Lab route',
+                supported: true,
+                fallback: '<a href="/gpu/">/gpu/</a> · not embedded in shell (see docs/PWA_GPU_ROUTE.md)',
+            },
         ];
         const tbody = document.querySelector('#capabilityTable tbody');
         tbody.innerHTML = '';

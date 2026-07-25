@@ -47,7 +47,7 @@ export const G4_PARITY_ROWS: ParityRow[] = [
     capability: 'Offline / PWA',
     legacy: 'yes',
     gpu: 'partial',
-    notes: '/gpu/ separate route; embed-vs-route decision open',
+    notes: '/gpu/ separate route (decided) — shell start_url=/; see docs/PWA_GPU_ROUTE.md',
   },
   {
     capability: 'KTX2 / Draco optional assets',

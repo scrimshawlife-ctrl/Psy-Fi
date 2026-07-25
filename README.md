@@ -51,7 +51,7 @@ Full board: [`docs/PRODUCTION_READINESS.md`](docs/PRODUCTION_READINESS.md).
 
 Ship checklist: `pytest` → `npm test && npm run gpu:build` → `docker compose up -d --build` → `/health` `/ready` `/` `/gpu/`.
 
-**Next steps:** validate Ultra on real NVIDIA/AMD/Intel desktops → G4 pixel goldens (WebGPU CI) → PWA embed decision. Details: [`docs/CONTINUATION_PLAN.md`](docs/CONTINUATION_PLAN.md).
+**Next steps:** validate Ultra on real NVIDIA/AMD/Intel desktops → optional WebGPU pixel goldens. Details: [`docs/CONTINUATION_PLAN.md`](docs/CONTINUATION_PLAN.md).
 
 ## Install
 
@@ -156,6 +156,7 @@ Canonical browser API is **`/api/v1`** (**hard-frozen**). Legacy `/api/*` and `/
 | ---------------------------------------------------------------------------------- | -------------------------- |
 | [`docs/PRODUCTION_READINESS.md`](docs/PRODUCTION_READINESS.md)                     | Production readiness board |
 | [`docs/DESKTOP_GPU.md`](docs/DESKTOP_GPU.md)                                       | Multi-vendor WebGPU Ultra  |
+| [`docs/PWA_GPU_ROUTE.md`](docs/PWA_GPU_ROUTE.md)                                   | `/gpu/` separate-route decision |
 | [`docs/NVIDIA_GPU.md`](docs/NVIDIA_GPU.md)                                         | NVIDIA drivers + Compose   |
 | [`PLANS.md`](PLANS.md)                                                             | Product phases + gates     |
 | [`docs/CONTINUATION_PLAN.md`](docs/CONTINUATION_PLAN.md)                           | Web-track next steps       |

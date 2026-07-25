@@ -24,7 +24,7 @@ Scope: web app / PWA / API — native iOS deferred (`IOS_MIGRATION.md`).
 | GPU | Draco/KTX2 upload + SceneAssetLayer | **done** | bridges ready; Basis/real Draco WASM optional |
 | GPU | G4 cutover ship gates | **done** | parity CI · structure goldens · soft pixel goldens · `G4_CUTOVER.md` |
 | PWA | Installable shell + SW + IndexedDB | **done** | device QA 2026-07-25 |
-| PWA | `/gpu/` separate-route decision | **done** | `PWA_GPU_ROUTE.md` · SW v9 |
+| PWA | `/gpu/` separate-route decision | **done** | `PWA_GPU_ROUTE.md` · SW v10 |
 | Deploy | Docker-only path | **done** | `DEPLOYMENT.md` · multi-stage GPU `dist/` |
 | Deploy | Compose healthcheck (no curl) | **done** | urllib |
 | CI | pytest + hallmark + gpu test/typecheck/build | **done** | `.github/workflows/ci.yml` |

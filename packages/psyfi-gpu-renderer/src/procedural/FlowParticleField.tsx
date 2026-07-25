@@ -36,7 +36,7 @@ export function FlowParticleField({
   const peripheral = Number(snapshot.parameter_field.parameters?.peripheral_flow ?? 0.25)
   const seed = Number(snapshot.procedural.crystals[0]?.seed ?? 7)
   const count = particleBudgetForTier(Math.min(cfg.particleBudget, 2048), intensity)
-  const color = (snapshot.parameter_field.palette?.tracers as string) || '#63F3E8'
+  const color = (snapshot.parameter_field.palette?.tracers as string) || '#3ee7f2'
   const backend = resolveComputeBackend(gl, tier !== 'battery')
 
   if (backend === 'webgpu') {

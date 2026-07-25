@@ -8,7 +8,7 @@ import type { PixelFrame } from './pixelTypes'
 import { PIXEL_GOLDEN_SIZE, softPresentSnapshot } from './softPresent'
 
 function parseHexColor(hex: string): [number, number, number] {
-  const s = String(hex || '#63F3E8').replace('#', '')
+  const s = String(hex || '#3ee7f2').replace('#', '')
   return [parseInt(s.slice(0, 2), 16) || 99, parseInt(s.slice(2, 4), 16) || 243, parseInt(s.slice(4, 6), 16) || 232]
 }
 
@@ -34,7 +34,7 @@ export async function webgpuPaletteClearCapture(
     const adapter = await gpu.requestAdapter({ powerPreference: 'high-performance' })
     if (!adapter) return null
     const device = await adapter.requestDevice()
-    const [r, g, b] = parseHexColor(String(snapshot.parameter_field.palette?.tracers || '#63F3E8'))
+    const [r, g, b] = parseHexColor(String(snapshot.parameter_field.palette?.tracers || '#3ee7f2'))
     const texture = device.createTexture({
       size: { width: size, height: size },
       format: 'rgba8unorm',

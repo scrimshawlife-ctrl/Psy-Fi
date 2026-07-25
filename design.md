@@ -54,5 +54,7 @@ Live CSS maps these onto existing `--pf-*` / `--color-*` aliases in `psyfi_api/s
 
 ## Brand marks
 - Core sigil: `docs/icons/pf-icon-core-sigil-{24,48}.svg` (served at `/assets/icons/`)
+- Icon pack: wire via `.pf-icon` CSS masks (`currentColor`) in shell chrome — do not leave as an orphan asset dump
 - PWA: `psyfi_api/static/icon-{192,512}.png` + `apple-touch-icon.png`
 - Marketing headers/footers: `docs/images/psyfi-{header,footer}-*.svg` (Space Grotesk + one cyan signal)
+- `/gpu/` loads `/static/fonts/fonts.css` and `packages/psyfi-gpu-renderer/src/styles/chrome.css`

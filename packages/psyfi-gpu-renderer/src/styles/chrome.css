@@ -1,0 +1,146 @@
+/* Hallmark · genre: atmospheric · macrostructure: Workbench · design-system: design.md · designed-as-app
+   Hallmark · pre-emit critique: P5 H4 E4 S5 R5 V4 · tokens: pass · icons: pass
+   GPU Lab chrome — calm instrument bar; field owns the canvas. */
+
+:root {
+  color-scheme: dark;
+  --pf-bg-0: #0a0e14;
+  --pf-bg-1: #121820;
+  --pf-bg-2: #1a222e;
+  --pf-border-subtle: #2a3344;
+  --pf-text-main: #eef2f7;
+  --pf-text-muted: #9aa6b8;
+  --pf-text-soft: #6d7a8f;
+  --pf-cyan: #3ee7f2;
+  --pf-danger: #ff4f6c;
+  --pf-font-main: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --pf-font-display: "Space Grotesk", "IBM Plex Sans", system-ui, sans-serif;
+  --pf-font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --color-paper: var(--pf-bg-0);
+  --color-ink: var(--pf-text-main);
+  --color-ink-2: var(--pf-text-muted);
+  --color-accent: var(--pf-cyan);
+}
+
+.gpu-app {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  height: 100%;
+  background: var(--pf-bg-0);
+  color: var(--pf-text-main);
+  font-family: var(--pf-font-main);
+}
+
+.gpu-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--pf-border-subtle);
+  background: var(--pf-bg-1);
+}
+
+.gpu-brand {
+  letter-spacing: -0.02em;
+  font-family: var(--pf-font-display);
+  font-weight: 600;
+}
+
+.gpu-status {
+  color: var(--pf-text-muted);
+  font-size: 13px;
+}
+
+.gpu-header label {
+  font-size: 13px;
+  color: var(--pf-text-muted);
+}
+
+.gpu-header select,
+.gpu-header input[type="number"],
+.gpu-header input[type="range"],
+.gpu-header button {
+  font: inherit;
+  color: var(--pf-text-main);
+  background: var(--pf-bg-0);
+  border: 1px solid var(--pf-border-subtle);
+  border-radius: 4px;
+  padding: 0.35rem 0.5rem;
+}
+
+.gpu-header button {
+  cursor: pointer;
+  min-height: 36px;
+}
+
+.gpu-header button:hover,
+.gpu-header button:focus-visible {
+  border-color: var(--pf-cyan);
+  outline: none;
+}
+
+.gpu-header a {
+  margin-left: auto;
+  font-size: 13px;
+  color: var(--pf-cyan);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.gpu-stage {
+  position: relative;
+  min-height: 0;
+  background: var(--pf-bg-0);
+}
+
+.gpu-fallback {
+  padding: 24px;
+  color: var(--pf-text-muted);
+  max-width: 40rem;
+  line-height: 1.5;
+}
+
+.gpu-fallback a {
+  color: var(--pf-cyan);
+}
+
+.gpu-seed-input {
+  width: 90px;
+}
+
+.gpu-hud {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  padding: 8px 10px;
+  font-size: 12px;
+  line-height: 1.45;
+  background: color-mix(in srgb, var(--pf-bg-0) 88%, transparent);
+  border: 1px solid var(--pf-border-subtle);
+  color: var(--pf-text-main);
+  max-width: 460px;
+  pointer-events: none;
+  font-family: var(--pf-font-mono);
+}
+
+.gpu-hud-accent {
+  color: var(--pf-cyan);
+}
+
+.gpu-hud-muted {
+  color: var(--pf-text-muted);
+  word-break: break-word;
+}
+
+.gpu-hud-soft {
+  color: var(--pf-text-soft);
+}
+
+.gpu-hud-ok {
+  color: var(--pf-cyan);
+}
+
+.gpu-hud-over {
+  color: var(--pf-danger);
+}

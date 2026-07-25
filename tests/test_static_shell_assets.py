@@ -50,7 +50,9 @@ def test_template_wires_cancel_recovery_and_renderer() -> None:
 
 def test_service_worker_precaches_renderer_assets() -> None:
     sw = (STATIC / "sw.js").read_text(encoding="utf-8")
-    assert "psyfi-shell-v15" in sw
+    assert "psyfi-shell-v16" in sw
+    assert ".woff2" in sw
+    assert "/assets/icons/pf-icon-reset-24.svg" in sw
     assert "/static/renderer.js" in sw
     assert "/static/render_worker.js" in sw
     assert "/static/viz/math.js" in sw
@@ -93,9 +95,15 @@ def test_pwa_png_icons_exist() -> None:
     assert "/static/fonts/fonts.css" in html
     assert "/static/apple-touch-icon.png" in html
     assert 'class="sigil-mark"' in html
+    assert "pf-icon-reset" in html
+    assert "experience-advanced" in html
+    assert 'modulator-panel" open' not in html
+    assert ">Icons</a>" not in html
     style = (STATIC / "style.css").read_text(encoding="utf-8")
     assert "design-system: design.md" in style
     assert "tabular-nums" in style
+    assert ".pf-icon" in style
+    assert "max-width: 1280px" in style
     # Live Experience leads Workbench (field before sim form).
     assert html.index('id="experiencePanel"') < html.index('id="workspace"')
 

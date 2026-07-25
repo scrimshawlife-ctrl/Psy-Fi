@@ -29,7 +29,7 @@ export function SceneRoot({
   const neutral = !!snapshot?.parameter_field.neutral_view
 
   const palette = useMemo(() => {
-    const tracers = (snapshot?.parameter_field.palette?.tracers as string) || '#63F3E8'
+    const tracers = (snapshot?.parameter_field.palette?.tracers as string) || '#3ee7f2'
     return tracers
   }, [snapshot?.parameter_field.palette])
 

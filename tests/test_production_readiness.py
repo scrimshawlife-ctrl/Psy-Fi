@@ -13,6 +13,15 @@ def test_readme_has_production_readiness_board() -> None:
     assert "## Production readiness" in readme
     assert "docs/PRODUCTION_READINESS.md" in readme
     assert "hard_frozen" in readme or "hard freeze" in readme.lower()
+    assert "NVIDIA" in readme or "nvidia" in readme.lower()
+
+
+def test_nvidia_gpu_doc_covers_rtx_5060() -> None:
+    doc = (ROOT / "docs" / "NVIDIA_GPU.md").read_text(encoding="utf-8")
+    assert "RTX 5060" in doc
+    assert "WebGPU" in doc
+    assert "--profile nvidia" in doc
+    assert (ROOT / "scripts" / "check_nvidia_host.sh").exists()
 
 
 def test_production_readiness_board_doc() -> None:

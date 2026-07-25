@@ -7,7 +7,8 @@ import { DebugHud } from './DebugOverlay/DebugHud'
 import {
   normalizeTier,
   probeDeviceCaps,
-  refineBatteryCaps,
+  recommendedTier,
+  refineDeviceCaps,
   resolveTier,
   type DeviceCaps,
   type QualityTier,
@@ -64,9 +65,16 @@ export function App() {
   }, [publisher, store, interpolator, substance, mode, intensity, seed, tier])
 
   useEffect(() => {
-    void refineBatteryCaps(probeDeviceCaps()).then((next) => {
+    void refineDeviceCaps(probeDeviceCaps()).then((next) => {
       setCaps(next)
-      setTier((prev) => resolveTier(prev, next))
+      // Auto-select Ultra on high-end NVIDIA (e.g. RTX 5060) unless user already picked.
+      setTier((prev) => {
+        const suggested = recommendedTier(next)
+        if (prev === 'balanced' && (suggested === 'ultra' || suggested === 'high')) {
+          return resolveTier(suggested, next)
+        }
+        return resolveTier(prev, next)
+      })
     })
   }, [])
 
@@ -170,13 +178,21 @@ export function App() {
           <div style={{ padding: 24, color: '#8aa8a4' }}>
             <p>WebGPU is not available in this browser.</p>
             <p>
-              Use the <a href="/">legacy Live Experience</a> (Canvas / WebGL) or try Chrome / Safari with
-              WebGPU enabled.
+              On NVIDIA desktops (e.g. RTX 5060), use Chrome/Edge with current drivers and force High
+              performance GPU — see <code>/docs</code> / <code>docs/NVIDIA_GPU.md</code>. Or use the{' '}
+              <a href="/">legacy Live Experience</a>.
             </p>
           </div>
         )}
         {showHud ? (
-          <DebugHud tier={effectiveTier} stats={stats} passIds={passes} webgpu={caps.webgpu} />
+          <DebugHud
+            tier={effectiveTier}
+            stats={stats}
+            passIds={passes}
+            webgpu={caps.webgpu}
+            adapterLabel={caps.adapter.description || caps.adapter.device || caps.adapter.vendor}
+            isNvidia={caps.isNvidia}
+          />
         ) : null}
       </div>
     </div>

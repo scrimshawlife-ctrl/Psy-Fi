@@ -1,5 +1,6 @@
 /** Public package surface — subsystems are independently replaceable. */
 export * from './contracts/QualityTier'
+export * from './contracts/GpuAdapter'
 export * from './contracts/SceneSnapshot'
 export * from './contracts/RenderGraph'
 export * from './bridge/SnapshotStore'

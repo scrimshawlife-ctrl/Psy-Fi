@@ -7,6 +7,18 @@ const caps: DeviceCaps = {
   maxTextureSize: 8192,
   preferBattery: false,
   isMobile: false,
+  preferUltra: false,
+  isNvidia: false,
+  isDiscrete: false,
+  adapter: {
+    vendor: 'unknown',
+    description: '',
+    device: '',
+    architecture: '',
+    isDiscrete: false,
+    isNvidia: false,
+    isHighEndNvidia: false,
+  },
 }
 
 describe('render graph budgets', () => {

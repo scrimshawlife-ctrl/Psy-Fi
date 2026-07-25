@@ -38,16 +38,24 @@ Board: [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md)
 - [x] Atmosphere fog / DoF / motion blur / chromatic aberration
 - [x] Device matrix + Phase 4 human evidence (2026-07-25)
 
+### Done — NVIDIA desktop path
+
+- [x] High-performance WebGPU adapter (`powerPreference`)
+- [x] RTX 30/40/50 (incl. **5060**) → recommended **Ultra**
+- [x] HUD adapter label + `docs/NVIDIA_GPU.md`
+- [x] Compose `--profile nvidia` + `scripts/check_nvidia_host.sh`
+
 ### Optional next
 
 - Profiling overlay polish in `/gpu/` UI
 - Draco/KTX2 WASM GPU upload
 - Legacy WebGL 1:1 shaders
+- Future CUDA workers (container GPU already reservable)
 
 ## Recommended next slice
 
-1. Optional: Draco/KTX2 GPU upload or `/gpu/` profiling HUD polish.
-2. Re-run device matrix after major UX changes.
+1. On your RTX 5060 machine: `./scripts/check_nvidia_host.sh` then open `/gpu/` in Chrome/Edge.
+2. Optional: Draco/KTX2 GPU upload or `/gpu/` profiling HUD polish.
 
 ## Commands
 

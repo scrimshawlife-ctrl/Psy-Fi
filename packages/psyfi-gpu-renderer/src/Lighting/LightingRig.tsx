@@ -1,6 +1,7 @@
 import type { SceneSnapshotV1 } from '../contracts/SceneSnapshot'
 import type { QualityTier } from '../contracts/QualityTier'
 import { tierConfig } from '../contracts/QualityTier'
+import { PF_PAPER, PF_VIOLET_FIELD } from '../styles/tokens'
 
 export function LightingRig({
   snapshot,
@@ -17,8 +18,8 @@ export function LightingRig({
   const fogFar = cfg.post.volumetricFog && !neutral ? 9.5 : 40
   return (
     <>
-      <color attach="background" args={['#0a0e14']} />
-      <fog attach="fog" args={['#0a0e14', fogNear, fogFar]} />
+      <color attach="background" args={[PF_PAPER]} />
+      <fog attach="fog" args={[PF_PAPER, fogNear, fogFar]} />
       <ambientLight intensity={ambient} />
       <directionalLight
         castShadow={cfg.post.contactShadows}
@@ -28,7 +29,7 @@ export function LightingRig({
         shadow-mapSize-height={cfg.tier === 'ultra' ? 2048 : 1024}
       />
       {/* Field-only violet fill; chrome stays cyan-signal per design.md */}
-      <pointLight position={[-2, 1.5, -1]} intensity={0.4} color="#7a8fd4" />
+      <pointLight position={[-2, 1.5, -1]} intensity={0.4} color={PF_VIOLET_FIELD} />
     </>
   )
 }

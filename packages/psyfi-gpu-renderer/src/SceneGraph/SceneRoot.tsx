@@ -14,6 +14,7 @@ import { FlowParticleField } from '../procedural/FlowParticleField'
 import { LightingRig } from '../Lighting/LightingRig'
 import { PostStack } from '../PostProcessing/PostStack'
 import { SceneAssetLayer } from '../AssetPipeline/SceneAssetLayer'
+import { PF_CYAN, PF_PAPER } from '../styles/tokens'
 
 export function SceneRoot({
   snapshot,
@@ -29,7 +30,7 @@ export function SceneRoot({
   const neutral = !!snapshot?.parameter_field.neutral_view
 
   const palette = useMemo(() => {
-    const tracers = (snapshot?.parameter_field.palette?.tracers as string) || '#3ee7f2'
+    const tracers = (snapshot?.parameter_field.palette?.tracers as string) || PF_CYAN
     return tracers
   }, [snapshot?.parameter_field.palette])
 
@@ -64,7 +65,7 @@ export function SceneRoot({
           blur={tier === 'ultra' ? 2.2 : 2.8}
           far={4}
           resolution={tier === 'ultra' ? 1024 : 512}
-          color="#050508"
+          color={PF_PAPER}
         />
       ) : null}
       <PostStack snapshot={snapshot} tier={tier} />

@@ -14,6 +14,8 @@
     <link rel="manifest" href="/static/manifest.json">
     <link rel="icon" href="/assets/icons/pf-icon-core-sigil-24.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/static/apple-touch-icon.png">
+    <link rel="preload" href="/static/images/psyfi-hero.jpg" as="image" fetchpriority="high">
+    <link rel="preload" href="/static/fonts/V8mDoQDjQSkFtoMM3T6r8E7mPbF4Cw.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="/static/fonts/fonts.css">
     <link rel="stylesheet" href="/static/style.css">
 </head>
@@ -73,8 +75,13 @@
             <a href="/gpu/" class="nav-link nav-link-icon" title="WebGPU GPU Lab — separate /gpu/ route (not embedded in this shell)"><span class="pf-icon pf-icon-console" aria-hidden="true"></span><span>GPU Lab</span></a>
             <a href="#presets" class="nav-link">Presets</a>
             <a href="#results" class="nav-link">Results</a>
-            <a href="#history" class="nav-link">History</a>
-            <a href="#capabilities" class="nav-link">Capabilities</a>
+            <details class="nav-more">
+                <summary class="nav-link">More</summary>
+                <div class="nav-more-menu">
+                    <a href="#history" class="nav-link">History</a>
+                    <a href="#capabilities" class="nav-link">Capabilities</a>
+                </div>
+            </details>
             <button type="button" class="nav-link" id="installButton" hidden>Install app</button>
         </nav>
 

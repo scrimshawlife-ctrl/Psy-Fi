@@ -50,7 +50,7 @@ def test_template_wires_cancel_recovery_and_renderer() -> None:
 
 def test_service_worker_precaches_renderer_assets() -> None:
     sw = (STATIC / "sw.js").read_text(encoding="utf-8")
-    assert "psyfi-shell-v18" in sw
+    assert "psyfi-shell-v19" in sw
     assert ".woff2" in sw
     assert "/assets/icons/pf-icon-reset-24.svg" in sw
     assert "/assets/icons/pf-icon-valence-meter-24.svg" in sw
@@ -110,6 +110,9 @@ def test_pwa_png_icons_exist() -> None:
     assert "launch-sigil" in html
     assert "/static/images/psyfi-hero.jpg" in html
     assert "launch-caption" in html
+    assert "nav-more" in html
+    assert 'rel="preload"' in html
+    assert "V8mDoQDjQSkFtoMM3T6r8E7mPbF4Cw.woff2" in html
     assert (STATIC / "images" / "psyfi-hero.jpg").exists()
     assert "pf-icon-valence" in html
     assert "syncFieldStatusLive" in (STATIC / "app.js").read_text(encoding="utf-8")

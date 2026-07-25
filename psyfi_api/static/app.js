@@ -307,7 +307,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const item = document.createElement('li');
             item.className = 'history-item';
             item.innerHTML = `
-                <div>
+                <div class="history-title">
+                    <span class="pf-icon pf-icon-console" aria-hidden="true"></span>
                     <strong>${record.width}×${record.height}</strong>
                     · seed <code>${record.seed}</code>
                     · ${record.preset || 'no preset'}

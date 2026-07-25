@@ -59,6 +59,18 @@
       "footer": "Ft2",
       "designed_as_app": true,
       "notes": "Full-bleed field hero on launch; GPU instrument controls collapsed; SW v18"
+    },
+    {
+      "date": "2026-07-25",
+      "target": "shell polish gaps + GPU tokens + nav More",
+      "verb": "fix",
+      "genre": "atmospheric",
+      "macrostructure": "Photographic\u2192Workbench",
+      "theme": "design.md",
+      "nav": "N9",
+      "footer": "Ft2",
+      "designed_as_app": true,
+      "notes": "Launch title ink; font/hero preload; nav More; history tabular; GPU PF_* tokens; SW v19; docs sync"
     }
   ]
 }

@@ -62,9 +62,16 @@
       "type": "object",
       "properties": {
         "mode": { "type": "string" },
-        "intensity": { "type": "number" }
+        "intensity": { "type": "number" },
+        "experience_id": { "type": ["string", "null"] },
+        "experience_title": { "type": ["string", "null"] },
+        "experience_score": { "type": ["number", "null"] }
       }
     },
+    "applied_experience_id": { "type": ["string", "null"] },
+    "applied_mode": { "type": ["string", "null"] },
+    "applied_intensity": { "type": ["number", "null"] },
+    "kind": { "type": "string" },
     "note": { "type": "string" }
   }
 }

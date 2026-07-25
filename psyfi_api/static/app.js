@@ -1308,12 +1308,17 @@ document.addEventListener('DOMContentLoaded', () => {
             imageSeedState = body;
             persistImageSeedHandoff(body);
             seedInput.value = String(body.master_seed >>> 0);
-            if (imageSeedApplyRecommended?.checked && body.applied_mode) {
-                modeSelect.value = body.applied_mode;
-            }
-            if (imageSeedApplyRecommended?.checked && body.applied_intensity != null) {
-                intensityRange.value = String(body.applied_intensity);
-                intensityValue.textContent = Number(body.applied_intensity).toFixed(2);
+            if (imageSeedApplyRecommended?.checked) {
+                const recExp = body.applied_experience_id || body.recommended?.experience_id;
+                if (recExp && experienceSelect) {
+                    const hasOpt = [...experienceSelect.options].some((o) => o.value === recExp);
+                    if (hasOpt) experienceSelect.value = recExp;
+                }
+                if (body.applied_mode) modeSelect.value = body.applied_mode;
+                if (body.applied_intensity != null) {
+                    intensityRange.value = String(body.applied_intensity);
+                    intensityValue.textContent = Number(body.applied_intensity).toFixed(2);
+                }
             }
             if (typeof player.setImageHints === 'function') {
                 player.setImageHints(body.parameter_hints || null);
@@ -1333,9 +1338,12 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             syncModulators();
             syncGpuLabLinks();
+            const recTitle = body.recommended?.experience_title || body.applied_experience_id || '';
             setImageSeedUiState(
                 'success',
-                `Seed ${body.master_seed} · loading live field (Pass 2)…`,
+                recTitle
+                    ? `Seed ${body.master_seed} · ${recTitle} · loading live field…`
+                    : `Seed ${body.master_seed} · loading live field (Pass 2)…`,
             );
             loadBtn.click();
         } catch (err) {
@@ -1445,6 +1453,62 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     document.getElementById('exportViewportBtn')?.addEventListener('click', () => {
         player.exportViewportPng();
+    });
+
+    async function fetchJourneyPromptOnly() {
+        if (!player.timeline) throw new Error('Load an experience first');
+        const res = await fetch('/api/v1/visualize/export-journey', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                timeline: player.timeline,
+                stills: [],
+                image_seed: imageSeedState
+                    ? {
+                          master_seed: imageSeedState.master_seed,
+                          influence: imageSeedState.influence,
+                          features: imageSeedState.features,
+                          parameter_hints: imageSeedState.parameter_hints,
+                      }
+                    : null,
+                experience_id: experienceSelect.value || player.timeline.experience_id || null,
+                t2v_provider: 'external',
+            }),
+        });
+        const body = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(body.detail || res.statusText || 'export-journey failed');
+        return body;
+    }
+
+    document.getElementById('copyT2vPromptBtn')?.addEventListener('click', async () => {
+        const hint = document.getElementById('t2vPromptHint');
+        try {
+            const body = await fetchJourneyPromptOnly();
+            const prompt = body?.t2v?.prompt || '';
+            if (!prompt) throw new Error('No prompt returned');
+            if (navigator.clipboard?.writeText) {
+                await navigator.clipboard.writeText(prompt);
+            } else {
+                const ta = document.createElement('textarea');
+                ta.value = prompt;
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                ta.remove();
+            }
+            if (hint) {
+                hint.hidden = false;
+                hint.textContent = `Copied T2V prompt (${prompt.length} chars) — paste into an external tool.`;
+            }
+            statusEl.textContent = 'T2V prompt copied';
+        } catch (err) {
+            console.error(err);
+            if (hint) {
+                hint.hidden = false;
+                hint.textContent = err.message || String(err);
+            }
+            alert(err.message || String(err));
+        }
     });
 
     document.getElementById('exportJourneyBtn')?.addEventListener('click', async () => {

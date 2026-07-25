@@ -121,6 +121,15 @@ class ExportJourneyRequest(BaseModel):
     t2v_provider: str = "external"
 
 
+class ImageSeedJourneyJsonRequest(ImageSeedJsonRequest):
+    """One-shot: Pass-1 image seed + parameter timeline + export-journey prompt package."""
+
+    steps: int = Field(default=12, ge=2, le=64)
+    quality_tier: str = "balanced"
+    reduce_motion: bool = False
+    dim_flashing: bool = False
+
+
 def _capped_intensity(
     *,
     substance: str,
@@ -368,17 +377,22 @@ def _run_image_seed(
     apply_recommended: bool,
 ) -> dict[str, Any]:
     catalog = get_default_catalog()
-    experience = catalog.get(experience_id) if experience_id else None
-    if experience_id and experience is None:
-        raise HTTPException(status_code=404, detail=f"Experience not found: {experience_id}")
+    # apply_recommended ignores client experience_id so Pass-1 conditioner and
+    # applied_* fields share the same catalog pick.
+    client_experience_id = None if apply_recommended else experience_id
+    experience = catalog.get(client_experience_id) if client_experience_id else None
+    if client_experience_id and experience is None:
+        raise HTTPException(status_code=404, detail=f"Experience not found: {client_experience_id}")
     substance_n = _normalize_substance(substance or (experience or {}).get("substance") or "lsd")
     _assert_experience_substance(experience, substance_n)
+    # Cap against overlay first; may re-cap after recommended experience is chosen.
     intensity_c = _capped_intensity(
         substance=substance_n,
         intensity=intensity,
         experience=experience,
     )
     overlay = catalog.overlay(substance_n)
+    candidates = catalog.list(substance=substance_n, valence=None) or catalog.list(valence=None)
     try:
         result = build_image_seed(
             image=image,
@@ -390,18 +404,34 @@ def _run_image_seed(
             influence=influence,
             include_preview=include_preview,
             include_source_field=include_source_field,
+            recipe_candidates=candidates,
+            prefer_recommended_experience=bool(apply_recommended) or experience is None,
         )
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     except Exception as exc:  # noqa: BLE001
         raise HTTPException(status_code=400, detail=f"image decode failed: {exc}") from exc
 
+    applied_exp_id = result.get("experience_id")
+    applied_exp = catalog.get(applied_exp_id) if applied_exp_id else experience
     if apply_recommended and result.get("recommended"):
         result["applied_mode"] = result["recommended"].get("mode")
-        result["applied_intensity"] = result["recommended"].get("intensity")
+        # Re-apply strictest intensity cap for the recommended recipe.
+        rec_i = float(result["recommended"].get("intensity") or intensity_c)
+        result["applied_intensity"] = _capped_intensity(
+            substance=substance_n,
+            intensity=rec_i,
+            experience=applied_exp,
+        )
+        result["applied_experience_id"] = result["recommended"].get("experience_id") or applied_exp_id
     else:
         result["applied_mode"] = mode
-        result["applied_intensity"] = intensity_c
+        result["applied_intensity"] = _capped_intensity(
+            substance=substance_n,
+            intensity=intensity_c,
+            experience=applied_exp,
+        )
+        result["applied_experience_id"] = experience_id or applied_exp_id
     result["kind"] = "image_seed"
     return result
 
@@ -449,6 +479,63 @@ async def image_seed_json(body: ImageSeedJsonRequest) -> dict[str, Any]:
         include_source_field=body.include_source_field,
         apply_recommended=body.apply_recommended,
     )
+
+
+@router.post("/visualize/image-seed-journey")
+async def image_seed_journey_json(body: ImageSeedJourneyJsonRequest) -> dict[str, Any]:
+    """One-shot: condition image → timeline → export-journey prompt package (no stills)."""
+    seed_result = _run_image_seed(
+        image=body.image_base64,
+        substance=body.substance,
+        experience_id=body.experience_id,
+        mode=body.mode,
+        intensity=body.intensity,
+        influence=body.influence,
+        include_preview=body.include_preview,
+        include_source_field=body.include_source_field,
+        apply_recommended=body.apply_recommended,
+    )
+    catalog = get_default_catalog()
+    exp_id = seed_result.get("applied_experience_id") or seed_result.get("experience_id")
+    experience = catalog.get(exp_id) if exp_id else None
+    substance_n = _normalize_substance(seed_result.get("substance") or body.substance)
+    mode_n = seed_result.get("applied_mode") or body.mode
+    intensity_n = float(seed_result.get("applied_intensity") or body.intensity)
+    modulators = {"image": float(seed_result.get("influence") or 0.0)}
+    timeline = build_parameter_timeline(
+        steps=body.steps,
+        substance=substance_n,
+        mode=mode_n,
+        intensity=intensity_n,
+        seed=int(seed_result["master_seed"]),
+        experience=experience,
+        modulators=modulators,
+        image_hints=seed_result.get("parameter_hints"),
+        reduce_motion=body.reduce_motion,
+        dim_flashing=body.dim_flashing,
+        quality_tier=body.quality_tier,
+        neutral_view=False,
+    )
+    timeline["kind"] = "timeline"
+    journey = build_export_journey(
+        timeline=timeline,
+        stills=None,
+        image_seed=seed_result,
+        experience=experience,
+        t2v_provider="external",
+    )
+    journey["kind"] = "export_journey"
+    return {
+        "schema": "psyfi.image_seed_journey.v1",
+        "kind": "image_seed_journey",
+        "image_seed": seed_result,
+        "timeline": timeline,
+        "journey": journey,
+        "note": (
+            "One-shot Pass-1 seed + Pass-2 timeline + T2V prompt package. "
+            "Capture viewport stills client-side if needed. Not medical advice."
+        ),
+    }
 
 
 @router.post("/visualize/scene-snapshot")

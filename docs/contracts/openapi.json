@@ -213,6 +213,98 @@
         "title": "HTTPValidationError",
         "type": "object"
       },
+      "ImageSeedJourneyJsonRequest": {
+        "description": "One-shot: Pass-1 image seed + parameter timeline + export-journey prompt package.",
+        "properties": {
+          "apply_recommended": {
+            "default": false,
+            "title": "Apply Recommended",
+            "type": "boolean"
+          },
+          "dim_flashing": {
+            "default": false,
+            "title": "Dim Flashing",
+            "type": "boolean"
+          },
+          "experience_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Experience Id"
+          },
+          "image_base64": {
+            "title": "Image Base64",
+            "type": "string"
+          },
+          "include_preview": {
+            "default": true,
+            "title": "Include Preview",
+            "type": "boolean"
+          },
+          "include_source_field": {
+            "default": true,
+            "title": "Include Source Field",
+            "type": "boolean"
+          },
+          "influence": {
+            "default": 0.65,
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Influence",
+            "type": "number"
+          },
+          "intensity": {
+            "default": 0.7,
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Intensity",
+            "type": "number"
+          },
+          "mode": {
+            "default": "open",
+            "enum": [
+              "open",
+              "attractor",
+              "void",
+              "power"
+            ],
+            "title": "Mode",
+            "type": "string"
+          },
+          "quality_tier": {
+            "default": "balanced",
+            "title": "Quality Tier",
+            "type": "string"
+          },
+          "reduce_motion": {
+            "default": false,
+            "title": "Reduce Motion",
+            "type": "boolean"
+          },
+          "steps": {
+            "default": 12,
+            "maximum": 64.0,
+            "minimum": 2.0,
+            "title": "Steps",
+            "type": "integer"
+          },
+          "substance": {
+            "default": "lsd",
+            "title": "Substance",
+            "type": "string"
+          }
+        },
+        "required": [
+          "image_base64"
+        ],
+        "title": "ImageSeedJourneyJsonRequest",
+        "type": "object"
+      },
       "ImageSeedJsonRequest": {
         "description": "JSON alternate for Pass-1 image seed (base64). Prefer multipart for large files.",
         "properties": {
@@ -3266,6 +3358,50 @@
           }
         },
         "summary": "Image Seed Multipart",
+        "tags": [
+          "experiences"
+        ]
+      }
+    },
+    "/api/v1/visualize/image-seed-journey": {
+      "post": {
+        "description": "One-shot: condition image \u2192 timeline \u2192 export-journey prompt package (no stills).",
+        "operationId": "image_seed_journey_json_api_v1_visualize_image_seed_journey_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ImageSeedJourneyJsonRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Image Seed Journey Json Api V1 Visualize Image Seed Journey Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Image Seed Journey Json",
         "tags": [
           "experiences"
         ]

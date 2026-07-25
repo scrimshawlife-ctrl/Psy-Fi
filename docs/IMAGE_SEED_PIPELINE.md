@@ -1,6 +1,6 @@
 # Image Seed Pipeline (two-pass)
 
-Status: **active** — Pass 1 + Pass 2 + GPU texture handoff + export-journey sidecar  
+Status: **active** — Pass 1 + Pass 2 + catalog recommend + GPU handoff + export-journey sidecar  
 Related: [`VISUAL_EXPERIENCES.md`](VISUAL_EXPERIENCES.md), [`rendering/ASSET_STANDARDS.md`](rendering/ASSET_STANDARDS.md), [`CONTINUATION_PLAN.md`](CONTINUATION_PLAN.md)
 
 ## Goal
@@ -32,12 +32,13 @@ Module: `psyfi_core/visualization/image_seed.py`
 
 1. Decode PNG/JPEG → RGBA, downscale (max edge 384).
 2. Measure features (mean RGB, contrast, edge density, warm/cool, energy).
-3. Apply recipe/overlay biases as pixel ops (saturation, void crush, symmetry fold, mild turbulence) scaled by `influence`.
-4. Derive `master_seed` from SHA-256 of conditioned bytes.
-5. Emit capped `parameter_hints` for live mapping.
-6. Emit luminance `source_field` for Live Experience source-plane blend.
-7. Optional small PNG preview (base64) for UI — discard after response.
-8. Optional conditioned texture PNG (≤256 edge) for GPU `assets.images` data-URL.
+3. Recommend mode/intensity and best-matching catalog `experience_id` from features.
+4. Apply recipe/overlay biases as pixel ops (saturation, void crush, symmetry fold, mild turbulence) scaled by `influence`.
+5. Derive `master_seed` from SHA-256 of conditioned bytes.
+6. Emit capped `parameter_hints` for live mapping.
+7. Emit luminance `source_field` for Live Experience source-plane blend.
+8. Optional small PNG preview (base64) for UI — discard after response.
+9. Optional conditioned texture PNG (≤256 edge) for GPU `assets.images` data-URL.
 
 ## Pass 2 — Live render
 
@@ -61,9 +62,12 @@ No LLM/video provider is invoked in-app — paste externally.
 
 `POST /api/v1/visualize/image-seed`
 
-- Multipart: `file` + form fields (`substance`, `experience_id`, `mode`, `intensity`, `influence`, …)
+- Multipart: `file` + form fields (`substance`, `experience_id`, `mode`, `intensity`, `influence`, `apply_recommended`, …)
 - Or JSON: `{ "image_base64": "...", ... }`
-- Response schema: `psyfi.image_seed.v1`
+- When `apply_recommended` is true, client `experience_id` is ignored; conditioner + `applied_*` use the catalog pick.
+- Response schema: `psyfi.image_seed.v1` (recommended may include `experience_id` / `experience_title` / `experience_score`)
+
+`POST /api/v1/visualize/image-seed-journey` → one-shot seed + timeline + `psyfi.export_journey.v1` prompt package (no stills)
 
 `POST /api/v1/visualize/export-journey` → `psyfi.export_journey.v1`
 

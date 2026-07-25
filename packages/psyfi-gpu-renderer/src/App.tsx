@@ -18,10 +18,15 @@ import {
 import { enabledPasses } from './contracts/RenderGraph'
 import type { SceneSnapshotV1 } from './contracts/SceneSnapshot'
 import { readGpuLaunchParams } from './bridge/launchParams'
+import { readImageSeedHandoff, type ImageSeedHandoffV1 } from './bridge/imageSeedHandoff'
 import type { OffscreenPresentMode } from './Renderer/offscreenPresent'
 
 export function App() {
   const launch = useMemo(() => readGpuLaunchParams(), [])
+  const imageSeed = useMemo<ImageSeedHandoffV1 | null>(
+    () => (launch.imageSeed ? readImageSeedHandoff() : null),
+    [launch.imageSeed],
+  )
   const store = useMemo(() => new SnapshotStore(), [])
   const interpolator = useMemo(() => new SnapshotInterpolator(), [])
   const publisher = useMemo(() => new AnalysisPublisher(store), [store])
@@ -32,10 +37,10 @@ export function App() {
   )
   const [snapshot, setSnapshot] = useState<SceneSnapshotV1 | null>(null)
   const [status, setStatus] = useState(launch.fromShell ? 'Loading from shell…' : 'Idle')
-  const [substance, setSubstance] = useState(launch.substance || 'lsd')
-  const [mode, setMode] = useState(launch.mode || 'open')
+  const [substance, setSubstance] = useState(launch.substance || imageSeed?.substance || 'lsd')
+  const [mode, setMode] = useState(launch.mode || imageSeed?.mode || 'open')
   const [intensity, setIntensity] = useState(launch.intensity ?? 0.75)
-  const [seed, setSeed] = useState(launch.seed ?? 42)
+  const [seed, setSeed] = useState(launch.seed ?? imageSeed?.master_seed ?? 42)
   const [showHud, setShowHud] = useState(true)
   const [stats, setStats] = useState(store.stats())
   const profiler = useMemo(() => new FrameProfiler(), [])
@@ -56,9 +61,14 @@ export function App() {
         intensity,
         seed,
         quality_tier: tier,
-        experience_id: launch.experienceId ?? null,
+        experience_id: launch.experienceId ?? imageSeed?.experience_id ?? null,
         include_simulation: true,
         include_fixture_assets: fixtureAssets,
+        image_hints: imageSeed?.parameter_hints ?? null,
+        image_seed_png_base64: imageSeed?.conditioned_texture_png_base64 ?? null,
+        modulators: imageSeed
+          ? { image: Math.min(1, Math.max(0, Number(imageSeed.influence) || 0)) }
+          : null,
         reduce_motion: window.matchMedia?.('(prefers-reduced-motion: reduce)').matches,
       })
       if (snap) {
@@ -68,9 +78,14 @@ export function App() {
           const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
           setSnapshot(reduceMotion ? interpolator.snap() : interpolator.sample())
         }
-        const assetN = snap.assets?.ktx2?.length || 0
+        const ktxN = snap.assets?.ktx2?.length || 0
+        const imgN = snap.assets?.images?.length || 0
+        const bits = [
+          ktxN ? `${ktxN} ktx2` : '',
+          imgN ? `${imgN} image-seed` : '',
+        ].filter(Boolean)
         setStatus(
-          `Snapshot ${snap.sequence} · ${snap.snapshot_id.slice(0, 8)}${assetN ? ` · ${assetN} ktx2` : ''}`,
+          `Snapshot ${snap.sequence} · ${snap.snapshot_id.slice(0, 8)}${bits.length ? ` · ${bits.join(' · ')}` : ''}`,
         )
       }
       setStats(store.stats())
@@ -89,6 +104,7 @@ export function App() {
     tier,
     launch.experienceId,
     fixtureAssets,
+    imageSeed,
   ])
 
   useEffect(() => {

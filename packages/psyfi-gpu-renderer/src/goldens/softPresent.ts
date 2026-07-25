@@ -144,7 +144,8 @@ export function softPresentSnapshot(
   const engines = snapshot.parameter_field.engines || {}
 
   // Fixture KTX2 ground band — locks SceneAssetLayer wiring into soft goldens.
-  const hasKtx2 = (snapshot.assets?.ktx2?.length || 0) > 0
+  const hasKtx2 =
+    (snapshot.assets?.ktx2?.length || 0) > 0 || (snapshot.assets?.images?.length || 0) > 0
   if (hasKtx2 && !neutral) {
     const y0 = Math.floor(size * 0.78)
     for (let y = y0; y < size; y++) {

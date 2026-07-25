@@ -19,6 +19,7 @@ export interface SceneAssetsNormalized {
   gltf: SceneAssetRef[]
   ktx2: SceneAssetRef[]
   splats: SceneAssetRef[]
+  images: SceneAssetRef[]
   all: SceneAssetRef[]
 }
 
@@ -36,7 +37,14 @@ export function normalizeSceneAssets(assets: SceneSnapshotV1['assets'] | undefin
   const gltf = (assets?.gltf || []).map((r, i) => asRef(r, 'gltf', i)).filter(Boolean) as SceneAssetRef[]
   const ktx2 = (assets?.ktx2 || []).map((r, i) => asRef(r, 'ktx2', i)).filter(Boolean) as SceneAssetRef[]
   const splats = (assets?.splats || []).map((r, i) => asRef(r, 'splat', i)).filter(Boolean) as SceneAssetRef[]
-  return { gltf, ktx2, splats, all: [...ktx2, ...gltf, ...splats] }
+  // Reuse ktx2 kind tag for ref shape; SceneAssetLayer special-cases PNG/data URLs.
+  const images = (assets?.images || []).map((r, i) => asRef(r, 'ktx2', i)).filter(Boolean) as SceneAssetRef[]
+  return { gltf, ktx2, splats, images, all: [...images, ...ktx2, ...gltf, ...splats] }
+}
+
+export function isPngOrDataUrl(url: string): boolean {
+  const u = String(url || '').toLowerCase()
+  return u.startsWith('data:image/') || u.endsWith('.png') || u.endsWith('.jpg') || u.endsWith('.jpeg') || u.endsWith('.webp')
 }
 
 export interface SceneAssetUploadIntent {

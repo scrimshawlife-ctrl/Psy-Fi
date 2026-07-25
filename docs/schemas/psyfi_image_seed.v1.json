@@ -46,6 +46,18 @@
       "type": ["string", "null"],
       "description": "Small PNG preview only; ephemeral, not stored server-side."
     },
+    "conditioned_texture_png_base64": {
+      "type": ["string", "null"],
+      "description": "Larger conditioned PNG for GPU assets.images data-URL attach."
+    },
+    "texture_asset": {
+      "type": ["object", "null"],
+      "properties": {
+        "id": { "type": "string" },
+        "url": { "type": "string" },
+        "role": { "type": "string" }
+      }
+    },
     "recommended": {
       "type": "object",
       "properties": {

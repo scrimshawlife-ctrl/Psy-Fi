@@ -11,6 +11,16 @@ export interface PublishOptions {
   include_simulation?: boolean
   include_fixture_assets?: boolean
   asset_pack_id?: string | null
+  image_hints?: Record<string, number> | null
+  image_seed_png_base64?: string | null
+  modulators?: {
+    camera?: number
+    motion?: number
+    midi?: number
+    audio?: number
+    haptics?: number
+    image?: number
+  } | null
   reduce_motion?: boolean
   dim_flashing?: boolean
   neutral_view?: boolean
@@ -45,6 +55,9 @@ export class AnalysisPublisher {
       include_simulation: opts.include_simulation ?? true,
       include_fixture_assets: !!opts.include_fixture_assets,
       asset_pack_id: opts.asset_pack_id ?? null,
+      image_hints: opts.image_hints ?? null,
+      image_seed_png_base64: opts.image_seed_png_base64 ?? null,
+      modulators: opts.modulators ?? null,
       reduce_motion: !!opts.reduce_motion,
       dim_flashing: !!opts.dim_flashing,
       neutral_view: !!opts.neutral_view,

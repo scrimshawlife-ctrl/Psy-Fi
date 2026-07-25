@@ -34,7 +34,7 @@ Prefer WebGL (on by default) uses a dedicated `#experienceCanvasGL` (Canvas 2D r
 | GET | `/api/v1/experiences/{id}` | Full recipe |
 | GET | `/api/v1/substances` | Substance visual defaults + counts |
 | POST | `/api/v1/visualize/parameter-timeline` | Deterministic parameter timeline or single snapshot |
-| POST | `/api/v1/visualize/image-seed` | Pass-1 experience-conditioned image → seed + hints (+ `/json` base64) |
+| POST | `/api/v1/visualize/image-seed` | Pass-1 experience-conditioned image → seed + hints (+ `/json`; `recommend_only` skips conditioning) |
 | POST | `/api/v1/visualize/image-seed-journey` | One-shot Pass-1 seed + timeline + T2V prompt package (no stills) |
 | POST | `/api/v1/visualize/export-journey` | Stills + formula T2V prompt sidecar (no provider call) |
 

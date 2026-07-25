@@ -60,6 +60,7 @@ Canonical queue: [`CONTINUATION_PLAN.md`](CONTINUATION_PLAN.md).
 | --- | --- | --- |
 | **P0** | Ultra auto-tier QA (NVIDIA / AMD / Intel) | **simulated pass** · hardware fps optional |
 | **P1** | G0–G4 ship polish (HUD, assets, goldens, PWA route) | **done** |
+| **P1** | Image-seed UX continuum (recommend-before-condition · Seed→journey · export polish) | **done** (A–C) · top-N alternatives optional — `CONTINUATION_PLAN.md` |
 | **P2** | Lock full R3F WebGPU still SHAs on a GPU CI runner | optional (API landed) |
 | **P2** | Vendor real Draco WASM / Basis transcoder | **done** | `/gpu/vendor/` · SceneAssetLayer async |
 | **P2** | Re-measure device matrix fps after major UI changes | living QA |

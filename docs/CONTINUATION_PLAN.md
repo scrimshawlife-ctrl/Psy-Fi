@@ -42,7 +42,6 @@ Board: [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md)
 - [x] Draco/KTX2 GPU upload path + `SceneAssetLayer`
 - [x] G4 parity matrix + scene-snapshot structure goldens
 - [x] Soft-present pixel SHA + histogram goldens ([`PIXEL_GOLDENS.md`](rendering/PIXEL_GOLDENS.md))
-- [x] PWA: `/gpu/` **separate route** ([`PWA_GPU_ROUTE.md`](PWA_GPU_ROUTE.md) · SW v30)
 - [x] Shell → GPU Lab handoff (`/gpu/?substance&mode&tier…`) + `battery_saver`/`survival` tier aliases
 - [x] Vendored Draco/Basis wired for browser decode; SceneAssetLayer async BasisLZ path
 - [x] Fixture KTX2 emission (`include_fixture_assets` / `PSYFI_SCENE_ASSETS`) + soft-present layers
@@ -57,7 +56,33 @@ Board: [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md)
 - [x] Export journey package + external T2V prompt sidecar (`/visualize/export-journey`)
 - [x] Image-seed catalog recommend + `apply_recommended` + one-shot `/visualize/image-seed-journey`
 
+## Active queue (post image-seed polish)
+
+Priority order for the next web-only slices. No calendar estimates — scoped by subsystem impact.
+
+| Priority | Slice | Why | Scope |
+| --- | --- | --- | --- |
+| **A** | Recommend-before-condition UX | **done** — confirm formula before Pass 1 mutates | `recommend_only` · Suggest formula · local ObjectURL preview |
+| **B** | Shell one-shot journey | **done** — Workbench `Seed → journey` | Downloads seed + timeline + T2V JSON; stills via Export journey |
+| **C** | Journey export polish | **done** — shared still capture + UI feedback | 2-frame paint wait · still count · prompt length |
+| **D** | Top-N formula alternatives | Scoring already ranks; API returns winner only | Additive `recommended_alternatives[]` · optional picker |
+| **E** | Hardware Ultra fps (optional) | Simulated QA already green | Measured samples when discrete GPU available · see below |
+
+### Explicit non-goals (this queue)
+
+- LLM / T2V provider calls in-app (prompt sidecar only)
+- Storing raw uploads or conditioned textures server-side
+- Breaking ParameterField / SafetyPass authority
+- Native iOS / non-Docker deploys
+
 ## Recommended next steps (priority order)
+
+### Active — image-seed UX continuum
+
+- [x] **A** Recommend-before-condition (`recommend_only` + shell suggest panel + local preview)
+- [x] **B** Surface `/visualize/image-seed-journey` in the Workbench (`Seed → journey`)
+- [x] **C** Harden export-journey still capture + prompt feedback
+- [ ] **D** Optional top-N recommended alternatives
 
 ### Done — PWA correctness (post-Hallmark)
 

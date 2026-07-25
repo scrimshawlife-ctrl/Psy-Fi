@@ -19,9 +19,9 @@ The installable PWA is PsyFi's first mobile application surface. It is not descr
 
 ### Planned (not yet in the client)
 
-- Cancel an in-flight simulation.
+- Server-side job cancellation / async simulate jobs.
 - Offline compute parity with the Python engine.
-- WebGPU acceleration and Worker offload.
+- WASM acceleration (only if profiling justifies it).
 - Camera/motion/audio/haptic adapters beyond detection.
 
 Camera, motion, MIDI, audio, haptics, WebGPU, persistent storage, and installability remain progressive enhancements. Unsupported capabilities must produce an explicit fallback state and must not block the core online workflow.

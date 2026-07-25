@@ -47,10 +47,10 @@ Exit gate: a user can configure, run, inspect, save, restore, and export a simul
 
 - [x] Define a renderer-independent visualization schema.
 - [x] Implement Canvas/WebGL visualization before adopting WebGPU-only features.
-- [ ] Add WebGPU as an optional accelerated path with a tested fallback.
-- [ ] Move expensive browser work to Web Workers.
+- [x] Add WebGPU as an optional accelerated path with a tested fallback.
+- [x] Move expensive browser work to Web Workers.
 - [ ] Evaluate WebAssembly only where profiling proves material benefit.
-- [ ] Establish frame-time, memory, battery, and thermal budgets.
+- [x] Establish frame-time, memory, battery, and thermal budgets.
 
 Exit gate: representative simulations meet documented visual fidelity and performance budgets on supported devices.
 
@@ -59,7 +59,8 @@ Exit gate: representative simulations meet documented visual fidelity and perfor
 - [x] Replace blanket caching with versioned cache strategies.
 - [x] Support offline shell loading and explicit online requirements for server computation.
 - [x] Add IndexedDB-backed local history with schema migrations.
-- [ ] Validate installability, safe-area handling, orientation, touch, reduced motion, and interrupted-session recovery.
+- [x] Safe-area handling, reduced-motion CSS, and interrupted-session recovery banner.
+- [ ] Validate installability / orientation / touch on physical devices.
 - [ ] Physically test current Safari, Chrome, Edge, and Firefox against the published capability matrix.
 
 Exit gate: PsyFi is dependable as an installable mobile web application without implying native parity.
@@ -100,8 +101,9 @@ Priority 1:
 - [x] Browser capability matrix.
 
 Priority 2:
-- Web Workers and optional WASM acceleration.
-- WebGPU accelerated renderer.
+- [x] Web Workers for heatmap rasterization.
+- [x] Optional WebGPU renderer with Canvas 2D fallback.
+- [ ] Optional WASM acceleration only after profiling evidence.
 - Advanced camera, motion, MIDI, audio, and haptic integrations.
 - Native iPhone proof of concept after Phase 4 gate.
 

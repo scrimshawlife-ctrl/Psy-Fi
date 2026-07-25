@@ -1,18 +1,20 @@
 // PsyFi Service Worker - progressive enhancement of the existing PWA shell.
 // Strategies follow MOBILE_PWA_GUIDE.md using the current static asset layout.
 
-const CACHE_NAME = 'psyfi-shell-v2';
+const CACHE_NAME = 'psyfi-shell-v3';
 const SHELL_URLS = [
   '/',
   '/static/style.css',
   '/static/app.js',
+  '/static/renderer.js',
+  '/static/render_worker.js',
   '/static/manifest.json',
 ];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log('[SW] Caching app shell');
+      console.log('[SW] Caching app shell', CACHE_NAME);
       return cache.addAll(SHELL_URLS);
     })
   );
@@ -71,12 +73,12 @@ self.addEventListener('fetch', (event) => {
           caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
           return response;
         })
-        .catch(() => caches.match('/') )
+        .catch(() => caches.match('/'))
     );
     return;
   }
 
-  // Versioned/static assets under /static: cache-first.
+  // Static assets under /static: cache-first.
   if (url.pathname.startsWith('/static/')) {
     event.respondWith(
       caches.match(request).then((cached) => {
@@ -90,6 +92,5 @@ self.addEventListener('fetch', (event) => {
         });
       })
     );
-    return;
   }
 });

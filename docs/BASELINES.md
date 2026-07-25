@@ -27,10 +27,11 @@ Device classes to sample: desktop Chromium, current iPhone Safari, mid-range And
 |---|---|
 | App shell interactive | ≤ 3.0 s on mid-tier mobile over broadband |
 | `/simulate/` 64×64 × 20 steps | ≤ 2.0 s server time locally; record p95 in deploy notes |
-| `/simulate/` 256×256 × 100 steps | ≤ 15.0 s server time locally; UI must remain cancellable in a later phase |
+| `/simulate/` 256×256 × 100 steps | ≤ 15.0 s server time locally; UI cancellable via AbortController |
 | Service worker install | Shell assets only; do not precache API responses |
 | Repeated runs memory | No unbounded growth across 20 standard runs in one tab |
-| Payload | JSON response for standard run remains metrics/session metadata only (no raw field dump yet) |
+| Payload | Metrics/session + bounded downsampled visualization (≤ 64×64) |
+| See also | [`docs/PERFORMANCE_BUDGETS.md`](PERFORMANCE_BUDGETS.md) |
 
 ## Measurement Notes
 

@@ -44,6 +44,14 @@
             <a href="#capabilities" class="nav-link">Capabilities</a>
         </nav>
 
+        <div class="recovery-banner" id="recoveryBanner" hidden role="status" aria-live="polite">
+            <p id="recoveryText">A previous session is available to restore.</p>
+            <div class="session-actions">
+                <button type="button" class="btn-secondary" id="recoveryRestore">Restore</button>
+                <button type="button" class="btn-secondary" id="recoveryDismiss">Dismiss</button>
+            </div>
+        </div>
+
         <main class="main-content">
             <section class="panel control-panel" id="workspace">
                 <div class="panel-header">
@@ -99,11 +107,19 @@
                                 </select>
                             </div>
                         </div>
-                        <button type="submit" class="btn-primary" id="runButton">
-                            <span class="btn-icon">▶</span>
-                            <span>Run Simulation</span>
-                        </button>
+                        <div class="run-actions">
+                            <button type="submit" class="btn-primary" id="runButton">
+                                <span class="btn-icon">▶</span>
+                                <span>Run Simulation</span>
+                            </button>
+                            <button type="button" class="btn-secondary" id="cancelButton" hidden>Cancel</button>
+                        </div>
+                        <label class="checkbox-row" for="preferWebGPU">
+                            <input type="checkbox" id="preferWebGPU" checked>
+                            Prefer WebGPU when available (Canvas 2D fallback)
+                        </label>
                         <p class="network-status" id="networkStatus" data-state="online" aria-live="polite">Online — server computation available</p>
+                        <p class="input-hint">Esc or Cancel aborts the in-flight browser request.</p>
                     </form>
                 </div>
             </section>
@@ -130,7 +146,9 @@
                         <div class="viz-layout">
                             <div class="viz-frame">
                                 <canvas id="fieldCanvas" width="320" height="320" role="img" aria-labelledby="vizSummary"></canvas>
+                                <canvas id="fieldCanvasGPU" width="320" height="320" hidden role="img" aria-labelledby="vizSummary"></canvas>
                                 <p class="viz-summary" id="vizSummary"></p>
+                                <p class="input-hint" id="vizBackend">Renderer: pending</p>
                             </div>
                             <div class="metrics-grid">
                                 <div class="metric-card"><div class="metric-label">Valence</div><div class="metric-value" id="valence">--</div><div class="metric-bar"><div class="metric-bar-fill" id="valenceBar"></div></div></div>
@@ -215,6 +233,7 @@
         </footer>
     </div>
 
+    <script src="/static/renderer.js"></script>
     <script src="/static/app.js"></script>
     <script>
         if ('serviceWorker' in navigator) {

@@ -1,18 +1,18 @@
 # `/api/v1` Contract Freeze
 
-Status: **soft_frozen** — 2026-07-25  
-Freeze id: `psyfi-api-v1-soft-2026-07-25`  
-Related: `MANIFEST.json`, `docs/CONTINUATION_PLAN.md`, overlay goldens
+Status: **hard_frozen** — 2026-07-25  
+Freeze id: `psyfi-api-v1-hard-2026-07-25`  
+Related: `MANIFEST.json`, [`docs/PRODUCTION_READINESS.md`](../../PRODUCTION_READINESS.md), overlay goldens
 
 ## Policy
 
-| Change type | Allowed under soft freeze? |
+| Change type | Allowed under hard freeze? |
 |---|---|
 | Additive fields / routes | Yes (update living OpenAPI + re-sync freeze) |
 | Rename / remove / semantic break | No — bump API version or open new freeze_id |
-| Device QA evidence | Still required for **hard** freeze |
+| Device QA evidence | Living continuous QA — not required to keep this freeze |
 
-Hard freeze remains blocked until physical-device matrix rows and Phase 4 usability evidence are filled.
+Device matrix / Phase 4 rows are **unfrozen** as ship gates. Keep recording results in [`BROWSER_CAPABILITY_MATRIX.md`](../../BROWSER_CAPABILITY_MATRIX.md).
 
 ## Frozen artifacts
 

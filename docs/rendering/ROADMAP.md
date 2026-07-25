@@ -36,20 +36,23 @@ Platform package: `packages/psyfi-gpu-renderer`
 
 ## Phase G3 — Premium desktop stack
 
-- PBR materials (TSL node materials)
-- SSAO, SSR, contact shadows
-- Volumetric fog
-- Motion blur, DoF, chromatic aberration
-- Full Ultra / High tier enablement
-- Profiling overlay + CI budget smoke
+- [x] PBR-oriented crystal materials via MaterialSystem descriptors
+- [x] SSAO / GTAO in `PresentPipeline` when `post.ssao`
+- [ ] SSR, contact shadows
+- [ ] Volumetric fog
+- [ ] Motion blur, DoF, chromatic aberration
+- [x] Ultra / High / Balanced AO enablement (battery off)
+- [x] CI budget smoke (`budgetSmoke.test.ts`)
+- [ ] Profiling overlay polish in `/gpu/` UI
 
 ## Phase G4 — Cutover readiness
 
 - Feature parity checklist vs legacy Live Experience
 - Visual regression goldens (canonical seeds)
 - PWA integration decision (embed vs route)
-- Soft → hard freeze includes scene-snapshot schema
+- [x] Soft → **hard** freeze includes scene-snapshot schema
 - Legacy viz marked deprecated (not deleted until iOS/web gates)
+- Device matrix: living QA (unfrozen as ship gate)
 
 ## Phase G5 — XR readiness
 

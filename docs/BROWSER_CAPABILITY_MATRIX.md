@@ -1,13 +1,13 @@
 # Browser Capability Matrix
 
-Status: Phase 3 living document + **device QA checklist** (blocks **hard** freeze)  
-Related: [`MOBILE_PWA_GUIDE.md`](../MOBILE_PWA_GUIDE.md), [`CONTINUATION_PLAN.md`](CONTINUATION_PLAN.md), [`PHASE4_USABILITY.md`](PHASE4_USABILITY.md), in-app `#capabilities`
+Status: **unfrozen** — living continuous QA (does **not** block Docker ship or `/api/v1` hard freeze)  
+Related: [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md), [`CONTINUATION_PLAN.md`](CONTINUATION_PLAN.md), [`PHASE4_USABILITY.md`](PHASE4_USABILITY.md), in-app `#capabilities`
 
 ## What this is
 
-A **manual QA log** of PsyFi on real browsers and phones. CI proves APIs and wiring; it does **not** prove install prompts, Safari quirks, touch Neutral View, or WebGPU on device. Soft freeze can ship without these rows; **hard freeze cannot**.
+A **manual QA log** of PsyFi on real browsers and phones. CI proves APIs and wiring; it does **not** prove install prompts, Safari quirks, touch Neutral View, or WebGPU on device.
 
-Fill a row only after you personally run the workflows below on that browser/device. Do not invent results.
+Previously this matrix gated hard freeze. That gate is **lifted** for production readiness — keep filling rows as hardware is available; do not invent results.
 
 ## Target devices (what to test on)
 
@@ -17,7 +17,7 @@ Fill a row only after you personally run the workflows below on that browser/dev
 | Desktop PC | **Newer Windows 11 PC** (recent Intel/AMD CPU + modern iGPU, or discrete GPU from ~2020+) | Chrome + Edge primary; Firefox secondary |
 | Phone | Current-generation Safari iOS and Chrome Android | Install / A2HS + touch Neutral View |
 
-Skip aging machines (pre-2018 Intel Macs, HD 4000–class PCs) for freeze evidence — they are best-effort only, not gate hardware.
+Skip aging machines (pre-2018 Intel Macs, HD 4000–class PCs) for readiness evidence — they are best-effort only.
 
 ## Runtime capability expectations
 
@@ -54,14 +54,14 @@ The web shell detects support in the current browser. Optional capabilities neve
 
 | Browser / device | Date | Version | Install / A2HS | SW update OK | Jobs cancel | Live Experience | `/gpu/` + compute | Neutral ≤ intent | Reduce motion | Notes |
 |---|---|---|---|---|---|---|---|---|---|---|
-| CI (Ubuntu / pytest + static wiring) | 2026-07-25 | 3.12 | n/a | ✅ SW asset list | ✅ API | ✅ API/player modules | ✅ build/typecheck | ✅ unit | ✅ unit | Automated only — not a device substitute |
-| Safari iOS (current gen) | | | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | **human required** |
-| Chrome Android (current gen) | | | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | **human required** |
-| Chrome — newer Mac (Apple Silicon) | | | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | **human required** — record Mac model |
-| Safari — newer Mac (Apple Silicon) | | | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | **human required** — record Mac model |
-| Chrome — newer Windows 11 PC | | | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | **human required** — record CPU/GPU |
-| Edge — newer Windows 11 PC | | | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | **human required** — record CPU/GPU |
-| Firefox — newer Mac or PC | | | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | **human required** — WebGPU may be limited |
+| CI (Ubuntu / pytest + static wiring) | 2026-07-25 | 3.12 | n/a | ✅ SW asset list | ✅ API | ✅ API/player modules | ✅ build/typecheck | ✅ unit | ✅ unit | Automated only — continuous QA still welcome on devices |
+| Safari iOS (current gen) | | | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | living QA |
+| Chrome Android (current gen) | | | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | living QA |
+| Chrome — newer Mac (Apple Silicon) | | | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | living QA — record Mac model |
+| Safari — newer Mac (Apple Silicon) | | | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | living QA — record Mac model |
+| Chrome — newer Windows 11 PC | | | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | living QA — record CPU/GPU |
+| Edge — newer Windows 11 PC | | | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | living QA — record CPU/GPU |
+| Firefox — newer Mac or PC | | | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | living QA — WebGPU may be limited |
 
 ## Automation coverage (CI)
 

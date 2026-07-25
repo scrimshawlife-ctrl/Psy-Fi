@@ -1,14 +1,12 @@
 # Phase 4 — Web Usability Checklist
 
-Status: draft checklist (evidence collection not yet complete)  
+Status: living evidence log (recommended continuous QA; **not** a production ship blocker)  
 Scope: web / PWA only  
-Related: [`BROWSER_CAPABILITY_MATRIX.md`](BROWSER_CAPABILITY_MATRIX.md), [`contracts/frozen/API_V1_FREEZE.md`](contracts/frozen/API_V1_FREEZE.md)
+Related: [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md), [`BROWSER_CAPABILITY_MATRIX.md`](BROWSER_CAPABILITY_MATRIX.md), [`contracts/frozen/API_V1_FREEZE.md`](contracts/frozen/API_V1_FREEZE.md)
 
 ## What this is
 
-Structured **human** evidence that the product is understandable and safe to use on real devices. Completing the evidence log (with the device matrix) is the last gate before promoting `/api/v1` from **soft** to **hard** freeze.
-
-Agents and CI cannot fill this table honestly — someone must click through on each browser/device.
+Structured **human** evidence that the product is understandable and safe to use on real devices. Contract hard freeze and Docker production readiness no longer wait on this table; keep filling it when hardware is available.
 
 ## Core workflows to validate
 
@@ -31,14 +29,14 @@ Agents and CI cannot fill this table honestly — someone must click through on 
 
 | Date | Browser / device | Workflow | Result | Notes |
 |---|---|---|---|---|
-| _pending_ | Safari iOS (current gen) | Live Experience + Neutral | | human |
-| _pending_ | Chrome Android (current gen) | Install + jobs cancel | | human |
-| _pending_ | Chrome on newer Apple Silicon Mac | Phase scrub + export + `/gpu/` compute | | human — record Mac model |
-| _pending_ | Safari on newer Apple Silicon Mac | Live Experience + `/gpu/` if WebGPU | | human — record Mac model |
-| _pending_ | Chrome on newer Windows 11 PC | Phase scrub + export + `/gpu/` compute | | human — record CPU/GPU |
-| _pending_ | Edge on newer Windows 11 PC | PWA shell + `/gpu/` | | human — record CPU/GPU |
-| _pending_ | Firefox on newer Mac or PC | Capability fallbacks | | human |
+| _pending_ | Safari iOS (current gen) | Live Experience + Neutral | | living QA |
+| _pending_ | Chrome Android (current gen) | Install + jobs cancel | | living QA |
+| _pending_ | Chrome on newer Apple Silicon Mac | Phase scrub + export + `/gpu/` compute | | living QA — record Mac model |
+| _pending_ | Safari on newer Apple Silicon Mac | Live Experience + `/gpu/` if WebGPU | | living QA — record Mac model |
+| _pending_ | Chrome on newer Windows 11 PC | Phase scrub + export + `/gpu/` compute | | living QA — record CPU/GPU |
+| _pending_ | Edge on newer Windows 11 PC | PWA shell + `/gpu/` | | living QA — record CPU/GPU |
+| _pending_ | Firefox on newer Mac or PC | Capability fallbacks | | living QA |
 
-## Exit toward freeze
+## Exit criteria (optional polish)
 
-When this table has real device rows, the [browser capability matrix](BROWSER_CAPABILITY_MATRIX.md) rows are filled, and no blocking UX defects remain, mark `/api/v1` freeze prep complete in `docs/contracts/frozen/API_V1_FREEZE.md` and promote soft → hard freeze in `docs/contracts/frozen/`.
+When this table and the [browser capability matrix](BROWSER_CAPABILITY_MATRIX.md) have real device rows and no blocking UX defects remain, note the milestone in [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md).

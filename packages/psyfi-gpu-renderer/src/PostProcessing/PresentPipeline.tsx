@@ -1,16 +1,17 @@
 import { useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useMemo, useRef } from 'react'
 import * as THREE from 'three/webgpu'
-import { pass, uniform, vec3, float, mix, renderOutput } from 'three/tsl'
+import { pass, uniform, vec3, float, mix, renderOutput, mrt, output, normalView } from 'three/tsl'
 import { bloom } from 'three/addons/tsl/display/BloomNode.js'
 import { afterImage } from 'three/addons/tsl/display/AfterImageNode.js'
+import { ao } from 'three/addons/tsl/display/GTAONode.js'
 import type { SceneSnapshotV1 } from '../contracts/SceneSnapshot'
 import type { QualityTier } from '../contracts/QualityTier'
 import { tierConfig } from '../contracts/QualityTier'
 import { resolveTemporalPolicy } from './TemporalAccumulate'
 
 /**
- * G1/G2 present path: scene → bloom → temporal accumulate → grade/exposure → mandatory safety.
+ * Present path: scene → optional GTAO → bloom → temporal → grade/exposure → mandatory safety.
  * Non-zero useFrame priority takes over the R3F render loop.
  */
 export function PresentPipeline({
@@ -35,14 +36,33 @@ export function PresentPipeline({
   useEffect(() => {
     const renderer = gl as unknown as InstanceType<typeof THREE.WebGPURenderer>
     const scenePass = pass(scene, camera)
+
+    if (cfg.post.ssao) {
+      scenePass.setMRT(
+        mrt({
+          output,
+          normal: normalView,
+        }),
+      )
+    }
+
     const color = scenePass.getTextureNode('output')
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let node: any = color
+
+    if (cfg.post.ssao) {
+      const depth = scenePass.getTextureNode('depth')
+      const normal = scenePass.getTextureNode('normal')
+      const aoPass = ao(depth, normal, camera)
+      aoPass.resolutionScale = tier === 'balanced' ? 0.5 : 1
+      node = aoPass.getTextureNode().mul(color)
+    }
+
     if (cfg.post.bloom) {
-      const bloomPass = bloom(color, 0.35, 0.4, 0.85)
+      const bloomPass = bloom(node, 0.35, 0.4, 0.85)
       bloomStrengthRef.current = bloomPass.strength
-      node = color.add(bloomPass)
+      node = node.add(bloomPass)
     } else {
       bloomStrengthRef.current = null
     }
@@ -79,7 +99,20 @@ export function PresentPipeline({
       bloomStrengthRef.current = null
       temporalDampRef.current = null
     }
-  }, [gl, scene, camera, cfg.post.bloom, cfg.post.taa, cfg.post.colorGrading, cfg.post.hdr, uExposure, uGrade, uSafety, tier])
+  }, [
+    gl,
+    scene,
+    camera,
+    cfg.post.bloom,
+    cfg.post.taa,
+    cfg.post.ssao,
+    cfg.post.colorGrading,
+    cfg.post.hdr,
+    uExposure,
+    uGrade,
+    uSafety,
+    tier,
+  ])
 
   useFrame((state) => {
     const now = state.clock.elapsedTime * 1000

@@ -48,16 +48,20 @@ Helper script (local / Docker / Compose / production checks):
 4. Run behind TLS (Compose `production` profile with `nginx.conf`, or your own reverse proxy).
 5. Confirm `/health` and `/ready`.
 
-## Optional GPU shell in the image
+## GPU shell in the image
 
-The GPU client is not baked into the default `Dockerfile`. Build and serve it separately if needed:
+The multi-stage `Dockerfile` runs `npm run gpu:build` and copies `packages/psyfi-gpu-renderer/dist` into the image. FastAPI serves it at `/gpu/` when present.
+
+Local iteration without rebuilding the image:
 
 ```bash
 npm ci
 npm run gpu:build
-# Mount packages/psyfi-gpu-renderer/dist or extend the image to copy it;
-# FastAPI serves /gpu/ when that dist exists.
+python3 scripts/run_dev_server.py
+# → http://localhost:8000/gpu/
 ```
+
+See [`docs/PRODUCTION_READINESS.md`](docs/PRODUCTION_READINESS.md) for the ship board.
 
 ## Health
 

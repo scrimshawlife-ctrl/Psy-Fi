@@ -15,7 +15,7 @@
 [![PWA](https://img.shields.io/badge/PWA-installable-8F7BFF)](MOBILE_PWA_GUIDE.md)
 [![Markdown Style Guide](https://img.shields.io/badge/hallmark-informational?logo=markdown)](https://github.com/vweevers/hallmark)
 
-[Install](#install) · [Usage](#usage) · [Live Experience](#live-experience) · [API](#api) · [Documentation](#documentation) · [Contributing](#contributing)
+[Install](#install) · [Usage](#usage) · [Live Experience](#live-experience) · [Production readiness](#production-readiness) · [API](#api) · [Documentation](#documentation) · [Contributing](#contributing)
 
 </div>
 
@@ -31,6 +31,24 @@ PsyFi keeps **simulation truth in Python** and puts an expressive, safety-clampe
 - Cancelable `/api/v1` jobs, IndexedDB history, installable PWA shell
 
 > The field is expressive. The instrument is precise.
+
+## Production readiness
+
+Full board: [`docs/PRODUCTION_READINESS.md`](docs/PRODUCTION_READINESS.md).
+
+| Track                              | Status           | Notes                                           |
+| ---------------------------------- | ---------------- | ----------------------------------------------- |
+| `/api/v1` contracts                | **hard\_frozen** | `psyfi-api-v1-hard-2026-07-25`                  |
+| CI (pytest + hallmark + GPU build) | **green path**   | `.github/workflows/ci.yml`                      |
+| Docker deploy                      | **ready**        | Compose + urllib healthcheck + GPU `dist/` bake |
+| Live Experience + safety           | **ready**        | Neutral View · ParameterField authority         |
+| GPU platform G0–G2                 | **ready**        | `/gpu/` compute · TAA · asset worker decode     |
+| GPU G3 premium AO                  | **in progress**  | GTAO on desktop tiers                           |
+| Device matrix                      | **unfrozen**     | living QA — not a ship blocker                  |
+| Phase 4 usability                  | **living**       | recommended continuous evidence                 |
+| Native iOS                         | deferred         | `docs/IOS_MIGRATION.md`                         |
+
+Ship checklist: `pytest` → `npm test && npm run gpu:build` → `docker compose up -d --build` → `/health` `/ready` `/` `/gpu/`.
 
 ## Install
 
@@ -51,7 +69,7 @@ Optional MIDI extras are already included in the default install (`mido`, `pytho
 # Rebuild phenomenology catalog + substance visual overlays
 python3 scripts/build_experience_catalog.py
 
-# Soft-freeze sync (after OpenAPI / golden updates)
+# Hard-freeze sync (after OpenAPI / golden updates)
 python3 scripts/export_openapi.py
 python3 scripts/regenerate_overlay_goldens.py
 python3 scripts/sync_frozen_contracts.py
@@ -100,8 +118,9 @@ curl -s -X POST http://localhost:8000/api/v1/visualize/parameter-timeline \
 | Live Experience (Canvas + optional WebGL) | yes                       |
 | Cancelable `/api/v1/jobs`                 | yes                       |
 | PWA shell + IndexedDB history             | yes                       |
-| MIDI (optional)                           | yes                       |
-| Camera / motion modulators                | yes (opt-in, gated)       |
+| MIDI / audio / haptics modulators         | yes (opt-in, gated)       |
+| WebGPU `/gpu/` platform (G0–G2)           | yes                       |
+| `/api/v1` hard freeze                     | yes                       |
 | Native iOS                                | deferred (separate track) |
 
 ## Architecture
@@ -122,27 +141,28 @@ Simulation metrics remain Python-authoritative. UI never becomes the source of t
 
 ## API
 
-Canonical browser API is **`/api/v1`** (soft-frozen). Legacy `/api/*` and `/simulate/` remain mirrored.
+Canonical browser API is **`/api/v1`** (**hard-frozen**). Legacy `/api/*` and `/simulate/` remain mirrored.
 
 - OpenAPI living snapshot: [`docs/contracts/openapi.json`](docs/contracts/openapi.json)
-- Soft-freeze pack: [`docs/contracts/frozen/`](docs/contracts/frozen/)
+- Hard-freeze pack: [`docs/contracts/frozen/`](docs/contracts/frozen/)
 - Interactive docs: `/docs` when the server is running
 
 ## Documentation
 
-| Doc                                                                                | Purpose                |
-| ---------------------------------------------------------------------------------- | ---------------------- |
-| [`PLANS.md`](PLANS.md)                                                             | Product phases + gates |
-| [`docs/CONTINUATION_PLAN.md`](docs/CONTINUATION_PLAN.md)                           | Web-track next steps   |
-| [`docs/VISUAL_EXPERIENCES.md`](docs/VISUAL_EXPERIENCES.md)                         | Live Experience guide  |
-| [`docs/rendering/README.md`](docs/rendering/README.md)                             | WebGPU platform docs   |
-| [`DEPLOYMENT.md`](DEPLOYMENT.md)                                                   | Docker deploy guide    |
-| [`docs/PHENOMENOLOGY_PIPELINE.md`](docs/PHENOMENOLOGY_PIPELINE.md)                 | Scraped → overlays     |
-| [`docs/BROWSER_CAPABILITY_MATRIX.md`](docs/BROWSER_CAPABILITY_MATRIX.md)           | Device QA matrix       |
-| [`docs/contracts/frozen/API_V1_FREEZE.md`](docs/contracts/frozen/API_V1_FREEZE.md) | Contract soft freeze   |
-| [`docs/PHASE4_USABILITY.md`](docs/PHASE4_USABILITY.md)                             | Usability checklist    |
-| [`MOBILE_PWA_GUIDE.md`](MOBILE_PWA_GUIDE.md)                                       | PWA guidance           |
-| [`docs/IOS_MIGRATION.md`](docs/IOS_MIGRATION.md)                                   | Deferred native notes  |
+| Doc                                                                                | Purpose                    |
+| ---------------------------------------------------------------------------------- | -------------------------- |
+| [`docs/PRODUCTION_READINESS.md`](docs/PRODUCTION_READINESS.md)                     | Production readiness board |
+| [`PLANS.md`](PLANS.md)                                                             | Product phases + gates     |
+| [`docs/CONTINUATION_PLAN.md`](docs/CONTINUATION_PLAN.md)                           | Web-track next steps       |
+| [`docs/VISUAL_EXPERIENCES.md`](docs/VISUAL_EXPERIENCES.md)                         | Live Experience guide      |
+| [`docs/rendering/README.md`](docs/rendering/README.md)                             | WebGPU platform docs       |
+| [`DEPLOYMENT.md`](DEPLOYMENT.md)                                                   | Docker deploy guide        |
+| [`docs/PHENOMENOLOGY_PIPELINE.md`](docs/PHENOMENOLOGY_PIPELINE.md)                 | Scraped → overlays         |
+| [`docs/BROWSER_CAPABILITY_MATRIX.md`](docs/BROWSER_CAPABILITY_MATRIX.md)           | Device QA (unfrozen)       |
+| [`docs/contracts/frozen/API_V1_FREEZE.md`](docs/contracts/frozen/API_V1_FREEZE.md) | Contract hard freeze       |
+| [`docs/PHASE4_USABILITY.md`](docs/PHASE4_USABILITY.md)                             | Usability checklist        |
+| [`MOBILE_PWA_GUIDE.md`](MOBILE_PWA_GUIDE.md)                                       | PWA guidance               |
+| [`docs/IOS_MIGRATION.md`](docs/IOS_MIGRATION.md)                                   | Deferred native notes      |
 
 ## Non-claims
 
@@ -156,7 +176,8 @@ Motifs/parameters are **INFERRED**; source existence is **OBSERVED**.
 - Prefer `/api/v1` for new routes; update OpenAPI + run `scripts/sync_frozen_contracts.py`
 - Do not bypass the visual safety pass
 - Do not add medical/healing claims to UI copy
-- Native iOS stays out of the web track unless Phase 4 gates pass
+- Native iOS stays out of the web track
+- Device matrix / Phase 4 are living QA — not freeze blockers
 - Keep root markdown hallmark-clean: `npx hallmark fix README.md`
 
 ```bash

@@ -1,31 +1,52 @@
-// PsyFi - Consciousness Field Simulator
-// Applied Alchemy Labs
-// Progressive enhancement of the existing static shell.
+// PsyFi web shell — progressive enhancement on the existing FastAPI static UI.
+
+const SESSION_STORAGE_KEY = 'psyfi.session.v1.last';
+const DB_NAME = 'psyfi-sessions';
+const DB_VERSION = 1;
+const STORE_NAME = 'history';
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('[PsyFi] Initializing...');
-
     const form = document.getElementById('simulationForm');
     const runButton = document.getElementById('runButton');
     const loadingOverlay = document.getElementById('loadingOverlay');
-    const resultsPanel = document.getElementById('resultsPanel');
     const errorPanel = document.getElementById('errorPanel');
     const networkStatus = document.getElementById('networkStatus');
-    const exportSessionButton = document.getElementById('exportSessionButton');
-    const restoreSessionButton = document.getElementById('restoreSessionButton');
+    const substanceSelect = document.getElementById('substancePreset');
+    const substanceGrid = document.getElementById('substanceGrid');
+    const presetEmpty = document.getElementById('presetEmpty');
+    const resultsEmpty = document.getElementById('resultsEmpty');
+    const resultsContent = document.getElementById('resultsContent');
+    const historyList = document.getElementById('historyList');
+    const historyEmpty = document.getElementById('historyEmpty');
+    const canvas = document.getElementById('fieldCanvas');
 
-    const SESSION_STORAGE_KEY = 'psyfi.session.v1.last';
-    let lastSession = null;
+    let lastPayload = null;
 
-    if (!form) console.error('[PsyFi] Form not found!');
-    if (!runButton) console.error('[PsyFi] Run button not found!');
-
-    const presets = {
+    const gridPresets = {
         quick: { width: 32, height: 32, steps: 10 },
         standard: { width: 64, height: 64, steps: 20 },
         detailed: { width: 128, height: 128, steps: 50 },
-        deep: { width: 256, height: 256, steps: 100 }
+        deep: { width: 256, height: 256, steps: 100 },
     };
+
+    function setHidden(el, hidden) {
+        if (!el) return;
+        el.hidden = hidden;
+    }
+
+    function showLoading(show) {
+        setHidden(loadingOverlay, !show);
+        runButton.disabled = show;
+    }
+
+    function showError(message) {
+        document.getElementById('errorMessage').textContent = message;
+        setHidden(errorPanel, false);
+    }
+
+    function hideError() {
+        setHidden(errorPanel, true);
+    }
 
     function updateNetworkStatus() {
         if (!networkStatus) return;
@@ -34,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
             networkStatus.textContent = 'Online — server computation available';
         } else {
             networkStatus.dataset.state = 'offline';
-            networkStatus.textContent = 'Offline — server simulations unavailable; local session restore still works';
+            networkStatus.textContent = 'Offline — server simulations unavailable; history restore still works';
         }
     }
 
@@ -44,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelectorAll('.preset-btn').forEach((button) => {
         button.addEventListener('click', () => {
-            const preset = presets[button.dataset.preset];
+            const preset = gridPresets[button.dataset.preset];
             if (!preset) return;
             document.getElementById('width').value = preset.width;
             document.getElementById('height').value = preset.height;
@@ -54,25 +75,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    function showLoading(show) {
-        loadingOverlay.style.display = show ? 'flex' : 'none';
-        runButton.disabled = show;
-    }
-
-    function hideResults() {
-        resultsPanel.style.display = 'none';
-        resultsPanel.style.opacity = '0';
-    }
-
-    function hideError() {
-        errorPanel.style.display = 'none';
-    }
-
-    function showError(message) {
-        document.getElementById('errorMessage').textContent = message;
-        errorPanel.style.display = 'block';
-    }
-
     function normalizeValue(value, min, max) {
         return (value - min) / (max - min);
     }
@@ -81,15 +83,64 @@ document.addEventListener('DOMContentLoaded', () => {
         const valueElement = document.getElementById(name);
         valueElement.textContent = value.toFixed(3);
         const barElement = document.getElementById(`${name}Bar`);
-        const percentage = Math.max(0, Math.min(100, barValue * 100));
-        barElement.style.width = `${percentage}%`;
+        barElement.style.width = `${Math.max(0, Math.min(100, barValue * 100))}%`;
         if (name === 'valence') {
-            valueElement.style.color = value > 0 ? 'var(--color-signal-primary)' : 'var(--color-signal-secondary)';
+            valueElement.style.color = value > 0
+                ? 'var(--color-signal-primary)'
+                : 'var(--color-signal-secondary)';
         }
     }
 
+    function renderVisualization(visualization) {
+        const summary = document.getElementById('vizSummary');
+        if (!visualization || !canvas) {
+            if (summary) summary.textContent = '';
+            return;
+        }
+
+        const values = visualization.field?.values;
+        const width = visualization.field?.width;
+        const height = visualization.field?.height;
+        summary.textContent = visualization.accessibility?.summary || '';
+
+        if (!values || !width || !height) {
+            return;
+        }
+
+        const ctx = canvas.getContext('2d');
+        const image = ctx.createImageData(width, height);
+        for (let i = 0; i < width * height; i += 1) {
+            const row = values[Math.floor(i / width)];
+            const v = row ? row[i % width] : 0;
+            const t = Math.max(0, Math.min(1, Number(v) || 0));
+            // Cyan → violet ramp using current brand signals.
+            const r = Math.round(62 + (143 - 62) * t);
+            const g = Math.round(231 + (123 - 231) * t);
+            const b = Math.round(242 + (255 - 242) * t);
+            const offset = i * 4;
+            image.data[offset] = r;
+            image.data[offset + 1] = g;
+            image.data[offset + 2] = b;
+            image.data[offset + 3] = 255;
+        }
+
+        // Draw into an offscreen canvas then scale for crisp pixels.
+        const off = document.createElement('canvas');
+        off.width = width;
+        off.height = height;
+        off.getContext('2d').putImageData(image, 0, 0);
+        ctx.imageSmoothingEnabled = false;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(off, 0, 0, canvas.width, canvas.height);
+    }
+
     function showResults(data) {
-        document.getElementById('fieldDimensions').textContent = `${data.width} × ${data.height}`;
+        lastPayload = data;
+        setHidden(resultsEmpty, true);
+        setHidden(resultsContent, false);
+
+        document.getElementById('fieldDimensions').textContent =
+            `${data.width} × ${data.height}`;
         updateMetric('valence', data.valence, normalizeValue(data.valence, -1, 1));
         updateMetric('coherence', data.coherence, data.coherence);
         updateMetric('symmetry', data.symmetry, data.symmetry);
@@ -97,49 +148,237 @@ document.addEventListener('DOMContentLoaded', () => {
         updateMetric('richness', data.richness, data.richness);
 
         document.getElementById('resultSeed').textContent = data.seed ?? '--';
+        document.getElementById('resultPreset').textContent = data.preset || data.session?.preset || 'none';
         document.getElementById('resultProvenance').textContent = data.provenance_id ?? '--';
-        document.getElementById('resultModules').textContent = (data.module_chain || []).join(' → ') || '--';
+        document.getElementById('resultModules').textContent =
+            (data.module_chain || []).join(' → ') || '--';
 
-        resultsPanel.style.display = 'block';
-        setTimeout(() => {
-            resultsPanel.style.opacity = '1';
-        }, 10);
-    }
-
-    function persistSession(session) {
-        lastSession = session;
+        renderVisualization(data.visualization);
         try {
-            localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(session));
+            localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(data.session));
         } catch (error) {
-            console.warn('[PsyFi] Unable to persist session locally:', error);
+            console.warn('[PsyFi] localStorage unavailable:', error);
         }
     }
 
-    function loadStoredSession() {
+    async function openDb() {
+        return new Promise((resolve, reject) => {
+            const request = indexedDB.open(DB_NAME, DB_VERSION);
+            request.onupgradeneeded = () => {
+                const db = request.result;
+                if (!db.objectStoreNames.contains(STORE_NAME)) {
+                    const store = db.createObjectStore(STORE_NAME, { keyPath: 'id' });
+                    store.createIndex('updated_at', 'updated_at');
+                }
+            };
+            request.onsuccess = () => resolve(request.result);
+            request.onerror = () => reject(request.error);
+        });
+    }
+
+    async function saveHistoryRecord(payload) {
+        if (!payload?.session) {
+            throw new Error('No session available to save');
+        }
+        const db = await openDb();
+        const record = {
+            id: payload.session.provenance.id,
+            updated_at: payload.session.updated_at || new Date().toISOString(),
+            session: payload.session,
+            visualization: payload.visualization || null,
+            metrics: {
+                valence: payload.valence,
+                coherence: payload.coherence,
+                symmetry: payload.symmetry,
+                roughness: payload.roughness,
+                richness: payload.richness,
+            },
+            width: payload.width,
+            height: payload.height,
+            seed: payload.seed,
+            preset: payload.preset || null,
+            module_chain: payload.module_chain || [],
+            provenance_id: payload.provenance_id,
+        };
+        await new Promise((resolve, reject) => {
+            const tx = db.transaction(STORE_NAME, 'readwrite');
+            tx.objectStore(STORE_NAME).put(record);
+            tx.oncomplete = () => resolve();
+            tx.onerror = () => reject(tx.error);
+        });
+        db.close();
+        await refreshHistory();
+    }
+
+    async function listHistory() {
         try {
-            const raw = localStorage.getItem(SESSION_STORAGE_KEY);
-            return raw ? JSON.parse(raw) : null;
+            const db = await openDb();
+            const records = await new Promise((resolve, reject) => {
+                const tx = db.transaction(STORE_NAME, 'readonly');
+                const request = tx.objectStore(STORE_NAME).getAll();
+                request.onsuccess = () => resolve(request.result || []);
+                request.onerror = () => reject(request.error);
+            });
+            db.close();
+            return records.sort((a, b) => String(b.updated_at).localeCompare(String(a.updated_at)));
         } catch (error) {
-            console.warn('[PsyFi] Unable to read stored session:', error);
-            return null;
+            console.warn('[PsyFi] IndexedDB unavailable:', error);
+            return [];
         }
     }
 
-    function applySessionToForm(session) {
-        if (!session || !session.parameters) return;
-        document.getElementById('width').value = session.parameters.width;
-        document.getElementById('height').value = session.parameters.height;
-        document.getElementById('steps').value = session.parameters.steps;
-        if (typeof session.seed === 'number') {
-            document.getElementById('seed').value = session.seed;
+    async function refreshHistory() {
+        const records = await listHistory();
+        historyList.innerHTML = '';
+        setHidden(historyEmpty, records.length > 0);
+        records.forEach((record) => {
+            const item = document.createElement('li');
+            item.className = 'history-item';
+            item.innerHTML = `
+                <div>
+                    <strong>${record.width}×${record.height}</strong>
+                    · seed <code>${record.seed}</code>
+                    · ${record.preset || 'no preset'}
+                </div>
+                <div class="history-meta">${record.id} · valence ${Number(record.metrics?.valence || 0).toFixed(3)}</div>
+                <button type="button" class="btn-secondary history-restore">Restore</button>
+            `;
+            item.querySelector('.history-restore').addEventListener('click', () => {
+                showResults({
+                    width: record.width,
+                    height: record.height,
+                    valence: record.metrics.valence,
+                    coherence: record.metrics.coherence,
+                    symmetry: record.metrics.symmetry,
+                    roughness: record.metrics.roughness,
+                    richness: record.metrics.richness,
+                    seed: record.seed,
+                    preset: record.preset,
+                    provenance_id: record.provenance_id,
+                    module_chain: record.module_chain,
+                    session: record.session,
+                    visualization: record.visualization,
+                });
+                document.getElementById('width').value = record.session.parameters.width;
+                document.getElementById('height').value = record.session.parameters.height;
+                document.getElementById('steps').value = record.session.parameters.steps;
+                document.getElementById('seed').value = record.seed;
+                if (record.preset) substanceSelect.value = record.preset;
+                hideError();
+            });
+            historyList.appendChild(item);
+        });
+    }
+
+    async function clearHistory() {
+        const db = await openDb();
+        await new Promise((resolve, reject) => {
+            const tx = db.transaction(STORE_NAME, 'readwrite');
+            tx.objectStore(STORE_NAME).clear();
+            tx.oncomplete = () => resolve();
+            tx.onerror = () => reject(tx.error);
+        });
+        db.close();
+        await refreshHistory();
+    }
+
+    async function loadPresets() {
+        try {
+            const response = await fetch('/api/presets/');
+            if (!response.ok) throw new Error(`Preset catalog failed (${response.status})`);
+            const data = await response.json();
+            substanceSelect.innerHTML = '<option value="">None (baseline coupling)</option>';
+            substanceGrid.innerHTML = '';
+            data.presets.forEach((preset) => {
+                const option = document.createElement('option');
+                option.value = preset.id;
+                option.textContent = `${preset.name} (${preset.substance_class})`;
+                substanceSelect.appendChild(option);
+
+                const card = document.createElement('button');
+                card.type = 'button';
+                card.className = 'substance-card';
+                card.innerHTML = `
+                    <span class="preset-name">${preset.name}</span>
+                    <span class="preset-desc">${preset.substance_class}</span>
+                `;
+                card.addEventListener('click', () => {
+                    substanceSelect.value = preset.id;
+                    document.querySelectorAll('.substance-card').forEach((el) => el.classList.remove('active'));
+                    card.classList.add('active');
+                });
+                substanceGrid.appendChild(card);
+            });
+            setHidden(presetEmpty, true);
+            setHidden(substanceGrid, false);
+        } catch (error) {
+            presetEmpty.textContent = `Preset catalog unavailable: ${error.message}`;
+            setHidden(presetEmpty, false);
+            setHidden(substanceGrid, true);
         }
     }
 
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
+    function renderCapabilities() {
+        const rows = [
+            {
+                name: 'Canvas 2D',
+                supported: !!(canvas && canvas.getContext),
+                fallback: 'Metrics/provenance text only',
+            },
+            {
+                name: 'WebGL',
+                supported: !!document.createElement('canvas').getContext('webgl'),
+                fallback: 'Canvas 2D baseline renderer',
+            },
+            {
+                name: 'WebGPU',
+                supported: !!navigator.gpu,
+                fallback: 'Canvas/WebGL path (optional accel later)',
+            },
+            {
+                name: 'IndexedDB',
+                supported: !!window.indexedDB,
+                fallback: 'localStorage last-session only',
+            },
+            {
+                name: 'Service Worker',
+                supported: 'serviceWorker' in navigator,
+                fallback: 'Online-only shell caching',
+            },
+            {
+                name: 'Web MIDI',
+                supported: !!(navigator.requestMIDIAccess),
+                fallback: 'REST MIDI routes when server has devices',
+            },
+            {
+                name: 'Persistent Storage',
+                supported: !!(navigator.storage && navigator.storage.persist),
+                fallback: 'Best-effort browser storage',
+            },
+            {
+                name: 'Vibration / Haptics',
+                supported: typeof navigator.vibrate === 'function',
+                fallback: 'Visual state feedback',
+            },
+        ];
 
+        const tbody = document.querySelector('#capabilityTable tbody');
+        tbody.innerHTML = '';
+        rows.forEach((row) => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${row.name}</td>
+                <td data-ok="${row.supported}">${row.supported ? 'yes' : 'no'}</td>
+                <td>${row.fallback}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
         if (!navigator.onLine) {
-            showError('Server simulation requires network connectivity. Restore a saved session to inspect prior results offline.');
+            showError('Server simulation requires network connectivity. Restore a history item to inspect prior results offline.');
             return;
         }
 
@@ -147,38 +386,39 @@ document.addEventListener('DOMContentLoaded', () => {
         const height = parseInt(document.getElementById('height').value, 10);
         const steps = parseInt(document.getElementById('steps').value, 10);
         const seed = parseInt(document.getElementById('seed').value, 10);
+        const preset = substanceSelect.value || null;
 
         showLoading(true);
-        hideResults();
         hideError();
 
         try {
+            const body = { width, height, steps, seed };
+            if (preset) body.preset = preset;
             const response = await fetch('/simulate/', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ width, height, steps, seed }),
+                body: JSON.stringify(body),
             });
-
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({}));
-                throw new Error(errorData.detail || `HTTP ${response.status}: ${response.statusText}`);
+                throw new Error(errorData.detail || `HTTP ${response.status}`);
             }
-
             const data = await response.json();
             showResults(data);
-            if (data.session) {
-                persistSession(data.session);
+            try {
+                await saveHistoryRecord(data);
+            } catch (error) {
+                console.warn('[PsyFi] History save skipped:', error);
             }
         } catch (error) {
-            console.error('[PsyFi] Error:', error);
             showError(error.message);
         } finally {
             showLoading(false);
         }
     });
 
-    exportSessionButton?.addEventListener('click', () => {
-        const session = lastSession || loadStoredSession();
+    document.getElementById('exportSessionButton')?.addEventListener('click', () => {
+        const session = lastPayload?.session;
         if (!session) {
             showError('No session available to export. Run a simulation first.');
             return;
@@ -192,46 +432,31 @@ document.addEventListener('DOMContentLoaded', () => {
         URL.revokeObjectURL(url);
     });
 
-    restoreSessionButton?.addEventListener('click', () => {
-        const session = loadStoredSession();
-        if (!session || !session.result || !session.result.metrics) {
-            showError('No locally saved session found.');
-            return;
+    document.getElementById('saveHistoryButton')?.addEventListener('click', async () => {
+        try {
+            await saveHistoryRecord(lastPayload);
+            hideError();
+        } catch (error) {
+            showError(error.message);
         }
-        lastSession = session;
-        applySessionToForm(session);
-        showResults({
-            width: session.parameters.width,
-            height: session.parameters.height,
-            valence: session.result.metrics.valence,
-            coherence: session.result.metrics.coherence,
-            symmetry: session.result.metrics.symmetry,
-            roughness: session.result.metrics.roughness,
-            richness: session.result.metrics.richness,
-            seed: session.seed,
-            provenance_id: session.provenance?.id,
-            module_chain: session.provenance?.module_chain || [],
-            session,
-        });
-        hideError();
     });
 
-    form.querySelectorAll('input[type="number"]').forEach((input) => {
-        input.addEventListener('input', (e) => {
-            const value = parseInt(e.target.value, 10);
-            const min = parseInt(e.target.min, 10);
-            const max = parseInt(e.target.max, 10);
-            e.target.style.borderColor =
-                value < min || value > max ? 'var(--color-status-danger)' : 'var(--pf-border-subtle)';
-        });
+    document.getElementById('clearHistoryButton')?.addEventListener('click', async () => {
+        try {
+            await clearHistory();
+        } catch (error) {
+            showError(error.message);
+        }
     });
 
-    document.addEventListener('keydown', (e) => {
-        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-            e.preventDefault();
+    document.addEventListener('keydown', (event) => {
+        if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+            event.preventDefault();
             form.dispatchEvent(new Event('submit'));
         }
     });
 
-    console.log('[PsyFi] Ready! Press Run Simulation or Ctrl+Enter to start.');
+    loadPresets();
+    refreshHistory();
+    renderCapabilities();
 });

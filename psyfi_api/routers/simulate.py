@@ -11,8 +11,11 @@ from psyfi_core.models import ResonanceFrame
 from psyfi_core.models.session import (
     SESSION_SCHEMA_VERSION,
     PsyFiSession,
+    PsyFiVisualization,
     SessionMetrics,
 )
+from psyfi_core.models.substance_preset import load_preset
+from psyfi_core.visualization import build_magnitude_visualization
 from psyfi_core.engines import (
     ConsciousnessOmegaParams,
     evolve_consciousness_omega,
@@ -25,26 +28,23 @@ router = APIRouter(prefix="/simulate", tags=["simulation"])
 
 
 class SimulateRequest(BaseModel):
-    """Request for consciousness field simulation.
-
-    Attributes:
-        width: Width of the field
-        height: Height of the field
-        steps: Number of evolution steps
-        seed: Optional deterministic seed override
-    """
+    """Request for consciousness field simulation."""
 
     width: int = Field(default=64, ge=8, le=512)
     height: int = Field(default=64, ge=8, le=512)
     steps: int = Field(default=10, ge=1, le=1000)
     seed: int | None = Field(default=None, ge=0, le=2**32 - 1)
+    preset: str | None = Field(
+        default=None,
+        description="Optional substance preset id/alias influencing coupling and normalization.",
+    )
 
 
 class SimulateResponse(BaseModel):
     """Response from consciousness field simulation.
 
-    Existing metric fields remain stable. Contract metadata is additive so
-    current clients keep working while Phase 0 session serialization lands.
+    Existing metric fields remain stable. Contract metadata and visualization
+    are additive for web-shell consumers.
     """
 
     width: int
@@ -60,16 +60,14 @@ class SimulateResponse(BaseModel):
     seed: int
     provenance_id: str
     module_chain: list[str]
+    preset: str | None = None
     session: PsyFiSession
+    visualization: PsyFiVisualization
 
 
 @router.post("/", response_model=SimulateResponse)
 async def simulate_consciousness_field(request: SimulateRequest) -> SimulateResponse:
-    """Simulate consciousness field evolution.
-
-    Creates a random initial field, evolves it using Consciousness Omega,
-    applies normalization, and computes valence metrics.
-    """
+    """Simulate consciousness field evolution."""
     config = PsyFiConfig()
     config.validate_grid_size(request.width, request.height)
 
@@ -77,8 +75,24 @@ async def simulate_consciousness_field(request: SimulateRequest) -> SimulateResp
     runtime = ABXRuntime(deterministic=True, seed=seed)
     runtime.metrics.set_grid_size(request.width, request.height)
 
-    frame = ResonanceFrame.zeros(request.width, request.height)
+    coupling_strength = 0.5
+    normalization_P = 1.0
+    normalization_V = 1.0
+    preset_name: str | None = None
 
+    if request.preset:
+        preset = load_preset(request.preset)
+        if preset is None:
+            from fastapi import HTTPException
+
+            raise HTTPException(status_code=404, detail=f"Preset '{request.preset}' not found")
+        preset_name = preset.name
+        coupling_strength = float(preset.psyfi_params.coupling_strength)
+        normalization_P = float(preset.psyfi_params.normalization.P)
+        normalization_V = float(preset.psyfi_params.normalization.V)
+        runtime.provenance.add_meta("preset", request.preset)
+
+    frame = ResonanceFrame.zeros(request.width, request.height)
     random_phases = runtime.rng.uniform(
         -np.pi, np.pi, size=(request.height, request.width)
     )
@@ -88,19 +102,18 @@ async def simulate_consciousness_field(request: SimulateRequest) -> SimulateResp
 
     params = ConsciousnessOmegaParams(
         coupling_type="symmetric",
-        coupling_strength=0.5,
+        coupling_strength=coupling_strength,
         steps=request.steps,
         dt=0.1,
     )
     evolved_field = evolve_consciousness_omega(frame.field, params, runtime)
 
-    norm_params = NormalizationParams(P=1.0, V=1.0, surround_radius=3)
+    norm_params = NormalizationParams(
+        P=normalization_P, V=normalization_V, surround_radius=3
+    )
     normalized_field = apply_normalization(evolved_field, norm_params)
-
     valence_metrics = compute_valence_metrics(normalized_field)
 
-    # Engines that accept runtime already record themselves. Fill gaps for
-    # helpers that do not yet take an ABXRuntime (normalization / valence).
     for module_name in ("normalization_nu", "valence_kappa"):
         if module_name not in runtime.provenance.module_chain:
             runtime.provenance.add_module(module_name)
@@ -108,6 +121,8 @@ async def simulate_consciousness_field(request: SimulateRequest) -> SimulateResp
     runtime.provenance.add_parameter("height", request.height)
     runtime.provenance.add_parameter("steps", request.steps)
     runtime.provenance.add_parameter("seed", seed)
+    if request.preset:
+        runtime.provenance.add_parameter("preset", request.preset)
 
     metrics = SessionMetrics(
         valence=valence_metrics.valence_score,
@@ -129,6 +144,17 @@ async def simulate_consciousness_field(request: SimulateRequest) -> SimulateResp
         normalization_P=norm_params.P,
         normalization_V=norm_params.V,
     )
+    if preset_name:
+        session.preset = request.preset
+
+    visualization = build_magnitude_visualization(
+        normalized_field,
+        session.provenance.id,
+        max_dim=64,
+        valence=metrics.valence,
+        coherence=metrics.coherence,
+    )
+    session.result.visualization_ref = visualization.schema_version
 
     return SimulateResponse(
         width=request.width,
@@ -141,5 +167,7 @@ async def simulate_consciousness_field(request: SimulateRequest) -> SimulateResp
         seed=seed,
         provenance_id=session.provenance.id,
         module_chain=session.provenance.module_chain,
+        preset=request.preset,
         session=session,
+        visualization=visualization,
     )

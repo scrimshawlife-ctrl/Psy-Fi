@@ -52,11 +52,13 @@ def test_simulate_returns_session_and_is_seed_deterministic() -> None:
         "valence_kappa",
     ]
     assert "session" in a
+    assert "visualization" in a
     PsyFiSession.model_validate(a["session"])
 
     # Deterministic metrics for identical seeds/params.
     for key in ("valence", "coherence", "symmetry", "roughness", "richness"):
         assert a[key] == pytest.approx(b[key])
+    assert a["visualization"]["field"]["values"] == b["visualization"]["field"]["values"]
 
 
 def test_from_simulation_helper_builds_portable_document() -> None:

@@ -15,6 +15,8 @@ REQUIRED_PATHS = {
     "/health",
     "/api/info",
     "/simulate/",
+    "/api/presets/",
+    "/api/presets/{preset_id}",
     "/api/midi/devices",
     "/api/midi/start",
 }

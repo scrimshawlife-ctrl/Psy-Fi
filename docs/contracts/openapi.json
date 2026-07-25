@@ -230,6 +230,125 @@
         "title": "MIDIStatusResponse",
         "type": "object"
       },
+      "PresetDetail": {
+        "description": "Preset detail including portable psyfi parameter defaults.",
+        "properties": {
+          "aliases": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Aliases",
+            "type": "array"
+          },
+          "coupling_strength": {
+            "title": "Coupling Strength",
+            "type": "number"
+          },
+          "drift_amplitude": {
+            "title": "Drift Amplitude",
+            "type": "number"
+          },
+          "drift_velocity": {
+            "title": "Drift Velocity",
+            "type": "number"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "normalization_P": {
+            "title": "Normalization P",
+            "type": "number"
+          },
+          "normalization_V": {
+            "title": "Normalization V",
+            "type": "number"
+          },
+          "phase_noise": {
+            "title": "Phase Noise",
+            "type": "number"
+          },
+          "phase_reset_strength": {
+            "title": "Phase Reset Strength",
+            "type": "number"
+          },
+          "substance_class": {
+            "title": "Substance Class",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "substance_class",
+          "coupling_strength",
+          "phase_noise",
+          "phase_reset_strength",
+          "drift_amplitude",
+          "drift_velocity",
+          "normalization_P",
+          "normalization_V"
+        ],
+        "title": "PresetDetail",
+        "type": "object"
+      },
+      "PresetListResponse": {
+        "description": "Catalog response for substance presets.",
+        "properties": {
+          "count": {
+            "title": "Count",
+            "type": "integer"
+          },
+          "presets": {
+            "items": {
+              "$ref": "#/components/schemas/PresetSummary"
+            },
+            "title": "Presets",
+            "type": "array"
+          }
+        },
+        "required": [
+          "count",
+          "presets"
+        ],
+        "title": "PresetListResponse",
+        "type": "object"
+      },
+      "PresetSummary": {
+        "description": "Lightweight preset card for the web preset browser.",
+        "properties": {
+          "aliases": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Aliases",
+            "type": "array"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "substance_class": {
+            "title": "Substance Class",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "substance_class"
+        ],
+        "title": "PresetSummary",
+        "type": "object"
+      },
       "PsyFiSession": {
         "description": "Deterministic session document shared by web and future iOS clients.",
         "properties": {
@@ -315,6 +434,84 @@
           "provenance"
         ],
         "title": "PsyFiSession",
+        "type": "object"
+      },
+      "PsyFiVisualization": {
+        "description": "Renderer-independent visualization schema (Canvas/WebGL/WebGPU/Metal).",
+        "properties": {
+          "accessibility": {
+            "$ref": "#/components/schemas/VisualizationAccessibility"
+          },
+          "channels": {
+            "items": {
+              "$ref": "#/components/schemas/VisualizationChannel"
+            },
+            "title": "Channels",
+            "type": "array"
+          },
+          "field": {
+            "additionalProperties": true,
+            "title": "Field",
+            "type": "object"
+          },
+          "frame_index": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Frame Index"
+          },
+          "layers": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "title": "Layers",
+            "type": "array"
+          },
+          "provenance_id": {
+            "title": "Provenance Id",
+            "type": "string"
+          },
+          "renderer_requirements": {
+            "additionalProperties": true,
+            "title": "Renderer Requirements",
+            "type": "object"
+          },
+          "schema_version": {
+            "default": "psyfi.visualization.v1",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "sequence_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sequence Id"
+          },
+          "view": {
+            "additionalProperties": true,
+            "title": "View",
+            "type": "object"
+          }
+        },
+        "required": [
+          "provenance_id",
+          "field",
+          "channels",
+          "accessibility"
+        ],
+        "title": "PsyFiVisualization",
         "type": "object"
       },
       "SessionMetrics": {
@@ -518,7 +715,7 @@
         "type": "object"
       },
       "SimulateRequest": {
-        "description": "Request for consciousness field simulation.\n\nAttributes:\n    width: Width of the field\n    height: Height of the field\n    steps: Number of evolution steps\n    seed: Optional deterministic seed override",
+        "description": "Request for consciousness field simulation.",
         "properties": {
           "height": {
             "default": 64,
@@ -526,6 +723,18 @@
             "minimum": 8.0,
             "title": "Height",
             "type": "integer"
+          },
+          "preset": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional substance preset id/alias influencing coupling and normalization.",
+            "title": "Preset"
           },
           "seed": {
             "anyOf": [
@@ -559,7 +768,7 @@
         "type": "object"
       },
       "SimulateResponse": {
-        "description": "Response from consciousness field simulation.\n\nExisting metric fields remain stable. Contract metadata is additive so\ncurrent clients keep working while Phase 0 session serialization lands.",
+        "description": "Response from consciousness field simulation.\n\nExisting metric fields remain stable. Contract metadata and visualization\nare additive for web-shell consumers.",
         "properties": {
           "api_version": {
             "default": "v0",
@@ -585,6 +794,17 @@
             },
             "title": "Module Chain",
             "type": "array"
+          },
+          "preset": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Preset"
           },
           "provenance_id": {
             "title": "Provenance Id",
@@ -618,6 +838,9 @@
             "title": "Valence",
             "type": "number"
           },
+          "visualization": {
+            "$ref": "#/components/schemas/PsyFiVisualization"
+          },
           "width": {
             "title": "Width",
             "type": "integer"
@@ -634,7 +857,8 @@
           "seed",
           "provenance_id",
           "module_chain",
-          "session"
+          "session",
+          "visualization"
         ],
         "title": "SimulateResponse",
         "type": "object"
@@ -677,6 +901,101 @@
           "type"
         ],
         "title": "ValidationError",
+        "type": "object"
+      },
+      "VisualizationAccessibility": {
+        "description": "Accessibility contract required for every canonical visualization.",
+        "properties": {
+          "downloadable_data_ref": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Downloadable Data Ref"
+          },
+          "high_contrast_palette": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "High Contrast Palette"
+          },
+          "legend": {
+            "items": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "type": "object"
+            },
+            "title": "Legend",
+            "type": "array"
+          },
+          "reduced_motion_alternative": {
+            "minLength": 1,
+            "title": "Reduced Motion Alternative",
+            "type": "string"
+          },
+          "summary": {
+            "minLength": 1,
+            "title": "Summary",
+            "type": "string"
+          }
+        },
+        "required": [
+          "summary",
+          "reduced_motion_alternative"
+        ],
+        "title": "VisualizationAccessibility",
+        "type": "object"
+      },
+      "VisualizationChannel": {
+        "description": "One renderable channel in a platform-neutral visualization scene.",
+        "properties": {
+          "blend": {
+            "default": "replace",
+            "pattern": "^(replace|add|multiply|screen)$",
+            "title": "Blend",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "palette": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Palette"
+          },
+          "role": {
+            "pattern": "^(magnitude|phase|valence|coherence|custom)$",
+            "title": "Role",
+            "type": "string"
+          },
+          "units": {
+            "title": "Units",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "role",
+          "units"
+        ],
+        "title": "VisualizationChannel",
         "type": "object"
       }
     }
@@ -984,6 +1303,71 @@
         ]
       }
     },
+    "/api/presets/": {
+      "get": {
+        "description": "List substance presets from the existing JSON registry.",
+        "operationId": "list_substance_presets_api_presets__get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PresetListResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List Substance Presets",
+        "tags": [
+          "presets"
+        ]
+      }
+    },
+    "/api/presets/{preset_id}": {
+      "get": {
+        "description": "Fetch one preset by id or alias.",
+        "operationId": "get_substance_preset_api_presets__preset_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "preset_id",
+            "required": true,
+            "schema": {
+              "title": "Preset Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PresetDetail"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Substance Preset",
+        "tags": [
+          "presets"
+        ]
+      }
+    },
     "/health": {
       "get": {
         "description": "Health check endpoint for monitoring and load balancers.\n\nReturns:\n    Comprehensive health status with version and timestamp",
@@ -1009,7 +1393,7 @@
     },
     "/simulate/": {
       "post": {
-        "description": "Simulate consciousness field evolution.\n\nCreates a random initial field, evolves it using Consciousness Omega,\napplies normalization, and computes valence metrics.",
+        "description": "Simulate consciousness field evolution.",
         "operationId": "simulate_consciousness_field_simulate__post",
         "requestBody": {
           "content": {

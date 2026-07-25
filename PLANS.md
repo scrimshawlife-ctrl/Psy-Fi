@@ -35,18 +35,18 @@ Exit gate: all active implementation work can be traced to a documented contract
 ### Phase 1 — Web Product Foundation
 
 - [x] Establish a dedicated frontend application boundary.
-- [ ] Build responsive navigation, simulation workspace, preset browser, results inspector, and provenance panel.
+- [x] Build responsive navigation, simulation workspace, preset browser, results inspector, and provenance panel.
 - [x] Centralize design tokens and component states.
 - [x] Add deterministic session serialization and shareable configuration files.
-- [ ] Add error boundaries, loading states, empty states, and capability diagnostics.
+- [x] Add error boundaries, loading states, empty states, and capability diagnostics.
 - [ ] Implement telemetry that is privacy-preserving and disabled by default until governance is approved.
 
 Exit gate: a user can configure, run, inspect, save, restore, and export a simulation from desktop and mobile browsers.
 
 ### Phase 2 — Visualization Runtime
 
-- [ ] Define a renderer-independent visualization schema.
-- [ ] Implement Canvas/WebGL visualization before adopting WebGPU-only features.
+- [x] Define a renderer-independent visualization schema.
+- [x] Implement Canvas/WebGL visualization before adopting WebGPU-only features.
 - [ ] Add WebGPU as an optional accelerated path with a tested fallback.
 - [ ] Move expensive browser work to Web Workers.
 - [ ] Evaluate WebAssembly only where profiling proves material benefit.
@@ -56,11 +56,11 @@ Exit gate: representative simulations meet documented visual fidelity and perfor
 
 ### Phase 3 — PWA and Mobile-Web Hardening
 
-- [ ] Replace blanket caching with versioned cache strategies.
-- [ ] Support offline shell loading and explicit online requirements for server computation.
-- [ ] Add IndexedDB-backed local history with schema migrations.
+- [x] Replace blanket caching with versioned cache strategies.
+- [x] Support offline shell loading and explicit online requirements for server computation.
+- [x] Add IndexedDB-backed local history with schema migrations.
 - [ ] Validate installability, safe-area handling, orientation, touch, reduced motion, and interrupted-session recovery.
-- [ ] Test current Safari, Chrome, Edge, and Firefox; publish a capability matrix.
+- [ ] Physically test current Safari, Chrome, Edge, and Firefox against the published capability matrix.
 
 Exit gate: PsyFi is dependable as an installable mobile web application without implying native parity.
 
@@ -93,11 +93,11 @@ Priority 0:
 - [x] Deterministic session schema.
 
 Priority 1:
-- Simulation workspace redesign (continue enhancing existing shell).
-- Results/provenance inspector enrichment beyond the current panel.
-- Visualization schema consumer / Canvas renderer prototype.
-- IndexedDB history replacing interim localStorage.
-- Browser capability matrix.
+- [x] Simulation workspace redesign (continue enhancing existing shell).
+- [x] Results/provenance inspector enrichment beyond the current panel.
+- [x] Visualization schema consumer / Canvas renderer prototype.
+- [x] IndexedDB history replacing interim localStorage.
+- [x] Browser capability matrix.
 
 Priority 2:
 - Web Workers and optional WASM acceleration.

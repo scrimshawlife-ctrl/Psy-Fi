@@ -13,7 +13,7 @@ class ConsciousnessOmegaParams(BaseModel):
 
     Attributes:
         coupling_type: Type of coupling between oscillators
-        coupling_strength: Strength of coupling (0 = independent, 1 = strong coupling)
+        coupling_strength: Strength of coupling (0 = independent, 2 = max coupling)
         natural_freq_base: Base natural frequency for oscillators
         freq_depth_scale: How much depth (y-position) affects frequency
         freq_brightness_scale: How much brightness affects frequency
@@ -22,7 +22,8 @@ class ConsciousnessOmegaParams(BaseModel):
     """
 
     coupling_type: Literal["symmetric", "asymmetric"] = Field(default="symmetric")
-    coupling_strength: float = Field(default=0.5, ge=0.0, le=1.0)
+    # Upper bound matches substance presets / safety defaults (e.g. DMT = 1.2)
+    coupling_strength: float = Field(default=0.5, ge=0.0, le=2.0)
     natural_freq_base: float = Field(default=1.0)
     freq_depth_scale: float = Field(default=0.5)
     freq_brightness_scale: float = Field(default=0.1)

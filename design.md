@@ -9,6 +9,7 @@ atmospheric
 
 ## Macrostructure family
 - Marketing pages: Photographic (field-led, one dominant visual)
+  - Entry fold: launch splash uses `/static/images/psyfi-hero.jpg` full-bleed, then Workbench
 - App pages: Workbench (instrument panel; field viewport primary, chrome calm)
 - Content pages: Long Document
 

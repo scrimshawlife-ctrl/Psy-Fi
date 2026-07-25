@@ -60,22 +60,23 @@ A CI stand-in for this checklist lives in [`SIMULATED_ULTRA_QA.md`](SIMULATED_UL
 
 Synthetic fps matrix: `packages/psyfi-gpu-renderer/fixtures/qa/ultra_fps_matrix.synthetic.v1.json` (evaluate with `qa/ultraFpsMatrix.ts` against Ultra ~120fps / High ~60fps tier budgets).
 
-## Validation checklist (next human step on real hardware)
+## Validation checklist (on real hardware)
 
 After deploy, on each target GPU:
 
 1. Open Chrome/Edge → `http://localhost:8000/gpu/` (or your host URL).
 2. HUD shows **adapter** string, **vendor**, **band ultra**, and tier **ultra**.
 3. Profiling line shows FPS · avg/p95/max ms vs tier **target** (prefer **ok**, not OVER).
-4. Toggle Neutral View — safety pass still attenuates; scene stays calm.
-5. With Battery Saver / low charge, tier clamps away from Ultra.
-6. Optional: note p95 vs [`GPU_PERFORMANCE_BUDGET.md`](rendering/GPU_PERFORMANCE_BUDGET.md) Ultra targets.
+4. Capture a measured sample: `/gpu/?measure_fps=1&tier=ultra` or the **Measure Ultra fps** button — see [`HARDWARE_ULTRA_FPS.md`](HARDWARE_ULTRA_FPS.md).
+5. Merge the download: `python3 scripts/merge_ultra_fps_measured.py ~/Downloads/psyfi-ultra-fps-*.json`
+6. Toggle Neutral View — safety pass still attenuates; scene stays calm.
+7. With Battery Saver / low charge, tier clamps away from Ultra.
 
-Update [`BROWSER_CAPABILITY_MATRIX.md`](BROWSER_CAPABILITY_MATRIX.md) if results differ from the peer rows.
+Update [`BROWSER_CAPABILITY_MATRIX.md`](BROWSER_CAPABILITY_MATRIX.md) Notes with measured avg / 1% low / p95.
 
 ## Recommended engineering follow-ups
 
-See [`CONTINUATION_PLAN.md`](CONTINUATION_PLAN.md) — after hardware validation: G4 cutover parity/goldens ([`rendering/G4_CUTOVER.md`](rendering/G4_CUTOVER.md)). Profiling HUD and KTX2/Draco upload bridges are in `/gpu/`.
+See [`CONTINUATION_PLAN.md`](CONTINUATION_PLAN.md) Active queue **E**. Profiling HUD and KTX2/Draco upload bridges are in `/gpu/`.
 
 ## Non-claims
 

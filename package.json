@@ -17,7 +17,8 @@
     "gpu:build": "npm run build -w @psyfi/gpu-renderer",
     "gpu:test": "npm run test -w @psyfi/gpu-renderer",
     "gpu:typecheck": "npm run typecheck -w @psyfi/gpu-renderer",
-    "gpu:goldens:pixel": "npm run goldens:pixel -w @psyfi/gpu-renderer"
+    "gpu:goldens:pixel": "npm run goldens:pixel -w @psyfi/gpu-renderer",
+    "gpu:fps:merge": "python3 scripts/merge_ultra_fps_measured.py"
   },
   "devDependencies": {
     "hallmark": "^5.0.2"

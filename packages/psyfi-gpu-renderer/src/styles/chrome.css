@@ -273,6 +273,38 @@
   color: var(--pf-danger);
 }
 
+.gpu-measure-panel {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  z-index: 4;
+  max-width: min(420px, calc(100% - 24px));
+  padding: 10px 12px;
+  display: grid;
+  gap: 6px;
+  border: 1px solid var(--pf-border-subtle);
+  background: color-mix(in srgb, var(--pf-bg-1) 92%, transparent);
+  font-family: var(--pf-font-mono);
+  font-size: 0.72rem;
+  color: var(--pf-text-main);
+}
+
+.gpu-measure-panel strong {
+  font-family: var(--pf-font-main);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.gpu-measure-panel button {
+  justify-self: start;
+  margin-top: 2px;
+}
+
+.gpu-measure-panel code {
+  font-size: 0.68rem;
+  color: var(--pf-cyan);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

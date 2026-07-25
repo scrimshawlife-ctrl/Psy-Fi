@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { AnalysisPublisher } from './bridge/AnalysisPublisher'
 import { SnapshotStore } from './bridge/SnapshotStore'
 import { SnapshotInterpolator } from './bridge/SnapshotInterpolator'
@@ -20,6 +20,13 @@ import type { SceneSnapshotV1 } from './contracts/SceneSnapshot'
 import { readGpuLaunchParams } from './bridge/launchParams'
 import { readImageSeedHandoff, type ImageSeedHandoffV1 } from './bridge/imageSeedHandoff'
 import type { OffscreenPresentMode } from './Renderer/offscreenPresent'
+import {
+  buildMeasuredUltraFpsPayload,
+  DEFAULT_MEASURE_SAMPLE_FRAMES,
+  DEFAULT_MEASURE_WARMUP_FRAMES,
+  downloadJson,
+  type MeasuredUltraFpsPayload,
+} from './qa/measureUltraFps'
 
 export function App() {
   const launch = useMemo(() => readGpuLaunchParams(), [])
@@ -47,6 +54,10 @@ export function App() {
   const [profile, setProfile] = useState<FrameProfilerSummary | null>(null)
   const [presentMode, setPresentMode] = useState<OffscreenPresentMode>('main')
   const [fixtureAssets, setFixtureAssets] = useState(!!launch.fixtureAssets)
+  const [measuring, setMeasuring] = useState(!!launch.measureFps)
+  const [measureProgress, setMeasureProgress] = useState(0)
+  const [measureResult, setMeasureResult] = useState<MeasuredUltraFpsPayload | null>(null)
+  const measureFramesRef = useRef({ frames: [] as number[], done: false })
 
   const effectiveTier = resolveTier(tier, caps)
   const passes = enabledPasses(effectiveTier, caps)
@@ -162,6 +173,36 @@ export function App() {
         droppedStale: st.droppedStale,
         drawCalls: passes.length,
       })
+      const bucket = measureFramesRef.current
+      if (measuring && !bucket.done && snapshot) {
+        bucket.frames.push(wallMs)
+        const need = DEFAULT_MEASURE_WARMUP_FRAMES + DEFAULT_MEASURE_SAMPLE_FRAMES
+        const n = bucket.frames.length
+        setMeasureProgress(Math.min(1, n / need))
+        if (n >= need) {
+          bucket.done = true
+          const adapterLabel =
+            caps.adapter.description || caps.adapter.device || caps.adapter.vendor || ''
+          const payload = buildMeasuredUltraFpsPayload({
+            frameMs: bucket.frames,
+            adapterDescription: adapterLabel,
+            vendor: caps.adapter.vendor,
+            perfBand: caps.adapter.perfBand,
+            tier: effectiveTier,
+            measureId: launch.measureId,
+            warmupFrames: DEFAULT_MEASURE_WARMUP_FRAMES,
+          })
+          setMeasureResult(payload)
+          setMeasuring(false)
+          const fname = `psyfi-ultra-fps-${payload.sample.id}-${payload.date}.json`
+          downloadJson(fname, payload)
+          setStatus(
+            payload.evaluation.ok
+              ? `Measured fps saved · ${payload.sample.id} · ok`
+              : `Measured fps saved · ${payload.sample.id} · UNDER budget`,
+          )
+        }
+      }
       hudAcc += wallMs
       // Refresh HUD stats ~4×/sec to avoid React thrash.
       if (hudAcc >= 250) {
@@ -172,7 +213,29 @@ export function App() {
     }
     raf = requestAnimationFrame(loop)
     return () => cancelAnimationFrame(raf)
-  }, [store, interpolator, profiler, passes.length, tierCfg.targetFrameMs])
+  }, [
+    store,
+    interpolator,
+    profiler,
+    passes.length,
+    tierCfg.targetFrameMs,
+    measuring,
+    measureFramesRef,
+    snapshot,
+    caps.adapter,
+    effectiveTier,
+    launch.measureId,
+  ])
+
+  const startMeasureFps = useCallback(() => {
+    measureFramesRef.current = { frames: [], done: false }
+    setMeasureResult(null)
+    setMeasureProgress(0)
+    setMeasuring(true)
+    setStatus('Measuring Ultra fps… keep tab focused')
+    // Prefer Ultra for the capture window unless shell forced another tier.
+    if (!launch.tier) setTier('ultra')
+  }, [launch.tier])
 
   return (
     <div className="gpu-app">
@@ -181,6 +244,14 @@ export function App() {
         <span className="gpu-status">{status}</span>
         <button type="button" onClick={() => void refresh()}>
           Publish snapshot
+        </button>
+        <button
+          type="button"
+          onClick={startMeasureFps}
+          disabled={measuring || !caps.webgpu}
+          title="Capture ~3s of frames and download a measured Ultra fps sample JSON"
+        >
+          {measuring ? `Measuring ${Math.round(measureProgress * 100)}%` : 'Measure Ultra fps'}
         </button>
         <button type="button" onClick={() => setShowHud((v) => !v)}>
           HUD
@@ -281,6 +352,33 @@ export function App() {
             presentMode={presentMode}
             fixtureAssets={!!(snapshot?.assets?.ktx2?.length)}
           />
+        ) : null}
+        {measureResult ? (
+          <div className="gpu-measure-panel" role="status">
+            <strong>Measured Ultra fps</strong>
+            <div>
+              {measureResult.sample.id} · avg {measureResult.sample.avgFps} · 1% low{' '}
+              {measureResult.sample.low1pctFps} · p95 {measureResult.sample.p95Ms} ms
+            </div>
+            <div className={measureResult.evaluation.ok ? 'gpu-hud-ok' : 'gpu-hud-over'}>
+              {measureResult.evaluation.ok ? 'budget ok' : 'under budget'} ·{' '}
+              {measureResult.evaluation.detail}
+            </div>
+            <div className="gpu-hud-muted">
+              Merge: <code>python3 scripts/merge_ultra_fps_measured.py ~/Downloads/psyfi-ultra-fps-*.json</code>
+            </div>
+            <button
+              type="button"
+              onClick={() =>
+                downloadJson(
+                  `psyfi-ultra-fps-${measureResult.sample.id}-${measureResult.date}.json`,
+                  measureResult,
+                )
+              }
+            >
+              Re-download JSON
+            </button>
+          </div>
         ) : null}
       </div>
     </div>

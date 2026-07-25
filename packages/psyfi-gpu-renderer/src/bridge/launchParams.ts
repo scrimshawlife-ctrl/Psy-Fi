@@ -21,6 +21,10 @@ export interface GpuLaunchParams {
   offscreenWorker: boolean
   /** Consume sessionStorage image-seed handoff from Live Experience. */
   imageSeed: boolean
+  /** Auto-capture Ultra fps sample after warm-up (`?measure_fps=1`). */
+  measureFps: boolean
+  /** Optional ULTRA_QA_TARGETS id override for measure_fps matching. */
+  measureId?: string | null
 }
 
 function truthyParam(q: URLSearchParams, key: string): boolean {
@@ -55,6 +59,8 @@ export function readGpuLaunchParams(
     offscreen: truthyParam(q, 'offscreen') || (q.get('offscreen') || '').toLowerCase() === 'worker',
     offscreenWorker: (q.get('offscreen') || '').toLowerCase() === 'worker',
     imageSeed: truthyParam(q, 'image_seed'),
+    measureFps: truthyParam(q, 'measure_fps'),
+    measureId: q.get('measure_id') || q.get('measureId') || null,
   }
 }
 
@@ -69,6 +75,8 @@ export function buildGpuLabUrl(opts: {
   fixtureAssets?: boolean
   offscreen?: boolean
   imageSeed?: boolean
+  measureFps?: boolean
+  measureId?: string | null
   origin?: string
 }): string {
   const q = new URLSearchParams()
@@ -84,6 +92,8 @@ export function buildGpuLabUrl(opts: {
   if (opts.fixtureAssets) q.set('fixtures', '1')
   if (opts.offscreen) q.set('offscreen', '1')
   if (opts.imageSeed) q.set('image_seed', '1')
+  if (opts.measureFps) q.set('measure_fps', '1')
+  if (opts.measureId) q.set('measure_id', opts.measureId)
   const base = opts.origin != null ? `${opts.origin.replace(/\/$/, '')}/gpu/` : '/gpu/'
   return `${base}?${q.toString()}`
 }

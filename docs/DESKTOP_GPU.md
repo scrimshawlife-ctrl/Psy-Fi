@@ -54,7 +54,11 @@ Docker GPU reservation (`--profile nvidia`), `nvidia-smi`, and RTX 50xx driver n
 | Tier stuck on Balanced | Confirm adapter string matches a Ultra-band series; disable Battery Saver |
 | AMD/Intel not Ultra | Confirm description includes RX 6/7/9xxx or Arc A/B series |
 
-## Validation checklist (next human step)
+## Simulated QA (CI)
+
+A CI stand-in for this checklist lives in [`SIMULATED_ULTRA_QA.md`](SIMULATED_ULTRA_QA.md) (adapter fixtures + API `/gpu/` + Neutral). It does **not** replace measured fps on a physical discrete GPU.
+
+## Validation checklist (next human step on real hardware)
 
 After deploy, on each target GPU:
 

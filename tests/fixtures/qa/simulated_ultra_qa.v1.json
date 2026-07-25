@@ -1,0 +1,49 @@
+{
+  "schema": "psyfi.simulated_ultra_qa.v1",
+  "date": "2026-07-25",
+  "mode": "simulated",
+  "environment": "ubuntu-ci / TestClient (no physical dGPU)",
+  "checks": [
+    {
+      "id": "health",
+      "ok": true,
+      "detail": "healthy"
+    },
+    {
+      "id": "ready",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "id": "gpu-shell",
+      "ok": true,
+      "detail": "status=200 bytes=758"
+    },
+    {
+      "id": "snapshot-lsd",
+      "ok": true,
+      "detail": "tier=ultra ssr=True crystals=2 hash=d6814456"
+    },
+    {
+      "id": "snapshot-psilocybin",
+      "ok": true,
+      "detail": "tier=ultra ssr=True crystals=3 hash=e17cbff9"
+    },
+    {
+      "id": "snapshot-dmt",
+      "ok": true,
+      "detail": "tier=ultra ssr=True crystals=4 hash=616785c5"
+    },
+    {
+      "id": "neutral-clamps-post",
+      "ok": true,
+      "detail": "ssr/ssao off under Neutral"
+    }
+  ],
+  "summary": {
+    "total": 7,
+    "passed": 7,
+    "failed": 0
+  },
+  "note": "Simulated stand-in for P0 human Ultra QA on NVIDIA/AMD/Intel desktops. Adapter\u2192tier classification is covered by gpu:test simulateUltraQa; this report covers API + /gpu/ mount + G4 ultra snapshots + Neutral clamp."
+}

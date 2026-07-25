@@ -53,18 +53,19 @@ Board: [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md)
 - [x] G4 scene-snapshot structure goldens (canonical seeds)
 - [x] PWA decision: `/gpu/` stays a **separate route** ([`PWA_GPU_ROUTE.md`](PWA_GPU_ROUTE.md))
 - [x] Soft-present pixel goldens (SHA + histogram) in CI ([`rendering/PIXEL_GOLDENS.md`](rendering/PIXEL_GOLDENS.md))
+- [x] **Simulated** P0 Ultra QA (adapter fixtures + API/`/gpu/` + Neutral) — [`SIMULATED_ULTRA_QA.md`](SIMULATED_ULTRA_QA.md)
 
 ## Recommended next steps (priority order)
 
-### P0 — Validate on real hardware (human QA) — **highest remaining priority**
+### P0 — Validate on real hardware (human QA)
 
-Ship code is ready; confirm Ultra auto-select and frame comfort on at least one card per vendor band:
+**Simulated stand-in passed** ([`SIMULATED_ULTRA_QA.md`](SIMULATED_ULTRA_QA.md)). Still confirm on physical silicon when available:
 
 1. **NVIDIA RTX 30/40/50** — `./scripts/check_nvidia_host.sh` → Chrome/Edge → `/gpu/` → HUD shows adapter + tier **ultra** + band **ultra** + fps/budget **ok**.
 2. **AMD RX 6000/7000/9000** — Adrenalin drivers · force high-perf GPU · same `/gpu/` check.
 3. **Intel Arc** (if available) — Arc drivers · force dGPU on hybrid · Ultra band.
 4. Spot-check **Battery Saver** clamp (low charge / saveData) still drops Ultra → Balanced.
-5. Log notes back into [`BROWSER_CAPABILITY_MATRIX.md`](BROWSER_CAPABILITY_MATRIX.md) if anything diverges.
+5. Promote matrix Notes from `simulated` → measured fps in [`BROWSER_CAPABILITY_MATRIX.md`](BROWSER_CAPABILITY_MATRIX.md).
 
 Guide: [`DESKTOP_GPU.md`](DESKTOP_GPU.md).
 

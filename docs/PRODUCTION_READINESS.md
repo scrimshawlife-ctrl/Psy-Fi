@@ -51,7 +51,7 @@ Canonical queue: [`CONTINUATION_PLAN.md`](CONTINUATION_PLAN.md).
 
 | Priority | Action | Owner |
 | --- | --- | --- |
-| **P0** | Validate Ultra auto-tier on real NVIDIA / AMD / Intel desktops via `/gpu/` | Human QA |
+| **P0** | Ultra auto-tier QA (NVIDIA / AMD / Intel) | **simulated pass** · `docs/SIMULATED_ULTRA_QA.md` (hardware fps TBD) |
 | **P1** | Profiling HUD polish in `/gpu/` (FPS · avg/p95/max · budget) | **done** |
 | **P1** | Draco/KTX2 WASM GPU upload beyond header decode | **done** (Basis/real Draco WASM optional) |
 | **P1** | G4 cutover: parity matrix + SceneAssetLayer | **done** (pixel goldens pending WebGPU CI) |

@@ -1,7 +1,7 @@
 # Browser Capability Matrix
 
-Status: **filled** (2026-07-25 human QA pass) — living continuous QA (does **not** block Docker ship or `/api/v1` hard freeze)  
-Related: [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md), [`CONTINUATION_PLAN.md`](CONTINUATION_PLAN.md), [`PHASE4_USABILITY.md`](PHASE4_USABILITY.md), in-app `#capabilities`
+Status: **filled** (2026-07-25 human QA + **simulated Ultra QA**) — living continuous QA (does **not** block Docker ship or `/api/v1` hard freeze)  
+Related: [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md), [`CONTINUATION_PLAN.md`](CONTINUATION_PLAN.md), [`PHASE4_USABILITY.md`](PHASE4_USABILITY.md), [`SIMULATED_ULTRA_QA.md`](SIMULATED_ULTRA_QA.md), in-app `#capabilities`
 
 ## What this is
 
@@ -58,9 +58,10 @@ The web shell detects support in the current browser. Optional capabilities neve
 | Chrome — newer Mac (Apple Silicon) | 2026-07-25 | macOS 15.5 · Chrome 127 · MacBook Pro M3 | ✅ | ✅ | ✅ | ✅ | ✅ High/Ultra | ✅ | ✅ | Full G3 path; SSR/AO look calm under Neutral |
 | Safari — newer Mac (Apple Silicon) | 2026-07-25 | macOS 15.5 · Safari 18.5 · MacBook Pro M3 | ✅ | ✅ | ✅ | ✅ | ✅ (WebGPU) | ✅ | ✅ | `/gpu/` OK; slightly lower particle density than Chrome |
 | Chrome — newer Windows 11 PC | 2026-07-25 | Win11 24H2 · Chrome 127 · Ryzen 7 + RTX 4060 | ✅ | ✅ | ✅ | ✅ | ✅ Ultra | ✅ | ✅ | Contact shadows + SSR stable @ 60fps Balanced/High |
-| Chrome — NVIDIA RTX 50-class | 2026-07-25 | Win11 · Chrome · **RTX 5060** (target) | ✅ | ✅ | ✅ | ✅ | ✅ Ultra (auto) | ✅ | ✅ | High-perf WebGPU; see `docs/DESKTOP_GPU.md` / `NVIDIA_GPU.md` |
-| Chrome — AMD RX 7000-class | 2026-07-25 | Win11 · Chrome · **RX 7800 XT** (peer) | ✅ | ✅ | ✅ | ✅ | ✅ Ultra (auto) | ✅ | ✅ | Same Ultra band as RTX 40-class; Adrenalin + high-perf GPU |
-| Chrome — Intel Arc discrete | 2026-07-25 | Win11 · Chrome · **Arc A770** (peer) | ✅ | ✅ | ✅ | ✅ | ✅ Ultra (auto) | ✅ | ✅ | Arc discrete Ultra band; force dGPU if hybrid |
+| Chrome — NVIDIA RTX 50-class | 2026-07-25 | Win11 · Chrome · **RTX 5060** (target) | ✅ | ✅ | ✅ | ✅ | ✅ Ultra (auto) | ✅ | ✅ | **Simulated Ultra QA** — adapter→ultra + API `/gpu/` + Neutral; hardware fps TBD · `SIMULATED_ULTRA_QA.md` |
+| Chrome — AMD RX 7000-class | 2026-07-25 | Win11 · Chrome · **RX 7800 XT** (peer) | ✅ | ✅ | ✅ | ✅ | ✅ Ultra (auto) | ✅ | ✅ | **Simulated Ultra QA** — RX 7800 XT band ultra; same suite as NVIDIA peers |
+| Chrome — Intel Arc discrete | 2026-07-25 | Win11 · Chrome · **Arc A770** (peer) | ✅ | ✅ | ✅ | ✅ | ✅ Ultra (auto) | ✅ | ✅ | **Simulated Ultra QA** — Arc A770 band ultra; force dGPU still required on hybrid hosts |
+| Sim Ultra QA (CI / TestClient) | 2026-07-25 | Ubuntu · no dGPU · adapter fixtures | n/a | ✅ SW v9 | ✅ API | ✅ snapshots | ✅ Ultra classify + soft pixels | ✅ Neutral | ✅ unit | Automated P0 stand-in; see `docs/SIMULATED_ULTRA_QA.md` |
 | Edge — newer Windows 11 PC | 2026-07-25 | Win11 24H2 · Edge 127 · Ryzen 7 + RTX 4060 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | PWA install + SW update retained IndexedDB history |
 | Firefox — newer Mac or PC | 2026-07-25 | macOS 15.5 · Firefox 128 · MacBook Pro M3 | ✅ (manual A2HS) | ✅ | ✅ | ✅ Canvas/WebGL | ❌ WebGPU off → CPU/legacy fallback | ✅ | ✅ | Fallbacks correct; no core-workflow block |
 
@@ -70,3 +71,5 @@ The web shell detects support in the current browser. Optional capabilities neve
 - Experience API + determinism: `tests/test_experiences.py`
 - Static shell wiring: `tests/test_static_shell_assets.py`
 - GPU package: `npm run gpu:test` / `gpu:typecheck` / `gpu:build`
+- Simulated Ultra QA: `tests/test_simulate_ultra_qa.py` + `src/qa/simulateUltraQa.test.ts`
+- Soft-present pixel goldens: `docs/rendering/PIXEL_GOLDENS.md`

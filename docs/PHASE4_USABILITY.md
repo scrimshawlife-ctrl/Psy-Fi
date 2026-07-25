@@ -38,6 +38,8 @@ Structured **human** evidence that the product is understandable and safe to use
 | 2026-07-25 | Firefox 128 · MacBook Pro M3 | Capability fallbacks | ✅ pass | WebGPU unavailable → Canvas/WebGL; core workflow unblocked |
 | 2026-07-25 | Chrome 127 · MacBook Pro M3 | Offline shell + blocked sim messaging | ✅ pass | Explicit offline messaging; import/restore OK |
 | 2026-07-25 | Chrome Android 127 · Pixel 8 | Audio/haptics modulators | ✅ pass | Opt-in only; safety pass still authoritative |
+| 2026-07-25 | **Simulated** Ultra QA (CI) · NVIDIA/AMD/Intel/Apple fixtures | P0 Ultra auto-tier + `/gpu/` + Neutral | ✅ pass (simulated) | No physical dGPU; see `SIMULATED_ULTRA_QA.md` + `tests/fixtures/qa/simulated_ultra_qa.v1.json` |
+| 2026-07-25 | **Simulated** Ultra QA · G4 seeds ultra snapshots | scene-snapshot SSR/SSAO + distinct hashes | ✅ pass (simulated) | lsd/42 · psilocybin/7 · dmt/99 |
 
 ## Exit criteria
 

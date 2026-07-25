@@ -57,7 +57,7 @@ def test_template_wires_cancel_recovery_and_renderer() -> None:
 
 def test_service_worker_precaches_renderer_assets() -> None:
     sw = (STATIC / "sw.js").read_text(encoding="utf-8")
-    assert "psyfi-shell-v25" in sw
+    assert "psyfi-shell-v26" in sw
     assert ".woff2" in sw
     assert "/assets/icons/pf-icon-reset-24.svg" in sw
     assert "/assets/icons/pf-icon-valence-meter-24.svg" in sw
@@ -207,5 +207,16 @@ def test_app_uses_abort_controller_and_worker_renderer() -> None:
     assert "u_source" in gl_js
     assert "u_safetyAtten" in gl_js
     assert "measureAtten" in gl_js
+    assert "u_chroma" in gl_js
+    assert "u_edge" in gl_js
+    assert "u_trail" in gl_js
+    assert "fractalFold" in gl_js
+    math_js = (STATIC / "viz" / "math.js").read_text(encoding="utf-8")
+    assert "fractalFold" in math_js
+    eng_js = (STATIC / "viz" / "engines" / "index.js").read_text(encoding="utf-8")
+    assert "fractalFold" in eng_js
+    assert "orbit" in eng_js
+    prefer_html = TEMPLATE.read_text(encoding="utf-8")
+    assert 'id="preferWebGLChk" checked' in prefer_html
     safety_js = (STATIC / "viz" / "safetyPass.js").read_text(encoding="utf-8")
     assert "measureAtten" in safety_js

@@ -107,14 +107,16 @@
       const ctx = this.ctx;
       const w = this.w;
       const h = this.h;
-      const iw = Math.max(80, Math.min(220, Math.floor(w / 3)));
-      const ih = Math.max(50, Math.min(140, Math.floor(h / 3)));
+      // Higher internal field resolution — still below full viewport for CPU cost.
+      const iw = Math.max(140, Math.min(420, Math.floor(w / 2.1)));
+      const ih = Math.max(90, Math.min(280, Math.floor(h / 2.1)));
       if (!this._buf || this._buf.width !== iw || this._buf.height !== ih) {
         this._buf = ctx.createImageData(iw, ih);
         this._off = document.createElement('canvas');
         this._off.width = iw;
         this._off.height = ih;
         this._offCtx = this._off.getContext('2d', { alpha: false });
+        this._prev = null;
       }
       const img = this._buf;
       const d = img.data;
@@ -125,6 +127,9 @@
       const seed = (f.master_seed || 42) >>> 0;
       const rnd = mulberry32(hash32(seed + 17));
       const time = (now - this.t0) / 1000;
+      const trail = p.trail_length || 0.35;
+      const edge = p.edge_gain || 0.4;
+      const chroma = p.chromatic_aberration || 0.1;
 
       const engineCtx = {
         time,
@@ -140,6 +145,8 @@
         complex: p.pattern_complexity || 0.4,
         voidB: p.void_bias || 0,
         attrB: p.attractor_bias || 0,
+        trail,
+        edge,
       };
       const symmetry = Math.max(1, Math.floor(2 + (p.symmetry_order || 0.3) * 10));
       const energy = (f.palette && f.palette.energy) || p.palette_energy || 0.5;
@@ -190,6 +197,12 @@
             v += engineCtx.attrB * 0.15 * Math.pow(Math.max(0, 1 - r * 2), 2);
           }
 
+          if (!neutral) {
+            const sharpened = v * v * (3 - 2 * v);
+            v = v * (1 - edge * 0.55) + sharpened * edge * 0.55;
+            v += edge * 0.1 * Math.abs(lattice - organic);
+          }
+
           v = clamp(v * (0.7 + energy * 0.8) + engineCtx.turb * (rnd() - 0.5) * 0.08, 0, 1);
 
           // Optional last-sim magnitude plane (before SafetyPass; never replaces ParameterField).
@@ -204,17 +217,32 @@
             gC = 12 + v * 34;
             bC = 18 + v * 40;
           } else {
-            const warm = clamp(v * 1.2, 0, 1);
-            rC = pal.r * warm * (0.35 + v) + 8;
-            gC = pal.g * warm * (0.4 + organic * 0.4 + v * 0.3) + 10;
-            bC = pal.b * (0.45 + v * 0.7) + lattice * 80 + 12;
+            const warm = clamp(v * 1.15, 0, 1);
+            const vR = clamp(v + chroma * 0.08 * (ux / (Math.abs(ux) + 0.2)), 0, 1);
+            const vB = clamp(v - chroma * 0.08 * (ux / (Math.abs(ux) + 0.2)), 0, 1);
+            rC = pal.r * vR * (0.4 + vR) + 6 + chroma * Math.abs(vR - vB) * 40;
+            gC = pal.g * warm * (0.45 + organic * 0.35 + v * 0.35) + 8;
+            bC = pal.b * vB * (0.5 + vB * 0.55) + lattice * 70 + 10;
             const bAmt = engineCtx.bloom * Math.pow(v, 2);
-            rC = rC * (1 - bAmt) + 255 * bAmt * 0.85;
-            gC = gC * (1 - bAmt) + 255 * bAmt * 0.9;
+            rC = rC * (1 - bAmt) + 255 * bAmt * 0.78;
+            gC = gC * (1 - bAmt) + 255 * bAmt * 0.88;
             bC = bC * (1 - bAmt) + 255 * bAmt;
+            // Soft vignette
+            const nr = Math.hypot((x - cx) / iw, (y - cy) / ih);
+            const vig = 0.72 + 0.28 * Math.max(0, 1 - nr * 1.6);
+            rC *= vig;
+            gC *= vig;
+            bC *= vig;
           }
 
           const idx = (y * iw + x) * 4;
+          // Trail persistence from prior frame (ParameterField trail_length).
+          if (!neutral && this._prev && trail > 0.05) {
+            const persist = 0.12 + trail * 0.62;
+            rC = rC * (1 - persist) + this._prev[idx] * persist;
+            gC = gC * (1 - persist) + this._prev[idx + 1] * persist;
+            bC = bC * (1 - persist) + this._prev[idx + 2] * persist;
+          }
           d[idx] = clamp(rC, 0, 255);
           d[idx + 1] = clamp(gC, 0, 255);
           d[idx + 2] = clamp(bC, 0, 255);
@@ -223,6 +251,8 @@
       }
 
       this.safety.apply(img, f.safety || {}, now);
+      if (!this._prev || this._prev.length !== d.length) this._prev = new Uint8ClampedArray(d.length);
+      this._prev.set(d);
       this._offCtx.putImageData(img, 0, 0);
       ctx.imageSmoothingEnabled = true;
       ctx.imageSmoothingQuality = 'high';

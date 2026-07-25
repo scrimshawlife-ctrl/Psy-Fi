@@ -25,7 +25,7 @@
   }
 
   function hexToRgb(hex) {
-    const h = (hex || '#63F3E8').replace('#', '');
+    const h = (hex || '#3ee7f2').replace('#', '');
     const full = h.length === 3 ? h.split('').map((c) => c + c).join('') : h;
     const n = parseInt(full, 16);
     return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 };
@@ -50,12 +50,13 @@
     return a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v;
   }
 
-  function fbm(x, y, seed) {
+  function fbm(x, y, seed, octaves) {
     let amp = 0.5;
     let freq = 1;
     let sum = 0;
     let norm = 0;
-    for (let i = 0; i < 5; i++) {
+    const n = Math.max(3, Math.min(7, octaves == null ? 5 : octaves | 0));
+    for (let i = 0; i < n; i++) {
       sum += amp * valueNoise(x * freq, y * freq, seed + i * 1013);
       norm += amp;
       amp *= 0.5;
@@ -65,9 +66,68 @@
   }
 
   function radPhase(x, y, seed) {
-    return fbm(x, y, seed + 99) * Math.PI * 2;
+    return fbm(x, y, seed + 99, 4) * Math.PI * 2;
+  }
+
+  /**
+   * Bounded Mandelbox-style fold + orbit trap (Canvas fractal kernel).
+   * Returns { x, y, trap, escape } with UV kept in a displayable range.
+   */
+  function fractalFold(x, y, ctx) {
+    const iters = 3 + Math.min(5, Math.floor((ctx.recursion || 0) * 5 + (ctx.complex || 0) * 2));
+    const scale = 1.35 + (ctx.recursion || 0) * 0.85;
+    const cx = Math.sin((ctx.time || 0) * 0.11 + (ctx.seed || 0) * 0.001) * (0.28 + (ctx.feedback || 0) * 0.45);
+    const cy = Math.cos((ctx.time || 0) * 0.09) * (0.22 + (ctx.depth || 0) * 0.4);
+    const spin = (ctx.time || 0) * (0.08 + (ctx.feedback || 0) * 0.25);
+    const cs = Math.cos(spin);
+    const sn = Math.sin(spin);
+    let zx = x;
+    let zy = y;
+    let trap = 1e9;
+    let escape = 0;
+    for (let i = 0; i < iters; i++) {
+      zx = Math.abs(zx);
+      zy = Math.abs(zy);
+      if (zx > 1) zx = 2 - zx;
+      if (zy > 1) zy = 2 - zy;
+      let rx = (zx * cs - zy * sn) * scale + cx;
+      let ry = (zx * sn + zy * cs) * scale + cy;
+      const r2 = rx * rx + ry * ry;
+      if (r2 < 0.5) {
+        rx *= 2;
+        ry *= 2;
+      } else if (r2 < 1) {
+        const inv = 1 / r2;
+        rx *= inv;
+        ry *= inv;
+      }
+      zx = rx;
+      zy = ry;
+      const dist = Math.abs(Math.hypot(zx, zy) - (0.55 + (ctx.depth || 0) * 0.35));
+      trap = Math.min(trap, dist);
+      if (zx * zx + zy * zy > 12) {
+        escape = (i + 1) / iters;
+        break;
+      }
+    }
+    const warp = 0.12 + (ctx.recursion || 0) * 0.18;
+    return {
+      x: x * (1 - warp) + Math.tanh(zx * 0.35) * warp,
+      y: y * (1 - warp) + Math.tanh(zy * 0.35) * warp,
+      trap: Math.exp(-trap * (3.2 + (ctx.complex || 0) * 5)),
+      escape,
+    };
   }
 
   global.PsyFiViz = global.PsyFiViz || {};
-  global.PsyFiViz.math = { clamp, hash32, mulberry32, hexToRgb, valueNoise, fbm, radPhase };
+  global.PsyFiViz.math = {
+    clamp,
+    hash32,
+    mulberry32,
+    hexToRgb,
+    valueNoise,
+    fbm,
+    radPhase,
+    fractalFold,
+  };
 })(window);

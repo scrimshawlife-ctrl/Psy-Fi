@@ -47,7 +47,7 @@ python3 scripts/build_experience_catalog.py
 ### Frontend
 - `psyfi_api/static/viz/experiencePlayer.js` — multi-engine Canvas field + safety pass
 - Live Experience panel alongside simulation workspace
-- Service worker precache includes experience player (`psyfi-shell-v24`)
+- Service worker precache includes experience player (`psyfi-shell-v25`)
 
 ### Tests
 ```text

@@ -7,6 +7,7 @@ from typing import Any, Literal
 from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel, Field
 
+from psyfi_api.simulation_service import PresetNotFoundError, run_simulation
 from psyfi_core.experiences.catalog import get_default_catalog, load_catalog
 from psyfi_core.experiences.parameter_mapper import (
     MODE_BIASES,
@@ -18,6 +19,14 @@ from psyfi_core.experiences.parameter_mapper import (
 router = APIRouter(prefix="/api/v1", tags=["experiences"])
 
 ModeName = Literal["open", "attractor", "void", "power"]
+
+
+class Modulators(BaseModel):
+    """Optional progressive enhancers routed only through ParameterField."""
+
+    camera: float = Field(default=0.0, ge=0.0, le=1.0)
+    motion: float = Field(default=0.0, ge=0.0, le=1.0)
+    midi: float = Field(default=0.0, ge=0.0, le=1.0)
 
 
 class TimelineRequest(BaseModel):
@@ -32,6 +41,20 @@ class TimelineRequest(BaseModel):
     quality_tier: str = "balanced"
     phase_t: float | None = Field(default=None, ge=0.0, le=1.0)
     neutral_view: bool = False
+    modulators: Modulators | None = None
+
+
+class FieldFrameRequest(BaseModel):
+    """Bridge: run a bounded Python simulation and return visualizable channels."""
+
+    width: int = Field(default=32, ge=8, le=128)
+    height: int = Field(default=32, ge=8, le=128)
+    steps: int = Field(default=4, ge=1, le=64)
+    seed: int = Field(default=42, ge=0)
+    preset: str | None = None
+    substance: str | None = None
+    mode: ModeName = "open"
+    intensity: float = Field(default=0.7, ge=0.0, le=1.0)
 
 
 @router.get("/experiences")
@@ -128,25 +151,7 @@ async def parameter_timeline(body: TimelineRequest) -> dict[str, Any]:
         or 1.0
     )
     intensity = min(body.intensity, cap)
-
-    if body.phase_t is not None and body.neutral_view:
-        snap = map_parameters(
-            substance=substance,
-            mode=body.mode,
-            intensity=intensity,
-            seed=body.seed,
-            experience=experience,
-            phase_t=body.phase_t,
-            neutral_view=True,
-            reduce_motion=body.reduce_motion,
-            dim_flashing=body.dim_flashing,
-            quality_tier=body.quality_tier,
-        )
-        return {
-            "schema_version": "1.0.0",
-            "kind": "snapshot",
-            "frame": snap.to_dict(),
-        }
+    modulators = body.modulators.model_dump() if body.modulators else None
 
     if body.phase_t is not None:
         snap = map_parameters(
@@ -155,6 +160,7 @@ async def parameter_timeline(body: TimelineRequest) -> dict[str, Any]:
             intensity=intensity,
             seed=body.seed,
             experience=experience,
+            modulators=modulators,
             phase_t=body.phase_t,
             neutral_view=body.neutral_view,
             reduce_motion=body.reduce_motion,
@@ -174,6 +180,7 @@ async def parameter_timeline(body: TimelineRequest) -> dict[str, Any]:
         intensity=intensity,
         seed=body.seed,
         experience=experience,
+        modulators=modulators,
         reduce_motion=body.reduce_motion,
         dim_flashing=body.dim_flashing,
         quality_tier=body.quality_tier,
@@ -182,13 +189,58 @@ async def parameter_timeline(body: TimelineRequest) -> dict[str, Any]:
     return timeline
 
 
+@router.post("/visualize/field-frame")
+async def field_frame(body: FieldFrameRequest) -> dict[str, Any]:
+    """Run a bounded simulation and pair it with a ParameterField snapshot."""
+    substance = (body.substance or body.preset or "lsd").lower().replace("_", "-")
+    try:
+        sim = run_simulation(
+            width=body.width,
+            height=body.height,
+            steps=body.steps,
+            seed=body.seed,
+            preset=body.preset or (substance if substance != "baseline" else None),
+        )
+    except PresetNotFoundError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+    snap = map_parameters(
+        substance=substance,
+        mode=body.mode,
+        intensity=body.intensity,
+        seed=body.seed,
+        phase_t=0.5,
+    )
+    return {
+        "schema_version": "1.0.0",
+        "kind": "field_frame",
+        "seed": body.seed,
+        "substance": substance,
+        "simulation": {
+            "width": sim.get("width"),
+            "height": sim.get("height"),
+            "metrics": {
+                "valence": sim.get("valence"),
+                "coherence": sim.get("coherence"),
+                "symmetry": sim.get("symmetry"),
+                "roughness": sim.get("roughness"),
+                "richness": sim.get("richness"),
+            },
+            "visualization": sim.get("visualization"),
+            "provenance_id": sim.get("provenance_id"),
+            "api_version": sim.get("api_version"),
+        },
+        "parameter_field": snap.to_dict(),
+        "note": (
+            "Simulation field is authoritative for metrics; "
+            "ParameterField is authoritative for Live Experience rendering."
+        ),
+    }
+
+
 @router.post("/experiences/reload-catalog")
 async def reload_catalog() -> dict[str, Any]:
     """Reload catalog from disk (dev helper)."""
-    get_default_catalog.cache_clear()
-    catalog = load_catalog()
-    get_default_catalog.cache_clear()
-    # repopulate cache
     from psyfi_core.experiences import catalog as catalog_mod
 
     catalog_mod.get_default_catalog.cache_clear()

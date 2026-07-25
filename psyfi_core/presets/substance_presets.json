@@ -304,12 +304,12 @@
       },
       "visual_signature": {
         "tracers_color": "#FFFFFF",
-        "tracers_length": 0.53,
+        "tracers_length": 0.453,
         "oscillation_style": "minimal",
-        "symmetry_bias": 0.455,
-        "depth_distortion": 0.88,
-        "color_enhancement": 0.515,
-        "pattern_complexity": 0.682
+        "symmetry_bias": 0.245,
+        "depth_distortion": 0.85,
+        "color_enhancement": 0.48,
+        "pattern_complexity": 0.536
       },
       "emotional_signature": {
         "valence_bias": 0.2,
@@ -372,12 +372,12 @@
       },
       "visual_signature": {
         "tracers_color": "#FFB547",
-        "tracers_length": 0.858,
+        "tracers_length": 0.845,
         "oscillation_style": "geometric",
-        "symmetry_bias": 0.77,
+        "symmetry_bias": 0.712,
         "depth_distortion": 0.425,
-        "color_enhancement": 0.82,
-        "pattern_complexity": 0.8
+        "color_enhancement": 0.813,
+        "pattern_complexity": 0.754
       },
       "emotional_signature": {
         "valence_bias": 0.6,
@@ -779,12 +779,12 @@
       },
       "visual_signature": {
         "tracers_color": "#7EC8E3",
-        "tracers_length": 0.555,
+        "tracers_length": 0.371,
         "oscillation_style": "smooth",
         "symmetry_bias": 0.42,
-        "depth_distortion": 0.775,
-        "color_enhancement": 0.55,
-        "pattern_complexity": 0.625
+        "depth_distortion": 0.763,
+        "color_enhancement": 0.352,
+        "pattern_complexity": 0.622
       },
       "emotional_signature": {
         "valence_bias": 0.15,

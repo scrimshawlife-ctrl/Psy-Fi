@@ -1,8 +1,8 @@
 # Engineering Receipt — Visual Experiences from Scraped Phenomenology
 
 **Date:** 2026-07-25  
-**Scope:** Phase 2 visualization runtime (web-first) + distilled substance visual overlays  
-**Status:** Vertical slice complete; overlays now drive parameter mapping; device camera/Metal deferred
+**Scope:** Phase 2 visualization runtime (web-first) + distilled substance visual overlays + P0–P2 hardening  
+**Status:** Engines split; WebGL path; phase scrubber; modulators/export/bridge; overlay goldens; README hero
 
 ## Delivered
 

@@ -1,8 +1,8 @@
 # PsyFi Web Continuation Plan
 
-Status: draft (2026-07-25)  
+Status: active implementation (2026-07-25)  
 Scope: **web app / PWA / API only** — native iOS remains a separate deferred track (`docs/IOS_MIGRATION.md`).  
-Basis: shipped Phases 0–3 essentials, `/api/v1`, Live Experience + distilled substance overlays (PR #21).
+Basis: Phases 0–3 essentials, `/api/v1`, Live Experience + overlays; this pass advances P0–P2 scaffolding.
 
 ## Current baseline
 
@@ -21,26 +21,26 @@ Authoritative docs: `PLANS.md`, `docs/VISUAL_EXPERIENCES.md`, `docs/ENGINEERING_
 
 ### P0 — Harden what shipped
 
-1. **Physical-device matrix** — Safari iOS, Chrome Android/desktop, Edge, Firefox against `docs/BROWSER_CAPABILITY_MATRIX.md` (install, SW update, Live Experience, Neutral View, reduce-motion).
-2. **Visual differentiation QA** — fixed-seed fixtures asserting LSD ≠ psilocybin ≠ DMT engine/palette hashes; golden parameter-timeline snapshots in CI.
-3. **Contract freeze prep** — freeze `/api/v1` experience + overlay schemas once device QA passes; keep OpenAPI snapshot gate green.
-4. **Close / reconcile open PRs** — ensure `#18` web-foundation work is either merged or superseded by this branch’s `/api/v1` + PWA surface.
+1. [x] **Physical-device matrix template** — `docs/BROWSER_CAPABILITY_MATRIX.md` checklist (human fill-in still required).
+2. [x] **Visual differentiation QA** — `tests/fixtures/experiences/substance_overlay_goldens.v1.json` + `tests/test_overlay_goldens.py`.
+3. [x] **Contract freeze prep** — `docs/contracts/frozen/API_V1_FREEZE.md` (freeze after device QA).
+4. [x] Reconcile merged web PRs (`#18`, `#21`) into continuation baseline.
 
 ### P1 — Make experiences feel distinctly substance-specific
 
-1. **Split Canvas engines** — extract `kaleidoscope`, `organicBloom`, `entityLattice`, `voidExpansion`, `flowField`, `recursiveFeedback`, `neutralView`, `safetyPass` from `experiencePlayer.js` into `static/viz/engines/` (same ParameterField contract).
-2. **WebGL port of ParameterField** — same immutable field → shader uniforms; Canvas remains fallback.
-3. **Phase timeline UI** — show comeup/peak/plateau/comedown on the Live Experience chrome; scrub `phase_t`.
-4. **Enrich thin substances** — add curated positive packs for 5-MeO-DMT, mescaline, ketamine; rebuild overlays via `scripts/build_experience_catalog.py`.
-5. **Simulation ↔ Experience bridge** — optional path: `/simulate` / job field → texture input for Live Experience (downsample server-side).
+1. [x] **Split Canvas engines** — `static/viz/math.js`, `safetyPass.js`, `engines/index.js`, orchestrator `experiencePlayer.js`.
+2. [x] **WebGL ParameterField path** — `static/viz/parameterFieldWebGL.js` (Canvas fallback remains default when 2D context already bound).
+3. [x] **Phase timeline UI** — scrubber + phase label + seed regenerate.
+4. [x] **Enrich thin substances** — additional 5-MeO / mescaline / ketamine seed recipes; rebuild overlays.
+5. [x] **Simulation ↔ Experience bridge** — `POST /api/v1/visualize/field-frame`.
 
 ### P2 — Progressive web capabilities (optional, gated)
 
-1. Camera texture input (`getUserMedia`) through ParameterField only — never direct sensor→shader.
-2. Device motion / touch modulators with replay fixtures.
-3. MIDI as live intensity/mode modulator (existing MIDI routes stay optional).
-4. Export: parameter timeline JSON + viewport still (no clinical claims).
-5. Usability studies → Phase 4 gate in `PLANS.md`.
+1. [x] Camera luminance meter → ParameterField modulator (opt-in).
+2. [x] Device motion meter → ParameterField modulator (opt-in).
+3. [x] MIDI intensity modulator slider (wired through ParameterField; hardware MIDI remains optional).
+4. [x] Export timeline JSON + viewport PNG.
+5. [x] Phase 4 usability checklist draft — `docs/PHASE4_USABILITY.md` (evidence rows pending).
 
 ### Out of scope (parked)
 

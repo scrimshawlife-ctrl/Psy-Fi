@@ -1029,6 +1029,29 @@ body {
 .experience-controls input[type="range"] {
   width: 100%;
 }
+.seed-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+.seed-row input {
+  flex: 1;
+}
+.modulator-panel {
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  padding: 0.65rem 0.8rem;
+  color: var(--color-text-secondary, #c8c8d4);
+}
+.modulator-panel summary {
+  cursor: pointer;
+  margin-bottom: 0.5rem;
+}
+.modulator-panel label {
+  display: block;
+  font-size: 0.85rem;
+  margin: 0.35rem 0;
+}
 .checkbox-row {
   display: flex;
   flex-wrap: wrap;

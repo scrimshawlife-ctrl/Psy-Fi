@@ -29,6 +29,7 @@ Canonical browser client paths are under `/api/v1/*`. Legacy `/api/*` and `/simu
 | `GET` | `/api/v1/experiences/{id}` | — | full recipe | Derived motifs + visual_recipe |
 | `GET` | `/api/v1/substances` | — | visual_signature + overlay | Distilled substance visual settings |
 | `POST` | `/api/v1/visualize/parameter-timeline` | timeline body | frames + hash | Immutable parameter field snapshots |
+| `POST` | `/api/v1/visualize/field-frame` | bounded sim | sim viz + ParameterField | Simulation ↔ experience bridge |
 | `*` | `/api/jobs/*`, `/api/presets/*`, `/api/telemetry/*`, `/api/midi/*` | same | same | Legacy mirrors of v1 |
 | `GET` | `/assets/icons/*` | — | static files | Mount of existing `docs/icons` |
 | `GET` | `/static/*` | — | static files | Existing UI assets + SW |

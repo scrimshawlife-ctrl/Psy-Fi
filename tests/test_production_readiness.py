@@ -44,6 +44,13 @@ def test_g4_cutover_checklist_exists() -> None:
     assert "lsd:open:42" in goldens.read_text(encoding="utf-8")
 
 
+def test_simulated_ultra_qa_doc_exists() -> None:
+    doc = (ROOT / "docs" / "SIMULATED_ULTRA_QA.md").read_text(encoding="utf-8")
+    assert "Simulated" in doc
+    assert "Ultra" in doc
+    assert "RTX" in doc
+
+
 def test_pixel_goldens_fixture_exists() -> None:
     pixel_doc = (ROOT / "docs" / "rendering" / "PIXEL_GOLDENS.md").read_text(encoding="utf-8")
     assert "soft-present" in pixel_doc.lower()

@@ -51,7 +51,7 @@ Full board: [`docs/PRODUCTION_READINESS.md`](docs/PRODUCTION_READINESS.md).
 
 Ship checklist: `pytest` → `npm test && npm run gpu:build` → `docker compose up -d --build` → `/health` `/ready` `/` `/gpu/`.
 
-**Next steps:** validate Ultra on real NVIDIA/AMD/Intel desktops. Pixel goldens: [`docs/rendering/PIXEL_GOLDENS.md`](docs/rendering/PIXEL_GOLDENS.md). Queue: [`docs/CONTINUATION_PLAN.md`](docs/CONTINUATION_PLAN.md).
+**Next steps:** optional hardware Ultra fps confirmation (simulated QA already passed — [`docs/SIMULATED_ULTRA_QA.md`](docs/SIMULATED_ULTRA_QA.md)). Queue: [`docs/CONTINUATION_PLAN.md`](docs/CONTINUATION_PLAN.md).
 
 ## Install
 
@@ -157,6 +157,7 @@ Canonical browser API is **`/api/v1`** (**hard-frozen**). Legacy `/api/*` and `/
 | [`docs/PRODUCTION_READINESS.md`](docs/PRODUCTION_READINESS.md)                     | Production readiness board |
 | [`docs/DESKTOP_GPU.md`](docs/DESKTOP_GPU.md)                                       | Multi-vendor WebGPU Ultra  |
 | [`docs/PWA_GPU_ROUTE.md`](docs/PWA_GPU_ROUTE.md)                                   | `/gpu/` separate-route decision |
+| [`docs/SIMULATED_ULTRA_QA.md`](docs/SIMULATED_ULTRA_QA.md)                         | Simulated P0 Ultra desktop QA  |
 | [`docs/NVIDIA_GPU.md`](docs/NVIDIA_GPU.md)                                         | NVIDIA drivers + Compose   |
 | [`PLANS.md`](PLANS.md)                                                             | Product phases + gates     |
 | [`docs/CONTINUATION_PLAN.md`](docs/CONTINUATION_PLAN.md)                           | Web-track next steps       |

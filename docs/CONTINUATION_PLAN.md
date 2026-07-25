@@ -44,12 +44,13 @@ Deploy: **Docker only** (`DEPLOYMENT.md`); Azure/Render paths removed (#28).
 - [x] AssetLoader worker-mode hook (fetch off main when Worker available)
 - [x] WebGPU TSL compute dispatch (`GpuFlowCompute`) with CPU InstancedMesh fallback
 - [x] Temporal accumulation / TAA wiring (`PresentPipeline` + policy helper)
-- [ ] Worker glTF/Draco/KTX2 decode (bytes-only fetch is in place) — next
+- [x] Worker glTF/GLB + KTX2 header decode (`decodeAsset` + `asset.worker.ts`)
 
 ### Deferred / human
 
 - Legacy WebGL 1:1 engine shaders (optional)
 - Device matrix + Phase 4 → hard freeze
+- Full Draco/KTX2 GPU upload + WASM decoders (beyond header/meta)
 
 ### Explicitly out of scope now
 
@@ -60,7 +61,7 @@ Deploy: **Docker only** (`DEPLOYMENT.md`); Azure/Render paths removed (#28).
 ## Recommended next slice
 
 1. **Human:** fill device matrix on **newer Mac (Apple Silicon) / newer Windows 11 PC** + current phones → hard freeze.
-2. **Engineering:** worker glTF/Draco/KTX2 decode; then G3 premium passes (SSAO/SSR/PBR).
+2. **Engineering:** G3 premium passes (SSAO/SSR/PBR) or Draco/KTX2 GPU upload.
 
 ## Commands
 

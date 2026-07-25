@@ -1,3 +1,5 @@
+import { decodeAssetBytes, type AssetDecodeMeta, type DecodedAssetPayload } from './decodeAsset'
+
 export type AssetKind = 'gltf' | 'ktx2' | 'splat'
 
 export interface AssetRequest {
@@ -10,23 +12,31 @@ export interface LoadedAsset {
   id: string
   kind: AssetKind
   bytes: ArrayBuffer
+  /** Present after G2 decode path (main or worker). */
+  meta?: AssetDecodeMeta
 }
 
 export type AssetLoadMode = 'main' | 'worker'
 
+export type { AssetDecodeMeta, DecodedAssetPayload }
+
 /**
  * Asset loading with optional Worker offload (G2).
- * Never parse glTF/Draco/KTX2 on the render critical path — only fetch bytes here.
+ * Fetch + lightweight decode stay off the render critical path.
  */
 export class AssetLoader {
   private cache = new Map<string, LoadedAsset>()
   private mode: AssetLoadMode = 'main'
   private worker: Worker | null = null
 
-  constructor(opts?: { mode?: AssetLoadMode; workerUrl?: string }) {
-    if (opts?.mode === 'worker' && typeof Worker !== 'undefined' && opts.workerUrl) {
+  constructor(opts?: { mode?: AssetLoadMode; workerUrl?: string | URL }) {
+    if (opts?.mode === 'worker' && typeof Worker !== 'undefined') {
       try {
-        this.worker = new Worker(opts.workerUrl, { type: 'module' })
+        const url =
+          opts.workerUrl ??
+          // Vite / bundler module worker
+          new URL('./asset.worker.ts', import.meta.url)
+        this.worker = new Worker(url, { type: 'module' })
         this.mode = 'worker'
       } catch {
         this.mode = 'main'
@@ -53,10 +63,9 @@ export class AssetLoader {
   }
 
   private async loadMain(req: AssetRequest, signal?: AbortSignal): Promise<LoadedAsset> {
-    const res = await fetch(req.url, { signal })
-    if (!res.ok) throw new Error(`asset ${req.id}: ${res.status}`)
-    const bytes = await res.arrayBuffer()
-    return { id: req.id, kind: req.kind, bytes }
+    const bytes = await fetchAssetBytes(req.url, signal)
+    const meta = decodeAssetBytes(req.kind, bytes)
+    return { id: req.id, kind: req.kind, bytes, meta }
   }
 
   private loadViaWorker(req: AssetRequest, signal?: AbortSignal): Promise<LoadedAsset> {
@@ -69,12 +78,26 @@ export class AssetLoader {
       }
       signal?.addEventListener('abort', onAbort, { once: true })
       const onMessage = (ev: MessageEvent) => {
-        const data = ev.data as { type: string; id: string; bytes?: ArrayBuffer; error?: string }
+        const data = ev.data as {
+          type: string
+          id: string
+          kind?: AssetKind
+          bytes?: ArrayBuffer
+          meta?: AssetDecodeMeta
+          error?: string
+        }
         if (data.id !== req.id) return
         worker.removeEventListener('message', onMessage)
         signal?.removeEventListener('abort', onAbort)
         if (data.type === 'error') reject(new Error(data.error || 'worker asset error'))
-        else resolve({ id: req.id, kind: req.kind, bytes: data.bytes as ArrayBuffer })
+        else {
+          resolve({
+            id: req.id,
+            kind: req.kind,
+            bytes: data.bytes as ArrayBuffer,
+            meta: data.meta,
+          })
+        }
       }
       worker.addEventListener('message', onMessage)
       worker.postMessage({ type: 'load', id: req.id, url: req.url, kind: req.kind })
@@ -92,7 +115,7 @@ export class AssetLoader {
   }
 }
 
-/** Pure helper used by asset workers and tests — fetch only, no decode. */
+/** Pure helper used by asset workers and tests — fetch only. */
 export async function fetchAssetBytes(url: string, signal?: AbortSignal): Promise<ArrayBuffer> {
   const res = await fetch(url, { signal })
   if (!res.ok) throw new Error(`asset fetch: ${res.status}`)

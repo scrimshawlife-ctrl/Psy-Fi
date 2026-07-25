@@ -1213,11 +1213,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const imageSeedInfluence = document.getElementById('imageSeedInfluence');
     const imageSeedInfluenceValue = document.getElementById('imageSeedInfluenceValue');
     const imageSeedApplyRecommended = document.getElementById('imageSeedApplyRecommended');
+    const imageSeedSuggestBtn = document.getElementById('imageSeedSuggestBtn');
     const imageSeedApplyBtn = document.getElementById('imageSeedApplyBtn');
+    const imageSeedJourneyBtn = document.getElementById('imageSeedJourneyBtn');
     const imageSeedClearBtn = document.getElementById('imageSeedClearBtn');
     const imageSeedStatus = document.getElementById('imageSeedStatus');
     const imageSeedPreview = document.getElementById('imageSeedPreview');
     const imageSeedPreviewEmpty = document.getElementById('imageSeedPreviewEmpty');
+    const imageSeedRecommend = document.getElementById('imageSeedRecommend');
+    const imageSeedRecommendTitle = document.getElementById('imageSeedRecommendTitle');
+    const imageSeedRecommendMeta = document.getElementById('imageSeedRecommendMeta');
+    let imageSeedLocalUrl = null;
+    let imageSeedSuggest = null;
 
     function imageInfluence() {
         return imageSeedInfluence ? Number(imageSeedInfluence.value) : 0;
@@ -1226,21 +1233,101 @@ document.addEventListener('DOMContentLoaded', () => {
     function setImageSeedUiState(state, msg) {
         if (imageSeedControl) imageSeedControl.dataset.state = state || 'idle';
         if (imageSeedStatus) imageSeedStatus.textContent = msg || 'Idle';
-        if (imageSeedApplyBtn) imageSeedApplyBtn.disabled = state === 'loading';
-        if (imageSeedFile) imageSeedFile.disabled = state === 'loading';
+        const busy = state === 'loading';
+        if (imageSeedApplyBtn) imageSeedApplyBtn.disabled = busy;
+        if (imageSeedSuggestBtn) imageSeedSuggestBtn.disabled = busy;
+        if (imageSeedJourneyBtn) imageSeedJourneyBtn.disabled = busy;
+        if (imageSeedFile) imageSeedFile.disabled = busy;
     }
 
-    function showImageSeedPreview(b64) {
+    function revokeImageSeedLocalUrl() {
+        if (imageSeedLocalUrl) {
+            URL.revokeObjectURL(imageSeedLocalUrl);
+            imageSeedLocalUrl = null;
+        }
+    }
+
+    function showImageSeedPreview(b64OrUrl, { isObjectUrl = false } = {}) {
         if (!imageSeedPreview) return;
-        if (b64) {
-            imageSeedPreview.src = `data:image/png;base64,${b64}`;
+        if (b64OrUrl) {
+            if (!isObjectUrl) revokeImageSeedLocalUrl();
+            imageSeedPreview.src = isObjectUrl
+                ? b64OrUrl
+                : `data:image/png;base64,${b64OrUrl}`;
             imageSeedPreview.hidden = false;
             if (imageSeedPreviewEmpty) imageSeedPreviewEmpty.hidden = true;
         } else {
+            revokeImageSeedLocalUrl();
             imageSeedPreview.removeAttribute('src');
             imageSeedPreview.hidden = true;
             if (imageSeedPreviewEmpty) imageSeedPreviewEmpty.hidden = false;
         }
+    }
+
+    function showLocalImageSeedPreview(file) {
+        revokeImageSeedLocalUrl();
+        if (!file) {
+            showImageSeedPreview(null);
+            return;
+        }
+        imageSeedLocalUrl = URL.createObjectURL(file);
+        showImageSeedPreview(imageSeedLocalUrl, { isObjectUrl: true });
+    }
+
+    function renderImageSeedRecommend(body) {
+        const rec = body?.recommended || {};
+        const title =
+            rec.experience_title || body?.applied_experience_id || rec.experience_id || 'Open field';
+        const mode = body?.applied_mode || rec.mode || modeSelect.value || 'open';
+        const intensity =
+            body?.applied_intensity != null ? body.applied_intensity : rec.intensity;
+        const score = rec.experience_score;
+        if (imageSeedRecommendTitle) imageSeedRecommendTitle.textContent = title;
+        if (imageSeedRecommendMeta) {
+            const parts = [`mode ${mode}`];
+            if (intensity != null) parts.push(`intensity ${Number(intensity).toFixed(2)}`);
+            if (score != null) parts.push(`score ${Number(score).toFixed(2)}`);
+            imageSeedRecommendMeta.textContent = parts.join(' · ');
+        }
+        if (imageSeedRecommend) imageSeedRecommend.hidden = false;
+    }
+
+    function clearImageSeedRecommend() {
+        imageSeedSuggest = null;
+        if (imageSeedRecommend) imageSeedRecommend.hidden = true;
+        if (imageSeedRecommendTitle) imageSeedRecommendTitle.textContent = '';
+        if (imageSeedRecommendMeta) imageSeedRecommendMeta.textContent = '';
+    }
+
+    function applyRecommendedControls(body) {
+        const recExp = body.applied_experience_id || body.recommended?.experience_id;
+        if (recExp && experienceSelect) {
+            const hasOpt = [...experienceSelect.options].some((o) => o.value === recExp);
+            if (hasOpt) experienceSelect.value = recExp;
+        }
+        if (body.applied_mode) modeSelect.value = body.applied_mode;
+        else if (body.recommended?.mode) modeSelect.value = body.recommended.mode;
+        const intensity =
+            body.applied_intensity != null
+                ? body.applied_intensity
+                : body.recommended?.intensity;
+        if (intensity != null) {
+            intensityRange.value = String(intensity);
+            intensityValue.textContent = Number(intensity).toFixed(2);
+        }
+    }
+
+    function fileToBase64(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+                const result = String(reader.result || '');
+                const b64 = result.includes(',') ? result.split(',')[1] : result;
+                resolve(b64);
+            };
+            reader.onerror = () => reject(reader.error || new Error('read failed'));
+            reader.readAsDataURL(file);
+        });
     }
 
     function syncModulators() {
@@ -1265,9 +1352,61 @@ document.addEventListener('DOMContentLoaded', () => {
         syncModulators();
     });
 
+    async function suggestImageSeedFormula() {
+        const file = imageSeedFile?.files && imageSeedFile.files[0];
+        if (!file) {
+            setImageSeedUiState('error', 'Choose an image first');
+            return;
+        }
+        setImageSeedUiState('loading', 'Suggesting formula…');
+        try {
+            const fd = new FormData();
+            fd.append('file', file);
+            fd.append('substance', substanceSelect.value || 'lsd');
+            fd.append('mode', modeSelect.value || 'open');
+            fd.append('intensity', String(Number(intensityRange.value)));
+            fd.append('influence', String(imageInfluence()));
+            fd.append('include_preview', 'false');
+            fd.append('include_source_field', 'false');
+            fd.append('apply_recommended', 'true');
+            fd.append('recommend_only', 'true');
+            const res = await fetch('/api/v1/visualize/image-seed', { method: 'POST', body: fd });
+            const body = await res.json().catch(() => ({}));
+            if (!res.ok) {
+                throw new Error(body.detail || res.statusText || 'suggest failed');
+            }
+            imageSeedSuggest = body;
+            renderImageSeedRecommend(body);
+            if (imageSeedApplyRecommended?.checked) applyRecommendedControls(body);
+            const title = body.recommended?.experience_title || body.applied_experience_id || 'formula';
+            setImageSeedUiState('success', `Suggested · ${title} — confirm, then Condition & load`);
+        } catch (err) {
+            console.error(err);
+            setImageSeedUiState('error', err.message || String(err));
+        }
+    }
+
+    imageSeedFile?.addEventListener('change', () => {
+        const file = imageSeedFile.files && imageSeedFile.files[0];
+        imageSeedState = null;
+        clearImageSeedHandoff();
+        clearImageSeedRecommend();
+        if (typeof player.clearImageHints === 'function') player.clearImageHints();
+        showLocalImageSeedPreview(file || null);
+        syncGpuLabLinks();
+        syncModulators();
+        if (!file) {
+            setImageSeedUiState('idle', 'Idle');
+            return;
+        }
+        setImageSeedUiState('idle', 'Image ready — suggesting formula…');
+        suggestImageSeedFormula();
+    });
+
     imageSeedClearBtn?.addEventListener('click', () => {
         imageSeedState = null;
         clearImageSeedHandoff();
+        clearImageSeedRecommend();
         if (typeof player.clearImageHints === 'function') player.clearImageHints();
         if (imageSeedFile) imageSeedFile.value = '';
         showImageSeedPreview(null);
@@ -1299,6 +1438,7 @@ document.addEventListener('DOMContentLoaded', () => {
         fd.append('include_preview', 'true');
         fd.append('include_source_field', 'true');
         fd.append('apply_recommended', imageSeedApplyRecommended?.checked ? 'true' : 'false');
+        fd.append('recommend_only', 'false');
         try {
             const res = await fetch('/api/v1/visualize/image-seed', { method: 'POST', body: fd });
             const body = await res.json().catch(() => ({}));
@@ -1306,20 +1446,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error(body.detail || res.statusText || 'image-seed failed');
             }
             imageSeedState = body;
+            imageSeedSuggest = null;
             persistImageSeedHandoff(body);
             seedInput.value = String(body.master_seed >>> 0);
-            if (imageSeedApplyRecommended?.checked) {
-                const recExp = body.applied_experience_id || body.recommended?.experience_id;
-                if (recExp && experienceSelect) {
-                    const hasOpt = [...experienceSelect.options].some((o) => o.value === recExp);
-                    if (hasOpt) experienceSelect.value = recExp;
-                }
-                if (body.applied_mode) modeSelect.value = body.applied_mode;
-                if (body.applied_intensity != null) {
-                    intensityRange.value = String(body.applied_intensity);
-                    intensityValue.textContent = Number(body.applied_intensity).toFixed(2);
-                }
-            }
+            if (imageSeedApplyRecommended?.checked) applyRecommendedControls(body);
+            renderImageSeedRecommend(body);
             if (typeof player.setImageHints === 'function') {
                 player.setImageHints(body.parameter_hints || null);
             }
@@ -1352,8 +1483,81 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    async function packageImageSeedJourney() {
+        const file = imageSeedFile?.files && imageSeedFile.files[0];
+        if (!file) {
+            setImageSeedUiState('error', 'Choose an image first');
+            return;
+        }
+        setImageSeedUiState('loading', 'Building seed → journey package…');
+        try {
+            const b64 = await fileToBase64(file);
+            const res = await fetch('/api/v1/visualize/image-seed-journey', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    image_base64: b64,
+                    substance: substanceSelect.value || 'lsd',
+                    experience_id: experienceSelect.value || null,
+                    mode: modeSelect.value || 'open',
+                    intensity: Number(intensityRange.value),
+                    influence: imageInfluence(),
+                    apply_recommended: !!imageSeedApplyRecommended?.checked,
+                    include_preview: false,
+                    include_source_field: false,
+                    steps: 12,
+                    quality_tier: (document.getElementById('qualityTierSelect')?.value) || 'balanced',
+                    reduce_motion: !!reduceMotionChk?.checked,
+                    dim_flashing: !!dimFlashChk?.checked,
+                }),
+            });
+            const body = await res.json().catch(() => ({}));
+            if (!res.ok) {
+                throw new Error(body.detail || res.statusText || 'image-seed-journey failed');
+            }
+            imageSeedState = body.image_seed || null;
+            if (imageSeedState) {
+                persistImageSeedHandoff(imageSeedState);
+                seedInput.value = String(imageSeedState.master_seed >>> 0);
+                if (imageSeedApplyRecommended?.checked) applyRecommendedControls(imageSeedState);
+                renderImageSeedRecommend(imageSeedState);
+                if (typeof player.setImageHints === 'function') {
+                    player.setImageHints(imageSeedState.parameter_hints || null);
+                }
+            }
+            const blob = new Blob([JSON.stringify(body, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `psyfi-seed-journey-${body.image_seed?.master_seed || 'export'}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            const promptLen = (body.journey?.t2v?.prompt || '').length;
+            const hint = document.getElementById('t2vPromptHint');
+            if (hint) {
+                hint.hidden = false;
+                hint.textContent = `Seed→journey downloaded · T2V prompt ${promptLen} chars (capture stills via Export journey).`;
+            }
+            syncModulators();
+            syncGpuLabLinks();
+            setImageSeedUiState(
+                'success',
+                `Journey packaged · seed ${body.image_seed?.master_seed ?? '—'}`,
+            );
+        } catch (err) {
+            console.error(err);
+            setImageSeedUiState('error', err.message || String(err));
+        }
+    }
+
+    imageSeedSuggestBtn?.addEventListener('click', () => {
+        suggestImageSeedFormula();
+    });
     imageSeedApplyBtn?.addEventListener('click', () => {
         conditionImageAndLoad();
+    });
+    imageSeedJourneyBtn?.addEventListener('click', () => {
+        packageImageSeedJourney();
     });
 
     let neutralOn = false;
@@ -1455,6 +1659,65 @@ document.addEventListener('DOMContentLoaded', () => {
         player.exportViewportPng();
     });
 
+    function imageSeedPayloadForJourney() {
+        if (!imageSeedState) return null;
+        return {
+            master_seed: imageSeedState.master_seed,
+            influence: imageSeedState.influence,
+            features: imageSeedState.features,
+            parameter_hints: imageSeedState.parameter_hints,
+        };
+    }
+
+    function waitForPaintFrames(n = 2) {
+        return new Promise((resolve) => {
+            let left = Math.max(1, n);
+            const tick = () => {
+                left -= 1;
+                if (left <= 0) resolve();
+                else requestAnimationFrame(tick);
+            };
+            requestAnimationFrame(tick);
+        });
+    }
+
+    async function captureTimelineStills() {
+        if (!player.timeline) throw new Error('Load an experience first');
+        const stills = [];
+        const frames = player.timeline.frames || [];
+        const last = frames.length - 1;
+        const picks = [0, Math.floor(last / 2), last].filter(
+            (v, i, a) => a.indexOf(v) === i && v >= 0 && frames[v],
+        );
+        const prevIdx = player.idx;
+        for (const idx of picks) {
+            player.setPhaseIndex(idx);
+            if (typeof player.render === 'function') {
+                try {
+                    player.render();
+                } catch (_) {
+                    /* optional redraw hook */
+                }
+            }
+            await waitForPaintFrames(2);
+            const target =
+                player.backend === 'webgl' && player.glCanvas && !player.glCanvas.hidden
+                    ? player.glCanvas
+                    : player.canvas;
+            const dataUrl = target.toDataURL('image/png');
+            const b64 = dataUrl.includes(',') ? dataUrl.split(',')[1] : dataUrl;
+            stills.push({
+                id: `still_${idx}`,
+                phase: frames[idx].phase,
+                phase_t: frames[idx].phase_t,
+                png_base64: b64,
+            });
+        }
+        player.setPhaseIndex(prevIdx);
+        await waitForPaintFrames(1);
+        return stills;
+    }
+
     async function fetchJourneyPromptOnly() {
         if (!player.timeline) throw new Error('Load an experience first');
         const res = await fetch('/api/v1/visualize/export-journey', {
@@ -1463,14 +1726,7 @@ document.addEventListener('DOMContentLoaded', () => {
             body: JSON.stringify({
                 timeline: player.timeline,
                 stills: [],
-                image_seed: imageSeedState
-                    ? {
-                          master_seed: imageSeedState.master_seed,
-                          influence: imageSeedState.influence,
-                          features: imageSeedState.features,
-                          parameter_hints: imageSeedState.parameter_hints,
-                      }
-                    : null,
+                image_seed: imageSeedPayloadForJourney(),
                 experience_id: experienceSelect.value || player.timeline.experience_id || null,
                 t2v_provider: 'external',
             }),
@@ -1516,46 +1772,17 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('Load an experience first');
             return;
         }
+        const hint = document.getElementById('t2vPromptHint');
         statusEl.textContent = 'Building export journey…';
         try {
-            const stills = [];
-            const frames = player.timeline.frames || [];
-            const picks = [0, Math.floor((frames.length - 1) / 2), frames.length - 1].filter(
-                (v, i, a) => a.indexOf(v) === i && v >= 0 && frames[v],
-            );
-            const prevIdx = player.idx;
-            for (const idx of picks) {
-                player.setPhaseIndex(idx);
-                // Allow one paint
-                await new Promise((r) => requestAnimationFrame(() => r()));
-                const target =
-                    player.backend === 'webgl' && player.glCanvas && !player.glCanvas.hidden
-                        ? player.glCanvas
-                        : player.canvas;
-                const dataUrl = target.toDataURL('image/png');
-                const b64 = dataUrl.includes(',') ? dataUrl.split(',')[1] : dataUrl;
-                stills.push({
-                    id: `still_${idx}`,
-                    phase: frames[idx].phase,
-                    phase_t: frames[idx].phase_t,
-                    png_base64: b64,
-                });
-            }
-            player.setPhaseIndex(prevIdx);
+            const stills = await captureTimelineStills();
             const res = await fetch('/api/v1/visualize/export-journey', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     timeline: player.timeline,
                     stills,
-                    image_seed: imageSeedState
-                        ? {
-                              master_seed: imageSeedState.master_seed,
-                              influence: imageSeedState.influence,
-                              features: imageSeedState.features,
-                              parameter_hints: imageSeedState.parameter_hints,
-                          }
-                        : null,
+                    image_seed: imageSeedPayloadForJourney(),
                     experience_id: experienceSelect.value || player.timeline.experience_id || null,
                     t2v_provider: 'external',
                 }),
@@ -1569,10 +1796,20 @@ document.addEventListener('DOMContentLoaded', () => {
             a.download = `psyfi-journey-${body.timeline_hash || body.master_seed || 'export'}.json`;
             a.click();
             URL.revokeObjectURL(url);
-            statusEl.textContent = 'Export journey downloaded · T2V prompt ready (external)';
+            const promptLen = (body.t2v?.prompt || '').length;
+            const stillCount = (body.stills || stills).length;
+            if (hint) {
+                hint.hidden = false;
+                hint.textContent = `Journey downloaded · ${stillCount} stills · T2V prompt ${promptLen} chars (external).`;
+            }
+            statusEl.textContent = `Export journey ready · ${stillCount} stills`;
         } catch (err) {
             console.error(err);
             statusEl.textContent = 'Export journey failed';
+            if (hint) {
+                hint.hidden = false;
+                hint.textContent = err.message || String(err);
+            }
             alert(err.message || String(err));
         }
     });

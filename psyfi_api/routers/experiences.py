@@ -52,6 +52,10 @@ class ImageSeedJsonRequest(BaseModel):
     include_preview: bool = True
     include_source_field: bool = True
     apply_recommended: bool = False
+    recommend_only: bool = Field(
+        default=False,
+        description="Analyze + recommend catalog formula without conditioning pixels.",
+    )
 
 
 class TimelineRequest(BaseModel):
@@ -375,11 +379,13 @@ def _run_image_seed(
     include_preview: bool,
     include_source_field: bool,
     apply_recommended: bool,
+    recommend_only: bool = False,
 ) -> dict[str, Any]:
     catalog = get_default_catalog()
-    # apply_recommended ignores client experience_id so Pass-1 conditioner and
-    # applied_* fields share the same catalog pick.
-    client_experience_id = None if apply_recommended else experience_id
+    # apply_recommended / recommend_only ignore client experience_id so Pass-1
+    # conditioner and applied_* fields share the same catalog pick.
+    prefer_rec = bool(apply_recommended) or bool(recommend_only)
+    client_experience_id = None if prefer_rec else experience_id
     experience = catalog.get(client_experience_id) if client_experience_id else None
     if client_experience_id and experience is None:
         raise HTTPException(status_code=404, detail=f"Experience not found: {client_experience_id}")
@@ -402,10 +408,11 @@ def _run_image_seed(
             mode=mode,
             intensity=intensity_c,
             influence=influence,
-            include_preview=include_preview,
-            include_source_field=include_source_field,
+            include_preview=include_preview and not recommend_only,
+            include_source_field=include_source_field and not recommend_only,
             recipe_candidates=candidates,
-            prefer_recommended_experience=bool(apply_recommended) or experience is None,
+            prefer_recommended_experience=prefer_rec or experience is None,
+            recommend_only=bool(recommend_only),
         )
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
@@ -414,7 +421,7 @@ def _run_image_seed(
 
     applied_exp_id = result.get("experience_id")
     applied_exp = catalog.get(applied_exp_id) if applied_exp_id else experience
-    if apply_recommended and result.get("recommended"):
+    if (apply_recommended or recommend_only) and result.get("recommended"):
         result["applied_mode"] = result["recommended"].get("mode")
         # Re-apply strictest intensity cap for the recommended recipe.
         rec_i = float(result["recommended"].get("intensity") or intensity_c)
@@ -432,7 +439,7 @@ def _run_image_seed(
             experience=applied_exp,
         )
         result["applied_experience_id"] = experience_id or applied_exp_id
-    result["kind"] = "image_seed"
+    result["kind"] = "image_seed_recommend" if recommend_only else "image_seed"
     return result
 
 
@@ -447,6 +454,7 @@ async def image_seed_multipart(
     include_preview: bool = Form(default=True),
     include_source_field: bool = Form(default=True),
     apply_recommended: bool = Form(default=False),
+    recommend_only: bool = Form(default=False),
 ) -> dict[str, Any]:
     """Pass 1: experience-condition an uploaded image → master_seed + live hints."""
     data = await file.read()
@@ -462,6 +470,7 @@ async def image_seed_multipart(
         include_preview=include_preview,
         include_source_field=include_source_field,
         apply_recommended=apply_recommended,
+        recommend_only=recommend_only,
     )
 
 
@@ -478,12 +487,18 @@ async def image_seed_json(body: ImageSeedJsonRequest) -> dict[str, Any]:
         include_preview=body.include_preview,
         include_source_field=body.include_source_field,
         apply_recommended=body.apply_recommended,
+        recommend_only=body.recommend_only,
     )
 
 
 @router.post("/visualize/image-seed-journey")
 async def image_seed_journey_json(body: ImageSeedJourneyJsonRequest) -> dict[str, Any]:
     """One-shot: condition image → timeline → export-journey prompt package (no stills)."""
+    if body.recommend_only:
+        raise HTTPException(
+            status_code=400,
+            detail="image-seed-journey requires conditioning; set recommend_only=false",
+        )
     seed_result = _run_image_seed(
         image=body.image_base64,
         substance=body.substance,
@@ -494,6 +509,7 @@ async def image_seed_journey_json(body: ImageSeedJourneyJsonRequest) -> dict[str
         include_preview=body.include_preview,
         include_source_field=body.include_source_field,
         apply_recommended=body.apply_recommended,
+        recommend_only=False,
     )
     catalog = get_default_catalog()
     exp_id = seed_result.get("applied_experience_id") or seed_result.get("experience_id")

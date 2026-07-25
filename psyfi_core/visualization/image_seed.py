@@ -398,8 +398,13 @@ def build_image_seed(
     include_texture: bool = True,
     recipe_candidates: list[dict[str, Any]] | None = None,
     prefer_recommended_experience: bool = False,
+    recommend_only: bool = False,
 ) -> dict[str, Any]:
-    """Run Pass 1 and return psyfi.image_seed.v1 payload."""
+    """Run Pass 1 and return psyfi.image_seed.v1 payload.
+
+    When ``recommend_only`` is true, skip pixel conditioning and return features +
+    catalog recommendation so the client can confirm formula before Pass 1 mutates.
+    """
     if isinstance(image, (bytes, bytearray)):
         rgba = decode_image_bytes(bytes(image))
     elif isinstance(image, str):
@@ -429,14 +434,6 @@ def build_image_seed(
     elif use_experience is None and rec_exp and rec_exp.get("recipe"):
         use_experience = rec_exp["recipe"]
 
-    drive = _recipe_drive(use_experience, substance_overlay)
-    # Deterministic conditioner seed from original features before mutate
-    pre_seed = derive_master_seed(rgba)
-    conditioned = condition_image(rgba, drive=drive, influence=influence, seed=pre_seed)
-    master_seed = derive_master_seed(conditioned)
-    hints = parameter_hints_from_features(features, drive, influence)
-    tex_b64 = encode_preview_png_base64(conditioned, edge=_TEXTURE_EDGE) if include_texture else None
-
     if rec_exp:
         recommended = {
             **recommended,
@@ -444,6 +441,40 @@ def build_image_seed(
             "experience_title": rec_exp.get("title"),
             "experience_score": rec_exp.get("score"),
         }
+
+    drive = _recipe_drive(use_experience, substance_overlay)
+    pre_seed = derive_master_seed(rgba)
+
+    if recommend_only:
+        # Provisional seed from the original image; Pass 1 conditioner not run.
+        hints = parameter_hints_from_features(features, drive, influence)
+        return {
+            "schema": IMAGE_SEED_SCHEMA,
+            "master_seed": int(pre_seed),
+            "influence": round(_clamp01(influence), 4),
+            "substance": substance,
+            "experience_id": (use_experience or {}).get("id") or (experience or {}).get("id"),
+            "mode": mode,
+            "features": features,
+            "parameter_hints": hints,
+            "source_field": None,
+            "conditioned_preview_png_base64": None,
+            "conditioned_texture_png_base64": None,
+            "texture_asset": None,
+            "recommended": recommended,
+            "recommend_only": True,
+            "note": (
+                "Recommend-only Pass-1 preview (no pixel conditioning). "
+                "Confirm formula, then re-call without recommend_only for the conditioned seed. "
+                "Modeled phenomenology for research/visualization only — not medical advice. "
+                "Image bytes are not stored."
+            ),
+        }
+
+    conditioned = condition_image(rgba, drive=drive, influence=influence, seed=pre_seed)
+    master_seed = derive_master_seed(conditioned)
+    hints = parameter_hints_from_features(features, drive, influence)
+    tex_b64 = encode_preview_png_base64(conditioned, edge=_TEXTURE_EDGE) if include_texture else None
 
     return {
         "schema": IMAGE_SEED_SCHEMA,
@@ -461,6 +492,7 @@ def build_image_seed(
         "conditioned_texture_png_base64": tex_b64,
         "texture_asset": texture_asset_ref(tex_b64),
         "recommended": recommended,
+        "recommend_only": False,
         "note": (
             "Pass-1 experience-conditioned image seed. "
             "Use master_seed + modulators.image for Pass-2 live ParameterField present. "

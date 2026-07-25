@@ -71,6 +71,7 @@
     "applied_experience_id": { "type": ["string", "null"] },
     "applied_mode": { "type": ["string", "null"] },
     "applied_intensity": { "type": ["number", "null"] },
+    "recommend_only": { "type": "boolean" },
     "kind": { "type": "string" },
     "note": { "type": "string" }
   }

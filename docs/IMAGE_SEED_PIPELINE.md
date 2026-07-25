@@ -1,6 +1,6 @@
 # Image Seed Pipeline (two-pass)
 
-Status: **active** — Pass 1 + Pass 2 + catalog recommend + GPU handoff + export-journey sidecar  
+Status: **active** — Pass 1 + Pass 2 + recommend-before-condition + GPU handoff + export-journey sidecar  
 Related: [`VISUAL_EXPERIENCES.md`](VISUAL_EXPERIENCES.md), [`rendering/ASSET_STANDARDS.md`](rendering/ASSET_STANDARDS.md), [`CONTINUATION_PLAN.md`](CONTINUATION_PLAN.md)
 
 ## Goal
@@ -62,12 +62,13 @@ No LLM/video provider is invoked in-app — paste externally.
 
 `POST /api/v1/visualize/image-seed`
 
-- Multipart: `file` + form fields (`substance`, `experience_id`, `mode`, `intensity`, `influence`, `apply_recommended`, …)
+- Multipart: `file` + form fields (`substance`, `experience_id`, `mode`, `intensity`, `influence`, `apply_recommended`, `recommend_only`, …)
 - Or JSON: `{ "image_base64": "...", ... }`
-- When `apply_recommended` is true, client `experience_id` is ignored; conditioner + `applied_*` use the catalog pick.
+- When `apply_recommended` / `recommend_only` is true, client `experience_id` is ignored; catalog pick drives `applied_*`.
+- `recommend_only=true` analyzes features and returns the recommended formula **without** pixel conditioning (Workbench suggest panel).
 - Response schema: `psyfi.image_seed.v1` (recommended may include `experience_id` / `experience_title` / `experience_score`)
 
-`POST /api/v1/visualize/image-seed-journey` → one-shot seed + timeline + `psyfi.export_journey.v1` prompt package (no stills)
+`POST /api/v1/visualize/image-seed-journey` → one-shot seed + timeline + `psyfi.export_journey.v1` prompt package (no stills; rejects `recommend_only`)
 
 `POST /api/v1/visualize/export-journey` → `psyfi.export_journey.v1`
 

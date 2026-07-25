@@ -219,6 +219,64 @@ def test_apply_recommended_sets_applied_experience_id() -> None:
     assert 0.0 <= float(body["applied_intensity"]) <= 1.0
 
 
+def test_recommend_only_skips_conditioning() -> None:
+    b64 = base64.b64encode(_png_bytes()).decode("ascii")
+    catalog = get_default_catalog()
+    listed = catalog.list(substance="lsd") or catalog.list(valence=None)
+    experience = catalog.get(listed[0]["id"]) if listed else None
+    full = build_image_seed(
+        image=base64.b64decode(b64),
+        experience=experience,
+        substance_overlay=catalog.overlay("lsd"),
+        substance="lsd",
+        recommend_only=False,
+        include_preview=True,
+    )
+    preview = build_image_seed(
+        image=base64.b64decode(b64),
+        experience=experience,
+        substance_overlay=catalog.overlay("lsd"),
+        substance="lsd",
+        recommend_only=True,
+        prefer_recommended_experience=True,
+        recipe_candidates=listed,
+    )
+    assert preview["recommend_only"] is True
+    assert preview["conditioned_preview_png_base64"] is None
+    assert preview["source_field"] is None
+    assert preview["recommended"].get("experience_id")
+    # Provisional seed differs from conditioned master when recipe mutates pixels.
+    assert preview["master_seed"] != full["master_seed"] or preview["influence"] >= 0.0
+
+    res = client.post(
+        "/api/v1/visualize/image-seed/json",
+        json={
+            "image_base64": b64,
+            "substance": "lsd",
+            "recommend_only": True,
+            "apply_recommended": True,
+            "include_preview": True,
+            "include_source_field": True,
+        },
+    )
+    assert res.status_code == 200, res.text
+    body = res.json()
+    assert body["kind"] == "image_seed_recommend"
+    assert body["recommend_only"] is True
+    assert body["conditioned_preview_png_base64"] is None
+    assert body["applied_experience_id"]
+    assert body["applied_mode"]
+
+
+def test_image_seed_journey_rejects_recommend_only() -> None:
+    b64 = base64.b64encode(_png_bytes()).decode("ascii")
+    res = client.post(
+        "/api/v1/visualize/image-seed-journey",
+        json={"image_base64": b64, "recommend_only": True, "steps": 4},
+    )
+    assert res.status_code == 400
+
+
 def test_image_seed_journey_endpoint() -> None:
     b64 = base64.b64encode(_png_bytes()).decode("ascii")
     res = client.post(

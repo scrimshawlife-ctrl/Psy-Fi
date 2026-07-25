@@ -55,6 +55,11 @@
             "title": "Mode",
             "type": "string"
           },
+          "recommend_only": {
+            "default": false,
+            "title": "Recommend Only",
+            "type": "boolean"
+          },
           "substance": {
             "default": "lsd",
             "title": "Substance",
@@ -281,6 +286,12 @@
             "title": "Quality Tier",
             "type": "string"
           },
+          "recommend_only": {
+            "default": false,
+            "description": "Analyze + recommend catalog formula without conditioning pixels.",
+            "title": "Recommend Only",
+            "type": "boolean"
+          },
           "reduce_motion": {
             "default": false,
             "title": "Reduce Motion",
@@ -362,6 +373,12 @@
             ],
             "title": "Mode",
             "type": "string"
+          },
+          "recommend_only": {
+            "default": false,
+            "description": "Analyze + recommend catalog formula without conditioning pixels.",
+            "title": "Recommend Only",
+            "type": "boolean"
           },
           "substance": {
             "default": "lsd",

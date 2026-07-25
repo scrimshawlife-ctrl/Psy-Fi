@@ -37,6 +37,10 @@ def test_template_wires_cancel_recovery_and_renderer() -> None:
     assert 'id="sourcePlaneChk"' in html
     assert 'id="sourcePlaneMix"' in html
     assert 'id="bridgeSimBtn"' in html
+    assert 'id="imageSeedSuggestBtn"' in html
+    assert 'id="imageSeedJourneyBtn"' in html
+    assert 'id="imageSeedRecommend"' in html
+    assert 'id="copyT2vPromptBtn"' in html
     assert 'id="modAudio"' in html
     assert 'id="modHaptics"' in html
     assert 'id="enableAudioBtn"' in html
@@ -60,7 +64,7 @@ def test_template_wires_cancel_recovery_and_renderer() -> None:
 
 def test_service_worker_precaches_renderer_assets() -> None:
     sw = (STATIC / "sw.js").read_text(encoding="utf-8")
-    assert "psyfi-shell-v31" in sw
+    assert "psyfi-shell-v32" in sw
     assert ".woff2" in sw
     assert "/assets/icons/pf-icon-reset-24.svg" in sw
     assert "/assets/icons/pf-icon-valence-meter-24.svg" in sw

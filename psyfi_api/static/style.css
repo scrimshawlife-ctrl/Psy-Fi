@@ -1744,6 +1744,33 @@ body.launch-ready #appShell {
     min-width: 0;
 }
 
+.image-seed-recommend {
+    border: 1px solid var(--pf-border-subtle);
+    background: color-mix(in srgb, var(--pf-bg-2) 88%, transparent);
+    padding: 8px 10px;
+    display: grid;
+    gap: 2px;
+}
+
+.image-seed-recommend[hidden] {
+    display: none !important;
+}
+
+.image-seed-recommend-title {
+    margin: 0;
+    font-family: var(--pf-font-main);
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--pf-text-main);
+}
+
+.image-seed-recommend-meta {
+    margin: 0;
+    font-family: var(--pf-font-mono);
+    font-size: 0.72rem;
+    color: var(--pf-text-muted);
+}
+
 .image-seed-status {
     margin: 0;
     font-family: var(--pf-font-mono);

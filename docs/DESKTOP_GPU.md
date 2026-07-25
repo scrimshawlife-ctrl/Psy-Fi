@@ -60,15 +60,16 @@ After deploy, on each target GPU:
 
 1. Open Chrome/Edge → `http://localhost:8000/gpu/` (or your host URL).
 2. HUD shows **adapter** string, **vendor**, **band ultra**, and tier **ultra**.
-3. Toggle Neutral View — safety pass still attenuates; scene stays calm.
-4. With Battery Saver / low charge, tier clamps away from Ultra.
-5. Optional: note 1% lows vs [`GPU_PERFORMANCE_BUDGET.md`](rendering/GPU_PERFORMANCE_BUDGET.md) Ultra targets.
+3. Profiling line shows FPS · avg/p95/max ms vs tier **target** (prefer **ok**, not OVER).
+4. Toggle Neutral View — safety pass still attenuates; scene stays calm.
+5. With Battery Saver / low charge, tier clamps away from Ultra.
+6. Optional: note p95 vs [`GPU_PERFORMANCE_BUDGET.md`](rendering/GPU_PERFORMANCE_BUDGET.md) Ultra targets.
 
 Update [`BROWSER_CAPABILITY_MATRIX.md`](BROWSER_CAPABILITY_MATRIX.md) if results differ from the peer rows.
 
 ## Recommended engineering follow-ups
 
-See [`CONTINUATION_PLAN.md`](CONTINUATION_PLAN.md) — after hardware validation: profiling HUD polish → Draco/KTX2 GPU upload → G4 cutover goldens.
+See [`CONTINUATION_PLAN.md`](CONTINUATION_PLAN.md) — after hardware validation: G4 cutover parity/goldens ([`rendering/G4_CUTOVER.md`](rendering/G4_CUTOVER.md)). Profiling HUD and KTX2/Draco upload bridges are in `/gpu/`.
 
 ## Non-claims
 

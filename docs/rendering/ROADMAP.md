@@ -45,13 +45,15 @@ Platform package: `packages/psyfi-gpu-renderer`
 - [x] CI budget smoke (`budgetSmoke.test.ts`)
 - [x] Device matrix + Phase 4 human QA filled (2026-07-25)
 - [x] Multi-vendor Ultra auto-tier (NVIDIA 30/40/50 · AMD RX 6/7/9xxx · Intel Arc · Apple Pro/Max)
-- [ ] Profiling overlay polish in `/gpu/` UI (**P1** — see [`CONTINUATION_PLAN.md`](../CONTINUATION_PLAN.md))
+- [x] Profiling overlay polish in `/gpu/` UI (FPS · avg/p95/max · tier budget)
 
-## Phase G4 — Cutover readiness (**recommended next eng slice after hardware QA**)
+## Phase G4 — Cutover readiness
 
-- [ ] Feature parity checklist vs legacy Live Experience
+- [x] Draco/KTX2 GPU upload path (`ktx2Parse` · `dracoBridge` · `GpuAssetUploader` · `loadAndUpload`)
+- [x] Cutover checklist doc [`G4_CUTOVER.md`](G4_CUTOVER.md)
+- [ ] Feature parity table evidence vs legacy Live Experience
 - [ ] Visual regression goldens (canonical seeds)
-- [ ] Draco/KTX2 WASM GPU upload (beyond worker header decode)
+- [ ] Vendor real Draco WASM / Basis transcoder (optional; bridges ready)
 - [ ] PWA integration decision (embed vs route)
 - [x] Soft → **hard** freeze includes scene-snapshot schema
 - Legacy viz marked deprecated (not deleted until iOS/web gates)

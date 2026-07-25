@@ -51,7 +51,7 @@ describe('decodeAsset', () => {
     expect(meta.hasDraco).toBe(false)
   })
 
-  it('parses KTX2 header fields', () => {
+  it('parses KTX2 header fields (legacy short buffer)', () => {
     const buf = new ArrayBuffer(48)
     const u8 = new Uint8Array(buf)
     const id = [0xab, 0x4b, 0x54, 0x58, 0x20, 0x32, 0x30, 0xbb, 0x0d, 0x0a, 0x1a, 0x0a]
@@ -70,6 +70,7 @@ describe('decodeAsset', () => {
     expect(meta.height).toBe(128)
     expect(meta.levelCount).toBe(5)
     expect(meta.vkFormat).toBe(123)
+    expect(meta.gpuReadyUncompressed).toBe(false)
   })
 
   it('records splat byte length', () => {

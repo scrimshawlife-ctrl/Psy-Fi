@@ -1,4 +1,5 @@
 import type { AssetKind } from './AssetLoader'
+import { parseKtx2Container, type Ktx2Supercompression } from './ktx2Parse'
 
 export interface GltfDecodeMeta {
   kind: 'gltf'
@@ -17,6 +18,8 @@ export interface Ktx2DecodeMeta {
   faceCount: number
   levelCount: number
   vkFormat: number
+  supercompression: Ktx2Supercompression
+  gpuReadyUncompressed: boolean
 }
 
 export interface SplatDecodeMeta {
@@ -72,31 +75,44 @@ function summarizeGltfJson(text: string, container: 'gltf-json' | 'glb'): GltfDe
 }
 
 export function decodeKtx2Bytes(bytes: ArrayBuffer): Ktx2DecodeMeta {
-  const u8 = new Uint8Array(bytes)
-  if (bytes.byteLength < 48) throw new Error('ktx2: buffer too small')
-  for (let i = 0; i < KTX2_ID.length; i++) {
-    if (u8[i] !== KTX2_ID[i]) throw new Error('ktx2: bad identifier')
-  }
-  const view = new DataView(bytes)
-  // KTX2 header layout after 12-byte identifier
-  const vkFormat = readU32LE(view, 12)
-  const typeSize = readU32LE(view, 16)
-  void typeSize
-  const pixelWidth = readU32LE(view, 20)
-  const pixelHeight = readU32LE(view, 24)
-  const pixelDepth = readU32LE(view, 28)
-  void pixelDepth
-  const layerCount = readU32LE(view, 32)
-  const faceCount = readU32LE(view, 36)
-  const levelCount = readU32LE(view, 40)
-  return {
-    kind: 'ktx2',
-    width: pixelWidth,
-    height: pixelHeight,
-    layerCount,
-    faceCount,
-    levelCount,
-    vkFormat,
+  // Prefer full container parse; fall back to legacy 48-byte header for tiny fixtures.
+  try {
+    const c = parseKtx2Container(bytes)
+    return {
+      kind: 'ktx2',
+      width: c.width,
+      height: c.height,
+      layerCount: c.layerCount,
+      faceCount: c.faceCount,
+      levelCount: c.levelCount,
+      vkFormat: c.vkFormat,
+      supercompression: c.supercompression,
+      gpuReadyUncompressed: c.gpuReadyUncompressed,
+    }
+  } catch {
+    const u8 = new Uint8Array(bytes)
+    if (bytes.byteLength < 48) throw new Error('ktx2: buffer too small')
+    for (let i = 0; i < KTX2_ID.length; i++) {
+      if (u8[i] !== KTX2_ID[i]) throw new Error('ktx2: bad identifier')
+    }
+    const view = new DataView(bytes)
+    const vkFormat = readU32LE(view, 12)
+    const pixelWidth = readU32LE(view, 20)
+    const pixelHeight = readU32LE(view, 24)
+    const layerCount = Math.max(1, readU32LE(view, 32) || 1)
+    const faceCount = Math.max(1, readU32LE(view, 36) || 1)
+    const levelCount = Math.max(1, readU32LE(view, 40) || 1)
+    return {
+      kind: 'ktx2',
+      width: pixelWidth,
+      height: pixelHeight,
+      layerCount,
+      faceCount,
+      levelCount,
+      vkFormat,
+      supercompression: 'unknown',
+      gpuReadyUncompressed: false,
+    }
   }
 }
 

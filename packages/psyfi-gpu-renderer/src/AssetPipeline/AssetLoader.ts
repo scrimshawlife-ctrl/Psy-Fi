@@ -1,4 +1,7 @@
 import { decodeAssetBytes, type AssetDecodeMeta, type DecodedAssetPayload } from './decodeAsset'
+import { createDracoWasmDecoder, type DracoWasmDecoder } from './dracoBridge'
+import { GpuAssetUploader, type GpuUploadDevice, type UploadedAsset } from './GpuAssetUploader'
+import { planDracoMeshUpload, planLoadedAssetUpload, type GpuUploadPlan } from './uploadPlan'
 
 export type AssetKind = 'gltf' | 'ktx2' | 'splat'
 
@@ -21,15 +24,22 @@ export type AssetLoadMode = 'main' | 'worker'
 export type { AssetDecodeMeta, DecodedAssetPayload }
 
 /**
- * Asset loading with optional Worker offload (G2).
+ * Asset loading with optional Worker offload (G2) + GPU upload planning (G4).
  * Fetch + lightweight decode stay off the render critical path.
  */
 export class AssetLoader {
   private cache = new Map<string, LoadedAsset>()
   private mode: AssetLoadMode = 'main'
   private worker: Worker | null = null
+  private draco: DracoWasmDecoder
 
-  constructor(opts?: { mode?: AssetLoadMode; workerUrl?: string | URL }) {
+  constructor(opts?: {
+    mode?: AssetLoadMode
+    workerUrl?: string | URL
+    draco?: DracoWasmDecoder
+    dracoWasmUrl?: string
+  }) {
+    this.draco = opts?.draco ?? createDracoWasmDecoder({ wasmUrl: opts?.dracoWasmUrl })
     if (opts?.mode === 'worker' && typeof Worker !== 'undefined') {
       try {
         const url =
@@ -104,6 +114,28 @@ export class AssetLoader {
     })
   }
 
+  /** Pure plan from a loaded asset (KTX2 uncompressed → texture2d; else deferred). */
+  planUpload(asset: LoadedAsset): GpuUploadPlan {
+    return planLoadedAssetUpload(asset)
+  }
+
+  /** Decode Draco bitstream (PSYD test pack or configured WASM) → mesh upload plan. */
+  planDracoUpload(id: string, bitstream: ArrayBuffer, attributes?: Record<string, number>) {
+    return planDracoMeshUpload(id, bitstream, this.draco, attributes)
+  }
+
+  /** Load → plan → upload to WebGPU device (deferred plans returned without device writes). */
+  async loadAndUpload(
+    req: AssetRequest,
+    device: GpuUploadDevice,
+    signal?: AbortSignal,
+  ): Promise<{ asset: LoadedAsset; plan: GpuUploadPlan; uploaded: UploadedAsset }> {
+    const asset = await this.load(req, signal)
+    const plan = this.planUpload(asset)
+    const uploaded = new GpuAssetUploader(device).upload(plan)
+    return { asset, plan, uploaded }
+  }
+
   clear(): void {
     this.cache.clear()
   }
@@ -111,6 +143,7 @@ export class AssetLoader {
   dispose(): void {
     this.worker?.terminate()
     this.worker = null
+    this.draco.dispose()
     this.cache.clear()
   }
 }

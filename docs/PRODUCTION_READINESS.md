@@ -45,12 +45,18 @@ Scope: web app / PWA / API — native iOS deferred (`IOS_MIGRATION.md`).
 
 Python simulation does **not** use CUDA/HIP. Discrete GPUs (NVIDIA RTX **30/40/50**, AMD RX **6000/7000/9000**, Intel **Arc**, Apple Pro/Max) accelerate `/gpu/` through **browser WebGPU**. Setup: [`DESKTOP_GPU.md`](DESKTOP_GPU.md) · NVIDIA Compose: [`NVIDIA_GPU.md`](NVIDIA_GPU.md).
 
-## Remaining optional polish
+## Recommended next steps
 
-1. Draco/KTX2 WASM GPU upload (beyond header decode)
-2. Optional legacy WebGL 1:1 shaders
-3. Re-run device matrix after major UI changes
-4. Future optional CUDA workers (Compose `nvidia` profile already reserves the GPU)
+Canonical queue: [`CONTINUATION_PLAN.md`](CONTINUATION_PLAN.md).
+
+| Priority | Action | Owner |
+| --- | --- | --- |
+| **P0** | Validate Ultra auto-tier on real NVIDIA / AMD / Intel desktops via `/gpu/` | Human QA |
+| **P1** | Profiling HUD polish in `/gpu/` (frame ms + pass list) | Eng |
+| **P1** | Draco/KTX2 WASM GPU upload beyond header decode | Eng |
+| **P1** | G4 cutover smoke: parity checklist + visual goldens | Eng |
+| **P2** | Re-run device matrix after major UI changes | QA |
+| **P2** | Optional legacy WebGL 1:1 shaders; future CUDA workers | Eng (opportunistic) |
 
 ## Non-claims
 

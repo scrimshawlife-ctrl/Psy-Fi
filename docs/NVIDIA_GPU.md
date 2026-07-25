@@ -79,6 +79,11 @@ Browse **`http://localhost:8000/gpu/`** from the NVIDIA-equipped machine (WebGPU
 | Tier stuck on Balanced | Confirm adapter string contains `RTX` 30/40/50; disable Battery Saver |
 | Docker `nvidia` profile fails | Install Container Toolkit; restart Docker; `nvidia-smi` must work on host |
 
+## Next steps
+
+1. Run the [validation checklist](DESKTOP_GPU.md#validation-checklist-next-human-step) on your RTX card.
+2. Engineering queue after hardware QA: [`CONTINUATION_PLAN.md`](CONTINUATION_PLAN.md).
+
 ## Non-claims
 
 Modeled phenomenology for research/visualization only. Not medical advice.

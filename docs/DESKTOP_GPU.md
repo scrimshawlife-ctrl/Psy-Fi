@@ -54,6 +54,22 @@ Docker GPU reservation (`--profile nvidia`), `nvidia-smi`, and RTX 50xx driver n
 | Tier stuck on Balanced | Confirm adapter string matches a Ultra-band series; disable Battery Saver |
 | AMD/Intel not Ultra | Confirm description includes RX 6/7/9xxx or Arc A/B series |
 
+## Validation checklist (next human step)
+
+After deploy, on each target GPU:
+
+1. Open Chrome/Edge → `http://localhost:8000/gpu/` (or your host URL).
+2. HUD shows **adapter** string, **vendor**, **band ultra**, and tier **ultra**.
+3. Toggle Neutral View — safety pass still attenuates; scene stays calm.
+4. With Battery Saver / low charge, tier clamps away from Ultra.
+5. Optional: note 1% lows vs [`GPU_PERFORMANCE_BUDGET.md`](rendering/GPU_PERFORMANCE_BUDGET.md) Ultra targets.
+
+Update [`BROWSER_CAPABILITY_MATRIX.md`](BROWSER_CAPABILITY_MATRIX.md) if results differ from the peer rows.
+
+## Recommended engineering follow-ups
+
+See [`CONTINUATION_PLAN.md`](CONTINUATION_PLAN.md) — after hardware validation: profiling HUD polish → Draco/KTX2 GPU upload → G4 cutover goldens.
+
 ## Non-claims
 
 Modeled phenomenology for research/visualization only. Not medical advice.

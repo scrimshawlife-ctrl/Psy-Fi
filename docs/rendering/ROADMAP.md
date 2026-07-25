@@ -44,13 +44,15 @@ Platform package: `packages/psyfi-gpu-renderer`
 - [x] Ultra / High / Balanced AO enablement (battery off)
 - [x] CI budget smoke (`budgetSmoke.test.ts`)
 - [x] Device matrix + Phase 4 human QA filled (2026-07-25)
-- [ ] Profiling overlay polish in `/gpu/` UI (optional)
+- [x] Multi-vendor Ultra auto-tier (NVIDIA 30/40/50 · AMD RX 6/7/9xxx · Intel Arc · Apple Pro/Max)
+- [ ] Profiling overlay polish in `/gpu/` UI (**P1** — see [`CONTINUATION_PLAN.md`](../CONTINUATION_PLAN.md))
 
-## Phase G4 — Cutover readiness
+## Phase G4 — Cutover readiness (**recommended next eng slice after hardware QA**)
 
-- Feature parity checklist vs legacy Live Experience
-- Visual regression goldens (canonical seeds)
-- PWA integration decision (embed vs route)
+- [ ] Feature parity checklist vs legacy Live Experience
+- [ ] Visual regression goldens (canonical seeds)
+- [ ] Draco/KTX2 WASM GPU upload (beyond worker header decode)
+- [ ] PWA integration decision (embed vs route)
 - [x] Soft → **hard** freeze includes scene-snapshot schema
 - Legacy viz marked deprecated (not deleted until iOS/web gates)
 - Device matrix: living QA (unfrozen as ship gate)

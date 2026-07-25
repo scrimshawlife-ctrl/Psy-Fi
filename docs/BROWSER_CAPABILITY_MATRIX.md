@@ -29,12 +29,19 @@ The web shell detects support in the current browser. Optional capabilities neve
 | Web Workers | Heatmap rasterize off main thread | Main-thread Canvas | No |
 | IndexedDB | Preferred history store | `localStorage` last session | No |
 | Service Worker | Installable shell caching | Online-only static hosting | No |
-| Web MIDI | Optional modulator / server MIDI | Manual intensity / REST MIDI | No |
+| Web MIDI | Optional browser MIDI meter → ParameterField (else REST MIDI) | Manual intensity / REST MIDI | No |
 | Camera (`getUserMedia`) | Optional luminance meter → ParameterField | Modulator slider stays manual | No |
 | Microphone (`getUserMedia`) | Optional audio meter → ParameterField | Audio slider stays manual | No |
-| DeviceMotion | Optional tilt → ParameterField | Modulator slider stays manual | No |
+| DeviceMotion | Optional accel → ParameterField motion channel | Modulator slider stays manual | No |
+| DeviceOrientation | Optional tilt blended into motion channel | Motion slider / DeviceMotion only | No |
+| AmbientLightSensor | Optional lux → camera channel | Camera meter / manual slider | No |
+| Gamepad | Optional axes/buttons → motion channel | Manual motion slider | No |
 | Vibration / Haptics | Optional pulse modulator | Visual state feedback | No |
+| Battery Status | GPU quality-tier hint only (not a field modulator) | Balanced/Ultra defaults | No |
+| Geolocation | Detected only — **not** used as a modulator | n/a | No |
 | Persistent Storage | Optional | Best-effort browser storage | No |
+
+In-app: Capabilities table + Live Experience **Use available sensors** (`deviceSensors.js`) feature-detects without prompting; meters are opt-in and rematerialize ParameterField live (throttled). Raw frames/samples are never stored.
 | `beforeinstallprompt` | Optional install CTA | Share → Add to Home Screen | No |
 
 ## How to fill a row

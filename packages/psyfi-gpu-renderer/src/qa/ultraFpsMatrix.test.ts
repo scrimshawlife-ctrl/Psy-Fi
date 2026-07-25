@@ -53,4 +53,22 @@ describe('Hardware Ultra fps matrix', () => {
     const report = buildUltraFpsMatrix({ samples: doc.samples as never })
     expect(report.summary.failed).toBe(0)
   })
+
+  it('ships measured fixture scaffold (may be empty until hardware capture)', () => {
+    const path = join(fixturesDir, 'ultra_fps_matrix.measured.v1.json')
+    const doc = JSON.parse(readFileSync(path, 'utf8')) as {
+      schema: string
+      mode: string
+      samples: { id: string; source: string; avgFps: number; low1pctFps: number; p95Ms: number }[]
+    }
+    expect(doc.schema).toBe('psyfi.ultra_fps_matrix.v1')
+    expect(doc.mode).toBe('measured')
+    for (const sample of doc.samples) {
+      expect(sample.source).toBe('measured')
+      const target = ULTRA_QA_TARGETS.find((t) => t.id === sample.id)
+      expect(target).toBeTruthy()
+      const ev = evaluateFpsSample(sample as never, target!.expectTier)
+      expect(ev.ok).toBe(true)
+    }
+  })
 })

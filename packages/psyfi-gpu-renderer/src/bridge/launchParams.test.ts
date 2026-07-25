@@ -58,4 +58,11 @@ describe('GPU Lab launch params', () => {
     expect(readGpuLaunchParams('?image_seed=1').imageSeed).toBe(true)
     expect(readGpuLaunchParams('').imageSeed).toBe(false)
   })
+
+  it('parses measure_fps + measure_id', () => {
+    const p = readGpuLaunchParams('?measure_fps=1&measure_id=nvidia-rtx-4070&tier=ultra')
+    expect(p.measureFps).toBe(true)
+    expect(p.measureId).toBe('nvidia-rtx-4070')
+    expect(p.tier).toBe('ultra')
+  })
 })

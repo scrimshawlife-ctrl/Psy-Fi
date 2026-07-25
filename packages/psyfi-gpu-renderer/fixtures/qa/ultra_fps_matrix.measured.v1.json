@@ -1,0 +1,7 @@
+{
+  "schema": "psyfi.ultra_fps_matrix.v1",
+  "mode": "measured",
+  "date": "2026-07-25",
+  "note": "Hardware-measured Ultra fps samples. Merge downloads from /gpu/?measure_fps=1 via scripts/merge_ultra_fps_measured.py. Synthetic CI stand-in remains ultra_fps_matrix.synthetic.v1.json until a target is promoted.",
+  "samples": []
+}

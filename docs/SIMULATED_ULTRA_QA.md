@@ -39,7 +39,7 @@ Physical NVIDIA / AMD / Intel machines are not available in this agent environme
 - Driver Control Panel “High performance GPU” forcing  
 - Chrome `chrome://gpu` WebGPU Hardware accelerated on a specific host  
 
-Re-run on hardware with [`DESKTOP_GPU.md`](DESKTOP_GPU.md) validation checklist when a discrete desktop is available; promote `ultra_fps_matrix` samples from `synthetic` → `measured` and update the device matrix Notes.
+Re-run on hardware with [`HARDWARE_ULTRA_FPS.md`](HARDWARE_ULTRA_FPS.md) (`/gpu/?measure_fps=1` → merge script) when a discrete desktop is available; promote samples into `ultra_fps_matrix.measured.v1.json` (optional `--promote-synthetic`) and update the device matrix Notes.
 
 ## Commands
 

@@ -66,7 +66,7 @@ Priority order for the next web-only slices. No calendar estimates — scoped by
 | **B** | Shell one-shot journey | **done** — Workbench `Seed → journey` | Downloads seed + timeline + T2V JSON; stills via Export journey |
 | **C** | Journey export polish | **done** — shared still capture + UI feedback | 2-frame paint wait · still count · prompt length |
 | **D** | Top-N formula alternatives | **done** — ranked picks in API + Workbench | `recommended_alternatives[]` · `recommend_top_n` · alt select |
-| **E** | Hardware Ultra fps (optional) | Simulated QA already green | Measured samples when discrete GPU available · see below |
+| **E** | Hardware Ultra fps | **harness ready** — capture on dGPU | `/gpu/?measure_fps=1` · `HARDWARE_ULTRA_FPS.md` · merge script |
 
 ### Explicit non-goals (this queue)
 
@@ -96,15 +96,16 @@ Priority order for the next web-only slices. No calendar estimates — scoped by
 - [x] WebGL Live Experience routes through SafetyPass (`u_safetyAtten`)
 - [x] Job store concurrency/retention caps; PresentPipeline never raw-presents without safety; worker load seq tokens
 
-### Optional — hardware Ultra fps
+### Active — hardware Ultra fps
 
-Synthetic fps matrix already in CI (`ultraFpsMatrix.ts`). When a discrete desktop is available:
+Harness landed; samples need a physical discrete GPU (not available in cloud CI):
 
-1. NVIDIA / AMD / Intel → `/gpu/` HUD: adapter · band ultra · tier ultra · fps/budget **ok**
-2. Replace `fixtures/qa/ultra_fps_matrix.synthetic.v1.json` samples with `source: measured`
-3. Promote matrix Notes from `simulated` → measured fps
+1. [x] In-browser capture (`/gpu/?measure_fps=1` · **Measure Ultra fps** button)
+2. [x] Merge script → `ultra_fps_matrix.measured.v1.json` (+ optional `--promote-synthetic`)
+3. [ ] Run capture on your dGPU · merge JSON · `npm run gpu:test`
+4. [ ] Update [`BROWSER_CAPABILITY_MATRIX.md`](BROWSER_CAPABILITY_MATRIX.md) Notes with measured fps
 
-Guide: [`DESKTOP_GPU.md`](DESKTOP_GPU.md).
+Guide: [`HARDWARE_ULTRA_FPS.md`](HARDWARE_ULTRA_FPS.md) · [`DESKTOP_GPU.md`](DESKTOP_GPU.md).
 
 ### Optional — polish
 
@@ -129,6 +130,9 @@ python3 -m pytest tests/ -q
 npm test && npm run gpu:test && npm run gpu:typecheck
 npm run gpu:build
 npm run gpu:goldens:pixel   # regenerate soft-present pixel goldens
+# Hardware Ultra fps (on discrete GPU desktop):
+#   open http://localhost:8000/gpu/?measure_fps=1&tier=ultra
+#   python3 scripts/merge_ultra_fps_measured.py ~/Downloads/psyfi-ultra-fps-*.json
 docker compose up -d --build
 ./scripts/check_nvidia_host.sh   # optional NVIDIA host
 python3 scripts/run_dev_server.py

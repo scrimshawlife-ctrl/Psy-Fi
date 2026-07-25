@@ -574,11 +574,12 @@ body {
 }
 
 .recovery-banner {
-    border: 1px solid var(--color-signal-primary);
+    border: 1px solid var(--pf-border-subtle);
     background: var(--color-surface-elevated);
     border-radius: var(--radius-md);
     padding: var(--space-3);
     margin-bottom: var(--space-4);
+    color: var(--color-text-primary);
 }
 
 .empty-state {
@@ -589,20 +590,22 @@ body {
 /* ===== Substance / results ===== */
 
 .substance-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(140px, 100%), 1fr));
+    display: flex;
+    flex-direction: column;
     gap: var(--space-2);
+    max-width: 22rem;
 }
 
 .substance-card {
     text-align: left;
-    background: var(--color-surface-elevated);
+    background: transparent;
     border: 1px solid var(--pf-border-subtle);
     border-radius: var(--radius-md);
     color: var(--color-text-primary);
     padding: var(--space-3);
-    min-height: 72px;
+    min-height: 52px;
     cursor: pointer;
+    width: 100%;
 }
 
 .substance-card.active,
@@ -750,6 +753,12 @@ body {
     cursor: pointer;
 }
 
+.nav-more > summary:focus-visible {
+    color: var(--color-text-primary);
+    border-bottom-color: var(--color-signal-primary);
+    outline: none;
+}
+
 .nav-more > summary::-webkit-details-marker {
     display: none;
 }
@@ -781,6 +790,7 @@ body {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.9rem;
+    font-variant-numeric: tabular-nums;
 }
 
 .capability-table th,
@@ -828,14 +838,13 @@ body {
 .loading-overlay {
     position: fixed;
     inset: 0;
-    background: color-mix(in srgb, var(--pf-bg-0) 88%, transparent);
+    background: color-mix(in srgb, var(--pf-bg-0) 92%, transparent);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: var(--space-4);
     z-index: 1000;
-    backdrop-filter: blur(2px);
 }
 
 .loading-overlay p {
@@ -1329,6 +1338,8 @@ body.launch-ready #appShell {
         scroll-behavior: auto !important;
         animation: none !important;
         transition: none !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
     }
 
     .field-status[data-live="true"] {

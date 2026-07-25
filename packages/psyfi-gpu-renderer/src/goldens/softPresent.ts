@@ -5,6 +5,7 @@
  */
 
 import type { SceneSnapshotV1, ProceduralNode } from '../contracts/SceneSnapshot'
+import { PF_CYAN, PF_PAPER } from '../styles/tokens'
 import type { PixelFrame } from './pixelTypes'
 
 export const PIXEL_GOLDEN_SIZE = 64
@@ -100,16 +101,17 @@ export function softPresentSnapshot(
   size: number = PIXEL_GOLDEN_SIZE,
 ): PixelFrame {
   const rgba = new Uint8Array(size * size * 4)
-  // Soft-present clear matches design.md paper (#0a0e14).
+  // Soft-present clear matches design.md paper (PF_PAPER).
+  const [paperR, paperG, paperB] = parseHexColor(PF_PAPER)
   for (let i = 0; i < size * size; i++) {
     const o = i * 4
-    rgba[o] = 10
-    rgba[o + 1] = 14
-    rgba[o + 2] = 20
+    rgba[o] = paperR
+    rgba[o + 1] = paperG
+    rgba[o + 2] = paperB
     rgba[o + 3] = 255
   }
 
-  const paletteHex = String(snapshot.parameter_field.palette?.tracers || '#3ee7f2')
+  const paletteHex = String(snapshot.parameter_field.palette?.tracers || PF_CYAN)
   let [pr, pg, pb] = parseHexColor(paletteHex)
   const intensity = snapshot.parameter_field.intensity ?? 0.5
   const neutral = !!snapshot.parameter_field.neutral_view

@@ -71,6 +71,18 @@
       "footer": "Ft2",
       "designed_as_app": true,
       "notes": "Launch title ink; font/hero preload; nav More; history tabular; GPU PF_* tokens; SW v19; docs sync"
+    },
+    {
+      "date": "2026-07-25",
+      "target": "shell a11y + substance list + GPU tokens/focus + SW",
+      "verb": "fix",
+      "genre": "atmospheric",
+      "macrostructure": "Photographic\u2192Workbench",
+      "theme": "design.md",
+      "nav": "N9",
+      "footer": "Ft2",
+      "designed_as_app": true,
+      "notes": "nav-more/gpu-controls focus-visible; recovery hairline; substance column; no overlay blur; capability tabular-nums; PF_CYAN/PF_PAPER in soft-present; SW v20"
     }
   ]
 }

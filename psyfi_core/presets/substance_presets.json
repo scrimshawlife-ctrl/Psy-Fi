@@ -94,12 +94,12 @@
       },
       "visual_signature": {
         "tracers_color": "#3EE7F2",
-        "tracers_length": 0.545,
+        "tracers_length": 0.623,
         "oscillation_style": "geometric",
-        "symmetry_bias": 0.434,
-        "depth_distortion": 0.306,
-        "color_enhancement": 0.539,
-        "pattern_complexity": 0.515
+        "symmetry_bias": 0.554,
+        "depth_distortion": 0.444,
+        "color_enhancement": 0.606,
+        "pattern_complexity": 0.636
       },
       "emotional_signature": {
         "valence_bias": 0.4,
@@ -164,12 +164,12 @@
       },
       "visual_signature": {
         "tracers_color": "#8F7BFF",
-        "tracers_length": 0.428,
+        "tracers_length": 0.529,
         "oscillation_style": "organic",
-        "symmetry_bias": 0.272,
-        "depth_distortion": 0.305,
-        "color_enhancement": 0.467,
-        "pattern_complexity": 0.387
+        "symmetry_bias": 0.292,
+        "depth_distortion": 0.499,
+        "color_enhancement": 0.584,
+        "pattern_complexity": 0.488
       },
       "emotional_signature": {
         "valence_bias": 0.5,
@@ -234,12 +234,12 @@
       },
       "visual_signature": {
         "tracers_color": "#FF42C1",
-        "tracers_length": 0.363,
+        "tracers_length": 0.406,
         "oscillation_style": "fractal",
-        "symmetry_bias": 0.382,
-        "depth_distortion": 0.525,
-        "color_enhancement": 0.344,
-        "pattern_complexity": 0.559
+        "symmetry_bias": 0.403,
+        "depth_distortion": 0.672,
+        "color_enhancement": 0.391,
+        "pattern_complexity": 0.657
       },
       "emotional_signature": {
         "valence_bias": 0.3,
@@ -440,13 +440,13 @@
         "acetylcholine": 0.0
       },
       "visual_signature": {
-        "tracers_color": "#63F3E8",
-        "tracers_length": 0.739,
+        "tracers_color": "#C3FF4A",
+        "tracers_length": 0.799,
         "oscillation_style": "geometric",
-        "symmetry_bias": 0.574,
-        "depth_distortion": 0.218,
-        "color_enhancement": 0.693,
-        "pattern_complexity": 0.584
+        "symmetry_bias": 0.646,
+        "depth_distortion": 0.213,
+        "color_enhancement": 0.743,
+        "pattern_complexity": 0.644
       },
       "emotional_signature": {
         "valence_bias": 0.65,
@@ -508,13 +508,13 @@
         "acetylcholine": 0.0
       },
       "visual_signature": {
-        "tracers_color": "#63F3E8",
-        "tracers_length": 0.474,
-        "oscillation_style": "geometric",
-        "symmetry_bias": 0.652,
-        "depth_distortion": 0.351,
-        "color_enhancement": 0.39,
-        "pattern_complexity": 0.68
+        "tracers_color": "#9DFF6A",
+        "tracers_length": 0.457,
+        "oscillation_style": "fractal",
+        "symmetry_bias": 0.722,
+        "depth_distortion": 0.392,
+        "color_enhancement": 0.355,
+        "pattern_complexity": 0.752
       },
       "emotional_signature": {
         "valence_bias": 0.35,
@@ -575,13 +575,13 @@
         "acetylcholine": 0.0
       },
       "visual_signature": {
-        "tracers_color": "#63F3E8",
-        "tracers_length": 0.691,
+        "tracers_color": "#5CE1FF",
+        "tracers_length": 0.743,
         "oscillation_style": "geometric",
-        "symmetry_bias": 0.614,
+        "symmetry_bias": 0.607,
         "depth_distortion": 0.2,
-        "color_enhancement": 0.643,
-        "pattern_complexity": 0.626
+        "color_enhancement": 0.709,
+        "pattern_complexity": 0.62
       },
       "emotional_signature": {
         "valence_bias": 0.7,
@@ -640,13 +640,13 @@
         "acetylcholine": 0.0
       },
       "visual_signature": {
-        "tracers_color": "#FF42C1",
-        "tracers_length": 0.92,
+        "tracers_color": "#E85CFF",
+        "tracers_length": 0.897,
         "oscillation_style": "fractal",
-        "symmetry_bias": 0.94,
-        "depth_distortion": 0.8,
-        "color_enhancement": 0.94,
-        "pattern_complexity": 0.95
+        "symmetry_bias": 0.815,
+        "depth_distortion": 0.388,
+        "color_enhancement": 0.83,
+        "pattern_complexity": 0.813
       },
       "emotional_signature": {
         "valence_bias": 0.45,
@@ -845,13 +845,13 @@
         "acetylcholine": 0.0
       },
       "visual_signature": {
-        "tracers_color": "#63F3E8",
-        "tracers_length": 0.384,
-        "oscillation_style": "minimal",
-        "symmetry_bias": 0.293,
-        "depth_distortion": 0.591,
-        "color_enhancement": 0.372,
-        "pattern_complexity": 0.485
+        "tracers_color": "#8BB8D8",
+        "tracers_length": 0.413,
+        "oscillation_style": "smooth",
+        "symmetry_bias": 0.336,
+        "depth_distortion": 0.663,
+        "color_enhancement": 0.394,
+        "pattern_complexity": 0.539
       },
       "emotional_signature": {
         "valence_bias": 0.25,
@@ -914,13 +914,13 @@
         "acetylcholine": 0.0
       },
       "visual_signature": {
-        "tracers_color": "#FF42C1",
-        "tracers_length": 0.55,
-        "oscillation_style": "organic",
-        "symmetry_bias": 0.45,
-        "depth_distortion": 0.8,
-        "color_enhancement": 0.55,
-        "pattern_complexity": 0.5
+        "tracers_color": "#6BA3C9",
+        "tracers_length": 0.413,
+        "oscillation_style": "smooth",
+        "symmetry_bias": 0.44,
+        "depth_distortion": 0.726,
+        "color_enhancement": 0.393,
+        "pattern_complexity": 0.624
       },
       "emotional_signature": {
         "valence_bias": 0.1,
@@ -983,13 +983,13 @@
         "acetylcholine": 0.0
       },
       "visual_signature": {
-        "tracers_color": "#63F3E8",
-        "tracers_length": 0.584,
-        "oscillation_style": "geometric",
-        "symmetry_bias": 0.261,
+        "tracers_color": "#FF6B9D",
+        "tracers_length": 0.646,
+        "oscillation_style": "organic",
+        "symmetry_bias": 0.293,
         "depth_distortion": 0.2,
-        "color_enhancement": 0.607,
-        "pattern_complexity": 0.348
+        "color_enhancement": 0.669,
+        "pattern_complexity": 0.373
       },
       "emotional_signature": {
         "valence_bias": 0.9,
@@ -1051,13 +1051,13 @@
         "acetylcholine": 0.0
       },
       "visual_signature": {
-        "tracers_color": "#63F3E8",
-        "tracers_length": 0.664,
-        "oscillation_style": "geometric",
-        "symmetry_bias": 0.2,
+        "tracers_color": "#FF8FB3",
+        "tracers_length": 0.755,
+        "oscillation_style": "organic",
+        "symmetry_bias": 0.305,
         "depth_distortion": 0.2,
-        "color_enhancement": 0.72,
-        "pattern_complexity": 0.3
+        "color_enhancement": 0.785,
+        "pattern_complexity": 0.383
       },
       "emotional_signature": {
         "valence_bias": 0.85,
@@ -1460,13 +1460,13 @@
         "acetylcholine": 0.2
       },
       "visual_signature": {
-        "tracers_color": "#8F7BFF",
-        "tracers_length": 0.25,
+        "tracers_color": "#C9B6FF",
+        "tracers_length": 0.666,
         "oscillation_style": "smooth",
-        "symmetry_bias": 0.8,
-        "depth_distortion": 0.3,
-        "color_enhancement": 0.4,
-        "pattern_complexity": 0.35
+        "symmetry_bias": 0.333,
+        "depth_distortion": 0.46,
+        "color_enhancement": 0.687,
+        "pattern_complexity": 0.466
       },
       "emotional_signature": {
         "valence_bias": 0.85,

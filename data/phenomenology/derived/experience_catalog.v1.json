@@ -2,7 +2,7 @@
   "schema_version": "1.0.0",
   "generator": "scripts/build_experience_catalog.py",
   "disclaimer": "Modeled phenomenological recipes for research/visualization only. Not medical, diagnostic, or therapeutic advice. Narrative hooks are short derived motifs, not republication of full source texts.",
-  "recipe_count": 57,
+  "recipe_count": 70,
   "recipes": [
     {
       "id": "exp_lsd_floral_geometry",
@@ -51,33 +51,33 @@
           "symmetry_order": 0.845,
           "feedback_strength": 0.805,
           "recursion_gain": 0.795,
-          "turbulence": 0.2,
-          "trail_length": 0.675,
-          "edge_gain": 0.755,
-          "zoom_velocity": 0.05,
+          "turbulence": 0.275,
+          "trail_length": 0.765,
+          "edge_gain": 0.722,
+          "zoom_velocity": 0.114,
           "displacement": 0.343,
-          "stability": 0.7,
+          "stability": 0.748,
           "entropy": 0.25,
-          "palette_energy": 0.812,
+          "palette_energy": 0.912,
           "pattern_complexity": 0.89,
-          "depth_distortion": 0.3,
-          "bloom": 0.5
+          "depth_distortion": 0.38,
+          "bloom": 0.632
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.07,
             "intensity": 0.35
           },
           "peak": {
-            "duration_norm": 0.45,
+            "duration_norm": 0.279,
             "intensity": 1.0
           },
           "plateau": {
-            "duration_norm": 0.25,
-            "intensity": 0.75
+            "duration_norm": 0.372,
+            "intensity": 0.8
           },
           "comedown": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.279,
             "intensity": 0.3
           }
         }
@@ -136,33 +136,33 @@
           "symmetry_order": 0.57,
           "feedback_strength": 0.58,
           "recursion_gain": 0.52,
-          "turbulence": 0.27,
-          "trail_length": 0.775,
-          "edge_gain": 0.53,
-          "zoom_velocity": 0.05,
+          "turbulence": 0.345,
+          "trail_length": 0.865,
+          "edge_gain": 0.497,
+          "zoom_velocity": 0.114,
           "displacement": 0.15,
-          "stability": 0.7,
+          "stability": 0.748,
           "entropy": 0.25,
-          "palette_energy": 0.922,
+          "palette_energy": 1.0,
           "pattern_complexity": 0.59,
-          "depth_distortion": 0.3,
-          "bloom": 0.58
+          "depth_distortion": 0.38,
+          "bloom": 0.765
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.07,
             "intensity": 0.35
           },
           "peak": {
-            "duration_norm": 0.45,
+            "duration_norm": 0.279,
             "intensity": 1.0
           },
           "plateau": {
-            "duration_norm": 0.25,
-            "intensity": 0.75
+            "duration_norm": 0.372,
+            "intensity": 0.8
           },
           "comedown": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.279,
             "intensity": 0.3
           }
         }
@@ -221,33 +221,33 @@
           "symmetry_order": 0.818,
           "feedback_strength": 0.782,
           "recursion_gain": 0.768,
-          "turbulence": 0.2,
-          "trail_length": 0.3,
-          "edge_gain": 0.732,
-          "zoom_velocity": 0.295,
+          "turbulence": 0.275,
+          "trail_length": 0.39,
+          "edge_gain": 0.699,
+          "zoom_velocity": 0.359,
           "displacement": 0.15,
-          "stability": 0.595,
+          "stability": 0.643,
           "entropy": 0.6,
-          "palette_energy": 0.4,
+          "palette_energy": 0.5,
           "pattern_complexity": 0.86,
-          "depth_distortion": 0.685,
-          "bloom": 0.2
+          "depth_distortion": 0.765,
+          "bloom": 0.332
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.07,
             "intensity": 0.35
           },
           "peak": {
-            "duration_norm": 0.45,
+            "duration_norm": 0.279,
             "intensity": 1.0
           },
           "plateau": {
-            "duration_norm": 0.25,
-            "intensity": 0.75
+            "duration_norm": 0.372,
+            "intensity": 0.8
           },
           "comedown": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.279,
             "intensity": 0.3
           }
         }
@@ -306,33 +306,33 @@
           "symmetry_order": 0.35,
           "feedback_strength": 0.4,
           "recursion_gain": 0.3,
-          "turbulence": 0.28,
-          "trail_length": 0.65,
-          "edge_gain": 0.35,
-          "zoom_velocity": 0.05,
+          "turbulence": 0.355,
+          "trail_length": 0.74,
+          "edge_gain": 0.317,
+          "zoom_velocity": 0.114,
           "displacement": 0.272,
-          "stability": 0.7,
+          "stability": 0.748,
           "entropy": 0.25,
-          "palette_energy": 0.785,
+          "palette_energy": 0.885,
           "pattern_complexity": 0.35,
-          "depth_distortion": 0.3,
-          "bloom": 0.48
+          "depth_distortion": 0.38,
+          "bloom": 0.672
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.07,
             "intensity": 0.35
           },
           "peak": {
-            "duration_norm": 0.45,
+            "duration_norm": 0.279,
             "intensity": 1.0
           },
           "plateau": {
-            "duration_norm": 0.25,
-            "intensity": 0.75
+            "duration_norm": 0.372,
+            "intensity": 0.8
           },
           "comedown": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.279,
             "intensity": 0.3
           }
         }
@@ -391,25 +391,25 @@
           "symmetry_order": 0.735,
           "feedback_strength": 0.715,
           "recursion_gain": 0.685,
-          "turbulence": 0.2,
-          "trail_length": 0.3,
-          "edge_gain": 0.665,
-          "zoom_velocity": 0.208,
-          "displacement": 0.36,
-          "stability": 0.632,
+          "turbulence": 0.253,
+          "trail_length": 0.395,
+          "edge_gain": 0.557,
+          "zoom_velocity": 0.268,
+          "displacement": 0.44,
+          "stability": 0.69,
           "entropy": 0.475,
-          "palette_energy": 0.4,
+          "palette_energy": 0.525,
           "pattern_complexity": 0.77,
-          "depth_distortion": 0.547,
-          "bloom": 0.2
+          "depth_distortion": 0.622,
+          "bloom": 0.485
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.083,
             "intensity": 0.35
           },
           "peak": {
-            "duration_norm": 0.45,
+            "duration_norm": 0.333,
             "intensity": 1.0
           },
           "plateau": {
@@ -417,7 +417,7 @@
             "intensity": 0.75
           },
           "comedown": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.333,
             "intensity": 0.3
           }
         }
@@ -476,25 +476,25 @@
           "symmetry_order": 0.35,
           "feedback_strength": 0.4,
           "recursion_gain": 0.3,
-          "turbulence": 0.31,
-          "trail_length": 0.6,
-          "edge_gain": 0.35,
-          "zoom_velocity": 0.05,
-          "displacement": 0.448,
-          "stability": 0.7,
+          "turbulence": 0.363,
+          "trail_length": 0.695,
+          "edge_gain": 0.242,
+          "zoom_velocity": 0.11,
+          "displacement": 0.528,
+          "stability": 0.758,
           "entropy": 0.25,
-          "palette_energy": 0.73,
+          "palette_energy": 0.855,
           "pattern_complexity": 0.35,
-          "depth_distortion": 0.3,
-          "bloom": 0.44
+          "depth_distortion": 0.375,
+          "bloom": 0.807
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.083,
             "intensity": 0.35
           },
           "peak": {
-            "duration_norm": 0.45,
+            "duration_norm": 0.333,
             "intensity": 1.0
           },
           "plateau": {
@@ -502,7 +502,7 @@
             "intensity": 0.75
           },
           "comedown": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.333,
             "intensity": 0.3
           }
         }
@@ -561,25 +561,25 @@
           "symmetry_order": 0.35,
           "feedback_strength": 0.4,
           "recursion_gain": 0.3,
-          "turbulence": 0.2,
-          "trail_length": 0.75,
-          "edge_gain": 0.35,
-          "zoom_velocity": 0.05,
-          "displacement": 0.29,
-          "stability": 0.7,
+          "turbulence": 0.253,
+          "trail_length": 0.845,
+          "edge_gain": 0.242,
+          "zoom_velocity": 0.11,
+          "displacement": 0.37,
+          "stability": 0.758,
           "entropy": 0.25,
-          "palette_energy": 0.895,
+          "palette_energy": 1.0,
           "pattern_complexity": 0.35,
-          "depth_distortion": 0.3,
-          "bloom": 0.56
+          "depth_distortion": 0.375,
+          "bloom": 0.845
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.083,
             "intensity": 0.35
           },
           "peak": {
-            "duration_norm": 0.45,
+            "duration_norm": 0.333,
             "intensity": 1.0
           },
           "plateau": {
@@ -587,7 +587,7 @@
             "intensity": 0.75
           },
           "comedown": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.333,
             "intensity": 0.3
           }
         }
@@ -646,34 +646,34 @@
           "symmetry_order": 0.79,
           "feedback_strength": 0.76,
           "recursion_gain": 0.795,
-          "turbulence": 0.42,
-          "trail_length": 0.3,
-          "edge_gain": 0.71,
-          "zoom_velocity": 0.365,
+          "turbulence": 0.538,
+          "trail_length": 0.39,
+          "edge_gain": 0.701,
+          "zoom_velocity": 0.443,
           "displacement": 0.26,
-          "stability": 0.372,
+          "stability": 0.364,
           "entropy": 0.7,
-          "palette_energy": 0.4,
+          "palette_energy": 0.475,
           "pattern_complexity": 0.83,
-          "depth_distortion": 0.795,
-          "bloom": 0.2
+          "depth_distortion": 0.893,
+          "bloom": 0.299
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
-            "intensity": 0.35
+            "duration_norm": 0.062,
+            "intensity": 0.55
           },
           "peak": {
-            "duration_norm": 0.45,
+            "duration_norm": 0.312,
             "intensity": 1.0
           },
           "plateau": {
-            "duration_norm": 0.25,
-            "intensity": 0.75
+            "duration_norm": 0.156,
+            "intensity": 0.7
           },
           "comedown": {
-            "duration_norm": 0.15,
-            "intensity": 0.3
+            "duration_norm": 0.469,
+            "intensity": 0.25
           }
         }
       },
@@ -731,34 +731,34 @@
           "symmetry_order": 0.845,
           "feedback_strength": 0.805,
           "recursion_gain": 0.795,
-          "turbulence": 0.54,
-          "trail_length": 0.3,
-          "edge_gain": 0.755,
-          "zoom_velocity": 0.05,
+          "turbulence": 0.658,
+          "trail_length": 0.39,
+          "edge_gain": 0.746,
+          "zoom_velocity": 0.128,
           "displacement": 0.32,
-          "stability": 0.402,
+          "stability": 0.394,
           "entropy": 0.675,
-          "palette_energy": 0.4,
+          "palette_energy": 0.475,
           "pattern_complexity": 0.89,
-          "depth_distortion": 0.3,
-          "bloom": 0.2
+          "depth_distortion": 0.398,
+          "bloom": 0.299
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
-            "intensity": 0.35
+            "duration_norm": 0.062,
+            "intensity": 0.55
           },
           "peak": {
-            "duration_norm": 0.45,
+            "duration_norm": 0.312,
             "intensity": 1.0
           },
           "plateau": {
-            "duration_norm": 0.25,
-            "intensity": 0.75
+            "duration_norm": 0.156,
+            "intensity": 0.7
           },
           "comedown": {
-            "duration_norm": 0.15,
-            "intensity": 0.3
+            "duration_norm": 0.469,
+            "intensity": 0.25
           }
         }
       },
@@ -816,34 +816,34 @@
           "symmetry_order": 0.35,
           "feedback_strength": 0.67,
           "recursion_gain": 0.713,
-          "turbulence": 0.44,
-          "trail_length": 0.3,
-          "edge_gain": 0.35,
-          "zoom_velocity": 0.312,
+          "turbulence": 0.558,
+          "trail_length": 0.39,
+          "edge_gain": 0.341,
+          "zoom_velocity": 0.39,
           "displacement": 0.27,
-          "stability": 0.378,
+          "stability": 0.37,
           "entropy": 0.625,
-          "palette_energy": 0.4,
+          "palette_energy": 0.475,
           "pattern_complexity": 0.71,
-          "depth_distortion": 0.713,
-          "bloom": 0.2
+          "depth_distortion": 0.811,
+          "bloom": 0.359
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
-            "intensity": 0.35
+            "duration_norm": 0.062,
+            "intensity": 0.55
           },
           "peak": {
-            "duration_norm": 0.45,
+            "duration_norm": 0.312,
             "intensity": 1.0
           },
           "plateau": {
-            "duration_norm": 0.25,
-            "intensity": 0.75
+            "duration_norm": 0.156,
+            "intensity": 0.7
           },
           "comedown": {
-            "duration_norm": 0.15,
-            "intensity": 0.3
+            "duration_norm": 0.469,
+            "intensity": 0.25
           }
         }
       },
@@ -900,34 +900,34 @@
           "symmetry_order": 0.35,
           "feedback_strength": 0.4,
           "recursion_gain": 0.823,
-          "turbulence": 0.3,
-          "trail_length": 0.475,
-          "edge_gain": 0.35,
-          "zoom_velocity": 0.382,
+          "turbulence": 0.43,
+          "trail_length": 0.552,
+          "edge_gain": 0.361,
+          "zoom_velocity": 0.462,
           "displacement": 0.15,
-          "stability": 0.557,
+          "stability": 0.513,
           "entropy": 0.725,
-          "palette_energy": 0.593,
-          "pattern_complexity": 0.35,
-          "depth_distortion": 0.823,
-          "bloom": 0.34
+          "palette_energy": 0.643,
+          "pattern_complexity": 0.1,
+          "depth_distortion": 1.0,
+          "bloom": 0.431
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
-            "intensity": 0.35
+            "duration_norm": 0.049,
+            "intensity": 0.5
           },
           "peak": {
-            "duration_norm": 0.45,
+            "duration_norm": 0.357,
             "intensity": 1.0
           },
           "plateau": {
-            "duration_norm": 0.25,
-            "intensity": 0.75
+            "duration_norm": 0.119,
+            "intensity": 0.55
           },
           "comedown": {
-            "duration_norm": 0.15,
-            "intensity": 0.3
+            "duration_norm": 0.476,
+            "intensity": 0.2
           }
         }
       },
@@ -986,34 +986,34 @@
           "symmetry_order": 0.432,
           "feedback_strength": 0.468,
           "recursion_gain": 0.806,
-          "turbulence": 0.29,
-          "trail_length": 0.575,
-          "edge_gain": 0.417,
-          "zoom_velocity": 0.372,
+          "turbulence": 0.42,
+          "trail_length": 0.652,
+          "edge_gain": 0.428,
+          "zoom_velocity": 0.452,
           "displacement": 0.15,
-          "stability": 0.562,
+          "stability": 0.518,
           "entropy": 0.71,
-          "palette_energy": 0.703,
-          "pattern_complexity": 0.44,
-          "depth_distortion": 0.806,
-          "bloom": 0.42
+          "palette_energy": 0.753,
+          "pattern_complexity": 0.19,
+          "depth_distortion": 1.0,
+          "bloom": 0.504
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
-            "intensity": 0.35
+            "duration_norm": 0.049,
+            "intensity": 0.5
           },
           "peak": {
-            "duration_norm": 0.45,
+            "duration_norm": 0.357,
             "intensity": 1.0
           },
           "plateau": {
-            "duration_norm": 0.25,
-            "intensity": 0.75
+            "duration_norm": 0.119,
+            "intensity": 0.55
           },
           "comedown": {
-            "duration_norm": 0.15,
-            "intensity": 0.3
+            "duration_norm": 0.476,
+            "intensity": 0.2
           }
         }
       },
@@ -1071,34 +1071,34 @@
           "symmetry_order": 0.35,
           "feedback_strength": 0.4,
           "recursion_gain": 0.768,
-          "turbulence": 0.34,
-          "trail_length": 0.3,
-          "edge_gain": 0.35,
-          "zoom_velocity": 0.347,
+          "turbulence": 0.47,
+          "trail_length": 0.377,
+          "edge_gain": 0.361,
+          "zoom_velocity": 0.427,
           "displacement": 0.15,
-          "stability": 0.573,
+          "stability": 0.529,
           "entropy": 0.675,
-          "palette_energy": 0.4,
-          "pattern_complexity": 0.35,
-          "depth_distortion": 0.768,
-          "bloom": 0.2
+          "palette_energy": 0.45,
+          "pattern_complexity": 0.1,
+          "depth_distortion": 1.0,
+          "bloom": 0.321
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
-            "intensity": 0.35
+            "duration_norm": 0.049,
+            "intensity": 0.5
           },
           "peak": {
-            "duration_norm": 0.45,
+            "duration_norm": 0.357,
             "intensity": 1.0
           },
           "plateau": {
-            "duration_norm": 0.25,
-            "intensity": 0.75
+            "duration_norm": 0.119,
+            "intensity": 0.55
           },
           "comedown": {
-            "duration_norm": 0.15,
-            "intensity": 0.3
+            "duration_norm": 0.476,
+            "intensity": 0.2
           }
         }
       },
@@ -1156,33 +1156,33 @@
           "symmetry_order": 0.79,
           "feedback_strength": 0.76,
           "recursion_gain": 0.74,
-          "turbulence": 0.2,
-          "trail_length": 0.675,
-          "edge_gain": 0.71,
-          "zoom_velocity": 0.05,
+          "turbulence": 0.26,
+          "trail_length": 0.77,
+          "edge_gain": 0.744,
+          "zoom_velocity": 0.102,
           "displacement": 0.307,
-          "stability": 0.7,
+          "stability": 0.868,
           "entropy": 0.25,
-          "palette_energy": 0.812,
+          "palette_energy": 1.0,
           "pattern_complexity": 0.83,
-          "depth_distortion": 0.3,
-          "bloom": 0.5
+          "depth_distortion": 0.365,
+          "bloom": 0.662
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
-            "intensity": 0.35
+            "duration_norm": 0.13,
+            "intensity": 0.3
           },
           "peak": {
-            "duration_norm": 0.45,
+            "duration_norm": 0.348,
             "intensity": 1.0
           },
           "plateau": {
-            "duration_norm": 0.25,
-            "intensity": 0.75
+            "duration_norm": 0.261,
+            "intensity": 0.8
           },
           "comedown": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.261,
             "intensity": 0.3
           }
         }
@@ -1241,33 +1241,33 @@
           "symmetry_order": 0.762,
           "feedback_strength": 0.738,
           "recursion_gain": 0.713,
-          "turbulence": 0.2,
-          "trail_length": 0.625,
-          "edge_gain": 0.688,
-          "zoom_velocity": 0.05,
+          "turbulence": 0.26,
+          "trail_length": 0.72,
+          "edge_gain": 0.722,
+          "zoom_velocity": 0.102,
           "displacement": 0.395,
-          "stability": 0.7,
+          "stability": 0.868,
           "entropy": 0.25,
-          "palette_energy": 0.758,
+          "palette_energy": 0.968,
           "pattern_complexity": 0.8,
-          "depth_distortion": 0.3,
-          "bloom": 0.46
+          "depth_distortion": 0.365,
+          "bloom": 0.622
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
-            "intensity": 0.35
+            "duration_norm": 0.13,
+            "intensity": 0.3
           },
           "peak": {
-            "duration_norm": 0.45,
+            "duration_norm": 0.348,
             "intensity": 1.0
           },
           "plateau": {
-            "duration_norm": 0.25,
-            "intensity": 0.75
+            "duration_norm": 0.261,
+            "intensity": 0.8
           },
           "comedown": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.261,
             "intensity": 0.3
           }
         }
@@ -1326,33 +1326,33 @@
           "symmetry_order": 0.68,
           "feedback_strength": 0.67,
           "recursion_gain": 0.63,
-          "turbulence": 0.2,
-          "trail_length": 0.725,
-          "edge_gain": 0.62,
-          "zoom_velocity": 0.05,
+          "turbulence": 0.26,
+          "trail_length": 0.82,
+          "edge_gain": 0.654,
+          "zoom_velocity": 0.102,
           "displacement": 0.15,
-          "stability": 0.7,
+          "stability": 0.868,
           "entropy": 0.25,
-          "palette_energy": 0.868,
+          "palette_energy": 1.0,
           "pattern_complexity": 0.71,
-          "depth_distortion": 0.3,
-          "bloom": 0.54
+          "depth_distortion": 0.365,
+          "bloom": 0.702
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
-            "intensity": 0.35
+            "duration_norm": 0.13,
+            "intensity": 0.3
           },
           "peak": {
-            "duration_norm": 0.45,
+            "duration_norm": 0.348,
             "intensity": 1.0
           },
           "plateau": {
-            "duration_norm": 0.25,
-            "intensity": 0.75
+            "duration_norm": 0.261,
+            "intensity": 0.8
           },
           "comedown": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.261,
             "intensity": 0.3
           }
         }
@@ -1411,33 +1411,33 @@
           "symmetry_order": 0.515,
           "feedback_strength": 0.535,
           "recursion_gain": 0.74,
-          "turbulence": 0.29,
-          "trail_length": 0.3,
-          "edge_gain": 0.485,
-          "zoom_velocity": 0.33,
+          "turbulence": 0.3,
+          "trail_length": 0.31,
+          "edge_gain": 0.387,
+          "zoom_velocity": 0.402,
           "displacement": 0.15,
-          "stability": 0.58,
+          "stability": 0.612,
           "entropy": 0.65,
-          "palette_energy": 0.4,
+          "palette_energy": 0.325,
           "pattern_complexity": 0.53,
-          "depth_distortion": 0.74,
-          "bloom": 0.2
+          "depth_distortion": 0.98,
+          "bloom": 0.295
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
-            "intensity": 0.35
+            "duration_norm": 0.049,
+            "intensity": 0.4
           },
           "peak": {
-            "duration_norm": 0.45,
-            "intensity": 1.0
+            "duration_norm": 0.317,
+            "intensity": 0.95
           },
           "plateau": {
-            "duration_norm": 0.25,
-            "intensity": 0.75
+            "duration_norm": 0.211,
+            "intensity": 0.7
           },
           "comedown": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.423,
             "intensity": 0.3
           }
         }
@@ -1497,33 +1497,33 @@
           "symmetry_order": 0.46,
           "feedback_strength": 0.49,
           "recursion_gain": 0.795,
-          "turbulence": 0.31,
-          "trail_length": 0.3,
-          "edge_gain": 0.44,
-          "zoom_velocity": 0.365,
+          "turbulence": 0.32,
+          "trail_length": 0.31,
+          "edge_gain": 0.342,
+          "zoom_velocity": 0.437,
           "displacement": 0.15,
-          "stability": 0.565,
+          "stability": 0.597,
           "entropy": 0.7,
-          "palette_energy": 0.4,
+          "palette_energy": 0.325,
           "pattern_complexity": 0.47,
-          "depth_distortion": 0.795,
-          "bloom": 0.2
+          "depth_distortion": 1.0,
+          "bloom": 0.31
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
-            "intensity": 0.35
+            "duration_norm": 0.049,
+            "intensity": 0.4
           },
           "peak": {
-            "duration_norm": 0.45,
-            "intensity": 1.0
+            "duration_norm": 0.317,
+            "intensity": 0.95
           },
           "plateau": {
-            "duration_norm": 0.25,
-            "intensity": 0.75
+            "duration_norm": 0.211,
+            "intensity": 0.7
           },
           "comedown": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.423,
             "intensity": 0.3
           }
         }
@@ -1583,33 +1583,33 @@
           "symmetry_order": 0.57,
           "feedback_strength": 0.58,
           "recursion_gain": 0.657,
-          "turbulence": 0.28,
-          "trail_length": 0.475,
-          "edge_gain": 0.53,
-          "zoom_velocity": 0.277,
+          "turbulence": 0.29,
+          "trail_length": 0.485,
+          "edge_gain": 0.432,
+          "zoom_velocity": 0.349,
           "displacement": 0.15,
-          "stability": 0.602,
+          "stability": 0.634,
           "entropy": 0.575,
-          "palette_energy": 0.593,
+          "palette_energy": 0.518,
           "pattern_complexity": 0.59,
-          "depth_distortion": 0.657,
-          "bloom": 0.34
+          "depth_distortion": 0.897,
+          "bloom": 0.427
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
-            "intensity": 0.35
+            "duration_norm": 0.049,
+            "intensity": 0.4
           },
           "peak": {
-            "duration_norm": 0.45,
-            "intensity": 1.0
+            "duration_norm": 0.317,
+            "intensity": 0.95
           },
           "plateau": {
-            "duration_norm": 0.25,
-            "intensity": 0.75
+            "duration_norm": 0.211,
+            "intensity": 0.7
           },
           "comedown": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.423,
             "intensity": 0.3
           }
         }
@@ -1745,7 +1745,7 @@
         ],
         "mode_default": "open",
         "palette": {
-          "tracers": "#63F3E8",
+          "tracers": "#FF6B9D",
           "energy": 0.85,
           "contrast": 0.55
         },
@@ -1753,34 +1753,34 @@
           "symmetry_order": 0.35,
           "feedback_strength": 0.4,
           "recursion_gain": 0.3,
-          "turbulence": 0.34,
-          "trail_length": 0.725,
-          "edge_gain": 0.35,
-          "zoom_velocity": 0.05,
+          "turbulence": 0.418,
+          "trail_length": 0.858,
+          "edge_gain": 0.157,
+          "zoom_velocity": 0.09,
           "displacement": 0.307,
-          "stability": 0.7,
+          "stability": 0.792,
           "entropy": 0.25,
-          "palette_energy": 0.868,
-          "pattern_complexity": 0.35,
-          "depth_distortion": 0.3,
-          "bloom": 0.54
+          "palette_energy": 1.0,
+          "pattern_complexity": 0.2,
+          "depth_distortion": 0.35,
+          "bloom": 1.0
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
-            "intensity": 0.35
+            "duration_norm": 0.1,
+            "intensity": 0.4
           },
           "peak": {
-            "duration_norm": 0.45,
-            "intensity": 1.0
+            "duration_norm": 0.4,
+            "intensity": 0.95
           },
           "plateau": {
-            "duration_norm": 0.25,
-            "intensity": 0.75
+            "duration_norm": 0.2,
+            "intensity": 0.8
           },
           "comedown": {
-            "duration_norm": 0.15,
-            "intensity": 0.3
+            "duration_norm": 0.3,
+            "intensity": 0.35
           }
         }
       },
@@ -1830,7 +1830,7 @@
         ],
         "mode_default": "attractor",
         "palette": {
-          "tracers": "#63F3E8",
+          "tracers": "#FF6B9D",
           "energy": 0.75,
           "contrast": 0.655
         },
@@ -1838,34 +1838,34 @@
           "symmetry_order": 0.542,
           "feedback_strength": 0.557,
           "recursion_gain": 0.492,
-          "turbulence": 0.36,
-          "trail_length": 0.675,
-          "edge_gain": 0.507,
-          "zoom_velocity": 0.05,
+          "turbulence": 0.438,
+          "trail_length": 0.808,
+          "edge_gain": 0.314,
+          "zoom_velocity": 0.09,
           "displacement": 0.15,
-          "stability": 0.7,
+          "stability": 0.792,
           "entropy": 0.25,
-          "palette_energy": 0.812,
-          "pattern_complexity": 0.56,
-          "depth_distortion": 0.3,
-          "bloom": 0.5
+          "palette_energy": 1.0,
+          "pattern_complexity": 0.41,
+          "depth_distortion": 0.35,
+          "bloom": 1.0
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
-            "intensity": 0.35
+            "duration_norm": 0.1,
+            "intensity": 0.4
           },
           "peak": {
-            "duration_norm": 0.45,
-            "intensity": 1.0
+            "duration_norm": 0.4,
+            "intensity": 0.95
           },
           "plateau": {
-            "duration_norm": 0.25,
-            "intensity": 0.75
+            "duration_norm": 0.2,
+            "intensity": 0.8
           },
           "comedown": {
-            "duration_norm": 0.15,
-            "intensity": 0.3
+            "duration_norm": 0.3,
+            "intensity": 0.35
           }
         }
       },
@@ -1915,41 +1915,41 @@
         ],
         "mode_default": "attractor",
         "palette": {
-          "tracers": "#63F3E8",
+          "tracers": "#C3FF4A",
           "energy": 0.8,
           "contrast": 0.79
         },
         "parameter_bias": {
-          "symmetry_order": 0.79,
+          "symmetry_order": 0.89,
           "feedback_strength": 0.76,
           "recursion_gain": 0.74,
-          "turbulence": 0.31,
-          "trail_length": 0.7,
-          "edge_gain": 0.71,
-          "zoom_velocity": 0.05,
+          "turbulence": 0.382,
+          "trail_length": 0.81,
+          "edge_gain": 0.738,
+          "zoom_velocity": 0.094,
           "displacement": 0.15,
-          "stability": 0.7,
+          "stability": 0.77,
           "entropy": 0.25,
-          "palette_energy": 0.84,
+          "palette_energy": 1.0,
           "pattern_complexity": 0.83,
-          "depth_distortion": 0.3,
-          "bloom": 0.52
+          "depth_distortion": 0.355,
+          "bloom": 0.786
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.1,
             "intensity": 0.35
           },
           "peak": {
-            "duration_norm": 0.45,
+            "duration_norm": 0.4,
             "intensity": 1.0
           },
           "plateau": {
-            "duration_norm": 0.25,
+            "duration_norm": 0.2,
             "intensity": 0.75
           },
           "comedown": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.3,
             "intensity": 0.3
           }
         }
@@ -2000,41 +2000,41 @@
         ],
         "mode_default": "open",
         "palette": {
-          "tracers": "#63F3E8",
+          "tracers": "#C3FF4A",
           "energy": 0.85,
           "contrast": 0.775
         },
         "parameter_bias": {
-          "symmetry_order": 0.762,
+          "symmetry_order": 0.862,
           "feedback_strength": 0.738,
           "recursion_gain": 0.713,
-          "turbulence": 0.34,
-          "trail_length": 0.725,
-          "edge_gain": 0.688,
-          "zoom_velocity": 0.05,
+          "turbulence": 0.412,
+          "trail_length": 0.835,
+          "edge_gain": 0.716,
+          "zoom_velocity": 0.094,
           "displacement": 0.22,
-          "stability": 0.578,
+          "stability": 0.648,
           "entropy": 0.425,
-          "palette_energy": 0.868,
+          "palette_energy": 1.0,
           "pattern_complexity": 0.8,
-          "depth_distortion": 0.3,
-          "bloom": 0.54
+          "depth_distortion": 0.355,
+          "bloom": 0.723
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.1,
             "intensity": 0.35
           },
           "peak": {
-            "duration_norm": 0.45,
+            "duration_norm": 0.4,
             "intensity": 1.0
           },
           "plateau": {
-            "duration_norm": 0.25,
+            "duration_norm": 0.2,
             "intensity": 0.75
           },
           "comedown": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.3,
             "intensity": 0.3
           }
         }
@@ -2085,41 +2085,41 @@
         ],
         "mode_default": "power",
         "palette": {
-          "tracers": "#63F3E8",
+          "tracers": "#9DFF6A",
           "energy": 0.6,
           "contrast": 0.8200000000000001
         },
         "parameter_bias": {
           "symmetry_order": 0.845,
-          "feedback_strength": 0.805,
-          "recursion_gain": 0.795,
-          "turbulence": 0.2,
-          "trail_length": 0.3,
-          "edge_gain": 0.755,
-          "zoom_velocity": 0.242,
+          "feedback_strength": 0.885,
+          "recursion_gain": 0.895,
+          "turbulence": 0.29,
+          "trail_length": 0.395,
+          "edge_gain": 0.727,
+          "zoom_velocity": 0.294,
           "displacement": 0.15,
-          "stability": 0.617,
+          "stability": 0.663,
           "entropy": 0.525,
-          "palette_energy": 0.4,
-          "pattern_complexity": 0.89,
-          "depth_distortion": 0.603,
-          "bloom": 0.2
+          "palette_energy": 0.495,
+          "pattern_complexity": 1.0,
+          "depth_distortion": 0.668,
+          "bloom": 0.329
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.111,
             "intensity": 0.35
           },
           "peak": {
-            "duration_norm": 0.45,
+            "duration_norm": 0.37,
             "intensity": 1.0
           },
           "plateau": {
-            "duration_norm": 0.25,
+            "duration_norm": 0.222,
             "intensity": 0.75
           },
           "comedown": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.296,
             "intensity": 0.3
           }
         }
@@ -2170,41 +2170,41 @@
         ],
         "mode_default": "attractor",
         "palette": {
-          "tracers": "#63F3E8",
+          "tracers": "#9DFF6A",
           "energy": 0.6,
           "contrast": 0.805
         },
         "parameter_bias": {
           "symmetry_order": 0.818,
-          "feedback_strength": 0.782,
-          "recursion_gain": 0.768,
-          "turbulence": 0.38,
-          "trail_length": 0.6,
-          "edge_gain": 0.732,
-          "zoom_velocity": 0.05,
+          "feedback_strength": 0.862,
+          "recursion_gain": 0.868,
+          "turbulence": 0.47,
+          "trail_length": 0.695,
+          "edge_gain": 0.704,
+          "zoom_velocity": 0.102,
           "displacement": 0.24,
-          "stability": 0.542,
+          "stability": 0.588,
           "entropy": 0.475,
-          "palette_energy": 0.73,
-          "pattern_complexity": 0.86,
-          "depth_distortion": 0.3,
-          "bloom": 0.44
+          "palette_energy": 0.825,
+          "pattern_complexity": 1.0,
+          "depth_distortion": 0.365,
+          "bloom": 0.569
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.111,
             "intensity": 0.35
           },
           "peak": {
-            "duration_norm": 0.45,
+            "duration_norm": 0.37,
             "intensity": 1.0
           },
           "plateau": {
-            "duration_norm": 0.25,
+            "duration_norm": 0.222,
             "intensity": 0.75
           },
           "comedown": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.296,
             "intensity": 0.3
           }
         }
@@ -2255,7 +2255,7 @@
         ],
         "mode_default": "open",
         "palette": {
-          "tracers": "#63F3E8",
+          "tracers": "#5CE1FF",
           "energy": 0.7,
           "contrast": 0.775
         },
@@ -2263,33 +2263,33 @@
           "symmetry_order": 0.762,
           "feedback_strength": 0.738,
           "recursion_gain": 0.713,
-          "turbulence": 0.2,
-          "trail_length": 0.65,
-          "edge_gain": 0.688,
-          "zoom_velocity": 0.05,
+          "turbulence": 0.182,
+          "trail_length": 0.742,
+          "edge_gain": 0.593,
+          "zoom_velocity": 0.098,
           "displacement": 0.29,
-          "stability": 0.7,
+          "stability": 0.858,
           "entropy": 0.25,
-          "palette_energy": 0.785,
+          "palette_energy": 0.92,
           "pattern_complexity": 0.8,
-          "depth_distortion": 0.3,
-          "bloom": 0.48
+          "depth_distortion": 0.36,
+          "bloom": 0.639
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.071,
             "intensity": 0.35
           },
           "peak": {
-            "duration_norm": 0.45,
+            "duration_norm": 0.357,
             "intensity": 1.0
           },
           "plateau": {
-            "duration_norm": 0.25,
+            "duration_norm": 0.286,
             "intensity": 0.75
           },
           "comedown": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.286,
             "intensity": 0.3
           }
         }
@@ -2340,7 +2340,7 @@
         ],
         "mode_default": "attractor",
         "palette": {
-          "tracers": "#63F3E8",
+          "tracers": "#5CE1FF",
           "energy": 0.8,
           "contrast": 0.7450000000000001
         },
@@ -2348,33 +2348,33 @@
           "symmetry_order": 0.708,
           "feedback_strength": 0.693,
           "recursion_gain": 0.657,
-          "turbulence": 0.2,
-          "trail_length": 0.7,
-          "edge_gain": 0.643,
-          "zoom_velocity": 0.05,
+          "turbulence": 0.182,
+          "trail_length": 0.792,
+          "edge_gain": 0.548,
+          "zoom_velocity": 0.098,
           "displacement": 0.15,
-          "stability": 0.7,
+          "stability": 0.858,
           "entropy": 0.25,
-          "palette_energy": 0.84,
+          "palette_energy": 0.975,
           "pattern_complexity": 0.74,
-          "depth_distortion": 0.3,
-          "bloom": 0.52
+          "depth_distortion": 0.36,
+          "bloom": 0.679
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.071,
             "intensity": 0.35
           },
           "peak": {
-            "duration_norm": 0.45,
+            "duration_norm": 0.357,
             "intensity": 1.0
           },
           "plateau": {
-            "duration_norm": 0.25,
+            "duration_norm": 0.286,
             "intensity": 0.75
           },
           "comedown": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.286,
             "intensity": 0.3
           }
         }
@@ -2425,7 +2425,7 @@
         ],
         "mode_default": "void",
         "palette": {
-          "tracers": "#63F3E8",
+          "tracers": "#8BB8D8",
           "energy": 0.6,
           "contrast": 0.67
         },
@@ -2433,33 +2433,33 @@
           "symmetry_order": 0.57,
           "feedback_strength": 0.58,
           "recursion_gain": 0.713,
-          "turbulence": 0.3,
-          "trail_length": 0.3,
-          "edge_gain": 0.53,
-          "zoom_velocity": 0.312,
+          "turbulence": 0.313,
+          "trail_length": 0.32,
+          "edge_gain": 0.527,
+          "zoom_velocity": 0.46,
           "displacement": 0.15,
-          "stability": 0.587,
+          "stability": 0.621,
           "entropy": 0.625,
-          "palette_energy": 0.4,
+          "palette_energy": 0.325,
           "pattern_complexity": 0.59,
-          "depth_distortion": 0.713,
-          "bloom": 0.2
+          "depth_distortion": 0.918,
+          "bloom": 0.276
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
-            "intensity": 0.35
+            "duration_norm": 0.059,
+            "intensity": 0.4
           },
           "peak": {
-            "duration_norm": 0.45,
-            "intensity": 1.0
+            "duration_norm": 0.353,
+            "intensity": 0.9
           },
           "plateau": {
-            "duration_norm": 0.25,
-            "intensity": 0.75
+            "duration_norm": 0.235,
+            "intensity": 0.65
           },
           "comedown": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.353,
             "intensity": 0.3
           }
         }
@@ -2510,7 +2510,7 @@
         ],
         "mode_default": "void",
         "palette": {
-          "tracers": "#63F3E8",
+          "tracers": "#8BB8D8",
           "energy": 0.4,
           "contrast": 0.55
         },
@@ -2518,33 +2518,33 @@
           "symmetry_order": 0.35,
           "feedback_strength": 0.4,
           "recursion_gain": 0.74,
-          "turbulence": 0.31,
-          "trail_length": 0.5,
-          "edge_gain": 0.35,
-          "zoom_velocity": 0.33,
+          "turbulence": 0.323,
+          "trail_length": 0.52,
+          "edge_gain": 0.347,
+          "zoom_velocity": 0.478,
           "displacement": 0.15,
-          "stability": 0.58,
+          "stability": 0.614,
           "entropy": 0.65,
-          "palette_energy": 0.62,
+          "palette_energy": 0.545,
           "pattern_complexity": 0.35,
-          "depth_distortion": 0.74,
-          "bloom": 0.36
+          "depth_distortion": 0.945,
+          "bloom": 0.444
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
-            "intensity": 0.35
+            "duration_norm": 0.059,
+            "intensity": 0.4
           },
           "peak": {
-            "duration_norm": 0.45,
-            "intensity": 1.0
+            "duration_norm": 0.353,
+            "intensity": 0.9
           },
           "plateau": {
-            "duration_norm": 0.25,
-            "intensity": 0.75
+            "duration_norm": 0.235,
+            "intensity": 0.65
           },
           "comedown": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.353,
             "intensity": 0.3
           }
         }
@@ -2595,7 +2595,7 @@
         ],
         "mode_default": "open",
         "palette": {
-          "tracers": "#63F3E8",
+          "tracers": "#FF8FB3",
           "energy": 0.9,
           "contrast": 0.55
         },
@@ -2603,33 +2603,33 @@
           "symmetry_order": 0.35,
           "feedback_strength": 0.4,
           "recursion_gain": 0.3,
-          "turbulence": 0.33,
-          "trail_length": 0.75,
-          "edge_gain": 0.35,
-          "zoom_velocity": 0.05,
+          "turbulence": 0.405,
+          "trail_length": 0.875,
+          "edge_gain": 0.203,
+          "zoom_velocity": 0.098,
           "displacement": 0.272,
-          "stability": 0.7,
+          "stability": 0.782,
           "entropy": 0.25,
-          "palette_energy": 0.895,
-          "pattern_complexity": 0.35,
-          "depth_distortion": 0.3,
-          "bloom": 0.56
+          "palette_energy": 1.0,
+          "pattern_complexity": 0.27,
+          "depth_distortion": 0.36,
+          "bloom": 1.0
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.077,
             "intensity": 0.35
           },
           "peak": {
-            "duration_norm": 0.45,
+            "duration_norm": 0.385,
             "intensity": 1.0
           },
           "plateau": {
-            "duration_norm": 0.25,
+            "duration_norm": 0.231,
             "intensity": 0.75
           },
           "comedown": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.308,
             "intensity": 0.3
           }
         }
@@ -2639,6 +2639,1118 @@
         "max_luminance_delta": 0.35,
         "reduced_motion_compatible": true,
         "intensity_cap": 1.0
+      }
+    },
+    {
+      "id": "exp_mdma_music_tactile",
+      "schema_version": "1.0.0",
+      "title": "Music-Tactile Warm Field",
+      "substance": "mdma",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "curated_seed",
+          "note": "Grounded in aggregate positive phenomenology motifs"
+        }
+      ],
+      "motifs": {
+        "body_somatic": 0.85,
+        "color_light": 0.8,
+        "time_memory": 0.35,
+        "geometry": 0.25
+      },
+      "narrative_hooks": [
+        "music-coupled tactile warmth; bloom over lattice; soft social chroma"
+      ],
+      "modes": [
+        "open",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "organic_bloom",
+          "flow_field"
+        ],
+        "secondary_engines": [
+          "recursive_feedback"
+        ],
+        "mode_default": "open",
+        "palette": {
+          "tracers": "#FF6B9D",
+          "energy": 0.8,
+          "contrast": 0.625
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.487,
+          "feedback_strength": 0.513,
+          "recursion_gain": 0.438,
+          "turbulence": 0.448,
+          "trail_length": 0.833,
+          "edge_gain": 0.269,
+          "zoom_velocity": 0.09,
+          "displacement": 0.15,
+          "stability": 0.792,
+          "entropy": 0.25,
+          "palette_energy": 1.0,
+          "pattern_complexity": 0.35,
+          "depth_distortion": 0.35,
+          "bloom": 1.0
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.1,
+            "intensity": 0.4
+          },
+          "peak": {
+            "duration_norm": 0.4,
+            "intensity": 0.95
+          },
+          "plateau": {
+            "duration_norm": 0.2,
+            "intensity": 0.8
+          },
+          "comedown": {
+            "duration_norm": 0.3,
+            "intensity": 0.35
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
+      }
+    },
+    {
+      "id": "exp_mdma_afterglow_haze",
+      "schema_version": "1.0.0",
+      "title": "Soft Afterglow Haze",
+      "substance": "mdma",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "curated_seed",
+          "note": "Grounded in aggregate positive phenomenology motifs"
+        }
+      ],
+      "motifs": {
+        "color_light": 0.7,
+        "body_somatic": 0.55,
+        "nature": 0.4,
+        "geometry": 0.2
+      },
+      "narrative_hooks": [
+        "gentle afterglow haze; low edge gain and lingering empathic bloom"
+      ],
+      "modes": [
+        "open",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "organic_bloom"
+        ],
+        "secondary_engines": [
+          "flow_field"
+        ],
+        "mode_default": "open",
+        "palette": {
+          "tracers": "#FF6B9D",
+          "energy": 0.7,
+          "contrast": 0.6100000000000001
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.46,
+          "feedback_strength": 0.49,
+          "recursion_gain": 0.41,
+          "turbulence": 0.388,
+          "trail_length": 0.783,
+          "edge_gain": 0.247,
+          "zoom_velocity": 0.09,
+          "displacement": 0.29,
+          "stability": 0.792,
+          "entropy": 0.25,
+          "palette_energy": 1.0,
+          "pattern_complexity": 0.32,
+          "depth_distortion": 0.35,
+          "bloom": 0.987
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.1,
+            "intensity": 0.4
+          },
+          "peak": {
+            "duration_norm": 0.4,
+            "intensity": 0.95
+          },
+          "plateau": {
+            "duration_norm": 0.2,
+            "intensity": 0.8
+          },
+          "comedown": {
+            "duration_norm": 0.3,
+            "intensity": 0.35
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
+      }
+    },
+    {
+      "id": "exp_mda_visionary_rose",
+      "schema_version": "1.0.0",
+      "title": "Visionary Rose Glow",
+      "substance": "mda",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "curated_seed",
+          "note": "Grounded in aggregate positive phenomenology motifs"
+        }
+      ],
+      "motifs": {
+        "color_light": 0.95,
+        "geometry": 0.45,
+        "body_somatic": 0.55
+      },
+      "narrative_hooks": [
+        "rose-gold visionary glow with soft ornamental hints, not hard lattice"
+      ],
+      "modes": [
+        "attractor",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "organic_bloom",
+          "kaleidoscope"
+        ],
+        "secondary_engines": [
+          "flow_field"
+        ],
+        "mode_default": "attractor",
+        "palette": {
+          "tracers": "#FF8FB3",
+          "energy": 0.95,
+          "contrast": 0.685
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.598,
+          "feedback_strength": 0.603,
+          "recursion_gain": 0.547,
+          "turbulence": 0.385,
+          "trail_length": 0.9,
+          "edge_gain": 0.405,
+          "zoom_velocity": 0.098,
+          "displacement": 0.15,
+          "stability": 0.782,
+          "entropy": 0.25,
+          "palette_energy": 1.0,
+          "pattern_complexity": 0.54,
+          "depth_distortion": 0.36,
+          "bloom": 1.0
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.077,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.385,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.231,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.308,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
+      }
+    },
+    {
+      "id": "exp_2cb_playful_chroma",
+      "schema_version": "1.0.0",
+      "title": "Playful Chroma Pop",
+      "substance": "2c-b",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "curated_seed",
+          "note": "Grounded in aggregate positive phenomenology motifs"
+        }
+      ],
+      "motifs": {
+        "color_light": 0.9,
+        "geometry": 0.7,
+        "body_somatic": 0.5
+      },
+      "narrative_hooks": [
+        "playful chroma pop; tactile neon geometry with stable attractors"
+      ],
+      "modes": [
+        "open",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "kaleidoscope",
+          "organic_bloom"
+        ],
+        "secondary_engines": [
+          "flow_field"
+        ],
+        "mode_default": "open",
+        "palette": {
+          "tracers": "#C3FF4A",
+          "energy": 0.9,
+          "contrast": 0.76
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.835,
+          "feedback_strength": 0.715,
+          "recursion_gain": 0.685,
+          "turbulence": 0.372,
+          "trail_length": 0.86,
+          "edge_gain": 0.693,
+          "zoom_velocity": 0.094,
+          "displacement": 0.15,
+          "stability": 0.77,
+          "entropy": 0.25,
+          "palette_energy": 1.0,
+          "pattern_complexity": 0.77,
+          "depth_distortion": 0.355,
+          "bloom": 0.818
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.1,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.4,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.2,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.3,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
+      }
+    },
+    {
+      "id": "exp_2ce_long_hold_mosaic",
+      "schema_version": "1.0.0",
+      "title": "Long-Hold Analytic Mosaic",
+      "substance": "2c-e",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "curated_seed",
+          "note": "Grounded in aggregate positive phenomenology motifs"
+        }
+      ],
+      "motifs": {
+        "geometry": 0.92,
+        "time_memory": 0.65,
+        "space_void": 0.45
+      },
+      "narrative_hooks": [
+        "long attentional hold on analytic mosaic; pacing over flash"
+      ],
+      "modes": [
+        "power",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "recursive_feedback",
+          "entity_lattice"
+        ],
+        "secondary_engines": [
+          "kaleidoscope"
+        ],
+        "mode_default": "power",
+        "palette": {
+          "tracers": "#9DFF6A",
+          "energy": 0.6,
+          "contrast": 0.8260000000000001
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.856,
+          "feedback_strength": 0.894,
+          "recursion_gain": 0.906,
+          "turbulence": 0.29,
+          "trail_length": 0.395,
+          "edge_gain": 0.736,
+          "zoom_velocity": 0.26,
+          "displacement": 0.15,
+          "stability": 0.678,
+          "entropy": 0.475,
+          "palette_energy": 0.495,
+          "pattern_complexity": 1.0,
+          "depth_distortion": 0.612,
+          "bloom": 0.329
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.111,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.37,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.222,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.296,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
+      }
+    },
+    {
+      "id": "exp_allad_gentle_comeup",
+      "schema_version": "1.0.0",
+      "title": "Gentle Lysergic Comeup",
+      "substance": "al-lad",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "curated_seed",
+          "note": "Grounded in aggregate positive phenomenology motifs"
+        }
+      ],
+      "motifs": {
+        "color_light": 0.75,
+        "geometry": 0.55,
+        "nature": 0.45,
+        "body_somatic": 0.35
+      },
+      "narrative_hooks": [
+        "gentler lysergic comeup; pastel geometry before full recursion"
+      ],
+      "modes": [
+        "open",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "organic_bloom",
+          "kaleidoscope"
+        ],
+        "secondary_engines": [
+          "recursive_feedback"
+        ],
+        "mode_default": "open",
+        "palette": {
+          "tracers": "#5CE1FF",
+          "energy": 0.75,
+          "contrast": 0.7150000000000001
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.653,
+          "feedback_strength": 0.648,
+          "recursion_gain": 0.603,
+          "turbulence": 0.252,
+          "trail_length": 0.767,
+          "edge_gain": 0.503,
+          "zoom_velocity": 0.098,
+          "displacement": 0.307,
+          "stability": 0.858,
+          "entropy": 0.25,
+          "palette_energy": 0.947,
+          "pattern_complexity": 0.68,
+          "depth_distortion": 0.36,
+          "bloom": 0.711
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.071,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.357,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.286,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.286,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
+      }
+    },
+    {
+      "id": "exp_mxe_muted_float",
+      "schema_version": "1.0.0",
+      "title": "Muted Float Chamber",
+      "substance": "mxe",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "curated_seed",
+          "note": "Grounded in aggregate positive phenomenology motifs"
+        }
+      ],
+      "motifs": {
+        "space_void": 0.85,
+        "body_somatic": 0.5,
+        "color_light": 0.3,
+        "geometry": 0.25
+      },
+      "narrative_hooks": [
+        "muted float chamber; sparse chroma and soft dissociative depth"
+      ],
+      "modes": [
+        "void",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "void_expansion",
+          "flow_field"
+        ],
+        "secondary_engines": [
+          "organic_bloom"
+        ],
+        "mode_default": "void",
+        "palette": {
+          "tracers": "#8BB8D8",
+          "energy": 0.3,
+          "contrast": 0.625
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.487,
+          "feedback_strength": 0.513,
+          "recursion_gain": 0.768,
+          "turbulence": 0.313,
+          "trail_length": 0.47,
+          "edge_gain": 0.459,
+          "zoom_velocity": 0.495,
+          "displacement": 0.15,
+          "stability": 0.607,
+          "entropy": 0.675,
+          "palette_energy": 0.49,
+          "pattern_complexity": 0.5,
+          "depth_distortion": 0.973,
+          "bloom": 0.396
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.059,
+            "intensity": 0.4
+          },
+          "peak": {
+            "duration_norm": 0.353,
+            "intensity": 0.9
+          },
+          "plateau": {
+            "duration_norm": 0.235,
+            "intensity": 0.65
+          },
+          "comedown": {
+            "duration_norm": 0.353,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
+      }
+    },
+    {
+      "id": "exp_ethlad_ornate_recursion",
+      "schema_version": "1.0.0",
+      "title": "Ornate Eth-LAD Recursion",
+      "substance": "eth-lad",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "curated_seed",
+          "note": "Grounded in aggregate positive phenomenology motifs"
+        }
+      ],
+      "motifs": {
+        "geometry": 0.9,
+        "machines": 0.4,
+        "color_light": 0.75,
+        "space_void": 0.45
+      },
+      "narrative_hooks": [
+        "ornate high-complexity recursion; lysergic sibling with denser lattice"
+      ],
+      "modes": [
+        "power",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "recursive_feedback",
+          "kaleidoscope"
+        ],
+        "secondary_engines": [
+          "entity_lattice"
+        ],
+        "mode_default": "power",
+        "palette": {
+          "tracers": "#E85CFF",
+          "energy": 0.75,
+          "contrast": 0.8200000000000001
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.925,
+          "feedback_strength": 0.805,
+          "recursion_gain": 0.895,
+          "turbulence": 0.447,
+          "trail_length": 0.77,
+          "edge_gain": 0.724,
+          "zoom_velocity": 0.268,
+          "displacement": 0.23,
+          "stability": 0.536,
+          "entropy": 0.475,
+          "palette_energy": 0.917,
+          "pattern_complexity": 1.0,
+          "depth_distortion": 0.622,
+          "bloom": 0.635
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.077,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.346,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.288,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.288,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
+      }
+    },
+    {
+      "id": "exp_ethlad_violet_tracers",
+      "schema_version": "1.0.0",
+      "title": "Violet Tracer Lattice",
+      "substance": "eth-lad",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "curated_seed",
+          "note": "Grounded in aggregate positive phenomenology motifs"
+        }
+      ],
+      "motifs": {
+        "color_light": 0.85,
+        "geometry": 0.8,
+        "time_memory": 0.4
+      },
+      "narrative_hooks": [
+        "violet tracer lattice with lucid ornamental hold"
+      ],
+      "modes": [
+        "attractor",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "kaleidoscope",
+          "recursive_feedback"
+        ],
+        "secondary_engines": [
+          "organic_bloom"
+        ],
+        "mode_default": "attractor",
+        "palette": {
+          "tracers": "#E85CFF",
+          "energy": 0.85,
+          "contrast": 0.79
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.87,
+          "feedback_strength": 0.76,
+          "recursion_gain": 0.84,
+          "turbulence": 0.287,
+          "trail_length": 0.82,
+          "edge_gain": 0.679,
+          "zoom_velocity": 0.11,
+          "displacement": 0.15,
+          "stability": 0.744,
+          "entropy": 0.25,
+          "palette_energy": 0.973,
+          "pattern_complexity": 0.95,
+          "depth_distortion": 0.375,
+          "bloom": 0.675
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.077,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.346,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.288,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.288,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
+      }
+    },
+    {
+      "id": "exp_jhana_luminous_stillness",
+      "schema_version": "1.0.0",
+      "title": "Luminous Stillness Field",
+      "substance": "jhana",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "curated_seed",
+          "note": "Grounded in aggregate positive phenomenology motifs"
+        }
+      ],
+      "motifs": {
+        "space_void": 0.7,
+        "color_light": 0.55,
+        "body_somatic": 0.4,
+        "geometry": 0.15
+      },
+      "narrative_hooks": [
+        "luminous stillness; low turbulence, high coherence, minimal ornament"
+      ],
+      "modes": [
+        "void",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "void_expansion",
+          "organic_bloom"
+        ],
+        "secondary_engines": [
+          "flow_field"
+        ],
+        "mode_default": "void",
+        "palette": {
+          "tracers": "#C9B6FF",
+          "energy": 0.55,
+          "contrast": 0.5950000000000001
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.432,
+          "feedback_strength": 0.468,
+          "recursion_gain": 0.685,
+          "turbulence": 0.13,
+          "trail_length": 0.645,
+          "edge_gain": 0.361,
+          "zoom_velocity": 0.351,
+          "displacement": 0.15,
+          "stability": 0.889,
+          "entropy": 0.6,
+          "palette_energy": 0.858,
+          "pattern_complexity": 0.24,
+          "depth_distortion": 0.755,
+          "bloom": 0.757
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.143,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.286,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.429,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.143,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.28,
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
+      }
+    },
+    {
+      "id": "exp_jhana_coherent_glow",
+      "schema_version": "1.0.0",
+      "title": "Coherent Soft Glow",
+      "substance": "jhana",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "curated_seed",
+          "note": "Grounded in aggregate positive phenomenology motifs"
+        }
+      ],
+      "motifs": {
+        "color_light": 0.65,
+        "body_somatic": 0.45,
+        "geometry": 0.2,
+        "nature": 0.35
+      },
+      "narrative_hooks": [
+        "coherent soft glow without pattern aggression; calm attentional field"
+      ],
+      "modes": [
+        "open",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "organic_bloom"
+        ],
+        "secondary_engines": [
+          "void_expansion"
+        ],
+        "mode_default": "open",
+        "palette": {
+          "tracers": "#C9B6FF",
+          "energy": 0.65,
+          "contrast": 0.6100000000000001
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.46,
+          "feedback_strength": 0.49,
+          "recursion_gain": 0.41,
+          "turbulence": 0.14,
+          "trail_length": 0.695,
+          "edge_gain": 0.384,
+          "zoom_velocity": 0.106,
+          "displacement": 0.272,
+          "stability": 0.994,
+          "entropy": 0.25,
+          "palette_energy": 0.913,
+          "pattern_complexity": 0.27,
+          "depth_distortion": 0.37,
+          "bloom": 0.805
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.143,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.286,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.429,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.143,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.28,
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
+      }
+    },
+    {
+      "id": "exp_dxm_plateau_drift",
+      "schema_version": "1.0.0",
+      "title": "Plateau Soft Drift",
+      "substance": "dxm",
+      "valence": "mixed",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "curated_seed",
+          "note": "Grounded in aggregate positive phenomenology motifs"
+        }
+      ],
+      "motifs": {
+        "space_void": 0.75,
+        "body_somatic": 0.55,
+        "geometry": 0.3,
+        "color_light": 0.35
+      },
+      "narrative_hooks": [
+        "plateau soft drift; muted dissociative corridors with intensity cap"
+      ],
+      "modes": [
+        "void",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "flow_field",
+          "void_expansion"
+        ],
+        "secondary_engines": [
+          "recursive_feedback"
+        ],
+        "mode_default": "void",
+        "palette": {
+          "tracers": "#6BA3C9",
+          "energy": 0.35,
+          "contrast": 0.64
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.386,
+          "feedback_strength": 0.401,
+          "recursion_gain": 0.535,
+          "turbulence": 0.244,
+          "trail_length": 0.367,
+          "edge_gain": 0.366,
+          "zoom_velocity": 0.279,
+          "displacement": 0.112,
+          "stability": 0.454,
+          "entropy": 0.469,
+          "palette_energy": 0.389,
+          "pattern_complexity": 0.338,
+          "depth_distortion": 0.681,
+          "bloom": 0.341
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.111,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.333,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.222,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.333,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 1.5,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true,
+        "intensity_cap": 0.7
+      }
+    },
+    {
+      "id": "exp_dxm_blurred_architecture",
+      "schema_version": "1.0.0",
+      "title": "Blurred Architecture Soften",
+      "substance": "dxm",
+      "valence": "mixed",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "curated_seed",
+          "note": "Grounded in aggregate positive phenomenology motifs"
+        }
+      ],
+      "motifs": {
+        "space_void": 0.7,
+        "machines": 0.25,
+        "geometry": 0.35,
+        "body_somatic": 0.45
+      },
+      "narrative_hooks": [
+        "blurred architectural soften; low chroma chaos and floating depth"
+      ],
+      "modes": [
+        "void",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "void_expansion",
+          "flow_field"
+        ],
+        "secondary_engines": [
+          "organic_bloom"
+        ],
+        "mode_default": "void",
+        "palette": {
+          "tracers": "#6BA3C9",
+          "energy": 0.6,
+          "contrast": 0.655
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.407,
+          "feedback_strength": 0.418,
+          "recursion_gain": 0.514,
+          "turbulence": 0.236,
+          "trail_length": 0.236,
+          "edge_gain": 0.383,
+          "zoom_velocity": 0.266,
+          "displacement": 0.15,
+          "stability": 0.394,
+          "entropy": 0.45,
+          "palette_energy": 0.244,
+          "pattern_complexity": 0.36,
+          "depth_distortion": 0.66,
+          "bloom": 0.226
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.111,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.333,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.222,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.333,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 1.5,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true,
+        "intensity_cap": 0.7
       }
     },
     {
@@ -2663,12 +3775,12 @@
       "motifs": {
         "geometry": 0.0,
         "entities": 1.0,
-        "color_light": 0.75,
+        "color_light": 1.0,
         "space_void": 1.0,
-        "body_somatic": 0.125,
-        "time_memory": 0.625,
+        "body_somatic": 0.875,
+        "time_memory": 1.0,
         "nature": 0.125,
-        "machines": 0.5
+        "machines": 0.875
       },
       "narrative_hooks": [
         "DMT - Erowid Exp - 'First Breakthrough in Eight Years - Machine World' --- <br>Get the Erowid \"Words\" T-shirt<br>Contribute $50 and show support for accurate dr",
@@ -2690,48 +3802,49 @@
         "mode_default": "power",
         "palette": {
           "tracers": "#FF42C1",
-          "energy": 0.75,
+          "energy": 1.0,
           "contrast": 0.5
         },
         "parameter_bias": {
           "symmetry_order": 0.35,
-          "feedback_strength": 0.625,
+          "feedback_strength": 0.794,
           "recursion_gain": 0.85,
-          "turbulence": 0.4,
-          "trail_length": 0.675,
-          "edge_gain": 0.35,
-          "zoom_velocity": 0.4,
-          "displacement": 0.294,
-          "stability": 0.375,
+          "turbulence": 0.668,
+          "trail_length": 0.89,
+          "edge_gain": 0.341,
+          "zoom_velocity": 0.478,
+          "displacement": 0.369,
+          "stability": 0.236,
           "entropy": 0.75,
-          "palette_energy": 0.812,
-          "pattern_complexity": 0.65,
-          "depth_distortion": 0.85,
-          "bloom": 0.5
+          "palette_energy": 1.0,
+          "pattern_complexity": 0.875,
+          "depth_distortion": 0.948,
+          "bloom": 0.83
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
-            "intensity": 0.35
+            "duration_norm": 0.062,
+            "intensity": 0.55
           },
           "peak": {
-            "duration_norm": 0.45,
+            "duration_norm": 0.312,
             "intensity": 1.0
           },
           "plateau": {
-            "duration_norm": 0.25,
-            "intensity": 0.75
+            "duration_norm": 0.156,
+            "intensity": 0.7
           },
           "comedown": {
-            "duration_norm": 0.15,
-            "intensity": 0.3
+            "duration_norm": 0.469,
+            "intensity": 0.25
           }
         }
       },
       "safety": {
-        "max_flash_hz": 2.0,
+        "max_flash_hz": 1.5,
         "max_luminance_delta": 0.35,
-        "reduced_motion_compatible": true
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
       }
     },
     {
@@ -2754,14 +3867,14 @@
         }
       ],
       "motifs": {
-        "geometry": 0.0,
-        "entities": 0.375,
-        "color_light": 0.125,
-        "space_void": 0.375,
-        "body_somatic": 0.25,
-        "time_memory": 0.5,
+        "geometry": 0.125,
+        "entities": 1.0,
+        "color_light": 0.5,
+        "space_void": 1.0,
+        "body_somatic": 0.5,
+        "time_memory": 1.0,
         "nature": 0.125,
-        "machines": 0.125
+        "machines": 0.5
       },
       "narrative_hooks": [
         "I tried a couple of moderately succesful yage journeys which had shown me the potentials of the mindspaces available through DMT.",
@@ -2783,48 +3896,49 @@
         "mode_default": "power",
         "palette": {
           "tracers": "#FF42C1",
-          "energy": 0.4,
-          "contrast": 0.5
+          "energy": 0.5,
+          "contrast": 0.5375
         },
         "parameter_bias": {
-          "symmetry_order": 0.35,
-          "feedback_strength": 0.456,
-          "recursion_gain": 0.506,
-          "turbulence": 0.25,
-          "trail_length": 0.362,
-          "edge_gain": 0.35,
-          "zoom_velocity": 0.181,
-          "displacement": 0.219,
-          "stability": 0.6,
-          "entropy": 0.438,
-          "palette_energy": 0.469,
-          "pattern_complexity": 0.425,
-          "depth_distortion": 0.506,
-          "bloom": 0.25
+          "symmetry_order": 0.419,
+          "feedback_strength": 0.625,
+          "recursion_gain": 0.85,
+          "turbulence": 0.518,
+          "trail_length": 0.64,
+          "edge_gain": 0.397,
+          "zoom_velocity": 0.478,
+          "displacement": 0.294,
+          "stability": 0.367,
+          "entropy": 0.75,
+          "palette_energy": 0.75,
+          "pattern_complexity": 0.65,
+          "depth_distortion": 0.948,
+          "bloom": 0.574
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
-            "intensity": 0.35
+            "duration_norm": 0.062,
+            "intensity": 0.55
           },
           "peak": {
-            "duration_norm": 0.45,
+            "duration_norm": 0.312,
             "intensity": 1.0
           },
           "plateau": {
-            "duration_norm": 0.25,
-            "intensity": 0.75
+            "duration_norm": 0.156,
+            "intensity": 0.7
           },
           "comedown": {
-            "duration_norm": 0.15,
-            "intensity": 0.3
+            "duration_norm": 0.469,
+            "intensity": 0.25
           }
         }
       },
       "safety": {
-        "max_flash_hz": 2.0,
+        "max_flash_hz": 1.5,
         "max_luminance_delta": 0.35,
-        "reduced_motion_compatible": true
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
       }
     },
     {
@@ -2848,13 +3962,13 @@
       ],
       "motifs": {
         "geometry": 0.0,
-        "entities": 0.625,
-        "color_light": 0.125,
-        "space_void": 0.0,
-        "body_somatic": 0.875,
-        "time_memory": 0.875,
-        "nature": 0.25,
-        "machines": 0.0
+        "entities": 1.0,
+        "color_light": 0.0,
+        "space_void": 0.875,
+        "body_somatic": 1.0,
+        "time_memory": 1.0,
+        "nature": 0.5,
+        "machines": 0.125
       },
       "narrative_hooks": [
         "\"Into the Mind of God: An Experience with DMT (exp96614)\".",
@@ -2881,43 +3995,44 @@
         },
         "parameter_bias": {
           "symmetry_order": 0.35,
-          "feedback_strength": 0.4,
-          "recursion_gain": 0.3,
-          "turbulence": 0.375,
-          "trail_length": 0.362,
-          "edge_gain": 0.35,
-          "zoom_velocity": 0.05,
-          "displacement": 0.237,
-          "stability": 0.7,
-          "entropy": 0.25,
-          "palette_energy": 0.469,
-          "pattern_complexity": 0.35,
-          "depth_distortion": 0.3,
-          "bloom": 0.25
+          "feedback_strength": 0.456,
+          "recursion_gain": 0.781,
+          "turbulence": 0.518,
+          "trail_length": 0.39,
+          "edge_gain": 0.341,
+          "zoom_velocity": 0.434,
+          "displacement": 0.35,
+          "stability": 0.517,
+          "entropy": 0.688,
+          "palette_energy": 0.475,
+          "pattern_complexity": 0.425,
+          "depth_distortion": 0.879,
+          "bloom": 0.449
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
-            "intensity": 0.35
+            "duration_norm": 0.062,
+            "intensity": 0.55
           },
           "peak": {
-            "duration_norm": 0.45,
+            "duration_norm": 0.312,
             "intensity": 1.0
           },
           "plateau": {
-            "duration_norm": 0.25,
-            "intensity": 0.75
+            "duration_norm": 0.156,
+            "intensity": 0.7
           },
           "comedown": {
-            "duration_norm": 0.15,
-            "intensity": 0.3
+            "duration_norm": 0.469,
+            "intensity": 0.25
           }
         }
       },
       "safety": {
-        "max_flash_hz": 2.0,
+        "max_flash_hz": 1.5,
         "max_luminance_delta": 0.35,
-        "reduced_motion_compatible": true
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
       }
     },
     {
@@ -2940,14 +4055,14 @@
         }
       ],
       "motifs": {
-        "geometry": 0.625,
-        "entities": 0.25,
-        "color_light": 0.375,
-        "space_void": 0.25,
-        "body_somatic": 0.25,
+        "geometry": 0.5,
+        "entities": 1.0,
+        "color_light": 0.25,
+        "space_void": 1.0,
+        "body_somatic": 0.75,
         "time_memory": 1.0,
-        "nature": 0.125,
-        "machines": 0.0
+        "nature": 0.625,
+        "machines": 0.25
       },
       "narrative_hooks": [
         "Obtaining the acid was easy enough, however, this time it came with a warning.",
@@ -2955,54 +4070,54 @@
         "While I had tripped several times on acid prior to this, D had only done it twice at this point."
       ],
       "modes": [
-        "attractor",
+        "void",
         "open"
       ],
       "visual_recipe": {
         "primary_engines": [
-          "kaleidoscope",
-          "recursive_feedback"
+          "void_expansion",
+          "flow_field"
         ],
         "secondary_engines": [
           "organic_bloom"
         ],
-        "mode_default": "attractor",
+        "mode_default": "void",
         "palette": {
           "tracers": "#3EE7F2",
           "energy": 0.4,
-          "contrast": 0.6875
+          "contrast": 0.65
         },
         "parameter_bias": {
-          "symmetry_order": 0.694,
-          "feedback_strength": 0.681,
-          "recursion_gain": 0.644,
-          "turbulence": 0.25,
-          "trail_length": 0.487,
-          "edge_gain": 0.631,
-          "zoom_velocity": 0.138,
-          "displacement": 0.194,
-          "stability": 0.662,
-          "entropy": 0.375,
-          "palette_energy": 0.606,
-          "pattern_complexity": 0.725,
-          "depth_distortion": 0.438,
-          "bloom": 0.35
+          "symmetry_order": 0.625,
+          "feedback_strength": 0.625,
+          "recursion_gain": 0.85,
+          "turbulence": 0.425,
+          "trail_length": 0.515,
+          "edge_gain": 0.542,
+          "zoom_velocity": 0.464,
+          "displacement": 0.419,
+          "stability": 0.51,
+          "entropy": 0.75,
+          "palette_energy": 0.638,
+          "pattern_complexity": 0.65,
+          "depth_distortion": 0.93,
+          "bloom": 0.545
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.07,
             "intensity": 0.35
           },
           "peak": {
-            "duration_norm": 0.45,
+            "duration_norm": 0.279,
             "intensity": 1.0
           },
           "plateau": {
-            "duration_norm": 0.25,
-            "intensity": 0.75
+            "duration_norm": 0.372,
+            "intensity": 0.8
           },
           "comedown": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.279,
             "intensity": 0.3
           }
         }
@@ -3010,7 +4125,8 @@
       "safety": {
         "max_flash_hz": 2.0,
         "max_luminance_delta": 0.35,
-        "reduced_motion_compatible": true
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
       }
     },
     {
@@ -3033,14 +4149,14 @@
         }
       ],
       "motifs": {
-        "geometry": 0.625,
-        "entities": 0.375,
+        "geometry": 0.875,
+        "entities": 0.5,
         "color_light": 0.5,
-        "space_void": 0.125,
-        "body_somatic": 0.375,
-        "time_memory": 0.625,
+        "space_void": 0.5,
+        "body_somatic": 1.0,
+        "time_memory": 1.0,
         "nature": 0.375,
-        "machines": 0.0
+        "machines": 0.125
       },
       "narrative_hooks": [
         "Everything adorned with intricate patterns etched into a thick clay-like texture.",
@@ -3048,54 +4164,54 @@
         "When I closed my eyes, bright earthy palettes danced on my eyelids."
       ],
       "modes": [
-        "attractor",
+        "void",
         "open"
       ],
       "visual_recipe": {
         "primary_engines": [
-          "kaleidoscope",
-          "recursive_feedback"
+          "recursive_feedback",
+          "entity_lattice"
         ],
         "secondary_engines": [
-          "organic_bloom"
+          "kaleidoscope"
         ],
-        "mode_default": "attractor",
+        "mode_default": "void",
         "palette": {
           "tracers": "#3EE7F2",
           "energy": 0.5,
-          "contrast": 0.6875
+          "contrast": 0.7625
         },
         "parameter_bias": {
-          "symmetry_order": 0.694,
-          "feedback_strength": 0.681,
-          "recursion_gain": 0.644,
-          "turbulence": 0.275,
-          "trail_length": 0.55,
-          "edge_gain": 0.631,
-          "zoom_velocity": 0.094,
-          "displacement": 0.281,
-          "stability": 0.681,
-          "entropy": 0.312,
-          "palette_energy": 0.675,
-          "pattern_complexity": 0.725,
-          "depth_distortion": 0.369,
-          "bloom": 0.4
+          "symmetry_order": 0.831,
+          "feedback_strength": 0.794,
+          "recursion_gain": 0.781,
+          "turbulence": 0.475,
+          "trail_length": 0.64,
+          "edge_gain": 0.711,
+          "zoom_velocity": 0.289,
+          "displacement": 0.306,
+          "stability": 0.629,
+          "entropy": 0.5,
+          "palette_energy": 0.775,
+          "pattern_complexity": 0.875,
+          "depth_distortion": 0.655,
+          "bloom": 0.682
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.07,
             "intensity": 0.35
           },
           "peak": {
-            "duration_norm": 0.45,
+            "duration_norm": 0.279,
             "intensity": 1.0
           },
           "plateau": {
-            "duration_norm": 0.25,
-            "intensity": 0.75
+            "duration_norm": 0.372,
+            "intensity": 0.8
           },
           "comedown": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.279,
             "intensity": 0.3
           }
         }
@@ -3103,7 +4219,8 @@
       "safety": {
         "max_flash_hz": 2.0,
         "max_luminance_delta": 0.35,
-        "reduced_motion_compatible": true
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
       }
     },
     {
@@ -3126,14 +4243,14 @@
         }
       ],
       "motifs": {
-        "geometry": 0.0,
-        "entities": 0.125,
+        "geometry": 0.375,
+        "entities": 0.75,
         "color_light": 1.0,
-        "space_void": 0.75,
-        "body_somatic": 0.125,
-        "time_memory": 0.875,
-        "nature": 0.625,
-        "machines": 0.0
+        "space_void": 1.0,
+        "body_somatic": 0.625,
+        "time_memory": 1.0,
+        "nature": 1.0,
+        "machines": 0.25
       },
       "narrative_hooks": [
         "\"Physics at the Edge of the Universe: An Experience with LSD (exp69866)\".",
@@ -3156,39 +4273,39 @@
         "palette": {
           "tracers": "#3EE7F2",
           "energy": 1.0,
-          "contrast": 0.5
+          "contrast": 0.6125
         },
         "parameter_bias": {
-          "symmetry_order": 0.35,
-          "feedback_strength": 0.4,
-          "recursion_gain": 0.713,
-          "turbulence": 0.225,
-          "trail_length": 0.8,
-          "edge_gain": 0.35,
-          "zoom_velocity": 0.312,
-          "displacement": 0.369,
-          "stability": 0.587,
-          "entropy": 0.625,
-          "palette_energy": 0.95,
-          "pattern_complexity": 0.35,
-          "depth_distortion": 0.713,
-          "bloom": 0.6
+          "symmetry_order": 0.556,
+          "feedback_strength": 0.569,
+          "recursion_gain": 0.85,
+          "turbulence": 0.4,
+          "trail_length": 0.89,
+          "edge_gain": 0.486,
+          "zoom_velocity": 0.464,
+          "displacement": 0.55,
+          "stability": 0.51,
+          "entropy": 0.75,
+          "palette_energy": 1.0,
+          "pattern_complexity": 0.575,
+          "depth_distortion": 0.93,
+          "bloom": 0.826
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.07,
             "intensity": 0.35
           },
           "peak": {
-            "duration_norm": 0.45,
+            "duration_norm": 0.279,
             "intensity": 1.0
           },
           "plateau": {
-            "duration_norm": 0.25,
-            "intensity": 0.75
+            "duration_norm": 0.372,
+            "intensity": 0.8
           },
           "comedown": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.279,
             "intensity": 0.3
           }
         }
@@ -3196,7 +4313,8 @@
       "safety": {
         "max_flash_hz": 2.0,
         "max_luminance_delta": 0.35,
-        "reduced_motion_compatible": true
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
       }
     },
     {
@@ -3219,14 +4337,14 @@
         }
       ],
       "motifs": {
-        "geometry": 0.0,
-        "entities": 0.0,
-        "color_light": 0.125,
+        "geometry": 0.625,
+        "entities": 0.375,
+        "color_light": 1.0,
         "space_void": 0.0,
         "body_somatic": 0.25,
-        "time_memory": 0.75,
-        "nature": 0.25,
-        "machines": 0.0
+        "time_memory": 1.0,
+        "nature": 0.375,
+        "machines": 0.125
       },
       "narrative_hooks": [
         "I had been raped about 4 years ago and at this time during my trip I started telling my boyfriend that I felt like that had no importance and effect on me any l",
@@ -3234,55 +4352,54 @@
         "Nothing was melting at this point, but I became very in love with colors."
       ],
       "modes": [
-        "open",
+        "attractor",
         "open"
       ],
       "visual_recipe": {
         "primary_engines": [
-          "organic_bloom",
+          "kaleidoscope",
           "recursive_feedback"
         ],
         "secondary_engines": [
-          "flow_field",
-          "void_expansion"
+          "organic_bloom"
         ],
-        "mode_default": "open",
+        "mode_default": "attractor",
         "palette": {
           "tracers": "#3EE7F2",
-          "energy": 0.4,
-          "contrast": 0.5
+          "energy": 1.0,
+          "contrast": 0.6875
         },
         "parameter_bias": {
-          "symmetry_order": 0.35,
-          "feedback_strength": 0.4,
-          "recursion_gain": 0.3,
-          "turbulence": 0.25,
-          "trail_length": 0.362,
-          "edge_gain": 0.35,
-          "zoom_velocity": 0.05,
-          "displacement": 0.237,
-          "stability": 0.7,
-          "entropy": 0.25,
-          "palette_energy": 0.469,
-          "pattern_complexity": 0.35,
-          "depth_distortion": 0.3,
-          "bloom": 0.25
+          "symmetry_order": 0.694,
+          "feedback_strength": 0.681,
+          "recursion_gain": 0.644,
+          "turbulence": 0.325,
+          "trail_length": 0.89,
+          "edge_gain": 0.598,
+          "zoom_velocity": 0.114,
+          "displacement": 0.306,
+          "stability": 0.704,
+          "entropy": 0.312,
+          "palette_energy": 1.0,
+          "pattern_complexity": 0.725,
+          "depth_distortion": 0.38,
+          "bloom": 0.77
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.07,
             "intensity": 0.35
           },
           "peak": {
-            "duration_norm": 0.45,
+            "duration_norm": 0.279,
             "intensity": 1.0
           },
           "plateau": {
-            "duration_norm": 0.25,
-            "intensity": 0.75
+            "duration_norm": 0.372,
+            "intensity": 0.8
           },
           "comedown": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.279,
             "intensity": 0.3
           }
         }
@@ -3290,7 +4407,8 @@
       "safety": {
         "max_flash_hz": 2.0,
         "max_luminance_delta": 0.35,
-        "reduced_motion_compatible": true
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
       }
     },
     {
@@ -3313,14 +4431,14 @@
         }
       ],
       "motifs": {
-        "geometry": 0.25,
-        "entities": 0.125,
-        "color_light": 0.125,
-        "space_void": 0.0,
+        "geometry": 1.0,
+        "entities": 1.0,
+        "color_light": 0.375,
+        "space_void": 0.75,
         "body_somatic": 1.0,
-        "time_memory": 0.25,
+        "time_memory": 1.0,
         "nature": 0.5,
-        "machines": 0.0
+        "machines": 0.375
       },
       "narrative_hooks": [
         "\"Somatic Vision and Cosmic Consciousness: An Experience with LSD (exp77462)\".",
@@ -3328,55 +4446,54 @@
         "200\u00b5g (approx) in tapwater-brewed 'Splashdown' tea in the back yard with L\u2013."
       ],
       "modes": [
-        "open",
+        "void",
         "open"
       ],
       "visual_recipe": {
         "primary_engines": [
-          "organic_bloom",
-          "recursive_feedback"
+          "recursive_feedback",
+          "entity_lattice"
         ],
         "secondary_engines": [
-          "flow_field",
-          "void_expansion"
+          "kaleidoscope"
         ],
-        "mode_default": "open",
+        "mode_default": "void",
         "palette": {
           "tracers": "#3EE7F2",
           "energy": 0.4,
-          "contrast": 0.575
+          "contrast": 0.8
         },
         "parameter_bias": {
-          "symmetry_order": 0.487,
-          "feedback_strength": 0.513,
-          "recursion_gain": 0.438,
-          "turbulence": 0.4,
-          "trail_length": 0.362,
-          "edge_gain": 0.462,
-          "zoom_velocity": 0.05,
-          "displacement": 0.325,
-          "stability": 0.7,
-          "entropy": 0.25,
-          "palette_energy": 0.469,
-          "pattern_complexity": 0.5,
-          "depth_distortion": 0.3,
-          "bloom": 0.25
+          "symmetry_order": 0.9,
+          "feedback_strength": 0.85,
+          "recursion_gain": 0.85,
+          "turbulence": 0.475,
+          "trail_length": 0.577,
+          "edge_gain": 0.767,
+          "zoom_velocity": 0.376,
+          "displacement": 0.4,
+          "stability": 0.504,
+          "entropy": 0.625,
+          "palette_energy": 0.706,
+          "pattern_complexity": 0.95,
+          "depth_distortion": 0.793,
+          "bloom": 0.632
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.07,
             "intensity": 0.35
           },
           "peak": {
-            "duration_norm": 0.45,
+            "duration_norm": 0.279,
             "intensity": 1.0
           },
           "plateau": {
-            "duration_norm": 0.25,
-            "intensity": 0.75
+            "duration_norm": 0.372,
+            "intensity": 0.8
           },
           "comedown": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.279,
             "intensity": 0.3
           }
         }
@@ -3384,7 +4501,8 @@
       "safety": {
         "max_flash_hz": 2.0,
         "max_luminance_delta": 0.35,
-        "reduced_motion_compatible": true
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
       }
     },
     {
@@ -3411,15 +4529,15 @@
         "entities": 0.25,
         "color_light": 0.0,
         "space_void": 0.125,
-        "body_somatic": 0.375,
-        "time_memory": 0.625,
+        "body_somatic": 0.5,
+        "time_memory": 1.0,
         "nature": 1.0,
-        "machines": 0.0
+        "machines": 0.25
       },
       "narrative_hooks": [
         "We went a few blocks down the street to a wooded area to smoke some weed that one of them had brought.",
         "I could see a black and white carousel through the trees, complete with horses and lights and everything, but no sound.",
-        "I knew something was wrong because I smoked a fair bit of pot on a regular basis at that time, and shouldn't have been very high after 2 hits."
+        "I also found myself touching the ground, because it felt 'fuzzy', and I realized that my friends were also behaving oddly."
       ],
       "modes": [
         "open",
@@ -3442,19 +4560,19 @@
         },
         "parameter_bias": {
           "symmetry_order": 0.35,
-          "feedback_strength": 0.4,
-          "recursion_gain": 0.369,
-          "turbulence": 0.275,
+          "feedback_strength": 0.513,
+          "recursion_gain": 0.438,
+          "turbulence": 0.3,
           "trail_length": 0.3,
           "edge_gain": 0.35,
           "zoom_velocity": 0.094,
-          "displacement": 0.5,
-          "stability": 0.681,
-          "entropy": 0.312,
+          "displacement": 0.55,
+          "stability": 0.594,
+          "entropy": 0.375,
           "palette_energy": 0.4,
-          "pattern_complexity": 0.35,
+          "pattern_complexity": 0.5,
           "depth_distortion": 0.369,
-          "bloom": 0.2
+          "bloom": 0.275
         },
         "phase_profile": {
           "comeup": {
@@ -3476,9 +4594,10 @@
         }
       },
       "safety": {
-        "max_flash_hz": 2.0,
+        "max_flash_hz": 1.5,
         "max_luminance_delta": 0.35,
-        "reduced_motion_compatible": true
+        "reduced_motion_compatible": true,
+        "intensity_cap": 0.55
       }
     },
     {
@@ -3501,14 +4620,14 @@
         }
       ],
       "motifs": {
-        "geometry": 0.125,
-        "entities": 0.25,
-        "color_light": 0.125,
-        "space_void": 0.125,
-        "body_somatic": 0.25,
-        "time_memory": 0.0,
+        "geometry": 0.0,
+        "entities": 1.0,
+        "color_light": 0.25,
+        "space_void": 0.625,
+        "body_somatic": 1.0,
+        "time_memory": 0.875,
         "nature": 1.0,
-        "machines": 0.0
+        "machines": 0.375
       },
       "narrative_hooks": [
         "\"Touching the Veil: An Experience with Mushrooms - P.",
@@ -3532,31 +4651,31 @@
         "palette": {
           "tracers": "#8F7BFF",
           "energy": 0.4,
-          "contrast": 0.5375
+          "contrast": 0.5
         },
         "parameter_bias": {
-          "symmetry_order": 0.419,
-          "feedback_strength": 0.456,
-          "recursion_gain": 0.369,
-          "turbulence": 0.25,
-          "trail_length": 0.362,
-          "edge_gain": 0.406,
-          "zoom_velocity": 0.094,
-          "displacement": 0.5,
-          "stability": 0.681,
-          "entropy": 0.312,
-          "palette_energy": 0.469,
-          "pattern_complexity": 0.425,
-          "depth_distortion": 0.369,
-          "bloom": 0.25
+          "symmetry_order": 0.35,
+          "feedback_strength": 0.569,
+          "recursion_gain": 0.644,
+          "turbulence": 0.453,
+          "trail_length": 0.52,
+          "edge_gain": 0.242,
+          "zoom_velocity": 0.329,
+          "displacement": 0.655,
+          "stability": 0.533,
+          "entropy": 0.562,
+          "palette_energy": 0.663,
+          "pattern_complexity": 0.575,
+          "depth_distortion": 0.719,
+          "bloom": 0.735
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.083,
             "intensity": 0.35
           },
           "peak": {
-            "duration_norm": 0.45,
+            "duration_norm": 0.333,
             "intensity": 1.0
           },
           "plateau": {
@@ -3564,7 +4683,7 @@
             "intensity": 0.75
           },
           "comedown": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.333,
             "intensity": 0.3
           }
         }
@@ -3572,7 +4691,8 @@
       "safety": {
         "max_flash_hz": 2.0,
         "max_luminance_delta": 0.35,
-        "reduced_motion_compatible": true
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
       }
     },
     {
@@ -3595,14 +4715,14 @@
         }
       ],
       "motifs": {
-        "geometry": 0.0,
-        "entities": 0.125,
-        "color_light": 0.0,
-        "space_void": 0.5,
-        "body_somatic": 0.125,
-        "time_memory": 0.5,
-        "nature": 0.125,
-        "machines": 0.0
+        "geometry": 0.125,
+        "entities": 0.875,
+        "color_light": 0.5,
+        "space_void": 1.0,
+        "body_somatic": 0.375,
+        "time_memory": 1.0,
+        "nature": 0.375,
+        "machines": 1.0
       },
       "narrative_hooks": [
         "\"The Universe Felt Sorry, Then Made Love to Itself: An Experience with Mushrooms - P.",
@@ -3610,47 +4730,46 @@
         "Anytime I tried to sit down, I couldn't stay put even for a minute."
       ],
       "modes": [
-        "open",
+        "void",
         "open"
       ],
       "visual_recipe": {
         "primary_engines": [
-          "organic_bloom",
-          "recursive_feedback"
+          "recursive_feedback",
+          "entity_lattice"
         ],
         "secondary_engines": [
-          "flow_field",
-          "void_expansion"
+          "kaleidoscope"
         ],
-        "mode_default": "open",
+        "mode_default": "void",
         "palette": {
           "tracers": "#8F7BFF",
-          "energy": 0.4,
-          "contrast": 0.5
+          "energy": 0.5,
+          "contrast": 0.5375
         },
         "parameter_bias": {
-          "symmetry_order": 0.35,
-          "feedback_strength": 0.4,
-          "recursion_gain": 0.575,
-          "turbulence": 0.225,
-          "trail_length": 0.3,
-          "edge_gain": 0.35,
-          "zoom_velocity": 0.225,
-          "displacement": 0.194,
-          "stability": 0.625,
-          "entropy": 0.5,
-          "palette_energy": 0.4,
-          "pattern_complexity": 0.35,
-          "depth_distortion": 0.575,
-          "bloom": 0.2
+          "symmetry_order": 0.419,
+          "feedback_strength": 0.85,
+          "recursion_gain": 0.85,
+          "turbulence": 0.653,
+          "trail_length": 0.645,
+          "edge_gain": 0.298,
+          "zoom_velocity": 0.46,
+          "displacement": 0.561,
+          "stability": 0.258,
+          "entropy": 0.75,
+          "palette_energy": 0.8,
+          "pattern_complexity": 0.95,
+          "depth_distortion": 0.925,
+          "bloom": 0.741
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.083,
             "intensity": 0.35
           },
           "peak": {
-            "duration_norm": 0.45,
+            "duration_norm": 0.333,
             "intensity": 1.0
           },
           "plateau": {
@@ -3658,7 +4777,7 @@
             "intensity": 0.75
           },
           "comedown": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.333,
             "intensity": 0.3
           }
         }
@@ -3666,7 +4785,8 @@
       "safety": {
         "max_flash_hz": 2.0,
         "max_luminance_delta": 0.35,
-        "reduced_motion_compatible": true
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
       }
     },
     {
@@ -3690,13 +4810,13 @@
       ],
       "motifs": {
         "geometry": 0.0,
-        "entities": 0.5,
-        "color_light": 0.375,
-        "space_void": 0.125,
-        "body_somatic": 0.375,
-        "time_memory": 0.375,
-        "nature": 0.375,
-        "machines": 0.0
+        "entities": 1.0,
+        "color_light": 0.875,
+        "space_void": 1.0,
+        "body_somatic": 0.75,
+        "time_memory": 1.0,
+        "nature": 0.75,
+        "machines": 0.25
       },
       "narrative_hooks": [
         "During that first trip, I recovered from a lifetime of psychological pain.",
@@ -3719,32 +4839,32 @@
         "mode_default": "open",
         "palette": {
           "tracers": "#8F7BFF",
-          "energy": 0.4,
+          "energy": 0.875,
           "contrast": 0.5
         },
         "parameter_bias": {
           "symmetry_order": 0.35,
-          "feedback_strength": 0.4,
-          "recursion_gain": 0.369,
-          "turbulence": 0.275,
-          "trail_length": 0.487,
-          "edge_gain": 0.35,
-          "zoom_velocity": 0.094,
-          "displacement": 0.281,
-          "stability": 0.681,
-          "entropy": 0.312,
-          "palette_energy": 0.606,
-          "pattern_complexity": 0.35,
-          "depth_distortion": 0.369,
-          "bloom": 0.35
+          "feedback_strength": 0.513,
+          "recursion_gain": 0.85,
+          "turbulence": 0.403,
+          "trail_length": 0.833,
+          "edge_gain": 0.242,
+          "zoom_velocity": 0.46,
+          "displacement": 0.542,
+          "stability": 0.52,
+          "entropy": 0.75,
+          "palette_energy": 1.0,
+          "pattern_complexity": 0.5,
+          "depth_distortion": 0.925,
+          "bloom": 0.948
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.083,
             "intensity": 0.35
           },
           "peak": {
-            "duration_norm": 0.45,
+            "duration_norm": 0.333,
             "intensity": 1.0
           },
           "plateau": {
@@ -3752,7 +4872,7 @@
             "intensity": 0.75
           },
           "comedown": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.333,
             "intensity": 0.3
           }
         }
@@ -3760,7 +4880,8 @@
       "safety": {
         "max_flash_hz": 2.0,
         "max_luminance_delta": 0.35,
-        "reduced_motion_compatible": true
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
       }
     },
     {
@@ -3817,33 +4938,33 @@
           "symmetry_order": 0.487,
           "feedback_strength": 0.513,
           "recursion_gain": 0.438,
-          "turbulence": 0.2,
-          "trail_length": 0.3,
-          "edge_gain": 0.462,
-          "zoom_velocity": 0.05,
+          "turbulence": 0.275,
+          "trail_length": 0.39,
+          "edge_gain": 0.429,
+          "zoom_velocity": 0.114,
           "displacement": 0.237,
-          "stability": 0.7,
+          "stability": 0.748,
           "entropy": 0.25,
-          "palette_energy": 0.4,
+          "palette_energy": 0.5,
           "pattern_complexity": 0.5,
-          "depth_distortion": 0.3,
-          "bloom": 0.2
+          "depth_distortion": 0.38,
+          "bloom": 0.332
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.07,
             "intensity": 0.35
           },
           "peak": {
-            "duration_norm": 0.45,
+            "duration_norm": 0.279,
             "intensity": 1.0
           },
           "plateau": {
-            "duration_norm": 0.25,
-            "intensity": 0.75
+            "duration_norm": 0.372,
+            "intensity": 0.8
           },
           "comedown": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.279,
             "intensity": 0.3
           }
         }
@@ -3851,7 +4972,8 @@
       "safety": {
         "max_flash_hz": 2.0,
         "max_luminance_delta": 0.35,
-        "reduced_motion_compatible": true
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
       }
     },
     {
@@ -3874,67 +4996,67 @@
         }
       ],
       "motifs": {
-        "geometry": 0.0,
+        "geometry": 0.25,
         "entities": 0.0,
         "color_light": 0.25,
         "space_void": 0.0,
         "body_somatic": 0.0,
         "time_memory": 0.0,
-        "nature": 0.0,
+        "nature": 0.125,
         "machines": 0.0
       },
       "narrative_hooks": [
         "beautiful textile-like geometry, neon tracers, stable attractors, amazing color salience and lucid ornamental clarity."
       ],
       "modes": [
-        "open",
+        "attractor",
         "open"
       ],
       "visual_recipe": {
         "primary_engines": [
-          "recursive_feedback",
-          "flow_field"
+          "kaleidoscope",
+          "recursive_feedback"
         ],
         "secondary_engines": [
           "organic_bloom"
         ],
-        "mode_default": "open",
+        "mode_default": "attractor",
         "palette": {
-          "tracers": "#63F3E8",
+          "tracers": "#C3FF4A",
           "energy": 0.4,
-          "contrast": 0.5
+          "contrast": 0.575
         },
         "parameter_bias": {
-          "symmetry_order": 0.35,
-          "feedback_strength": 0.4,
-          "recursion_gain": 0.3,
-          "turbulence": 0.2,
-          "trail_length": 0.425,
-          "edge_gain": 0.35,
-          "zoom_velocity": 0.05,
-          "displacement": 0.15,
-          "stability": 0.7,
+          "symmetry_order": 0.587,
+          "feedback_strength": 0.513,
+          "recursion_gain": 0.438,
+          "turbulence": 0.272,
+          "trail_length": 0.535,
+          "edge_gain": 0.49,
+          "zoom_velocity": 0.094,
+          "displacement": 0.194,
+          "stability": 0.77,
           "entropy": 0.25,
-          "palette_energy": 0.538,
-          "pattern_complexity": 0.35,
-          "depth_distortion": 0.3,
-          "bloom": 0.3
+          "palette_energy": 0.803,
+          "pattern_complexity": 0.5,
+          "depth_distortion": 0.355,
+          "bloom": 0.483
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.1,
             "intensity": 0.35
           },
           "peak": {
-            "duration_norm": 0.45,
+            "duration_norm": 0.4,
             "intensity": 1.0
           },
           "plateau": {
-            "duration_norm": 0.25,
+            "duration_norm": 0.2,
             "intensity": 0.75
           },
           "comedown": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.3,
             "intensity": 0.3
           }
         }
@@ -3942,7 +5064,8 @@
       "safety": {
         "max_flash_hz": 2.0,
         "max_luminance_delta": 0.35,
-        "reduced_motion_compatible": true
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
       }
     },
     {
@@ -3965,7 +5088,7 @@
         }
       ],
       "motifs": {
-        "geometry": 0.125,
+        "geometry": 0.25,
         "entities": 0.0,
         "color_light": 0.0,
         "space_void": 0.0,
@@ -3978,54 +5101,54 @@
         "deep analytic patterns held for long stretches, complex mosaics, cosmic geometry, profound focus and awe without terror."
       ],
       "modes": [
-        "open",
+        "power",
         "open"
       ],
       "visual_recipe": {
         "primary_engines": [
           "recursive_feedback",
-          "flow_field"
+          "kaleidoscope"
         ],
         "secondary_engines": [
-          "organic_bloom"
+          "entity_lattice"
         ],
-        "mode_default": "open",
+        "mode_default": "power",
         "palette": {
-          "tracers": "#63F3E8",
+          "tracers": "#9DFF6A",
           "energy": 0.4,
-          "contrast": 0.5375
+          "contrast": 0.575
         },
         "parameter_bias": {
-          "symmetry_order": 0.419,
-          "feedback_strength": 0.456,
-          "recursion_gain": 0.369,
-          "turbulence": 0.2,
-          "trail_length": 0.3,
-          "edge_gain": 0.406,
-          "zoom_velocity": 0.05,
+          "symmetry_order": 0.487,
+          "feedback_strength": 0.593,
+          "recursion_gain": 0.538,
+          "turbulence": 0.29,
+          "trail_length": 0.395,
+          "edge_gain": 0.434,
+          "zoom_velocity": 0.102,
           "displacement": 0.15,
-          "stability": 0.7,
+          "stability": 0.746,
           "entropy": 0.25,
-          "palette_energy": 0.4,
-          "pattern_complexity": 0.425,
-          "depth_distortion": 0.3,
-          "bloom": 0.2
+          "palette_energy": 0.495,
+          "pattern_complexity": 0.65,
+          "depth_distortion": 0.365,
+          "bloom": 0.329
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.111,
             "intensity": 0.35
           },
           "peak": {
-            "duration_norm": 0.45,
+            "duration_norm": 0.37,
             "intensity": 1.0
           },
           "plateau": {
-            "duration_norm": 0.25,
+            "duration_norm": 0.222,
             "intensity": 0.75
           },
           "comedown": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.296,
             "intensity": 0.3
           }
         }
@@ -4033,7 +5156,8 @@
       "safety": {
         "max_flash_hz": 2.0,
         "max_luminance_delta": 0.35,
-        "reduced_motion_compatible": true
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
       }
     },
     {
@@ -4058,7 +5182,7 @@
       "motifs": {
         "geometry": 0.375,
         "entities": 0.0,
-        "color_light": 0.125,
+        "color_light": 0.25,
         "space_void": 0.0,
         "body_somatic": 0.0,
         "time_memory": 0.125,
@@ -4082,7 +5206,7 @@
         ],
         "mode_default": "attractor",
         "palette": {
-          "tracers": "#63F3E8",
+          "tracers": "#5CE1FF",
           "energy": 0.4,
           "contrast": 0.6125
         },
@@ -4090,33 +5214,33 @@
           "symmetry_order": 0.556,
           "feedback_strength": 0.569,
           "recursion_gain": 0.506,
-          "turbulence": 0.2,
-          "trail_length": 0.362,
-          "edge_gain": 0.519,
-          "zoom_velocity": 0.05,
+          "turbulence": 0.182,
+          "trail_length": 0.517,
+          "edge_gain": 0.424,
+          "zoom_velocity": 0.098,
           "displacement": 0.15,
-          "stability": 0.7,
+          "stability": 0.858,
           "entropy": 0.25,
-          "palette_energy": 0.469,
+          "palette_energy": 0.673,
           "pattern_complexity": 0.575,
-          "depth_distortion": 0.3,
-          "bloom": 0.25
+          "depth_distortion": 0.36,
+          "bloom": 0.459
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.071,
             "intensity": 0.35
           },
           "peak": {
-            "duration_norm": 0.45,
+            "duration_norm": 0.357,
             "intensity": 1.0
           },
           "plateau": {
-            "duration_norm": 0.25,
+            "duration_norm": 0.286,
             "intensity": 0.75
           },
           "comedown": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.286,
             "intensity": 0.3
           }
         }
@@ -4124,7 +5248,8 @@
       "safety": {
         "max_flash_hz": 2.0,
         "max_luminance_delta": 0.35,
-        "reduced_motion_compatible": true
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
       }
     },
     {
@@ -4181,41 +5306,42 @@
           "symmetry_order": 0.35,
           "feedback_strength": 0.4,
           "recursion_gain": 0.3,
-          "turbulence": 0.2,
-          "trail_length": 0.3,
-          "edge_gain": 0.35,
-          "zoom_velocity": 0.05,
+          "turbulence": 0.318,
+          "trail_length": 0.39,
+          "edge_gain": 0.341,
+          "zoom_velocity": 0.128,
           "displacement": 0.15,
-          "stability": 0.7,
+          "stability": 0.692,
           "entropy": 0.25,
-          "palette_energy": 0.4,
+          "palette_energy": 0.475,
           "pattern_complexity": 0.35,
-          "depth_distortion": 0.3,
-          "bloom": 0.2
+          "depth_distortion": 0.398,
+          "bloom": 0.299
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
-            "intensity": 0.35
+            "duration_norm": 0.062,
+            "intensity": 0.55
           },
           "peak": {
-            "duration_norm": 0.45,
+            "duration_norm": 0.312,
             "intensity": 1.0
           },
           "plateau": {
-            "duration_norm": 0.25,
-            "intensity": 0.75
+            "duration_norm": 0.156,
+            "intensity": 0.7
           },
           "comedown": {
-            "duration_norm": 0.15,
-            "intensity": 0.3
+            "duration_norm": 0.469,
+            "intensity": 0.25
           }
         }
       },
       "safety": {
-        "max_flash_hz": 2.0,
+        "max_flash_hz": 1.5,
         "max_luminance_delta": 0.35,
-        "reduced_motion_compatible": true
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
       }
     },
     {
@@ -4272,41 +5398,42 @@
           "symmetry_order": 0.35,
           "feedback_strength": 0.4,
           "recursion_gain": 0.369,
-          "turbulence": 0.2,
-          "trail_length": 0.3,
-          "edge_gain": 0.35,
-          "zoom_velocity": 0.094,
+          "turbulence": 0.318,
+          "trail_length": 0.39,
+          "edge_gain": 0.341,
+          "zoom_velocity": 0.172,
           "displacement": 0.15,
-          "stability": 0.681,
+          "stability": 0.673,
           "entropy": 0.312,
-          "palette_energy": 0.4,
+          "palette_energy": 0.475,
           "pattern_complexity": 0.35,
-          "depth_distortion": 0.369,
-          "bloom": 0.2
+          "depth_distortion": 0.467,
+          "bloom": 0.299
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
-            "intensity": 0.35
+            "duration_norm": 0.062,
+            "intensity": 0.55
           },
           "peak": {
-            "duration_norm": 0.45,
+            "duration_norm": 0.312,
             "intensity": 1.0
           },
           "plateau": {
-            "duration_norm": 0.25,
-            "intensity": 0.75
+            "duration_norm": 0.156,
+            "intensity": 0.7
           },
           "comedown": {
-            "duration_norm": 0.15,
-            "intensity": 0.3
+            "duration_norm": 0.469,
+            "intensity": 0.25
           }
         }
       },
       "safety": {
-        "max_flash_hz": 2.0,
+        "max_flash_hz": 1.5,
         "max_luminance_delta": 0.35,
-        "reduced_motion_compatible": true
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
       }
     },
     {
@@ -4363,33 +5490,33 @@
           "symmetry_order": 0.35,
           "feedback_strength": 0.4,
           "recursion_gain": 0.3,
-          "turbulence": 0.2,
-          "trail_length": 0.3,
-          "edge_gain": 0.35,
-          "zoom_velocity": 0.05,
+          "turbulence": 0.275,
+          "trail_length": 0.39,
+          "edge_gain": 0.317,
+          "zoom_velocity": 0.114,
           "displacement": 0.15,
-          "stability": 0.7,
+          "stability": 0.748,
           "entropy": 0.25,
-          "palette_energy": 0.4,
+          "palette_energy": 0.5,
           "pattern_complexity": 0.35,
-          "depth_distortion": 0.3,
-          "bloom": 0.2
+          "depth_distortion": 0.38,
+          "bloom": 0.332
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.07,
             "intensity": 0.35
           },
           "peak": {
-            "duration_norm": 0.45,
+            "duration_norm": 0.279,
             "intensity": 1.0
           },
           "plateau": {
-            "duration_norm": 0.25,
-            "intensity": 0.75
+            "duration_norm": 0.372,
+            "intensity": 0.8
           },
           "comedown": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.279,
             "intensity": 0.3
           }
         }
@@ -4397,7 +5524,8 @@
       "safety": {
         "max_flash_hz": 2.0,
         "max_luminance_delta": 0.35,
-        "reduced_motion_compatible": true
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
       }
     },
     {
@@ -4454,33 +5582,33 @@
           "symmetry_order": 0.419,
           "feedback_strength": 0.456,
           "recursion_gain": 0.369,
-          "turbulence": 0.2,
-          "trail_length": 0.3,
-          "edge_gain": 0.406,
-          "zoom_velocity": 0.05,
+          "turbulence": 0.275,
+          "trail_length": 0.39,
+          "edge_gain": 0.373,
+          "zoom_velocity": 0.114,
           "displacement": 0.15,
-          "stability": 0.7,
+          "stability": 0.748,
           "entropy": 0.25,
-          "palette_energy": 0.4,
+          "palette_energy": 0.5,
           "pattern_complexity": 0.425,
-          "depth_distortion": 0.3,
-          "bloom": 0.2
+          "depth_distortion": 0.38,
+          "bloom": 0.332
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.07,
             "intensity": 0.35
           },
           "peak": {
-            "duration_norm": 0.45,
+            "duration_norm": 0.279,
             "intensity": 1.0
           },
           "plateau": {
-            "duration_norm": 0.25,
-            "intensity": 0.75
+            "duration_norm": 0.372,
+            "intensity": 0.8
           },
           "comedown": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.279,
             "intensity": 0.3
           }
         }
@@ -4488,7 +5616,8 @@
       "safety": {
         "max_flash_hz": 2.0,
         "max_luminance_delta": 0.35,
-        "reduced_motion_compatible": true
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
       }
     },
     {
@@ -4515,7 +5644,7 @@
         "entities": 0.0,
         "color_light": 0.375,
         "space_void": 0.0,
-        "body_somatic": 0.0,
+        "body_somatic": 0.25,
         "time_memory": 0.0,
         "nature": 0.125,
         "machines": 0.0
@@ -4529,15 +5658,15 @@
       ],
       "visual_recipe": {
         "primary_engines": [
-          "recursive_feedback",
+          "organic_bloom",
           "flow_field"
         ],
         "secondary_engines": [
-          "organic_bloom"
+          "recursive_feedback"
         ],
         "mode_default": "open",
         "palette": {
-          "tracers": "#63F3E8",
+          "tracers": "#FF8FB3",
           "energy": 0.4,
           "contrast": 0.5
         },
@@ -4545,33 +5674,33 @@
           "symmetry_order": 0.35,
           "feedback_strength": 0.4,
           "recursion_gain": 0.3,
-          "turbulence": 0.2,
-          "trail_length": 0.487,
-          "edge_gain": 0.35,
-          "zoom_velocity": 0.05,
+          "turbulence": 0.325,
+          "trail_length": 0.612,
+          "edge_gain": 0.203,
+          "zoom_velocity": 0.098,
           "displacement": 0.194,
-          "stability": 0.7,
+          "stability": 0.782,
           "entropy": 0.25,
-          "palette_energy": 0.606,
-          "pattern_complexity": 0.35,
-          "depth_distortion": 0.3,
-          "bloom": 0.35
+          "palette_energy": 0.961,
+          "pattern_complexity": 0.27,
+          "depth_distortion": 0.36,
+          "bloom": 0.821
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.077,
             "intensity": 0.35
           },
           "peak": {
-            "duration_norm": 0.45,
+            "duration_norm": 0.385,
             "intensity": 1.0
           },
           "plateau": {
-            "duration_norm": 0.25,
+            "duration_norm": 0.231,
             "intensity": 0.75
           },
           "comedown": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.308,
             "intensity": 0.3
           }
         }
@@ -4579,7 +5708,8 @@
       "safety": {
         "max_flash_hz": 2.0,
         "max_luminance_delta": 0.35,
-        "reduced_motion_compatible": true
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
       }
     },
     {
@@ -4606,7 +5736,7 @@
         "entities": 0.0,
         "color_light": 0.25,
         "space_void": 0.0,
-        "body_somatic": 0.125,
+        "body_somatic": 0.25,
         "time_memory": 0.0,
         "nature": 0.0,
         "machines": 0.0
@@ -4620,15 +5750,15 @@
       ],
       "visual_recipe": {
         "primary_engines": [
-          "recursive_feedback",
+          "organic_bloom",
           "flow_field"
         ],
         "secondary_engines": [
-          "organic_bloom"
+          "recursive_feedback"
         ],
         "mode_default": "open",
         "palette": {
-          "tracers": "#63F3E8",
+          "tracers": "#FF6B9D",
           "energy": 0.4,
           "contrast": 0.5
         },
@@ -4636,41 +5766,42 @@
           "symmetry_order": 0.35,
           "feedback_strength": 0.4,
           "recursion_gain": 0.3,
-          "turbulence": 0.225,
-          "trail_length": 0.425,
-          "edge_gain": 0.35,
-          "zoom_velocity": 0.05,
+          "turbulence": 0.328,
+          "trail_length": 0.558,
+          "edge_gain": 0.157,
+          "zoom_velocity": 0.09,
           "displacement": 0.15,
-          "stability": 0.7,
+          "stability": 0.792,
           "entropy": 0.25,
-          "palette_energy": 0.538,
-          "pattern_complexity": 0.35,
-          "depth_distortion": 0.3,
-          "bloom": 0.3
+          "palette_energy": 0.873,
+          "pattern_complexity": 0.2,
+          "depth_distortion": 0.35,
+          "bloom": 0.763
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
-            "intensity": 0.35
+            "duration_norm": 0.1,
+            "intensity": 0.4
           },
           "peak": {
-            "duration_norm": 0.45,
-            "intensity": 1.0
+            "duration_norm": 0.4,
+            "intensity": 0.95
           },
           "plateau": {
-            "duration_norm": 0.25,
-            "intensity": 0.75
+            "duration_norm": 0.2,
+            "intensity": 0.8
           },
           "comedown": {
-            "duration_norm": 0.15,
-            "intensity": 0.3
+            "duration_norm": 0.3,
+            "intensity": 0.35
           }
         }
       },
       "safety": {
         "max_flash_hz": 2.0,
         "max_luminance_delta": 0.35,
-        "reduced_motion_compatible": true
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
       }
     },
     {
@@ -4697,7 +5828,7 @@
         "entities": 0.0,
         "color_light": 0.125,
         "space_void": 0.0,
-        "body_somatic": 0.0,
+        "body_somatic": 0.25,
         "time_memory": 0.0,
         "nature": 0.0,
         "machines": 0.0
@@ -4711,15 +5842,15 @@
       ],
       "visual_recipe": {
         "primary_engines": [
-          "recursive_feedback",
+          "organic_bloom",
           "flow_field"
         ],
         "secondary_engines": [
-          "organic_bloom"
+          "recursive_feedback"
         ],
         "mode_default": "open",
         "palette": {
-          "tracers": "#63F3E8",
+          "tracers": "#FF6B9D",
           "energy": 0.4,
           "contrast": 0.5
         },
@@ -4727,41 +5858,42 @@
           "symmetry_order": 0.35,
           "feedback_strength": 0.4,
           "recursion_gain": 0.3,
-          "turbulence": 0.2,
-          "trail_length": 0.362,
-          "edge_gain": 0.35,
-          "zoom_velocity": 0.05,
+          "turbulence": 0.328,
+          "trail_length": 0.495,
+          "edge_gain": 0.157,
+          "zoom_velocity": 0.09,
           "displacement": 0.15,
-          "stability": 0.7,
+          "stability": 0.792,
           "entropy": 0.25,
-          "palette_energy": 0.469,
-          "pattern_complexity": 0.35,
-          "depth_distortion": 0.3,
-          "bloom": 0.25
+          "palette_energy": 0.804,
+          "pattern_complexity": 0.2,
+          "depth_distortion": 0.35,
+          "bloom": 0.712
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
-            "intensity": 0.35
+            "duration_norm": 0.1,
+            "intensity": 0.4
           },
           "peak": {
-            "duration_norm": 0.45,
-            "intensity": 1.0
+            "duration_norm": 0.4,
+            "intensity": 0.95
           },
           "plateau": {
-            "duration_norm": 0.25,
-            "intensity": 0.75
+            "duration_norm": 0.2,
+            "intensity": 0.8
           },
           "comedown": {
-            "duration_norm": 0.15,
-            "intensity": 0.3
+            "duration_norm": 0.3,
+            "intensity": 0.35
           }
         }
       },
       "safety": {
         "max_flash_hz": 2.0,
         "max_luminance_delta": 0.35,
-        "reduced_motion_compatible": true
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
       }
     },
     {
@@ -4784,10 +5916,10 @@
         }
       ],
       "motifs": {
-        "geometry": 0.0,
+        "geometry": 0.125,
         "entities": 0.0,
         "color_light": 0.125,
-        "space_void": 0.125,
+        "space_void": 0.25,
         "body_somatic": 0.0,
         "time_memory": 0.0,
         "nature": 0.0,
@@ -4797,54 +5929,54 @@
         "soft dissociative corridors, warm floating drift, muted colorful mosaic, peaceful detachment and smooth void depth."
       ],
       "modes": [
-        "open",
+        "void",
         "open"
       ],
       "visual_recipe": {
         "primary_engines": [
-          "recursive_feedback",
-          "flow_field"
+          "flow_field",
+          "void_expansion"
         ],
         "secondary_engines": [
           "organic_bloom"
         ],
-        "mode_default": "open",
+        "mode_default": "void",
         "palette": {
-          "tracers": "#63F3E8",
+          "tracers": "#8BB8D8",
           "energy": 0.4,
-          "contrast": 0.5
+          "contrast": 0.5375
         },
         "parameter_bias": {
-          "symmetry_order": 0.35,
-          "feedback_strength": 0.4,
-          "recursion_gain": 0.369,
-          "turbulence": 0.2,
-          "trail_length": 0.362,
-          "edge_gain": 0.35,
-          "zoom_velocity": 0.094,
+          "symmetry_order": 0.419,
+          "feedback_strength": 0.456,
+          "recursion_gain": 0.438,
+          "turbulence": 0.213,
+          "trail_length": 0.382,
+          "edge_gain": 0.403,
+          "zoom_velocity": 0.286,
           "displacement": 0.15,
-          "stability": 0.681,
-          "entropy": 0.312,
-          "palette_energy": 0.469,
-          "pattern_complexity": 0.35,
-          "depth_distortion": 0.369,
-          "bloom": 0.25
+          "stability": 0.696,
+          "entropy": 0.375,
+          "palette_energy": 0.394,
+          "pattern_complexity": 0.425,
+          "depth_distortion": 0.643,
+          "bloom": 0.251
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
-            "intensity": 0.35
+            "duration_norm": 0.059,
+            "intensity": 0.4
           },
           "peak": {
-            "duration_norm": 0.45,
-            "intensity": 1.0
+            "duration_norm": 0.353,
+            "intensity": 0.9
           },
           "plateau": {
-            "duration_norm": 0.25,
-            "intensity": 0.75
+            "duration_norm": 0.235,
+            "intensity": 0.65
           },
           "comedown": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.353,
             "intensity": 0.3
           }
         }
@@ -4852,7 +5984,8 @@
       "safety": {
         "max_flash_hz": 2.0,
         "max_luminance_delta": 0.35,
-        "reduced_motion_compatible": true
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
       }
     },
     {
@@ -4910,25 +6043,25 @@
           "symmetry_order": 0.35,
           "feedback_strength": 0.4,
           "recursion_gain": 0.3,
-          "turbulence": 0.2,
-          "trail_length": 0.3,
-          "edge_gain": 0.35,
-          "zoom_velocity": 0.05,
-          "displacement": 0.15,
-          "stability": 0.7,
+          "turbulence": 0.253,
+          "trail_length": 0.395,
+          "edge_gain": 0.242,
+          "zoom_velocity": 0.11,
+          "displacement": 0.23,
+          "stability": 0.758,
           "entropy": 0.25,
-          "palette_energy": 0.4,
+          "palette_energy": 0.525,
           "pattern_complexity": 0.35,
-          "depth_distortion": 0.3,
-          "bloom": 0.2
+          "depth_distortion": 0.375,
+          "bloom": 0.485
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.083,
             "intensity": 0.35
           },
           "peak": {
-            "duration_norm": 0.45,
+            "duration_norm": 0.333,
             "intensity": 1.0
           },
           "plateau": {
@@ -4936,7 +6069,7 @@
             "intensity": 0.75
           },
           "comedown": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.333,
             "intensity": 0.3
           }
         }
@@ -4944,7 +6077,8 @@
       "safety": {
         "max_flash_hz": 2.0,
         "max_luminance_delta": 0.35,
-        "reduced_motion_compatible": true
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
       }
     },
     {
@@ -4969,7 +6103,7 @@
       "motifs": {
         "geometry": 0.0,
         "entities": 0.0,
-        "color_light": 0.0,
+        "color_light": 0.125,
         "space_void": 0.0,
         "body_somatic": 0.125,
         "time_memory": 0.0,
@@ -5002,25 +6136,25 @@
           "symmetry_order": 0.35,
           "feedback_strength": 0.4,
           "recursion_gain": 0.3,
-          "turbulence": 0.225,
-          "trail_length": 0.3,
-          "edge_gain": 0.35,
-          "zoom_velocity": 0.05,
-          "displacement": 0.15,
-          "stability": 0.7,
+          "turbulence": 0.278,
+          "trail_length": 0.457,
+          "edge_gain": 0.242,
+          "zoom_velocity": 0.11,
+          "displacement": 0.23,
+          "stability": 0.758,
           "entropy": 0.25,
-          "palette_energy": 0.4,
+          "palette_energy": 0.594,
           "pattern_complexity": 0.35,
-          "depth_distortion": 0.3,
-          "bloom": 0.2
+          "depth_distortion": 0.375,
+          "bloom": 0.554
         },
         "phase_profile": {
           "comeup": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.083,
             "intensity": 0.35
           },
           "peak": {
-            "duration_norm": 0.45,
+            "duration_norm": 0.333,
             "intensity": 1.0
           },
           "plateau": {
@@ -5028,7 +6162,7 @@
             "intensity": 0.75
           },
           "comedown": {
-            "duration_norm": 0.15,
+            "duration_norm": 0.333,
             "intensity": 0.3
           }
         }
@@ -5036,7 +6170,8 @@
       "safety": {
         "max_flash_hz": 2.0,
         "max_luminance_delta": 0.35,
-        "reduced_motion_compatible": true
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
       }
     }
   ]

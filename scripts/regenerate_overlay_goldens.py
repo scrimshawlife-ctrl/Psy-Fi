@@ -25,6 +25,9 @@ SUBSTANCES = (
     "mxe",
     "mda",
     "pcp",
+    "eth-lad",
+    "jhana",
+    "dxm",
 )
 
 

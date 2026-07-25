@@ -7,275 +7,338 @@
   "steps": 8,
   "substances": {
     "lsd": {
-      "snapshot_hash": "98a56240fbf60ca8",
-      "timeline_hash": "cd99a821ab5332ca",
+      "snapshot_hash": "66d7c0adf14d6f02",
+      "timeline_hash": "4870ea81e913db41",
       "palette_tracers": "#3EE7F2",
-      "pattern_complexity": 0.4041,
-      "symmetry_order": 0.534,
+      "pattern_complexity": 0.4505,
+      "symmetry_order": 0.62,
       "top_engines": [
         {
           "name": "recursive_feedback",
-          "weight": 0.3758
+          "weight": 0.3775
         },
         {
           "name": "kaleidoscope",
-          "weight": 0.2823
+          "weight": 0.3485
         },
         {
           "name": "organic_bloom",
-          "weight": 0.1541
+          "weight": 0.1384
         }
       ]
     },
     "psilocybin": {
-      "snapshot_hash": "a80aeec6a5a93ba6",
-      "timeline_hash": "fe737d2f1f67e6e5",
+      "snapshot_hash": "2561f9d40ec7fe7e",
+      "timeline_hash": "4af61c7f1fe48e5f",
       "palette_tracers": "#8F7BFF",
-      "pattern_complexity": 0.3021,
+      "pattern_complexity": 0.3397,
       "symmetry_order": 0.407,
       "top_engines": [
         {
           "name": "organic_bloom",
-          "weight": 0.4032
+          "weight": 0.3916
         },
         {
           "name": "recursive_feedback",
-          "weight": 0.2499
+          "weight": 0.2587
         },
         {
           "name": "flow_field",
-          "weight": 0.2213
+          "weight": 0.217
         }
       ]
     },
     "dmt": {
-      "snapshot_hash": "214e992234ca8504",
-      "timeline_hash": "f3c3782ac12218d5",
+      "snapshot_hash": "2f8b8b478e03055a",
+      "timeline_hash": "a60bbcc32cfc2c9e",
       "palette_tracers": "#FF42C1",
-      "pattern_complexity": 0.4173,
-      "symmetry_order": 0.467,
+      "pattern_complexity": 0.368,
+      "symmetry_order": 0.476,
       "top_engines": [
         {
           "name": "recursive_feedback",
-          "weight": 0.3857
+          "weight": 0.3963
         },
         {
           "name": "entity_lattice",
-          "weight": 0.3317
+          "weight": 0.3161
         },
         {
           "name": "kaleidoscope",
-          "weight": 0.1759
+          "weight": 0.1913
         }
       ]
     },
     "5-meo-dmt": {
-      "snapshot_hash": "2af8e9aade9029c9",
-      "timeline_hash": "3260f6e38d9118bd",
+      "snapshot_hash": "5594b21f6b556cfa",
+      "timeline_hash": "55b4bac0588cfa0c",
       "palette_tracers": "#FFFFFF",
-      "pattern_complexity": 0.2787,
+      "pattern_complexity": 0.0667,
       "symmetry_order": 0.377,
       "top_engines": [
         {
           "name": "void_expansion",
-          "weight": 0.5462
+          "weight": 0.5996
         },
         {
           "name": "organic_bloom",
-          "weight": 0.2591
+          "weight": 0.273
         },
         {
-          "name": "flow_field",
-          "weight": 0.1121
+          "name": "recursive_feedback",
+          "weight": 0.0826
         }
       ]
     },
     "mescaline": {
-      "snapshot_hash": "8d0652e6f65b8dab",
-      "timeline_hash": "4f9c83b412bcff09",
+      "snapshot_hash": "443a219f2e4cf202",
+      "timeline_hash": "78faaac2b6d4783b",
       "palette_tracers": "#FFB547",
-      "pattern_complexity": 0.572,
+      "pattern_complexity": 0.4605,
       "symmetry_order": 0.744,
       "top_engines": [
         {
           "name": "kaleidoscope",
-          "weight": 0.3809
+          "weight": 0.3864
         },
         {
           "name": "recursive_feedback",
-          "weight": 0.3726
+          "weight": 0.3777
         },
         {
           "name": "organic_bloom",
-          "weight": 0.1309
+          "weight": 0.1392
         }
       ]
     },
     "ketamine": {
-      "snapshot_hash": "89515845892eaefe",
-      "timeline_hash": "8fb7195baa69109f",
+      "snapshot_hash": "64c72fe50b216c32",
+      "timeline_hash": "94baaddea00e8c40",
       "palette_tracers": "#7EC8E3",
-      "pattern_complexity": 0.3887,
+      "pattern_complexity": 0.3341,
       "symmetry_order": 0.515,
       "top_engines": [
         {
           "name": "flow_field",
-          "weight": 0.4343
+          "weight": 0.4402
         },
         {
           "name": "void_expansion",
-          "weight": 0.315
+          "weight": 0.3206
         },
         {
           "name": "recursive_feedback",
-          "weight": 0.2164
+          "weight": 0.2255
         }
       ]
     },
     "mdma": {
-      "snapshot_hash": "854c9f381ec25a8b",
-      "timeline_hash": "a2ed9ef8ed0b259b",
-      "palette_tracers": "#63F3E8",
-      "pattern_complexity": 0.2948,
-      "symmetry_order": 0.398,
+      "snapshot_hash": "19391b1984062d8b",
+      "timeline_hash": "892d037f8045328e",
+      "palette_tracers": "#FF6B9D",
+      "pattern_complexity": 0.1737,
+      "symmetry_order": 0.423,
       "top_engines": [
         {
-          "name": "recursive_feedback",
-          "weight": 0.3487
-        },
-        {
-          "name": "kaleidoscope",
-          "weight": 0.2393
+          "name": "organic_bloom",
+          "weight": 0.4249
         },
         {
           "name": "flow_field",
-          "weight": 0.2238
+          "weight": 0.2813
+        },
+        {
+          "name": "recursive_feedback",
+          "weight": 0.2242
         }
       ]
     },
     "2c-b": {
-      "snapshot_hash": "84a5def7eece1347",
-      "timeline_hash": "a65ed651c9b12361",
-      "palette_tracers": "#63F3E8",
-      "pattern_complexity": 0.484,
-      "symmetry_order": 0.634,
+      "snapshot_hash": "9b37ea290d66dc81",
+      "timeline_hash": "158e5b8550327198",
+      "palette_tracers": "#C3FF4A",
+      "pattern_complexity": 0.464,
+      "symmetry_order": 0.793,
       "top_engines": [
         {
-          "name": "recursive_feedback",
-          "weight": 0.3726
-        },
-        {
           "name": "kaleidoscope",
-          "weight": 0.3319
+          "weight": 0.3894
         },
         {
-          "name": "flow_field",
-          "weight": 0.1646
+          "name": "recursive_feedback",
+          "weight": 0.3618
+        },
+        {
+          "name": "organic_bloom",
+          "weight": 0.1459
         }
       ]
     },
     "2c-e": {
-      "snapshot_hash": "320d30186d215f09",
-      "timeline_hash": "99b782b44ddbadc8",
-      "palette_tracers": "#63F3E8",
-      "pattern_complexity": 0.5317,
-      "symmetry_order": 0.694,
+      "snapshot_hash": "72bb32c4b493505f",
+      "timeline_hash": "5dec412dcb104416",
+      "palette_tracers": "#9DFF6A",
+      "pattern_complexity": 0.5193,
+      "symmetry_order": 0.751,
       "top_engines": [
         {
           "name": "recursive_feedback",
-          "weight": 0.3792
+          "weight": 0.3715
+        },
+        {
+          "name": "entity_lattice",
+          "weight": 0.3153
         },
         {
           "name": "kaleidoscope",
-          "weight": 0.3235
-        },
-        {
-          "name": "flow_field",
-          "weight": 0.1328
+          "weight": 0.2298
         }
       ]
     },
     "al-lad": {
-      "snapshot_hash": "a3074f304ab34087",
-      "timeline_hash": "95d5e03fbf2cfe12",
-      "palette_tracers": "#63F3E8",
-      "pattern_complexity": 0.517,
-      "symmetry_order": 0.675,
+      "snapshot_hash": "145a437912c01a2b",
+      "timeline_hash": "226a75fe12c4d3c2",
+      "palette_tracers": "#5CE1FF",
+      "pattern_complexity": 0.4346,
+      "symmetry_order": 0.67,
       "top_engines": [
         {
-          "name": "recursive_feedback",
-          "weight": 0.3902
-        },
-        {
           "name": "kaleidoscope",
-          "weight": 0.3633
+          "weight": 0.3796
         },
         {
-          "name": "flow_field",
-          "weight": 0.1332
+          "name": "recursive_feedback",
+          "weight": 0.3787
+        },
+        {
+          "name": "organic_bloom",
+          "weight": 0.1429
         }
       ]
     },
     "mxe": {
-      "snapshot_hash": "770c16e28beb87ad",
-      "timeline_hash": "66a6e7cb9174398f",
-      "palette_tracers": "#63F3E8",
-      "pattern_complexity": 0.3153,
-      "symmetry_order": 0.423,
+      "snapshot_hash": "8b011030906ad79c",
+      "timeline_hash": "cb61d98175017fc7",
+      "palette_tracers": "#8BB8D8",
+      "pattern_complexity": 0.2823,
+      "symmetry_order": 0.457,
       "top_engines": [
         {
-          "name": "void_expansion",
-          "weight": 0.4393
+          "name": "flow_field",
+          "weight": 0.4328
         },
         {
-          "name": "organic_bloom",
-          "weight": 0.202
+          "name": "void_expansion",
+          "weight": 0.3299
         },
         {
           "name": "recursive_feedback",
-          "weight": 0.1906
+          "weight": 0.1389
         }
       ]
     },
     "mda": {
-      "snapshot_hash": "ac54e5b34be5b12e",
-      "timeline_hash": "674ded0c85ab7d9c",
-      "palette_tracers": "#63F3E8",
-      "pattern_complexity": 0.2567,
-      "symmetry_order": 0.35,
+      "snapshot_hash": "9867cc310d3a4d87",
+      "timeline_hash": "dd4804762f469c17",
+      "palette_tracers": "#FF8FB3",
+      "pattern_complexity": 0.214,
+      "symmetry_order": 0.433,
       "top_engines": [
         {
-          "name": "recursive_feedback",
-          "weight": 0.394
-        },
-        {
-          "name": "kaleidoscope",
-          "weight": 0.2187
+          "name": "organic_bloom",
+          "weight": 0.4187
         },
         {
           "name": "flow_field",
-          "weight": 0.2048
+          "weight": 0.2699
+        },
+        {
+          "name": "recursive_feedback",
+          "weight": 0.2286
         }
       ]
     },
     "pcp": {
-      "snapshot_hash": "a8f47d09a2ac9845",
-      "timeline_hash": "218ee7474af61946",
+      "snapshot_hash": "1df966976a61cf4a",
+      "timeline_hash": "d8b46f2d9f8277a8",
       "palette_tracers": "#A0FF9A",
-      "pattern_complexity": 0.2413,
+      "pattern_complexity": 0.2963,
       "symmetry_order": 0.324,
       "top_engines": [
         {
           "name": "flow_field",
-          "weight": 0.355
+          "weight": 0.3246
         },
         {
           "name": "recursive_feedback",
-          "weight": 0.3124
+          "weight": 0.3027
         },
         {
           "name": "organic_bloom",
-          "weight": 0.2182
+          "weight": 0.2335
+        }
+      ]
+    },
+    "eth-lad": {
+      "snapshot_hash": "045f660850b1c261",
+      "timeline_hash": "47cc2b3c2fa52c15",
+      "palette_tracers": "#E85CFF",
+      "pattern_complexity": 0.6111,
+      "symmetry_order": 0.897,
+      "top_engines": [
+        {
+          "name": "recursive_feedback",
+          "weight": 0.3646
+        },
+        {
+          "name": "entity_lattice",
+          "weight": 0.3087
+        },
+        {
+          "name": "kaleidoscope",
+          "weight": 0.2301
+        }
+      ]
+    },
+    "jhana": {
+      "snapshot_hash": "2fb2d318dae0bcf2",
+      "timeline_hash": "e1edebe9ed169ac1",
+      "palette_tracers": "#C9B6FF",
+      "pattern_complexity": 0.1516,
+      "symmetry_order": 0.446,
+      "top_engines": [
+        {
+          "name": "void_expansion",
+          "weight": 0.3478
+        },
+        {
+          "name": "flow_field",
+          "weight": 0.344
+        },
+        {
+          "name": "organic_bloom",
+          "weight": 0.1797
+        }
+      ]
+    },
+    "dxm": {
+      "snapshot_hash": "2e3caaadc8390f20",
+      "timeline_hash": "b5fa6d74336aa957",
+      "palette_tracers": "#6BA3C9",
+      "pattern_complexity": 0.2171,
+      "symmetry_order": 0.396,
+      "top_engines": [
+        {
+          "name": "flow_field",
+          "weight": 0.4386
+        },
+        {
+          "name": "void_expansion",
+          "weight": 0.3299
+        },
+        {
+          "name": "recursive_feedback",
+          "weight": 0.1492
         }
       ]
     }

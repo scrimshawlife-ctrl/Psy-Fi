@@ -18,32 +18,42 @@ LEXICON_PATH = OUT_DIR / "motif_lexicon.v1.json"
 
 MOTIF_PATTERNS = {
     "geometry": re.compile(
-        r"mandala|geometric|fractal|spiral|lattice|kaleidoscope|symmetry|tessellat|grid|hexagon|pattern|fleur",
+        r"mandala|geometric|fractal|spiral|lattice|kaleidoscope|symmetry|tessellat|grid|hexagon|"
+        r"pattern|fleur|ornamental|mosaic|chrysanthemum|cev|oev|afterimage|tracer",
         re.I,
     ),
     "entities": re.compile(
-        r"\bentity\b|\bentities\b|\bbeings?\b|\bfaces?\b|\bgod\b|presence|machine world|lattice presence",
+        r"\bentity\b|\bentities\b|\bbeings?\b|\bfaces?\b|\bgod\b|presence|machine world|"
+        r"lattice presence|pareidolia|angelic",
         re.I,
     ),
     "color_light": re.compile(
-        r"color|colour|neon|iridescent|rainbow|glow|lumin|chromatic|aurora|spectrum|magenta|cyan|opal|aura|vibrant",
+        r"color|colour|neon|iridescent|rainbow|glow|lumin|chromatic|aurora|spectrum|magenta|"
+        r"cyan|opal|aura|vibrant|synesthes|pastel|phosphor|halo",
         re.I,
     ),
     "space_void": re.compile(
-        r"void|space|tunnel|wormhole|portal|infinite|abyss|cosmos|universe|dimension|starfield|breakthrough",
+        r"void|space|tunnel|wormhole|portal|infinite|abyss|cosmos|universe|dimension|"
+        r"starfield|breakthrough|k-?hole|dissociat|whiteout|ego.?death",
         re.I,
     ),
     "body_somatic": re.compile(
-        r"body|skin|breath|heartbeat|somatic|dissolve|melt|vibrate|pulse|ego",
+        r"body|skin|breath|heartbeat|somatic|dissolve|melt|vibrate|pulse|ego|"
+        r"warmth|empath|tactile|touch|hug|music.?body|heart.?open",
         re.I,
     ),
-    "time_memory": re.compile(r"time|memory|loop|eternity|past|future|timeless|phase", re.I),
+    "time_memory": re.compile(
+        r"time|memory|loop|eternity|past|future|timeless|phase|duration|hold|linger",
+        re.I,
+    ),
     "nature": re.compile(
-        r"forest|tree|water|ocean|cloud|flower|floral|bird|plant|mountain|earth|organic|veil",
+        r"forest|tree|water|ocean|cloud|flower|floral|bird|plant|mountain|earth|organic|"
+        r"veil|desert|sunlit|textile|breathing.?wall",
         re.I,
     ),
     "machines": re.compile(
-        r"machine|circuit|code|digital|pixel|matrix|hyperdimensional|architecture",
+        r"machine|circuit|code|digital|pixel|matrix|hyperdimensional|architecture|"
+        r"glyph|language|download",
         re.I,
     ),
 }
@@ -59,12 +69,21 @@ def _hash(s: str) -> str:
     return "sha256:" + hashlib.sha256(s.encode("utf-8", errors="ignore")).hexdigest()[:16]
 
 
+def _markdown_windows(markdown: str, *, window: int = 5000) -> str:
+    """Sample head / mid / tail so long Erowid reports are not truncated to one slice."""
+    md = markdown or ""
+    if len(md) <= window * 2:
+        return md[: window * 2]
+    mid = max(0, (len(md) // 2) - (window // 2))
+    return "\n".join([md[:window], md[mid : mid + window], md[-window:]])
+
+
 def _text_of(d: dict) -> str:
     parts = [
         d.get("title") or "",
         d.get("description") or "",
         d.get("content") or "",
-        (d.get("markdown") or "")[:6000],
+        _markdown_windows(d.get("markdown") or ""),
         d.get("text") or "",
     ]
     text = " ".join(parts)
@@ -150,8 +169,122 @@ def _engines_for(motifs: dict[str, float], substance: str) -> tuple[list[str], l
         primary, secondary, mode = ["recursive_feedback", "kaleidoscope"], ["entity_lattice"], "power"
     if substance == "mxe":
         primary, secondary, mode = ["flow_field", "void_expansion"], ["organic_bloom"], "void"
+    if substance == "eth-lad":
+        primary, secondary, mode = ["recursive_feedback", "kaleidoscope"], ["entity_lattice"], "power"
+    if substance == "jhana":
+        primary, secondary, mode = ["void_expansion", "organic_bloom"], ["flow_field"], "void"
+    if substance == "dxm":
+        primary, secondary, mode = ["flow_field", "void_expansion"], ["organic_bloom"], "void"
 
     return primary, secondary, mode
+
+
+def _load_presets() -> dict[str, dict]:
+    path = ROOT / "psyfi_core" / "presets" / "substance_presets.json"
+    if not path.exists():
+        return {}
+    data = json.loads(path.read_text(encoding="utf-8"))
+    return {str(k).lower().replace("_", "-"): v for k, v in (data.get("presets") or {}).items()}
+
+
+def _phase_profile_for(substance: str) -> dict[str, dict[str, float]]:
+    """Normalize preset state_phases.duration_minutes into ParameterField phase norms."""
+    defaults = {
+        "comeup": {"duration_norm": 0.15, "intensity": 0.35},
+        "peak": {"duration_norm": 0.45, "intensity": 1.0},
+        "plateau": {"duration_norm": 0.25, "intensity": 0.75},
+        "comedown": {"duration_norm": 0.15, "intensity": 0.3},
+    }
+    # Short-acting tryptamines / dissociatives: front-loaded peak, brief plateau.
+    substance_defaults = {
+        "dmt": {
+            "comeup": {"duration_norm": 0.08, "intensity": 0.55},
+            "peak": {"duration_norm": 0.55, "intensity": 1.0},
+            "plateau": {"duration_norm": 0.2, "intensity": 0.7},
+            "comedown": {"duration_norm": 0.17, "intensity": 0.25},
+        },
+        "5-meo-dmt": {
+            "comeup": {"duration_norm": 0.06, "intensity": 0.5},
+            "peak": {"duration_norm": 0.6, "intensity": 1.0},
+            "plateau": {"duration_norm": 0.14, "intensity": 0.55},
+            "comedown": {"duration_norm": 0.2, "intensity": 0.2},
+        },
+        "ketamine": {
+            "comeup": {"duration_norm": 0.1, "intensity": 0.4},
+            "peak": {"duration_norm": 0.4, "intensity": 0.95},
+            "plateau": {"duration_norm": 0.3, "intensity": 0.7},
+            "comedown": {"duration_norm": 0.2, "intensity": 0.3},
+        },
+        "mxe": {
+            "comeup": {"duration_norm": 0.12, "intensity": 0.4},
+            "peak": {"duration_norm": 0.42, "intensity": 0.9},
+            "plateau": {"duration_norm": 0.28, "intensity": 0.65},
+            "comedown": {"duration_norm": 0.18, "intensity": 0.3},
+        },
+        "mdma": {
+            "comeup": {"duration_norm": 0.18, "intensity": 0.4},
+            "peak": {"duration_norm": 0.4, "intensity": 0.95},
+            "plateau": {"duration_norm": 0.25, "intensity": 0.8},
+            "comedown": {"duration_norm": 0.17, "intensity": 0.35},
+        },
+        "mescaline": {
+            "comeup": {"duration_norm": 0.2, "intensity": 0.3},
+            "peak": {"duration_norm": 0.35, "intensity": 1.0},
+            "plateau": {"duration_norm": 0.3, "intensity": 0.8},
+            "comedown": {"duration_norm": 0.15, "intensity": 0.3},
+        },
+        "lsd": {
+            "comeup": {"duration_norm": 0.12, "intensity": 0.35},
+            "peak": {"duration_norm": 0.3, "intensity": 1.0},
+            "plateau": {"duration_norm": 0.38, "intensity": 0.8},
+            "comedown": {"duration_norm": 0.2, "intensity": 0.3},
+        },
+    }
+    preset = _load_presets().get(substance) or {}
+    phases = preset.get("state_phases") or {}
+    order = ("comeup", "peak", "plateau", "comedown")
+    minutes = []
+    for name in order:
+        cfg = phases.get(name) or {}
+        minutes.append(float(cfg.get("duration_minutes") or 0.0))
+    total = sum(minutes)
+    base = substance_defaults.get(substance) or defaults
+    if total <= 0:
+        return {k: dict(v) for k, v in base.items()}
+    out: dict[str, dict[str, float]] = {}
+    for name, mins in zip(order, minutes, strict=True):
+        out[name] = {
+            "duration_norm": round(max(0.05, mins / total), 3),
+            "intensity": float(base[name]["intensity"]),
+        }
+    # Renormalize in case of rounding / floors.
+    norm_sum = sum(v["duration_norm"] for v in out.values()) or 1.0
+    for name in order:
+        out[name]["duration_norm"] = round(out[name]["duration_norm"] / norm_sum, 3)
+    return out
+
+
+def _emotion_param_delta(substance: str) -> dict[str, float]:
+    """Soft INFERRED bias from preset emotional_signature (never medical claims)."""
+    em = (_load_presets().get(substance) or {}).get("emotional_signature") or {}
+    if not em:
+        return {}
+    empathy = float(em.get("empathy_gain", 0.0))
+    arousal = float(em.get("arousal_level", 0.0))
+    anxiety = float(em.get("anxiety_tendency", 0.0))
+    ego = float(em.get("ego_boundary_softening", 0.0))
+    valence = float(em.get("valence_bias", 0.0))
+    coherence = float(em.get("thought_coherence", 0.0))
+    return {
+        "bloom": round(0.18 * empathy + 0.06 * max(0.0, valence), 3),
+        "trail_length": round(0.1 * empathy + 0.05 * max(0.0, arousal), 3),
+        "turbulence": round(0.1 * max(0.0, arousal) + 0.05 * anxiety, 3),
+        "stability": round(0.12 * coherence - 0.08 * anxiety, 3),
+        "palette_energy": round(0.1 * max(0.0, valence) + 0.1 * empathy, 3),
+        "zoom_velocity": round(0.08 * ego, 3),
+        "depth_distortion": round(0.1 * ego, 3),
+        "edge_gain": round(-0.08 * empathy + 0.05 * anxiety, 3),
+    }
 
 
 def _param_bias(motifs: dict[str, float], substance: str) -> dict[str, float]:
@@ -160,11 +293,12 @@ def _param_bias(motifs: dict[str, float], substance: str) -> dict[str, float]:
     v = motifs.get("space_void", 0)
     m = motifs.get("machines", 0)
     n = motifs.get("nature", 0)
-    return {
+    s = motifs.get("body_somatic", 0)
+    bias = {
         "symmetry_order": round(0.35 + 0.55 * g, 3),
         "feedback_strength": round(0.4 + 0.45 * max(g, m), 3),
         "recursion_gain": round(0.3 + 0.55 * max(m, g, v), 3),
-        "turbulence": round(0.2 + 0.4 * max(m, motifs.get("body_somatic", 0) * 0.5), 3),
+        "turbulence": round(0.2 + 0.4 * max(m, s * 0.5), 3),
         "trail_length": round(0.3 + 0.5 * c, 3),
         "edge_gain": round(0.35 + 0.45 * g, 3),
         "zoom_velocity": round(0.05 + 0.35 * v, 3),
@@ -174,8 +308,29 @@ def _param_bias(motifs: dict[str, float], substance: str) -> dict[str, float]:
         "palette_energy": round(0.4 + 0.55 * c, 3),
         "pattern_complexity": round(0.35 + 0.6 * max(g, m), 3),
         "depth_distortion": round(0.3 + 0.55 * v, 3),
-        "bloom": round(0.2 + 0.4 * c, 3),
+        "bloom": round(0.2 + 0.4 * c + 0.15 * s, 3),
     }
+    # Substance priors so thin overlays do not collapse toward LSD-geometry.
+    priors = {
+        "mdma": {"bloom": 0.2, "edge_gain": -0.12, "pattern_complexity": -0.15, "palette_energy": 0.15},
+        "mda": {"bloom": 0.22, "edge_gain": -0.08, "pattern_complexity": -0.08, "palette_energy": 0.18},
+        "2c-b": {"symmetry_order": 0.1, "palette_energy": 0.12, "edge_gain": 0.08},
+        "2c-e": {"pattern_complexity": 0.15, "recursion_gain": 0.1, "feedback_strength": 0.08},
+        "al-lad": {"turbulence": -0.08, "stability": 0.08, "edge_gain": -0.05},
+        "mxe": {"depth_distortion": 0.12, "palette_energy": -0.12, "bloom": -0.05, "zoom_velocity": 0.08},
+        "ketamine": {"depth_distortion": 0.15, "palette_energy": -0.1, "edge_gain": -0.1},
+        "5-meo-dmt": {"pattern_complexity": -0.25, "bloom": -0.05, "depth_distortion": 0.15},
+        "psilocybin": {"bloom": 0.12, "displacement": 0.08, "edge_gain": -0.06},
+        "mescaline": {"stability": 0.1, "edge_gain": 0.08, "palette_energy": 0.08},
+        "eth-lad": {"pattern_complexity": 0.12, "recursion_gain": 0.1, "symmetry_order": 0.08},
+        "jhana": {"bloom": 0.1, "turbulence": -0.15, "stability": 0.18, "pattern_complexity": -0.2},
+        "dxm": {"depth_distortion": 0.12, "palette_energy": -0.1, "pattern_complexity": -0.08},
+    }
+    for key, delta in (priors.get(substance) or {}).items():
+        bias[key] = round(max(0.0, min(1.0, bias.get(key, 0.5) + delta)), 3)
+    for key, delta in _emotion_param_delta(substance).items():
+        bias[key] = round(max(0.0, min(1.0, bias.get(key, 0.5) + delta)), 3)
+    return bias
 
 
 TRACERS = {
@@ -192,6 +347,9 @@ TRACERS = {
     "2c-e": "#9DFF6A",
     "al-lad": "#5CE1FF",
     "mxe": "#8BB8D8",
+    "eth-lad": "#E85CFF",
+    "jhana": "#C9B6FF",
+    "dxm": "#6BA3C9",
     "baseline": "#63F3E8",
 }
 
@@ -323,6 +481,58 @@ def seed_recipes() -> list[dict]:
          ["organic_bloom", "recursive_feedback"], ["flow_field"],
          {"color_light": 0.9, "body_somatic": 0.65, "nature": 0.35},
          ["luminous empathic field; elevated glow with soft organic motion"]),
+        ("mdma", "music_tactile", "Music-Tactile Warm Field", "open",
+         ["organic_bloom", "flow_field"], ["recursive_feedback"],
+         {"body_somatic": 0.85, "color_light": 0.8, "time_memory": 0.35, "geometry": 0.25},
+         ["music-coupled tactile warmth; bloom over lattice; soft social chroma"]),
+        ("mdma", "afterglow_haze", "Soft Afterglow Haze", "open",
+         ["organic_bloom"], ["flow_field"],
+         {"color_light": 0.7, "body_somatic": 0.55, "nature": 0.4, "geometry": 0.2},
+         ["gentle afterglow haze; low edge gain and lingering empathic bloom"]),
+        ("mda", "visionary_rose", "Visionary Rose Glow", "attractor",
+         ["organic_bloom", "kaleidoscope"], ["flow_field"],
+         {"color_light": 0.95, "geometry": 0.45, "body_somatic": 0.55},
+         ["rose-gold visionary glow with soft ornamental hints, not hard lattice"]),
+        ("2c-b", "playful_chroma", "Playful Chroma Pop", "open",
+         ["kaleidoscope", "organic_bloom"], ["flow_field"],
+         {"color_light": 0.9, "geometry": 0.7, "body_somatic": 0.5},
+         ["playful chroma pop; tactile neon geometry with stable attractors"]),
+        ("2c-e", "long_hold_mosaic", "Long-Hold Analytic Mosaic", "power",
+         ["recursive_feedback", "entity_lattice"], ["kaleidoscope"],
+         {"geometry": 0.92, "time_memory": 0.65, "space_void": 0.45},
+         ["long attentional hold on analytic mosaic; pacing over flash"]),
+        ("al-lad", "gentle_comeup", "Gentle Lysergic Comeup", "open",
+         ["organic_bloom", "kaleidoscope"], ["recursive_feedback"],
+         {"color_light": 0.75, "geometry": 0.55, "nature": 0.45, "body_somatic": 0.35},
+         ["gentler lysergic comeup; pastel geometry before full recursion"]),
+        ("mxe", "muted_float", "Muted Float Chamber", "void",
+         ["void_expansion", "flow_field"], ["organic_bloom"],
+         {"space_void": 0.85, "body_somatic": 0.5, "color_light": 0.3, "geometry": 0.25},
+         ["muted float chamber; sparse chroma and soft dissociative depth"]),
+        ("eth-lad", "ornate_recursion", "Ornate Eth-LAD Recursion", "power",
+         ["recursive_feedback", "kaleidoscope"], ["entity_lattice"],
+         {"geometry": 0.9, "machines": 0.4, "color_light": 0.75, "space_void": 0.45},
+         ["ornate high-complexity recursion; lysergic sibling with denser lattice"]),
+        ("eth-lad", "violet_tracers", "Violet Tracer Lattice", "attractor",
+         ["kaleidoscope", "recursive_feedback"], ["organic_bloom"],
+         {"color_light": 0.85, "geometry": 0.8, "time_memory": 0.4},
+         ["violet tracer lattice with lucid ornamental hold"]),
+        ("jhana", "luminous_stillness", "Luminous Stillness Field", "void",
+         ["void_expansion", "organic_bloom"], ["flow_field"],
+         {"space_void": 0.7, "color_light": 0.55, "body_somatic": 0.4, "geometry": 0.15},
+         ["luminous stillness; low turbulence, high coherence, minimal ornament"]),
+        ("jhana", "coherent_glow", "Coherent Soft Glow", "open",
+         ["organic_bloom"], ["void_expansion"],
+         {"color_light": 0.65, "body_somatic": 0.45, "geometry": 0.2, "nature": 0.35},
+         ["coherent soft glow without pattern aggression; calm attentional field"]),
+        ("dxm", "plateau_drift", "Plateau Soft Drift", "void",
+         ["flow_field", "void_expansion"], ["recursive_feedback"],
+         {"space_void": 0.75, "body_somatic": 0.55, "geometry": 0.3, "color_light": 0.35},
+         ["plateau soft drift; muted dissociative corridors with intensity cap"]),
+        ("dxm", "blurred_architecture", "Blurred Architecture Soften", "void",
+         ["void_expansion", "flow_field"], ["organic_bloom"],
+         {"space_void": 0.7, "machines": 0.25, "geometry": 0.35, "body_somatic": 0.45},
+         ["blurred architectural soften; low chroma chaos and floating depth"]),
     ]
     recipes = []
     for substance, slug, title, mode, primary, secondary, motifs, hooks in base:
@@ -330,13 +540,21 @@ def seed_recipes() -> list[dict]:
         if substance == "pcp":
             for k in list(bias):
                 bias[k] = round(bias[k] * 0.55, 3)
+        if substance == "dxm":
+            for k in list(bias):
+                bias[k] = round(bias[k] * 0.75, 3)
+        intensity_cap = 1.0
+        if substance == "pcp":
+            intensity_cap = 0.55
+        elif substance == "dxm":
+            intensity_cap = 0.7
         recipes.append(
             {
                 "id": f"exp_{substance.replace('-', '')}_{slug}",
                 "schema_version": "1.0.0",
                 "title": title,
                 "substance": substance,
-                "valence": "positive" if substance != "pcp" else "mixed",
+                "valence": "positive" if substance not in ("pcp", "dxm") else "mixed",
                 "authority": {
                     "motifs": "INFERRED",
                     "parameters": "INFERRED",
@@ -361,18 +579,13 @@ def seed_recipes() -> list[dict]:
                         "contrast": 0.55 + 0.3 * motifs.get("geometry", 0),
                     },
                     "parameter_bias": bias,
-                    "phase_profile": {
-                        "comeup": {"duration_norm": 0.15, "intensity": 0.35},
-                        "peak": {"duration_norm": 0.45, "intensity": 1.0},
-                        "plateau": {"duration_norm": 0.25, "intensity": 0.75},
-                        "comedown": {"duration_norm": 0.15, "intensity": 0.3},
-                    },
+                    "phase_profile": _phase_profile_for(substance),
                 },
                 "safety": {
-                    "max_flash_hz": 1.5 if substance in ("dmt", "pcp") else 2.0,
-                    "max_luminance_delta": 0.28 if substance == "5-meo-dmt" else 0.35,
+                    "max_flash_hz": 1.5 if substance in ("dmt", "pcp", "dxm") else 2.0,
+                    "max_luminance_delta": 0.28 if substance in ("5-meo-dmt", "jhana") else 0.35,
                     "reduced_motion_compatible": True,
-                    "intensity_cap": 0.55 if substance == "pcp" else 1.0,
+                    "intensity_cap": intensity_cap,
                 },
             }
         )
@@ -442,17 +655,13 @@ def recipes_from_files() -> list[dict]:
                         "contrast": 0.5 + 0.3 * motifs.get("geometry", 0.3),
                     },
                     "parameter_bias": _param_bias(motifs, substance),
-                    "phase_profile": {
-                        "comeup": {"duration_norm": 0.15, "intensity": 0.35},
-                        "peak": {"duration_norm": 0.45, "intensity": 1.0},
-                        "plateau": {"duration_norm": 0.25, "intensity": 0.75},
-                        "comedown": {"duration_norm": 0.15, "intensity": 0.3},
-                    },
+                    "phase_profile": _phase_profile_for(substance),
                 },
                 "safety": {
-                    "max_flash_hz": 2.0,
-                    "max_luminance_delta": 0.35,
+                    "max_flash_hz": 1.5 if substance in ("dmt", "pcp", "dxm") else 2.0,
+                    "max_luminance_delta": 0.28 if substance in ("5-meo-dmt", "jhana") else 0.35,
                     "reduced_motion_compatible": True,
+                    "intensity_cap": 0.55 if substance == "pcp" else (0.7 if substance == "dxm" else 1.0),
                 },
             }
         )
@@ -477,8 +686,27 @@ def _oscillation_style(means: dict[str, float], substance: str) -> str:
     m = means.get("machines", 0.0)
     v = means.get("space_void", 0.0)
     e = means.get("entities", 0.0)
-    if substance == "pcp":
-        return "unstable"
+    # Hard substance priors — prevent empathogens/dissociatives collapsing to geometric.
+    prior = {
+        "pcp": "unstable",
+        "ketamine": "smooth",
+        "mxe": "smooth",
+        "dxm": "smooth",
+        "5-meo-dmt": "minimal",
+        "jhana": "smooth",
+        "mdma": "organic",
+        "mda": "organic",
+        "psilocybin": "organic",
+        "dmt": "fractal",
+        "2c-e": "fractal",
+        "eth-lad": "fractal",
+        "2c-b": "geometric",
+        "al-lad": "geometric",
+        "mescaline": "geometric",
+        "lsd": "geometric",
+    }
+    if substance in prior:
+        return prior[substance]
     if substance == "ketamine" or (v > 0.55 and g < 0.4 and m < 0.35):
         return "smooth" if substance == "ketamine" else "minimal"
     if substance in ("5-meo-dmt",) or (v >= 0.7 and g < 0.45 and m < 0.35):
@@ -513,7 +741,12 @@ def _visual_signature(means: dict[str, float], substance: str, style: str) -> di
     }
 
 
-def _avg_engine_weights(substance_recipes: list[dict]) -> dict[str, float]:
+def _avg_engine_weights(
+    substance_recipes: list[dict],
+    *,
+    substance: str,
+    means: dict[str, float],
+) -> dict[str, float]:
     weights = {k: 0.0 for k in ENGINE_KEYS}
     for recipe in substance_recipes:
         visual = recipe.get("visual_recipe") or {}
@@ -525,8 +758,25 @@ def _avg_engine_weights(substance_recipes: list[dict]) -> dict[str, float]:
             key = str(eng).replace("-", "_")
             if key in weights:
                 weights[key] += max(0.15, 0.5 - 0.08 * i)
-    total = sum(weights.values()) or 1.0
-    return {k: round(v / total, 4) for k, v in weights.items()}
+    # Blend substance-forced engines so file-derived noise cannot erase identity.
+    primary, secondary, _mode = _engines_for(means, substance)
+    forced = {k: 0.0 for k in ENGINE_KEYS}
+    for i, eng in enumerate(primary):
+        key = str(eng).replace("-", "_")
+        if key in forced:
+            forced[key] += max(0.4, 1.0 - 0.15 * i)
+    for i, eng in enumerate(secondary):
+        key = str(eng).replace("-", "_")
+        if key in forced:
+            forced[key] += max(0.2, 0.55 - 0.1 * i)
+    recipe_total = sum(weights.values()) or 1.0
+    forced_total = sum(forced.values()) or 1.0
+    blended = {
+        k: 0.4 * (weights[k] / recipe_total) + 0.6 * (forced[k] / forced_total)
+        for k in ENGINE_KEYS
+    }
+    total = sum(blended.values()) or 1.0
+    return {k: round(v / total, 4) for k, v in blended.items()}
 
 
 def _avg_parameter_bias(substance_recipes: list[dict]) -> dict[str, float]:
@@ -616,16 +866,20 @@ def build_overlays(recipes: list[dict]) -> dict:
             "recommended_mode": recommended_mode,
             "oscillation_style": style,
             "visual_signature": _visual_signature(means, substance, style),
-            "engine_weights": _avg_engine_weights(substance_recipes),
+            "engine_weights": _avg_engine_weights(
+                substance_recipes, substance=substance, means=means
+            ),
             "primary_engines": primary,
             "secondary_engines": secondary,
             "parameter_bias": _avg_parameter_bias(substance_recipes),
             "palette": _avg_palette(substance_recipes, substance),
-            "phase_profile": _avg_phase_profile(substance_recipes),
+            "phase_profile": _phase_profile_for(substance),
             "safety": {
-                "max_flash_hz": 1.5 if substance in ("dmt", "pcp") else 2.0,
-                "max_luminance_delta": 0.28 if substance == "5-meo-dmt" else 0.35,
-                "intensity_cap": 0.55 if substance == "pcp" else 1.0,
+                "max_flash_hz": 1.5 if substance in ("dmt", "pcp", "dxm") else 2.0,
+                "max_luminance_delta": 0.28 if substance in ("5-meo-dmt", "jhana") else 0.35,
+                "intensity_cap": 0.55
+                if substance == "pcp"
+                else (0.7 if substance == "dxm" else 1.0),
             },
         }
     return {

@@ -7,6 +7,11 @@ import {
   vec3,
   float,
   mix,
+  max,
+  div,
+  mul,
+  select,
+  greaterThan,
   renderOutput,
   mrt,
   output,
@@ -130,7 +135,11 @@ export function PresentPipeline({
       node = node.mul(uGrade).mul(uExposure)
     }
 
-    // Mandatory safety attenuator (after temporal so history cannot bypass clamps)
+    // Mandatory safety: peak luminance clamp (safety_clamp.wgsl) then attenuator.
+    // Peak clamp must run even when uSafety === 1 (common happy path).
+    const peak = max(node.r, max(node.g, node.b))
+    const peakScale = select(greaterThan(peak, float(0.96)), div(float(0.96), peak), float(1))
+    node = mul(node, peakScale)
     node = node.mul(uSafety)
     node = mix(vec3(0.05, 0.05, 0.055), node, float(0.98))
 
@@ -223,9 +232,9 @@ export function PresentPipeline({
     if (postRef.current) {
       postRef.current.needsUpdate = true
       postRef.current.render()
-    } else {
-      state.gl.render(state.scene, state.camera)
     }
+    // else: skip present — never raw-render without the safety graph
+    // (mount / tier rebuild). Prior framebuffer is retained.
   }, 1)
 
   return null

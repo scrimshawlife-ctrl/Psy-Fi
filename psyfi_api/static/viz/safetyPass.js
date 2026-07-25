@@ -10,15 +10,18 @@
       this.flashEvents = [];
     }
 
-    apply(imageData, safety, now) {
-      const d = imageData.data;
+    /** Measure flash/luma attenuator from packed RGBA bytes (stride samples). */
+    measureAtten(rgba, safety, now, strideBytes) {
+      const d = rgba;
+      const step = Math.max(4, (strideBytes || 16) | 0);
       const maxDelta = (safety && safety.max_luminance_delta) || 0.35;
       const maxFlash = (safety && safety.max_flash_hz) || 2.0;
       let sum = 0;
-      for (let i = 0; i < d.length; i += 16) {
+      let samples = 0;
+      for (let i = 0; i + 2 < d.length; i += step) {
         sum += 0.2126 * d[i] + 0.7152 * d[i + 1] + 0.0722 * d[i + 2];
+        samples++;
       }
-      const samples = Math.floor(d.length / 16);
       const luma = sum / (255 * Math.max(1, samples));
       const delta = Math.abs(luma - this.lastLuma);
       if (delta > maxDelta * 0.85) {
@@ -29,6 +32,13 @@
       let atten = 1.0;
       if (flashHz > maxFlash) atten *= 0.55;
       if (delta > maxDelta) atten *= 0.7;
+      this.lastLuma = luma * atten + this.lastLuma * (1 - atten);
+      return atten;
+    }
+
+    apply(imageData, safety, now) {
+      const d = imageData.data;
+      const atten = this.measureAtten(d, safety, now, 16);
       if (atten < 0.999) {
         for (let i = 0; i < d.length; i += 4) {
           d[i] = d[i] * atten + 12 * (1 - atten);
@@ -45,7 +55,6 @@
           d[i + 2] *= s;
         }
       }
-      this.lastLuma = luma * atten + this.lastLuma * (1 - atten);
       return imageData;
     }
   }

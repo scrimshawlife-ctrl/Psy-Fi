@@ -49,8 +49,15 @@ Board: [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md)
 
 ### Done — PWA correctness (post-Hallmark)
 
-- [x] Root-scoped service worker (`/sw.js` · `Service-Worker-Allowed: /` · SW v11) so offline shell + `/gpu/` network-first actually run
+- [x] Root-scoped service worker (`/sw.js` · `Service-Worker-Allowed: /` · SW v12) so offline shell + `/gpu/` network-first actually run
 - [x] Job cancel finalize lock (cancel cannot lose to `completed`)
+
+### Done — critical safety hardening
+
+- [x] Strictest `intensity_cap` (`min` of experience + overlay); reject mismatched experience/substance
+- [x] `neutral_view` on multi-frame parameter-timeline + persistent Neutral across phase ticks
+- [x] WebGL Live Experience routes through SafetyPass (`u_safetyAtten`)
+- [x] Job store concurrency/retention caps; PresentPipeline never raw-presents without safety; worker load seq tokens
 
 ### Optional — hardware Ultra fps
 

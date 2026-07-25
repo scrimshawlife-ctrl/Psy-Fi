@@ -41,6 +41,7 @@ class JobSummary(BaseModel):
 def _run_job(job_id: str) -> None:
     job = job_store.get(job_id)
     if job is None:
+        job_store.release_slot()
         return
     job.status = "running"
     job.touch()
@@ -82,12 +83,23 @@ def _run_job(job_id: str) -> None:
             job.status = "failed"
             job.error = str(exc)
             job.touch()
+    finally:
+        job_store.release_slot()
 
 
 @router.post("/simulate", response_model=JobSummary)
 async def create_simulate_job(body: JobCreateRequest) -> JobSummary:
     """Start a cancellable simulation job in a worker thread."""
-    job = job_store.create(body.model_dump())
+    if not job_store.try_acquire_slot():
+        raise HTTPException(
+            status_code=429,
+            detail="Too many concurrent simulation jobs; retry after one completes",
+        )
+    try:
+        job = job_store.create(body.model_dump())
+    except Exception:
+        job_store.release_slot()
+        raise
     thread = threading.Thread(target=_run_job, args=(job.id,), daemon=True)
     thread.start()
     telemetry.emit("simulate_job_created", job_id=job.id, steps=body.steps)

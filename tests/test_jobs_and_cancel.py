@@ -81,12 +81,36 @@ def test_finalize_after_run_prefers_cancel_over_completed() -> None:
     assert job.result is None
 
 
+def test_job_create_rejects_when_concurrent_slots_exhausted() -> None:
+    from psyfi_api.jobs import JobStore
+
+    store = JobStore(max_retained=16, max_concurrent=1)
+    assert store.try_acquire_slot() is True
+    assert store.try_acquire_slot() is False
+    store.release_slot()
+    assert store.try_acquire_slot() is True
+    store.release_slot()
+
+
+def test_job_store_evicts_terminal_jobs_over_retention() -> None:
+    from psyfi_api.jobs import JobStore
+
+    store = JobStore(max_retained=8, max_concurrent=4)
+    for i in range(12):
+        job = store.create({"width": 8, "height": 8, "steps": 1, "n": i})
+        with job._lock:
+            job.status = "completed"
+            job.result = {"n": i}
+            job.touch()
+    assert len(store.list_recent(limit=50)) <= 8
+
+
 def test_service_worker_root_scope_headers() -> None:
     with TestClient(app) as client:
         res = client.get("/sw.js")
         assert res.status_code == 200
         assert res.headers.get("service-worker-allowed") == "/"
-        assert "psyfi-shell-v11" in res.text
+        assert "psyfi-shell-v12" in res.text
         assert "isGpuRoute" in res.text
 
 

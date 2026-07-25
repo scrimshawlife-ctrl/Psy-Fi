@@ -87,15 +87,46 @@ def _capped_intensity(
     intensity: float,
     experience: dict[str, Any] | None,
 ) -> float:
-    """Apply catalog/experience safety intensity caps (ParameterField authority)."""
+    """Apply the strictest catalog/experience safety intensity cap.
+
+    Caps must be combined with ``min`` — never ``or``. A recipe that sets
+    ``intensity_cap: 1.0`` must not mask a lower substance overlay cap.
+    """
     catalog = get_default_catalog()
     overlay = catalog.overlay(substance) or {}
-    cap = float(
-        (experience or {}).get("safety", {}).get("intensity_cap")
-        or overlay.get("safety", {}).get("intensity_cap")
-        or 1.0
-    )
+    caps: list[float] = []
+    exp_cap = (experience or {}).get("safety", {}).get("intensity_cap")
+    if exp_cap is not None:
+        caps.append(float(exp_cap))
+    overlay_cap = overlay.get("safety", {}).get("intensity_cap")
+    if overlay_cap is not None:
+        caps.append(float(overlay_cap))
+    cap = min(caps) if caps else 1.0
     return min(float(intensity), cap)
+
+
+def _normalize_substance(value: str) -> str:
+    return value.lower().replace("_", "-")
+
+
+def _assert_experience_substance(
+    experience: dict[str, Any] | None,
+    substance: str,
+) -> None:
+    """Reject experience_id / substance pairs that would mix safety envelopes."""
+    if not experience:
+        return
+    exp_sub = experience.get("substance")
+    if not exp_sub:
+        return
+    if _normalize_substance(str(exp_sub)) != _normalize_substance(substance):
+        raise HTTPException(
+            status_code=400,
+            detail=(
+                f"experience_id substance '{exp_sub}' does not match "
+                f"request substance '{substance}'"
+            ),
+        )
 
 
 @router.get("/experiences")
@@ -184,6 +215,8 @@ async def parameter_timeline(body: TimelineRequest) -> dict[str, Any]:
             substance = body.substance
     else:
         substance = body.substance
+    substance = _normalize_substance(substance)
+    _assert_experience_substance(experience, substance)
 
     intensity = _capped_intensity(
         substance=substance,
@@ -223,6 +256,7 @@ async def parameter_timeline(body: TimelineRequest) -> dict[str, Any]:
         reduce_motion=body.reduce_motion,
         dim_flashing=body.dim_flashing,
         quality_tier=body.quality_tier,
+        neutral_view=body.neutral_view,
     )
     timeline["kind"] = "timeline"
     return timeline
@@ -281,9 +315,12 @@ async def field_frame(body: FieldFrameRequest) -> dict[str, Any]:
 @router.post("/visualize/scene-snapshot")
 async def scene_snapshot(body: SceneSnapshotRequest) -> dict[str, Any]:
     """Publish an immutable GPU scene snapshot (analysis → renderer contract)."""
-    substance = body.substance.lower().replace("_", "-")
+    substance = _normalize_substance(body.substance)
     catalog = get_default_catalog()
     experience = catalog.get(body.experience_id) if body.experience_id else None
+    if body.experience_id and experience is None:
+        raise HTTPException(status_code=404, detail=f"Experience not found: {body.experience_id}")
+    _assert_experience_substance(experience, substance)
     modulators = body.modulators.model_dump() if body.modulators else None
     intensity = _capped_intensity(
         substance=substance,
@@ -301,6 +338,7 @@ async def scene_snapshot(body: SceneSnapshotRequest) -> dict[str, Any]:
         reduce_motion=body.reduce_motion,
         dim_flashing=body.dim_flashing,
         quality_tier=body.quality_tier,
+        neutral_view=body.neutral_view,
     )
     frames = timeline.get("frames") or []
     # Rematerialize through map_parameters when Neutral is requested. A flag-only

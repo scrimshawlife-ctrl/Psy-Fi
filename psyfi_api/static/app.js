@@ -1106,6 +1106,7 @@ document.addEventListener('DOMContentLoaded', () => {
         statusEl.textContent = 'Loading timeline…';
         neutralOn = false;
         neutralBtn.textContent = 'Neutral View';
+        if (typeof player.neutral === 'function') player.neutral(false);
         syncModulators();
         try {
             const data = await player.loadTimeline({

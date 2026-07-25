@@ -25,6 +25,13 @@ export class SnapshotInterpolator {
     this.t = 0
   }
 
+  /** Jump to the current target with no interpolation (reduced-motion). */
+  snap(): SceneSnapshotV1 | null {
+    this.t = 1
+    this.from = this.to
+    return this.sample()
+  }
+
   tick(dt: number): SceneSnapshotV1 | null {
     if (!this.to) return null
     this.t = Math.min(1, this.t + dt * this.speed)

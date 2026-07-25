@@ -106,10 +106,13 @@
   cursor: pointer;
 }
 
-.gpu-header button:hover,
-.gpu-header button:focus-visible {
+.gpu-header button:hover {
   border-color: var(--pf-cyan);
-  outline: none;
+}
+
+.gpu-header button:focus-visible {
+  border-color: var(--color-focus);
+  outline-color: var(--color-focus);
 }
 
 .gpu-header button:active {
@@ -134,10 +137,13 @@
   align-items: center;
 }
 
-.gpu-header a:hover,
+.gpu-header a:hover {
+  color: var(--pf-text-main);
+}
+
 .gpu-header a:focus-visible {
   color: var(--pf-text-main);
-  outline: none;
+  outline-color: var(--color-focus);
 }
 
 .gpu-header a:active {

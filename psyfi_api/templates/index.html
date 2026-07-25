@@ -40,10 +40,14 @@
                 <h1 id="launchTitle" class="launch-brand">PsyFi</h1>
             </div>
             <p class="launch-caption">Field plate · consciousness simulation</p>
-            <p class="launch-sub">Checking monitor, GPU, and components that can feed the field. No permissions yet.</p>
+            <p class="launch-sub">Monitor and GPU checked before the workspace opens. No permissions yet.</p>
+            <div class="launch-actions">
+                <button type="button" class="btn-primary" id="launchEnterBtn" disabled>Enter workspace</button>
+                <button type="button" class="btn-secondary" id="launchSkipBtn">Skip scan</button>
+            </div>
             <div class="launch-resolution input-group">
                 <label for="launchResolutionSelect">Field resolution</label>
-                <select id="launchResolutionSelect">
+                <select id="launchResolutionSelect" aria-describedby="launchResolutionHint">
                     <option value="32x32">32 × 32 — Quick</option>
                     <option value="64x64" selected>64 × 64 — Standard</option>
                     <option value="128x128">128 × 128 — Detailed</option>
@@ -51,10 +55,6 @@
                     <option value="512x512">512 × 512 — Max</option>
                 </select>
                 <p class="input-hint" id="launchResolutionHint">Sets the simulation grid used after Enter.</p>
-            </div>
-            <div class="launch-actions">
-                <button type="button" class="btn-primary" id="launchEnterBtn" disabled>Enter workspace</button>
-                <button type="button" class="btn-secondary" id="launchSkipBtn">Skip scan</button>
             </div>
             <p class="launch-title" id="launchScanHeading">Device scan</p>
             <ul class="launch-scan-list" id="launchScanList" aria-live="polite"></ul>
@@ -141,17 +141,6 @@
                             </select>
                         </div>
                         <div class="input-group">
-                            <label for="viewportResolutionSelect">Viewport resolution</label>
-                            <select id="viewportResolutionSelect">
-                                <option value="auto" selected>Auto (fit panel · DPR capped)</option>
-                                <option value="640x400">640 × 400</option>
-                                <option value="960x540">960 × 540</option>
-                                <option value="1280x720">1280 × 720</option>
-                                <option value="1920x1080">1920 × 1080</option>
-                                <option value="native">Native monitor pixels</option>
-                            </select>
-                        </div>
-                        <div class="input-group">
                             <label for="intensityRange">Intensity <span id="intensityValue">0.70</span></label>
                             <input type="range" id="intensityRange" min="0" max="1" step="0.01" value="0.7">
                         </div>
@@ -168,6 +157,17 @@
                         </div>
                         <details class="experience-advanced">
                             <summary>Field options</summary>
+                            <div class="input-group">
+                                <label for="viewportResolutionSelect">Viewport resolution</label>
+                                <select id="viewportResolutionSelect">
+                                    <option value="auto" selected>Auto (fit · DPR cap)</option>
+                                    <option value="640x400">640 × 400</option>
+                                    <option value="960x540">960 × 540</option>
+                                    <option value="1280x720">1280 × 720</option>
+                                    <option value="1920x1080">1920 × 1080</option>
+                                    <option value="native">Native monitor pixels</option>
+                                </select>
+                            </div>
                             <div class="checkbox-row">
                                 <label><input type="checkbox" id="reduceMotionChk"> Reduce motion</label>
                                 <label><input type="checkbox" id="dimFlashChk"> Dim flashing</label>
@@ -186,7 +186,6 @@
                                 Scans this device for available sensors. Opt-in meters feed the ParameterField
                                 (never direct-to-shader, never stored). Safety pass + Neutral View stay authoritative.
                             </p>
-                            <div class="sensor-chip-row" id="sensorChipRow" aria-live="polite"></div>
                             <div class="session-actions sensor-actions">
                                 <button type="button" class="btn-primary" id="enableAvailableSensorsBtn">Use available sensors</button>
                                 <button type="button" class="btn-secondary" id="disableSensorsBtn">Stop sensors</button>

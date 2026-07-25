@@ -117,6 +117,15 @@ Priority 2:
 - Advanced camera, motion, MIDI, audio, and haptic integrations (web-optional).
 - Native iPhone work remains parked (separate track).
 
+### Continuation (web-only)
+
+See [`docs/CONTINUATION_PLAN.md`](docs/CONTINUATION_PLAN.md) for the next P0–P2 queue after substance-overlay distillation:
+
+- physical-device matrix + visual differentiation QA
+- split Live Experience engines + WebGL ParameterField port
+- enrich thin substance source packs; simulation↔experience bridge
+- optional camera/motion adapters; Phase 4 usability freeze
+
 ## Definition of Done
 
 A work item is complete only when implementation, tests, user-facing states, documentation, accessibility behavior, performance impact, and migration implications are addressed. Placeholder UI and undocumented platform-specific coupling do not satisfy completion.

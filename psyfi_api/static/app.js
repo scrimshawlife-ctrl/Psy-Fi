@@ -1176,6 +1176,16 @@ document.addEventListener('DOMContentLoaded', () => {
         statusEl.textContent = `Renderer preference: ${player.backend}`;
     });
 
+    const qualityTierSelect = document.getElementById('qualityTierSelect');
+    qualityTierSelect?.addEventListener('change', () => {
+        const tier = qualityTierSelect.value || 'balanced';
+        statusEl.textContent = `Quality tier: ${tier} (reload experience to rematerialize)`;
+        if (player.loadContext && typeof player.loadTimeline === 'function' && loadBtn && !loadBtn.disabled) {
+            // Rematerialize current experience at the new tier when a timeline is loaded.
+            loadBtn.click();
+        }
+    });
+
     sourcePlaneChk?.addEventListener('change', () => {
         syncSourcePlaneUI();
         statusEl.textContent = sourcePlaneChk.checked
@@ -1257,7 +1267,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     steps: 12,
                     reduce_motion: !!reduceMotionChk.checked,
                     dim_flashing: !!dimFlashChk.checked,
-                    quality_tier: 'balanced',
+                    quality_tier: (document.getElementById('qualityTierSelect')?.value) || 'balanced',
                 });
                 data = {
                     kind: 'field_frame',
@@ -1450,7 +1460,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 steps: 20,
                 reduce_motion: !!reduceMotionChk.checked,
                 dim_flashing: !!dimFlashChk.checked,
-                quality_tier: 'balanced',
+                quality_tier: (document.getElementById('qualityTierSelect')?.value) || 'balanced',
                 modulators: {
                     camera: Number(modCamera?.value || 0),
                     motion: Number(modMotion?.value || 0),

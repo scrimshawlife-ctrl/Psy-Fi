@@ -61,6 +61,14 @@
       this._buf = null;
       this.onFrameInfo = null;
       this.backend = 'canvas2d';
+      this.lodDrop = 0;
+      this._emaFrameMs = 16;
+    }
+
+    _noteFrameMs(ms) {
+      this._emaFrameMs = this._emaFrameMs * 0.85 + ms * 0.15;
+      if (this._emaFrameMs > 22) this.lodDrop = Math.min(2, this.lodDrop + 1);
+      else if (this._emaFrameMs < 13 && this.lodDrop > 0) this.lodDrop = Math.max(0, this.lodDrop - 1);
     }
 
     setFrame(frame) {
@@ -90,7 +98,9 @@
       this.t0 = performance.now();
       const loop = (now) => {
         if (!this.running) return;
+        const t0 = performance.now();
         this.draw(now);
+        this._noteFrameMs(performance.now() - t0);
         this.raf = requestAnimationFrame(loop);
       };
       this.raf = requestAnimationFrame(loop);
@@ -102,14 +112,15 @@
     }
 
     draw(now) {
-      const { clamp, hexToRgb, mulberry32, hash32, fbm } = math();
+      const { clamp, hexToRgb, mulberry32, hash32, fbm, resolveRenderLod } = math();
       const engFns = engines();
       const ctx = this.ctx;
       const w = this.w;
       const h = this.h;
-      // Higher internal field resolution — still below full viewport for CPU cost.
-      const iw = Math.max(140, Math.min(420, Math.floor(w / 2.1)));
-      const ih = Math.max(90, Math.min(280, Math.floor(h / 2.1)));
+      const f = this.frame || {};
+      const lod = resolveRenderLod(f.quality_tier || 'balanced', this.lodDrop);
+      const iw = Math.max(lod.canvasMinW, Math.min(lod.canvasMaxW, Math.floor(w / lod.canvasDiv)));
+      const ih = Math.max(lod.canvasMinH, Math.min(lod.canvasMaxH, Math.floor(h / lod.canvasDiv)));
       if (!this._buf || this._buf.width !== iw || this._buf.height !== ih) {
         this._buf = ctx.createImageData(iw, ih);
         this._off = document.createElement('canvas');
@@ -120,16 +131,15 @@
       }
       const img = this._buf;
       const d = img.data;
-      const f = this.frame || {};
       const p = f.parameters || {};
       const eng = f.engines || {};
       const pal = hexToRgb((f.palette && f.palette.tracers) || '#3ee7f2');
       const seed = (f.master_seed || 42) >>> 0;
       const rnd = mulberry32(hash32(seed + 17));
       const time = (now - this.t0) / 1000;
-      const trail = p.trail_length || 0.35;
+      const trail = (p.trail_length || 0.35) * lod.trailScale;
       const edge = p.edge_gain || 0.4;
-      const chroma = p.chromatic_aberration || 0.1;
+      const chroma = (p.chromatic_aberration || 0.1) * lod.chromaScale;
 
       const engineCtx = {
         time,
@@ -147,6 +157,10 @@
         attrB: p.attractor_bias || 0,
         trail,
         edge,
+        foldIters: lod.foldIters,
+        fbmOctaves: lod.fbmOctaves,
+        deepDetail: lod.deepDetail,
+        latticeDetail: lod.latticeDetail,
       };
       const symmetry = Math.max(1, Math.floor(2 + (p.symmetry_order || 0.3) * 10));
       const energy = (f.palette && f.palette.energy) || p.palette_energy || 0.5;
@@ -161,6 +175,12 @@
       const cx = iw * 0.5;
       const cy = ih * 0.5;
       const invMin = 1 / Math.min(iw, ih);
+      const doK = wK > 0.05;
+      const doR = wR > 0.05;
+      const doF = wF > 0.05;
+      const doO = wO > 0.05;
+      const doV = wV > 0.05;
+      const doE = wE > 0.05;
 
       for (let y = 0; y < ih; y++) {
         for (let x = 0; x < iw; x++) {
@@ -172,15 +192,17 @@
           let lattice = 0;
 
           if (!neutral) {
-            ({ ux, uy } = engFns.kaleidoscope(ux, uy, wK, symmetry));
-            const rf = engFns.recursiveFeedback(ux, uy, wR, engineCtx);
-            ux = rf.ux;
-            uy = rf.uy;
-            feedbackF = rf.feedbackF || 0;
-            ({ ux, uy } = engFns.flowField(ux, uy, wF, engineCtx));
-            organic = engFns.organicBloom(ux, uy, wO, engineCtx);
-            voidF = engFns.voidExpansion(ux, uy, wV, engineCtx);
-            lattice = engFns.entityLattice(ux, uy, wE, engineCtx);
+            if (doK) ({ ux, uy } = engFns.kaleidoscope(ux, uy, wK, symmetry));
+            if (doR) {
+              const rf = engFns.recursiveFeedback(ux, uy, wR, engineCtx);
+              ux = rf.ux;
+              uy = rf.uy;
+              feedbackF = rf.feedbackF || 0;
+            }
+            if (doF) ({ ux, uy } = engFns.flowField(ux, uy, wF, engineCtx));
+            if (doO) organic = engFns.organicBloom(ux, uy, wO, engineCtx);
+            if (doV) voidF = engFns.voidExpansion(ux, uy, wV, engineCtx);
+            if (doE) lattice = engFns.entityLattice(ux, uy, wE, engineCtx);
           }
 
           let v = neutral
@@ -189,7 +211,7 @@
               organic * wO +
               voidF * wV +
               lattice * wE +
-              fbm(ux * 1.1, uy * 1.1, seed) * wF * 0.5;
+              (doF ? fbm(ux * 1.1, uy * 1.1, seed, lod.fbmOctaves) * wF * 0.5 : 0);
 
           if (engineCtx.attrB > 0.2 && !neutral) {
             const r = Math.hypot(ux, uy);
@@ -197,7 +219,7 @@
             v += engineCtx.attrB * 0.15 * Math.pow(Math.max(0, 1 - r * 2), 2);
           }
 
-          if (!neutral) {
+          if (!neutral && edge > 0.05) {
             const sharpened = v * v * (3 - 2 * v);
             v = v * (1 - edge * 0.55) + sharpened * edge * 0.55;
             v += edge * 0.1 * Math.abs(lattice - organic);
@@ -218,8 +240,9 @@
             bC = 18 + v * 40;
           } else {
             const warm = clamp(v * 1.15, 0, 1);
-            const vR = clamp(v + chroma * 0.08 * (ux / (Math.abs(ux) + 0.2)), 0, 1);
-            const vB = clamp(v - chroma * 0.08 * (ux / (Math.abs(ux) + 0.2)), 0, 1);
+            // Cheap chroma: channel push from UV — no extra field samples.
+            const vR = clamp(v + chroma * 0.1 * (ux / (Math.abs(ux) + 0.2)), 0, 1);
+            const vB = clamp(v - chroma * 0.1 * (ux / (Math.abs(ux) + 0.2)), 0, 1);
             rC = pal.r * vR * (0.4 + vR) + 6 + chroma * Math.abs(vR - vB) * 40;
             gC = pal.g * warm * (0.45 + organic * 0.35 + v * 0.35) + 8;
             bC = pal.b * vB * (0.5 + vB * 0.55) + lattice * 70 + 10;
@@ -227,7 +250,6 @@
             rC = rC * (1 - bAmt) + 255 * bAmt * 0.78;
             gC = gC * (1 - bAmt) + 255 * bAmt * 0.88;
             bC = bC * (1 - bAmt) + 255 * bAmt;
-            // Soft vignette
             const nr = Math.hypot((x - cx) / iw, (y - cy) / ih);
             const vig = 0.72 + 0.28 * Math.max(0, 1 - nr * 1.6);
             rC *= vig;
@@ -236,7 +258,6 @@
           }
 
           const idx = (y * iw + x) * 4;
-          // Trail persistence from prior frame (ParameterField trail_length).
           if (!neutral && this._prev && trail > 0.05) {
             const persist = 0.12 + trail * 0.62;
             rC = rC * (1 - persist) + this._prev[idx] * persist;
@@ -267,6 +288,7 @@
           mode: f.mode,
           substance: f.substance,
           backend: this.backend,
+          lod: lod.name,
         });
       }
     }
@@ -641,11 +663,17 @@
 
     _status(info) {
       if (!this.statusEl) return;
+      const lod =
+        info.lod ||
+        (this.backend === 'webgl' && this.webgl && this.webgl._lastLodName) ||
+        (this.loadContext && this.loadContext.quality_tier) ||
+        '';
       this.statusEl.textContent = [
         info.substance || '',
         info.mode || '',
         info.phase || '',
         info.backend || this.backend,
+        lod ? `lod ${lod}` : '',
         info.hash ? `hash ${info.hash}` : '',
       ]
         .filter(Boolean)
@@ -655,11 +683,13 @@
     _provenance(data) {
       if (!this.provenanceEl) return;
       const frame = (data.frames && data.frames[0]) || data.frame || {};
+      const tier = frame.quality_tier || (this.loadContext && this.loadContext.quality_tier) || 'balanced';
       this.provenanceEl.innerHTML = `
         <div><strong>Timeline</strong> ${data.timeline_hash || frame.hash || '—'}</div>
         <div><strong>Seed</strong> ${data.seed ?? frame.master_seed ?? '—'}</div>
         <div><strong>Experience</strong> ${data.experience_id || frame.experience_id || '—'}</div>
         <div><strong>Backend</strong> ${this.backend}</div>
+        <div><strong>Quality</strong> ${tier}</div>
         <div><strong>Authority</strong> parameters INFERRED · motifs INFERRED · sources OBSERVED</div>
         <div class="muted">Modeled phenomenology for research/visualization only. Not medical advice.</div>
       `;

@@ -73,8 +73,71 @@
    * Bounded Mandelbox-style fold + orbit trap (Canvas fractal kernel).
    * Returns { x, y, trap, escape } with UV kept in a displayable range.
    */
+  /**
+   * Resolve draw LOD from ParameterField quality_tier + adaptive drop (0–2).
+   * Does not alter ParameterField authority — visual cost only.
+   */
+  function resolveRenderLod(qualityTier, adaptiveDrop) {
+    const tier = String(qualityTier || 'balanced').toLowerCase();
+    let level = 2; // balanced
+    if (tier === 'survival') level = 0;
+    else if (tier === 'efficient') level = 1;
+    const drop = Math.max(0, Math.min(2, adaptiveDrop | 0));
+    level = Math.max(0, level - drop);
+    const table = [
+      {
+        level: 0,
+        name: 'survival',
+        foldIters: 3,
+        fbmOctaves: 3,
+        canvasDiv: 3.4,
+        canvasMinW: 96,
+        canvasMaxW: 180,
+        canvasMinH: 64,
+        canvasMaxH: 120,
+        trailScale: 0.35,
+        chromaScale: 0,
+        deepDetail: false,
+        latticeDetail: false,
+      },
+      {
+        level: 1,
+        name: 'efficient',
+        foldIters: 4,
+        fbmOctaves: 4,
+        canvasDiv: 2.7,
+        canvasMinW: 120,
+        canvasMaxW: 280,
+        canvasMinH: 80,
+        canvasMaxH: 180,
+        trailScale: 0.65,
+        chromaScale: 0.7,
+        deepDetail: false,
+        latticeDetail: true,
+      },
+      {
+        level: 2,
+        name: 'balanced',
+        foldIters: 6,
+        fbmOctaves: 6,
+        canvasDiv: 2.1,
+        canvasMinW: 140,
+        canvasMaxW: 420,
+        canvasMinH: 90,
+        canvasMaxH: 280,
+        trailScale: 1,
+        chromaScale: 1,
+        deepDetail: true,
+        latticeDetail: true,
+      },
+    ];
+    return table[level];
+  }
+
   function fractalFold(x, y, ctx) {
-    const iters = 3 + Math.min(5, Math.floor((ctx.recursion || 0) * 5 + (ctx.complex || 0) * 2));
+    const want = 3 + Math.min(5, Math.floor((ctx.recursion || 0) * 5 + (ctx.complex || 0) * 2));
+    const cap = ctx.foldIters != null ? ctx.foldIters | 0 : want;
+    const iters = Math.max(2, Math.min(want, cap));
     const scale = 1.35 + (ctx.recursion || 0) * 0.85;
     const cx = Math.sin((ctx.time || 0) * 0.11 + (ctx.seed || 0) * 0.001) * (0.28 + (ctx.feedback || 0) * 0.45);
     const cy = Math.cos((ctx.time || 0) * 0.09) * (0.22 + (ctx.depth || 0) * 0.4);
@@ -129,5 +192,6 @@
     fbm,
     radPhase,
     fractalFold,
+    resolveRenderLod,
   };
 })(window);

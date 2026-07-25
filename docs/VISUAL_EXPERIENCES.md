@@ -23,7 +23,7 @@ python3 scripts/run_dev_server.py
 ```
 
 Renderer modules: `static/viz/math.js`, `safetyPass.js`, `engines/`, `parameterFieldWebGL.js`, `experiencePlayer.js`.  
-Prefer WebGL (on by default) uses a dedicated `#experienceCanvasGL` (Canvas 2D remains `#experienceCanvas`). Fractal styles deepen via Mandelbox-style fold + orbit trap; `chromatic_aberration`, `edge_gain`, and `trail_length` drive both backends.
+Prefer WebGL (on by default) uses a dedicated `#experienceCanvasGL` (Canvas 2D remains `#experienceCanvas`). Fractal styles deepen via Mandelbox-style fold + orbit trap; `chromatic_aberration`, `edge_gain`, and `trail_length` drive both backends. Render LOD follows ParameterField `quality_tier` (Balanced / Efficient / Survival) with adaptive drop under frame pressure; chroma is a cheap single-sample channel push.
 
 ## API
 

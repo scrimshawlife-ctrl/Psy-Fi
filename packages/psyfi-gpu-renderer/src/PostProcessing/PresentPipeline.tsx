@@ -1,17 +1,18 @@
 import { useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useMemo, useRef } from 'react'
 import * as THREE from 'three/webgpu'
-import { pass, uniform, vec3, float, mix, renderOutput, mrt, output, normalView } from 'three/tsl'
+import { pass, uniform, vec3, float, mix, renderOutput, mrt, output, normalView, metalness } from 'three/tsl'
 import { bloom } from 'three/addons/tsl/display/BloomNode.js'
 import { afterImage } from 'three/addons/tsl/display/AfterImageNode.js'
 import { ao } from 'three/addons/tsl/display/GTAONode.js'
+import { ssr } from 'three/addons/tsl/display/SSRNode.js'
 import type { SceneSnapshotV1 } from '../contracts/SceneSnapshot'
 import type { QualityTier } from '../contracts/QualityTier'
 import { tierConfig } from '../contracts/QualityTier'
 import { resolveTemporalPolicy } from './TemporalAccumulate'
 
 /**
- * Present path: scene → optional GTAO → bloom → temporal → grade/exposure → mandatory safety.
+ * Present path: scene → GTAO → SSR → bloom → temporal → grade/exposure → mandatory safety.
  * Non-zero useFrame priority takes over the R3F render loop.
  */
 export function PresentPipeline({
@@ -37,11 +38,12 @@ export function PresentPipeline({
     const renderer = gl as unknown as InstanceType<typeof THREE.WebGPURenderer>
     const scenePass = pass(scene, camera)
 
-    if (cfg.post.ssao) {
+    if (cfg.post.ssao || cfg.post.ssr) {
       scenePass.setMRT(
         mrt({
           output,
           normal: normalView,
+          metalness,
         }),
       )
     }
@@ -50,13 +52,20 @@ export function PresentPipeline({
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let node: any = color
+    const depth = scenePass.getTextureNode('depth')
+    const normal = cfg.post.ssao || cfg.post.ssr ? scenePass.getTextureNode('normal') : null
 
-    if (cfg.post.ssao) {
-      const depth = scenePass.getTextureNode('depth')
-      const normal = scenePass.getTextureNode('normal')
+    if (cfg.post.ssao && normal) {
       const aoPass = ao(depth, normal, camera)
       aoPass.resolutionScale = tier === 'balanced' ? 0.5 : 1
       node = aoPass.getTextureNode().mul(color)
+    }
+
+    if (cfg.post.ssr && normal) {
+      const metal = scenePass.getTextureNode('metalness')
+      const ssrPass = ssr(node, depth, normal, metal, camera)
+      // Blend reflections; keep subtle so safety/Neutral still dominate
+      node = node.add(ssrPass.getTextureNode().mul(float(0.28)))
     }
 
     if (cfg.post.bloom) {
@@ -106,6 +115,7 @@ export function PresentPipeline({
     cfg.post.bloom,
     cfg.post.taa,
     cfg.post.ssao,
+    cfg.post.ssr,
     cfg.post.colorGrading,
     cfg.post.hdr,
     uExposure,

@@ -38,7 +38,7 @@ Platform package: `packages/psyfi-gpu-renderer`
 
 - [x] PBR-oriented crystal materials via MaterialSystem descriptors
 - [x] SSAO / GTAO in `PresentPipeline` when `post.ssao`
-- [ ] SSR, contact shadows
+- [x] SSR (ultra/high) + ContactShadows when `post.contactShadows`
 - [ ] Volumetric fog
 - [ ] Motion blur, DoF, chromatic aberration
 - [x] Ultra / High / Balanced AO enablement (battery off)

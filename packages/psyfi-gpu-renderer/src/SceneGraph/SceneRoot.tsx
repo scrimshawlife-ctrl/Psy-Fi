@@ -1,8 +1,10 @@
+import { ContactShadows } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 import { useMemo, useRef } from 'react'
 import type { Group } from 'three'
 import type { SceneSnapshotV1 } from '../contracts/SceneSnapshot'
 import type { QualityTier } from '../contracts/QualityTier'
+import { tierConfig } from '../contracts/QualityTier'
 import { CrystalField } from '../procedural/CrystalField'
 import { MetaballField } from '../procedural/MetaballField'
 import { RibbonField } from '../procedural/RibbonField'
@@ -20,6 +22,7 @@ export function SceneRoot({
   tier: QualityTier
 }) {
   const root = useRef<Group>(null)
+  const cfg = tierConfig(tier)
   const engines = snapshot?.parameter_field.engines || {}
   const intensity = snapshot?.parameter_field.intensity ?? 0.5
   const neutral = !!snapshot?.parameter_field.neutral_view
@@ -51,6 +54,17 @@ export function SceneRoot({
           <MagnitudePlane field={snapshot.magnitude_field} mix={neutral ? 0 : 0.35} />
         ) : null}
       </group>
+      {!neutral && cfg.post.contactShadows ? (
+        <ContactShadows
+          position={[0, -0.85, 0]}
+          opacity={0.45}
+          scale={8}
+          blur={tier === 'ultra' ? 2.2 : 2.8}
+          far={4}
+          resolution={tier === 'ultra' ? 1024 : 512}
+          color="#050508"
+        />
+      ) : null}
       <PostStack snapshot={snapshot} tier={tier} />
     </>
   )

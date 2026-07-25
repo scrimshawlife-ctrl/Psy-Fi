@@ -18,7 +18,7 @@ Scope: web app / PWA / API — native iOS deferred (`IOS_MIGRATION.md`).
 | GPU | G0 scaffold + scene-snapshot API | **done** | `/gpu/` · `#26` |
 | GPU | G1 present (bloom/grade/exposure/safety) | **done** | `#30` |
 | GPU | G2 compute / TAA / asset worker decode | **done** | `#31`–`#33` |
-| GPU | G3 premium AO (desktop tiers) | **in progress** | GTAO on ultra/high/balanced |
+| GPU | G3 premium AO / SSR / contact shadows | **in progress** | GTAO + SSR (ultra/high) + ContactShadows |
 | Deploy | Docker-only path | **done** | `DEPLOYMENT.md` · multi-stage GPU `dist/` |
 | Deploy | Compose healthcheck (no curl) | **done** | urllib |
 | CI | pytest + hallmark + gpu test/typecheck/build | **done** | `.github/workflows/ci.yml` |

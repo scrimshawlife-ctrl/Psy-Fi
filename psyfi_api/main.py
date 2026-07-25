@@ -5,6 +5,7 @@ from pathlib import Path
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
@@ -66,6 +67,24 @@ app.include_router(experiences.router)
 async def root(request: Request):
     """Root endpoint - serves the web UI."""
     return templates.TemplateResponse(request, "index.html")
+
+
+@app.get("/sw.js")
+async def service_worker() -> FileResponse:
+    """Serve the PWA service worker with a root scope allowlist.
+
+    Scripts under `/static/` default to max scope `/static/`, which cannot
+    intercept `/` or `/gpu/` navigations. `Service-Worker-Allowed: /` plus
+    registration `{ scope: '/' }` makes the documented offline shell real.
+    """
+    return FileResponse(
+        BASE_DIR / "static" / "sw.js",
+        media_type="application/javascript; charset=utf-8",
+        headers={
+            "Service-Worker-Allowed": "/",
+            "Cache-Control": "no-cache",
+        },
+    )
 
 
 @app.get("/health")

@@ -42,10 +42,15 @@ Board: [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md)
 - [x] Draco/KTX2 GPU upload path + `SceneAssetLayer`
 - [x] G4 parity matrix + scene-snapshot structure goldens
 - [x] Soft-present pixel SHA + histogram goldens ([`PIXEL_GOLDENS.md`](rendering/PIXEL_GOLDENS.md))
-- [x] PWA: `/gpu/` **separate route** ([`PWA_GPU_ROUTE.md`](PWA_GPU_ROUTE.md) · SW v10)
+- [x] PWA: `/gpu/` **separate route** ([`PWA_GPU_ROUTE.md`](PWA_GPU_ROUTE.md) · SW v11)
 - [x] Simulated P0 Ultra QA ([`SIMULATED_ULTRA_QA.md`](SIMULATED_ULTRA_QA.md))
 
 ## Recommended next steps (priority order)
+
+### Done — PWA correctness (post-Hallmark)
+
+- [x] Root-scoped service worker (`/sw.js` · `Service-Worker-Allowed: /` · SW v11) so offline shell + `/gpu/` network-first actually run
+- [x] Job cancel finalize lock (cancel cannot lose to `completed`)
 
 ### Optional — hardware Ultra fps
 
@@ -62,6 +67,7 @@ Guide: [`DESKTOP_GPU.md`](DESKTOP_GPU.md).
 | --- | --- |
 | Full R3F WebGPU stills | Needs GPU CI runner; soft-present goldens already in CI |
 | Vendor Draco WASM / Basis transcoder | Bridges ready; not required for ship |
+| GPU PresentPipeline dispose on tier rebuild | Leak hardening on Ultra |
 | Legacy WebGL 1:1 shaders | Only if keeping `/` long-term parity |
 | CUDA/HIP workers | Compose `nvidia` profile already reserves GPU |
 | XR readiness | [`rendering/XR_COMPATIBILITY.md`](rendering/XR_COMPATIBILITY.md) |

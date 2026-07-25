@@ -1,0 +1,30 @@
+{
+  "schema": "psyfi.g4_pixel_snapshot_index.v1",
+  "quality_tier": "balanced",
+  "cases": [
+    {
+      "substance": "lsd",
+      "mode": "open",
+      "seed": 42,
+      "intensity": 0.75,
+      "file": "lsd_open_42.snapshot.json",
+      "key": "lsd_open_42"
+    },
+    {
+      "substance": "psilocybin",
+      "mode": "attractor",
+      "seed": 7,
+      "intensity": 0.6,
+      "file": "psilocybin_attractor_7.snapshot.json",
+      "key": "psilocybin_attractor_7"
+    },
+    {
+      "substance": "dmt",
+      "mode": "void",
+      "seed": 99,
+      "intensity": 0.85,
+      "file": "dmt_void_99.snapshot.json",
+      "key": "dmt_void_99"
+    }
+  ]
+}

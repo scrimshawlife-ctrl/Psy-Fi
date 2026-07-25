@@ -16,7 +16,8 @@
     "gpu:dev": "npm run dev -w @psyfi/gpu-renderer",
     "gpu:build": "npm run build -w @psyfi/gpu-renderer",
     "gpu:test": "npm run test -w @psyfi/gpu-renderer",
-    "gpu:typecheck": "npm run typecheck -w @psyfi/gpu-renderer"
+    "gpu:typecheck": "npm run typecheck -w @psyfi/gpu-renderer",
+    "gpu:goldens:pixel": "npm run goldens:pixel -w @psyfi/gpu-renderer"
   },
   "devDependencies": {
     "hallmark": "^5.0.2"

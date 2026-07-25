@@ -51,7 +51,7 @@ Full board: [`docs/PRODUCTION_READINESS.md`](docs/PRODUCTION_READINESS.md).
 
 Ship checklist: `pytest` → `npm test && npm run gpu:build` → `docker compose up -d --build` → `/health` `/ready` `/` `/gpu/`.
 
-**Next steps:** validate Ultra on real NVIDIA/AMD/Intel desktops → optional WebGPU pixel goldens. Details: [`docs/CONTINUATION_PLAN.md`](docs/CONTINUATION_PLAN.md).
+**Next steps:** validate Ultra on real NVIDIA/AMD/Intel desktops. Pixel goldens: [`docs/rendering/PIXEL_GOLDENS.md`](docs/rendering/PIXEL_GOLDENS.md). Queue: [`docs/CONTINUATION_PLAN.md`](docs/CONTINUATION_PLAN.md).
 
 ## Install
 

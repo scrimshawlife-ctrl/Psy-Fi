@@ -52,6 +52,7 @@ Board: [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md)
 - [x] SceneAssetLayer + G4 parity matrix / visual seed list in CI
 - [x] G4 scene-snapshot structure goldens (canonical seeds)
 - [x] PWA decision: `/gpu/` stays a **separate route** ([`PWA_GPU_ROUTE.md`](PWA_GPU_ROUTE.md))
+- [x] Soft-present pixel goldens (SHA + histogram) in CI ([`rendering/PIXEL_GOLDENS.md`](rendering/PIXEL_GOLDENS.md))
 
 ## Recommended next steps (priority order)
 
@@ -78,7 +79,7 @@ Guide: [`DESKTOP_GPU.md`](DESKTOP_GPU.md).
 ### P2 — Later / opportunistic
 
 - Optional legacy WebGL 1:1 shaders (only if keeping `/` long-term parity)
-- WebGPU pixel / histogram goldens (needs GPU CI runner)
+- Full R3F WebGPU still capture on a GPU CI runner (soft-present goldens already in CI)
 - Future CUDA/HIP workers (Compose `nvidia` profile already reserves the GPU; not required for WebGPU)
 - XR readiness (`docs/rendering/XR_COMPATIBILITY.md`) — non-blocking
 

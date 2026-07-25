@@ -744,6 +744,17 @@
       "SceneSnapshotRequest": {
         "description": "Immutable GPU scene snapshot \u2014 analysis publish surface for the WebGPU client.",
         "properties": {
+          "asset_pack_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Asset Pack Id"
+          },
           "dim_flashing": {
             "default": false,
             "title": "Dim Flashing",
@@ -766,6 +777,11 @@
             "minimum": 8.0,
             "title": "Height",
             "type": "integer"
+          },
+          "include_fixture_assets": {
+            "default": false,
+            "title": "Include Fixture Assets",
+            "type": "boolean"
           },
           "include_simulation": {
             "default": true,

@@ -15,6 +15,8 @@ export interface PsyFiGPUCanvasProps {
   tier: QualityTier
   /** Opt-in OffscreenCanvas present target (`?offscreen=1`). */
   preferOffscreen?: boolean
+  /** Prefer present-worker remoting (`?offscreen=worker`) — protocol scaffold only. */
+  preferWorker?: boolean
   onPresentMode?: (mode: OffscreenPresentMode) => void
   children?: ReactNode
 }
@@ -23,22 +25,30 @@ export function PsyFiGPUCanvas({
   snapshot,
   tier,
   preferOffscreen = false,
+  preferWorker = false,
   onPresentMode,
   children,
 }: PsyFiGPUCanvasProps) {
   const cfgScale = tier === 'battery' ? 0.65 : tier === 'balanced' ? 0.85 : 1
   const transferred = useRef(false)
   const presentMode = useMemo(() => {
-    const mode = resolveOffscreenPresentMode({ requested: preferOffscreen })
+    const mode = resolveOffscreenPresentMode({
+      requested: preferOffscreen || preferWorker,
+      preferWorker,
+    })
     onPresentMode?.(mode)
     return mode
-  }, [preferOffscreen, onPresentMode])
+  }, [preferOffscreen, preferWorker, onPresentMode])
 
   return (
     <Canvas
       shadows={tier !== 'battery'}
       dpr={[1, Math.min(2, 1.5 * cfgScale)]}
       gl={async (props) => {
+        // Worker remoting: protocol exists; present stays on main until GPU worker lands.
+        if (presentMode === 'worker-remoting' || presentMode === 'worker-unsupported') {
+          return createWebGPURenderer(props as never)
+        }
         // Same-thread OffscreenCanvas: transfer the R3F canvas once when requested.
         const canvas = (props as { canvas?: HTMLCanvasElement }).canvas
         if (

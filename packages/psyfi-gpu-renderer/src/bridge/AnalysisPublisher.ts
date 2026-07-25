@@ -10,6 +10,7 @@ export interface PublishOptions {
   experience_id?: string | null
   include_simulation?: boolean
   include_fixture_assets?: boolean
+  asset_pack_id?: string | null
   reduce_motion?: boolean
   dim_flashing?: boolean
   neutral_view?: boolean
@@ -43,6 +44,7 @@ export class AnalysisPublisher {
       experience_id: opts.experience_id ?? null,
       include_simulation: opts.include_simulation ?? true,
       include_fixture_assets: !!opts.include_fixture_assets,
+      asset_pack_id: opts.asset_pack_id ?? null,
       reduce_motion: !!opts.reduce_motion,
       dim_flashing: !!opts.dim_flashing,
       neutral_view: !!opts.neutral_view,

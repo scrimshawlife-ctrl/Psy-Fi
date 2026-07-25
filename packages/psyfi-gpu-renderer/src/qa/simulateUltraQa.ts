@@ -16,73 +16,11 @@ import { G4_VISUAL_SEEDS } from '../contracts/g4Parity'
 import { softPresentSnapshot, PIXEL_GOLDEN_SIZE } from '../goldens/softPresent'
 import { metricsFromFrame } from '../goldens/pixelMetrics'
 import type { SceneSnapshotV1 } from '../contracts/SceneSnapshot'
+import { buildUltraFpsMatrix } from './ultraFpsMatrix'
+import { ULTRA_QA_TARGETS, type UltraQaTarget } from './ultraTargets'
 
-export interface UltraQaTarget {
-  id: string
-  vendor: string
-  description: string
-  expectBand: 'ultra' | 'high'
-  expectTier: QualityTier
-}
-
-export const ULTRA_QA_TARGETS: UltraQaTarget[] = [
-  {
-    id: 'nvidia-rtx-5060',
-    vendor: 'nvidia',
-    description: 'NVIDIA GeForce RTX 5060',
-    expectBand: 'ultra',
-    expectTier: 'ultra',
-  },
-  {
-    id: 'nvidia-rtx-3080',
-    vendor: 'nvidia',
-    description: 'NVIDIA GeForce RTX 3080',
-    expectBand: 'ultra',
-    expectTier: 'ultra',
-  },
-  {
-    id: 'nvidia-rtx-4070',
-    vendor: 'nvidia',
-    description: 'NVIDIA GeForce RTX 4070 SUPER',
-    expectBand: 'ultra',
-    expectTier: 'ultra',
-  },
-  {
-    id: 'amd-rx-7800xt',
-    vendor: 'amd',
-    description: 'AMD Radeon RX 7800 XT',
-    expectBand: 'ultra',
-    expectTier: 'ultra',
-  },
-  {
-    id: 'amd-rx-9070xt',
-    vendor: 'amd',
-    description: 'AMD Radeon RX 9070 XT',
-    expectBand: 'ultra',
-    expectTier: 'ultra',
-  },
-  {
-    id: 'intel-arc-a770',
-    vendor: 'intel',
-    description: 'Intel(R) Arc(TM) A770 Graphics',
-    expectBand: 'ultra',
-    expectTier: 'ultra',
-  },
-  {
-    id: 'apple-m3-max',
-    vendor: 'apple',
-    description: 'Apple M3 Max',
-    expectBand: 'ultra',
-    expectTier: 'ultra',
-  },
-  {
-    id: 'nvidia-rtx-2080',
-    vendor: 'nvidia',
-    description: 'NVIDIA GeForce RTX 2080 Ti',
-    expectBand: 'high',
-    expectTier: 'high',
-  },
-]
+export type { UltraQaTarget }
+export { ULTRA_QA_TARGETS }
 
 export interface UltraQaCheckResult {
   id: string
@@ -169,6 +107,18 @@ export interface UltraQaReport {
   mode: 'simulated'
   checks: UltraQaCheckResult[]
   summary: { total: number; passed: number; failed: number }
+}
+
+export function runUltraFpsMatrixCheck(): UltraQaCheckResult {
+  const matrix = buildUltraFpsMatrix()
+  const ok = matrix.summary.failed === 0
+  return {
+    id: 'ultra-fps-matrix',
+    ok,
+    detail: ok
+      ? `synthetic fps matrix ${matrix.summary.passed}/${matrix.summary.total} pass (hardware pending=${matrix.summary.pending_hardware})`
+      : `fps matrix failed=${matrix.summary.failed}`,
+  }
 }
 
 export function buildUltraQaReport(checks: UltraQaCheckResult[]): UltraQaReport {

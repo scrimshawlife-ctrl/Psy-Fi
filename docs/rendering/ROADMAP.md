@@ -60,7 +60,11 @@ Cutover: [`G4_CUTOVER.md`](G4_CUTOVER.md) · pixels: [`PIXEL_GOLDENS.md`](PIXEL_
 - [x] Soft-present pixel SHA + histogram goldens (`pixelGolden.test.ts`)
 - [x] PWA integration decision — **separate `/gpu/` route** ([`PWA_GPU_ROUTE.md`](../PWA_GPU_ROUTE.md))
 - [x] Soft → **hard** freeze includes scene-snapshot schema
-- [ ] Full R3F WebGPU stills on GPU CI runner (optional)
+- [x] R3F still capture API (`captureR3fStill` · mode `r3f-deferred` without GPU CI)
+- [ ] Lock full R3F WebGPU still SHAs on a GPU CI runner (optional)
+- [x] Worker OffscreenCanvas remoting protocol (`?offscreen=worker` · FakeWorker stub)
+- [x] Product art pack schema + empty registry (`asset_pack_id` attach)
+- [x] Hardware Ultra fps matrix scaffold (synthetic samples in CI)
 - [x] Vendor real Draco WASM / Basis transcoder (`public/vendor/` · `draco3d` · Basis init)
 - Legacy viz marked deprecated (not deleted until iOS/web gates)
 - Device matrix: living QA (unfrozen as ship gate)

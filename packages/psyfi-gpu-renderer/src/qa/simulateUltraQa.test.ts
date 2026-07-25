@@ -8,6 +8,7 @@ import {
   runAdapterUltraChecks,
   runBatteryClampCheck,
   runSoftPresentDistinctness,
+  runUltraFpsMatrixCheck,
   ULTRA_QA_TARGETS,
 } from './simulateUltraQa'
 
@@ -47,6 +48,7 @@ describe('Simulated P0 Ultra desktop QA', () => {
       ...runAdapterUltraChecks(),
       runBatteryClampCheck(),
       runSoftPresentDistinctness(snaps),
+      runUltraFpsMatrixCheck(),
     ]
     const report = buildUltraQaReport(checks)
     expect(report.mode).toBe('simulated')

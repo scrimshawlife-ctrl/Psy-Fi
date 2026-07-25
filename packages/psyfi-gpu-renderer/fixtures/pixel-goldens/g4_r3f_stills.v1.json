@@ -1,0 +1,7 @@
+{
+  "schema": "psyfi.g4_r3f_stills.v1",
+  "status": "deferred",
+  "runner": "gpu-ci",
+  "note": "Full R3F WebGPU SceneRoot stills lock here when a GPU CI harness exists. Soft-present remains the CI structure golden.",
+  "cases": []
+}

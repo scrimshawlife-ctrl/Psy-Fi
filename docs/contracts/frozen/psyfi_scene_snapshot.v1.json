@@ -44,6 +44,7 @@
     "post": { "type": "object" },
     "safety": { "type": "object" },
     "assets": { "type": "object" },
+    "asset_pack_id": { "type": ["string", "null"] },
     "authority": { "type": "object" },
     "provenance_id": { "type": ["string", "null"] },
     "note": { "type": "string" }

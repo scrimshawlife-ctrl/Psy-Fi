@@ -13,6 +13,7 @@ Physical NVIDIA / AMD / Intel machines are not available in this agent environme
 | Adapter → Ultra band / tier | `packages/psyfi-gpu-renderer/src/qa/simulateUltraQa.test.ts` |
 | Battery clamp Ultra → Balanced | same |
 | Soft-present pixel distinctness | G4 seed fixtures |
+| Hardware Ultra fps matrix (synthetic) | `qa/ultraFpsMatrix.ts` · `fixtures/qa/ultra_fps_matrix.synthetic.v1.json` |
 | `/health` `/ready` `/gpu/` | `tests/test_simulate_ultra_qa.py` |
 | Ultra scene-snapshots + Neutral clamp | same → `tests/fixtures/qa/simulated_ultra_qa.v1.json` |
 
@@ -30,6 +31,7 @@ Physical NVIDIA / AMD / Intel machines are not available in this agent environme
 | 8 | `/gpu/` shell mounted (built dist) | ✅ simulated |
 | 9 | G4 seeds publish ultra snapshots (distinct hashes) | ✅ simulated |
 | 10 | Neutral View collapses SSR/SSAO | ✅ simulated |
+| 11 | Ultra fps matrix vs tier budgets | ✅ synthetic (hardware pending) |
 
 ## Not claimed
 
@@ -37,7 +39,7 @@ Physical NVIDIA / AMD / Intel machines are not available in this agent environme
 - Driver Control Panel “High performance GPU” forcing  
 - Chrome `chrome://gpu` WebGPU Hardware accelerated on a specific host  
 
-Re-run on hardware with [`DESKTOP_GPU.md`](DESKTOP_GPU.md) validation checklist when a discrete desktop is available; update the device matrix Notes from `simulated` → measured fps.
+Re-run on hardware with [`DESKTOP_GPU.md`](DESKTOP_GPU.md) validation checklist when a discrete desktop is available; promote `ultra_fps_matrix` samples from `synthetic` → `measured` and update the device matrix Notes.
 
 ## Commands
 

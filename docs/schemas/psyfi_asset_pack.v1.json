@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://psyfi.local/schemas/psyfi_asset_pack.v1.json",
+  "title": "psyfi.asset_pack.v1",
+  "type": "object",
+  "required": ["schema", "id", "version", "procedural_fallback", "gltf", "ktx2", "splats", "status"],
+  "additionalProperties": true,
+  "properties": {
+    "schema": { "const": "psyfi.asset_pack.v1" },
+    "id": { "type": "string", "minLength": 1 },
+    "version": { "type": "string" },
+    "procedural_fallback": { "type": "boolean" },
+    "license": { "type": "string" },
+    "status": { "enum": ["stub", "draft", "published"] },
+    "gltf": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "url"],
+        "properties": {
+          "id": { "type": "string" },
+          "url": { "type": "string" },
+          "role": { "type": "string" }
+        }
+      }
+    },
+    "ktx2": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "url"],
+        "properties": {
+          "id": { "type": "string" },
+          "url": { "type": "string" },
+          "role": { "type": "string" }
+        }
+      }
+    },
+    "splats": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "url"],
+        "properties": {
+          "id": { "type": "string" },
+          "url": { "type": "string" },
+          "role": { "type": "string" }
+        }
+      }
+    }
+  }
+}

@@ -14,7 +14,7 @@ describe('offscreen present mode', () => {
     expect(
       resolveOffscreenPresentMode({
         requested: true,
-        caps: { canTransfer: false, preferMain: false },
+        caps: { canTransfer: false, canWorker: false, preferMain: false },
       }),
     ).toBe('offscreen-unsupported')
   })
@@ -23,7 +23,7 @@ describe('offscreen present mode', () => {
     expect(
       resolveOffscreenPresentMode({
         requested: true,
-        caps: { canTransfer: true, preferMain: true },
+        caps: { canTransfer: true, canWorker: true, preferMain: true },
       }),
     ).toBe('main')
   })
@@ -32,14 +32,13 @@ describe('offscreen present mode', () => {
     expect(
       resolveOffscreenPresentMode({
         requested: true,
-        caps: { canTransfer: true, preferMain: false },
+        caps: { canTransfer: true, canWorker: true, preferMain: false },
       }),
     ).toBe('offscreen-requested')
   })
 
   it('probeOffscreenCaps reflects missing APIs in Node', () => {
     const caps = probeOffscreenCaps()
-    // Node vitest has no HTMLCanvasElement transfer.
     expect(caps.canTransfer).toBe(false)
   })
 

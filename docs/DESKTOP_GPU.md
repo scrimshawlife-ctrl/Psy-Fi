@@ -56,7 +56,9 @@ Docker GPU reservation (`--profile nvidia`), `nvidia-smi`, and RTX 50xx driver n
 
 ## Simulated QA (CI)
 
-A CI stand-in for this checklist lives in [`SIMULATED_ULTRA_QA.md`](SIMULATED_ULTRA_QA.md) (adapter fixtures + API `/gpu/` + Neutral). It does **not** replace measured fps on a physical discrete GPU.
+A CI stand-in for this checklist lives in [`SIMULATED_ULTRA_QA.md`](SIMULATED_ULTRA_QA.md) (adapter fixtures + API `/gpu/` + Neutral + synthetic Ultra fps matrix). It does **not** replace measured fps on a physical discrete GPU.
+
+Synthetic fps matrix: `packages/psyfi-gpu-renderer/fixtures/qa/ultra_fps_matrix.synthetic.v1.json` (evaluate with `qa/ultraFpsMatrix.ts` against Ultra ~120fps / High ~60fps tier budgets).
 
 ## Validation checklist (next human step on real hardware)
 

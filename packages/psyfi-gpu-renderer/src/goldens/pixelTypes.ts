@@ -1,6 +1,6 @@
 /** Shared types for /gpu/ pixel goldens (soft-present CI + optional WebGPU capture). */
 
-export type PixelBackend = 'soft' | 'webgpu'
+export type PixelBackend = 'soft' | 'webgpu' | 'r3f-webgpu'
 
 export interface PixelFrame {
   width: number

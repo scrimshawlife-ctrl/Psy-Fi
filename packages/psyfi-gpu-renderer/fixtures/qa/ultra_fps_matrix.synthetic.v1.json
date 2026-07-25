@@ -1,0 +1,72 @@
+{
+  "schema": "psyfi.ultra_fps_matrix.v1",
+  "mode": "synthetic",
+  "date": "2026-07-25",
+  "note": "CI stand-in for hardware Ultra fps. Replace samples with measured DESKTOP_GPU validation results when silicon is available.",
+  "samples": [
+    {
+      "id": "nvidia-rtx-5060",
+      "avgFps": 132,
+      "low1pctFps": 118,
+      "p95Ms": 8.47,
+      "source": "synthetic",
+      "note": "CI stand-in vs 120.5 fps tier target"
+    },
+    {
+      "id": "nvidia-rtx-3080",
+      "avgFps": 132,
+      "low1pctFps": 118,
+      "p95Ms": 8.47,
+      "source": "synthetic",
+      "note": "CI stand-in vs 120.5 fps tier target"
+    },
+    {
+      "id": "nvidia-rtx-4070",
+      "avgFps": 132,
+      "low1pctFps": 118,
+      "p95Ms": 8.47,
+      "source": "synthetic",
+      "note": "CI stand-in vs 120.5 fps tier target"
+    },
+    {
+      "id": "amd-rx-7800xt",
+      "avgFps": 132,
+      "low1pctFps": 118,
+      "p95Ms": 8.47,
+      "source": "synthetic",
+      "note": "CI stand-in vs 120.5 fps tier target"
+    },
+    {
+      "id": "amd-rx-9070xt",
+      "avgFps": 132,
+      "low1pctFps": 118,
+      "p95Ms": 8.47,
+      "source": "synthetic",
+      "note": "CI stand-in vs 120.5 fps tier target"
+    },
+    {
+      "id": "intel-arc-a770",
+      "avgFps": 132,
+      "low1pctFps": 118,
+      "p95Ms": 8.47,
+      "source": "synthetic",
+      "note": "CI stand-in vs 120.5 fps tier target"
+    },
+    {
+      "id": "apple-m3-max",
+      "avgFps": 132,
+      "low1pctFps": 118,
+      "p95Ms": 8.47,
+      "source": "synthetic",
+      "note": "CI stand-in vs 120.5 fps tier target"
+    },
+    {
+      "id": "nvidia-rtx-2080",
+      "avgFps": 72,
+      "low1pctFps": 64,
+      "p95Ms": 15.63,
+      "source": "synthetic",
+      "note": "CI stand-in vs 59.9 fps tier target"
+    }
+  ]
+}

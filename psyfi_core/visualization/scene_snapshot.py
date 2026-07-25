@@ -239,8 +239,11 @@ def build_scene_snapshot(
     camera: dict[str, Any] | None = None,
     snapshot_id: str | None = None,
     include_fixture_assets: bool = False,
+    asset_pack_id: str | None = None,
 ) -> dict[str, Any]:
     """Build an immutable scene snapshot for the GPU renderer."""
+    from psyfi_core.visualization.asset_packs import attach_pack_assets
+
     tier = normalize_snapshot_quality_tier(quality_tier)
 
     field = dict(parameter_field)
@@ -278,6 +281,14 @@ def build_scene_snapshot(
         "exposure_mode": "physically_based",
     }
 
+    pack_id = (asset_pack_id or "").strip() or None
+    assets = attach_pack_assets(
+        fixture_scene_assets()
+        if resolve_include_fixture_assets(include_fixture_assets)
+        else empty_scene_assets(),
+        pack_id,
+    )
+
     return {
         "schema_version": SCENE_SNAPSHOT_SCHEMA,
         "snapshot_id": sid,
@@ -292,11 +303,8 @@ def build_scene_snapshot(
         "lighting": lighting,
         "post": post,
         "safety": safety,
-        "assets": (
-            fixture_scene_assets()
-            if resolve_include_fixture_assets(include_fixture_assets)
-            else empty_scene_assets()
-        ),
+        "assets": assets,
+        "asset_pack_id": pack_id,
         "authority": {
             "parameters": "INFERRED",
             "motifs": "INFERRED",

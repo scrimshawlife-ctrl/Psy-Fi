@@ -24,7 +24,7 @@ Canonical data: `packages/psyfi-gpu-renderer/src/contracts/g4Parity.ts` (CI-test
 | Modulators (cam/motion/MIDI/audio/haptics) | yes | partial | MIDI/haptics still legacy-primary |
 | Reduce motion | yes | yes | snapshot flag |
 | Offline / PWA | yes | partial | `/gpu/` **separate route (decided)** — [`PWA_GPU_ROUTE.md`](../PWA_GPU_ROUTE.md) |
-| KTX2 / Draco optional assets | n/a | yes | Vendored codecs; SceneAssetLayer; fixture KTX2 via `include_fixture_assets` / `PSYFI_SCENE_ASSETS`; product packs deferred |
+| KTX2 / Draco optional assets | n/a | yes | Vendored codecs; SceneAssetLayer; fixture KTX2 via `include_fixture_assets` / `PSYFI_SCENE_ASSETS`; product packs via `asset_pack_id` (empty registry in CI) |
 
 ## PWA decision
 
@@ -46,7 +46,8 @@ Canonical seeds (also in `g4Parity.ts`):
 - [x] CPU scene-snapshot structure goldens (`tests/fixtures/experiences/g4_scene_snapshot_goldens.v1.json`)
 - [x] Soft-present pixel SHA + histogram goldens in CI ([`PIXEL_GOLDENS.md`](PIXEL_GOLDENS.md))
 - [x] Document intentional deltas vs Canvas/WebGL legacy ([`PIXEL_GOLDENS.md`](PIXEL_GOLDENS.md))
-- [ ] Full R3F WebGPU still capture on a GPU CI runner (optional later)
+- [x] R3F still orchestrator API (`r3fStillCapture.ts` · deferred fixture `g4_r3f_stills.v1.json`)
+- [ ] Lock full R3F WebGPU still SHAs on a GPU CI runner (optional later)
 
 ## Exit criteria for G4
 

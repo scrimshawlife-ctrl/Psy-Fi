@@ -8,6 +8,7 @@ import { MetaballField } from '../procedural/MetaballField'
 import { RibbonField } from '../procedural/RibbonField'
 import { GlyphField } from '../procedural/GlyphField'
 import { MagnitudePlane } from '../procedural/MagnitudePlane'
+import { FlowParticleField } from '../procedural/FlowParticleField'
 import { LightingRig } from '../Lighting/LightingRig'
 import { PostStack } from '../PostProcessing/PostStack'
 
@@ -43,6 +44,9 @@ export function SceneRoot({
         {!neutral && <MetaballField nodes={snapshot.procedural.metaballs} color={palette} />}
         {!neutral && <RibbonField nodes={snapshot.procedural.ribbons} color={palette} />}
         {!neutral && <GlyphField nodes={snapshot.procedural.glyphs} color={palette} />}
+        {!neutral && tier !== 'battery' ? (
+          <FlowParticleField snapshot={snapshot} tier={tier} />
+        ) : null}
         {snapshot.magnitude_field ? (
           <MagnitudePlane field={snapshot.magnitude_field} mix={neutral ? 0 : 0.35} />
         ) : null}

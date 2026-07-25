@@ -35,7 +35,7 @@ export function DebugHud({
   const vendorTag =
     vendorLabel && vendorLabel !== 'unknown' ? ` · ${vendorLabel.toUpperCase()}` : ''
   const bandTag = perfBand && perfBand !== 'unknown' ? ` · band ${perfBand}` : ''
-  const budgetColor = profile?.overBudget ? '#ffb4a8' : '#9fd9d2'
+  const budgetColor = profile?.overBudget ? '#ff4f6c' : '#3ee7f2'
   return (
     <div
       style={{
@@ -45,12 +45,12 @@ export function DebugHud({
         padding: '8px 10px',
         fontSize: 12,
         lineHeight: 1.45,
-        background: 'rgba(7,7,11,0.72)',
-        border: '1px solid rgba(99,243,232,0.25)',
-        color: '#e8f7f5',
+        background: 'color-mix(in srgb, #0a0e14 88%, transparent)',
+        border: '1px solid #2a3344',
+        color: '#eef2f7',
         maxWidth: 460,
         pointerEvents: 'none',
-        fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Consolas, monospace',
+        fontFamily: '"IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace',
       }}
     >
       <div>
@@ -59,7 +59,7 @@ export function DebugHud({
         {bandTag}
       </div>
       {adapterLabel ? (
-        <div style={{ color: '#9fd9d2' }}>adapter {adapterLabel}</div>
+        <div style={{ color: '#3ee7f2' }}>adapter {adapterLabel}</div>
       ) : null}
       {profile && profile.sampleCount > 0 ? (
         <div style={{ color: budgetColor }}>
@@ -68,17 +68,17 @@ export function DebugHud({
           {profile.overBudget ? ' · OVER' : ' · ok'}
         </div>
       ) : (
-        <div style={{ color: '#8aa8a4' }}>profiling…</div>
+        <div style={{ color: '#9aa6b8' }}>profiling…</div>
       )}
       <div>
         seq {stats.appliedSequence} · dropped stale {stats.droppedStale}
         {stats.pendingSequence != null ? ` · pending ${stats.pendingSequence}` : ''}
         {particleBudget != null ? ` · particles ≤ ${particleBudget.toLocaleString()}` : ''}
       </div>
-      <div style={{ color: '#8aa8a4', wordBreak: 'break-word' }}>
+      <div style={{ color: '#9aa6b8', wordBreak: 'break-word' }}>
         passes ({passIds.length}): {passIds.join(', ')}
       </div>
-      <div style={{ color: '#8aa8a4' }}>Modeled phenomenology — not medical advice.</div>
+      <div style={{ color: '#6d7a8f' }}>Modeled phenomenology — not medical advice.</div>
     </div>
   )
 }

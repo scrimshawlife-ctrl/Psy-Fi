@@ -100,7 +100,7 @@ export function softPresentSnapshot(
   size: number = PIXEL_GOLDEN_SIZE,
 ): PixelFrame {
   const rgba = new Uint8Array(size * size * 4)
-  // Dark clear (matches canvas #07070B)
+  // Soft-present clear locked to historical goldens (#07070B). Live canvas uses design.md paper #0a0e14.
   for (let i = 0; i < size * size; i++) {
     const o = i * 4
     rgba[o] = 7

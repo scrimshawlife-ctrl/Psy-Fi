@@ -3,19 +3,37 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#3ee7f2" />
     <title>PsyFi GPU Experience</title>
+    <!-- Hallmark · genre: atmospheric · macrostructure: Workbench · design-system: design.md · designed-as-app · nav: N9 -->
     <style>
+      /* Hallmark · pre-emit critique: P4 H4 E4 S4 R4 V4 · tokens: pass */
       :root {
         color-scheme: dark;
-        --pf-bg: #07070b;
-        --pf-ink: #e8f7f5;
-        --pf-accent: #63f3e8;
-        --pf-muted: #8aa8a4;
-        font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+        --pf-bg-0: #0a0e14;
+        --pf-bg-1: #121820;
+        --pf-text-main: #eef2f7;
+        --pf-text-muted: #9aa6b8;
+        --pf-text-soft: #6d7a8f;
+        --pf-cyan: #3ee7f2;
+        --pf-border-subtle: #2a3344;
+        --pf-font-main: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+        --pf-font-display: "Space Grotesk", "IBM Plex Sans", system-ui, sans-serif;
+        --pf-font-mono: "IBM Plex Mono", ui-monospace, monospace;
+        --color-paper: var(--pf-bg-0);
+        --color-ink: var(--pf-text-main);
+        --color-ink-2: var(--pf-text-muted);
+        --color-accent: var(--pf-cyan);
       }
       * { box-sizing: border-box; }
-      html, body, #root { margin: 0; height: 100%; background: var(--pf-bg); color: var(--pf-ink); }
-      a { color: var(--pf-accent); }
+      html, body, #root {
+        margin: 0;
+        height: 100%;
+        background: var(--pf-bg-0);
+        color: var(--pf-text-main);
+        font-family: var(--pf-font-main);
+      }
+      a { color: var(--pf-cyan); }
     </style>
   </head>
   <body>

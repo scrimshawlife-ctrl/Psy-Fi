@@ -13,11 +13,9 @@
 
     <link rel="manifest" href="/static/manifest.json">
     <link rel="icon" href="/assets/icons/pf-icon-core-sigil-24.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="/assets/icons/pf-icon-core-sigil-48.svg">
+    <link rel="apple-touch-icon" href="/static/apple-touch-icon.png">
+    <link rel="stylesheet" href="/static/fonts/fonts.css">
     <link rel="stylesheet" href="/static/style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 </head>
 <body class="launch-pending">
     <div class="launch-splash" id="launchSplash" role="dialog" aria-modal="true" aria-labelledby="launchTitle">
@@ -40,7 +38,7 @@
         <header class="header">
             <div class="brand-row">
                 <div class="sigil" aria-hidden="true">
-                    <div class="sigil-inner"></div>
+                    <img class="sigil-mark" src="/assets/icons/pf-icon-core-sigil-48.svg" width="44" height="44" alt="">
                 </div>
                 <div class="brand-copy">
                     <h1 class="title">
@@ -55,8 +53,8 @@
         </header>
 
         <nav class="workspace-nav" aria-label="Workspace sections">
-            <a href="#workspace" class="nav-link">Workspace</a>
             <a href="#experiencePanel" class="nav-link">Live Experience</a>
+            <a href="#workspace" class="nav-link">Workspace</a>
             <a href="/gpu/" class="nav-link" title="WebGPU GPU Lab — separate /gpu/ route (not embedded in this shell)">GPU Lab</a>
             <a href="#presets" class="nav-link">Presets</a>
             <a href="#results" class="nav-link">Results</a>
@@ -74,81 +72,7 @@
         </div>
 
         <main class="main-content">
-            <section class="panel control-panel" id="workspace">
-                <div class="panel-header">
-                    <h2>Simulation Workspace</h2>
-                </div>
-                <div class="panel-body">
-                    <form id="simulationForm">
-                        <div class="preset-selector">
-                            <label>Grid presets</label>
-                            <div class="preset-buttons">
-                                <button type="button" class="preset-btn" data-preset="quick">
-                                    <span class="preset-name">Quick Test</span>
-                                    <span class="preset-desc">32×32, 10 steps</span>
-                                </button>
-                                <button type="button" class="preset-btn" data-preset="standard">
-                                    <span class="preset-name">Standard</span>
-                                    <span class="preset-desc">64×64, 20 steps</span>
-                                </button>
-                                <button type="button" class="preset-btn" data-preset="detailed">
-                                    <span class="preset-name">Detailed</span>
-                                    <span class="preset-desc">128×128, 50 steps</span>
-                                </button>
-                                <button type="button" class="preset-btn" data-preset="deep">
-                                    <span class="preset-name">Deep Dive</span>
-                                    <span class="preset-desc">256×256, 100 steps</span>
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="divider"></div>
-
-                        <div class="input-grid">
-                            <div class="input-group">
-                                <label for="width">Field Width</label>
-                                <input type="number" id="width" name="width" value="64" min="8" max="512" required>
-                            </div>
-                            <div class="input-group">
-                                <label for="height">Field Height</label>
-                                <input type="number" id="height" name="height" value="64" min="8" max="512" required>
-                            </div>
-                            <div class="input-group">
-                                <label for="steps">Evolution Steps</label>
-                                <input type="number" id="steps" name="steps" value="20" min="1" max="1000" required>
-                            </div>
-                            <div class="input-group">
-                                <label for="seed">Seed</label>
-                                <input type="number" id="seed" name="seed" value="1337" min="0" max="4294967295" required>
-                            </div>
-                            <div class="input-group">
-                                <label for="substancePreset">Substance Preset</label>
-                                <select id="substancePreset" name="substancePreset">
-                                    <option value="">None (baseline coupling)</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="run-actions">
-                            <button type="submit" class="btn-primary" id="runButton">
-                                <span>Run Simulation</span>
-                            </button>
-                            <button type="button" class="btn-secondary" id="cancelButton" hidden>Cancel</button>
-                        </div>
-                        <label class="checkbox-row" for="preferWebGPU">
-                            <input type="checkbox" id="preferWebGPU" checked>
-                            Prefer WebGPU when available (Canvas 2D fallback)
-                        </label>
-                        <label class="checkbox-row" for="telemetryOptIn">
-                            <input type="checkbox" id="telemetryOptIn">
-                            Opt in to local diagnostic telemetry (off unless server enables it)
-                        </label>
-                        <p class="network-status" id="networkStatus" data-state="online" aria-live="polite">Online — server computation available</p>
-                        <p class="input-hint">Esc or Cancel requests server-side job cancellation.</p>
-                    </form>
-                </div>
-            </section>
-
-            <!-- Live Experience Workspace -->
+            <!-- Live Experience Workspace — field viewport leads Workbench -->
             <section class="panel experience-panel" id="experiencePanel">
                 <div class="panel-header">
                     <h2>Live Experience</h2>
@@ -247,6 +171,80 @@
                         </div>
                         <p class="disclaimer">Modeled phenomenology for research/visualization only. Not medical, diagnostic, or therapeutic advice. Interpretation is speculative.</p>
                     </div>
+                </div>
+            </section>
+
+<section class="panel control-panel" id="workspace">
+                <div class="panel-header">
+                    <h2>Simulation Workspace</h2>
+                </div>
+                <div class="panel-body">
+                    <form id="simulationForm">
+                        <div class="preset-selector">
+                            <label>Grid presets</label>
+                            <div class="preset-buttons">
+                                <button type="button" class="preset-btn" data-preset="quick">
+                                    <span class="preset-name">Quick Test</span>
+                                    <span class="preset-desc">32×32, 10 steps</span>
+                                </button>
+                                <button type="button" class="preset-btn" data-preset="standard">
+                                    <span class="preset-name">Standard</span>
+                                    <span class="preset-desc">64×64, 20 steps</span>
+                                </button>
+                                <button type="button" class="preset-btn" data-preset="detailed">
+                                    <span class="preset-name">Detailed</span>
+                                    <span class="preset-desc">128×128, 50 steps</span>
+                                </button>
+                                <button type="button" class="preset-btn" data-preset="deep">
+                                    <span class="preset-name">Deep Dive</span>
+                                    <span class="preset-desc">256×256, 100 steps</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <div class="input-grid">
+                            <div class="input-group">
+                                <label for="width">Field Width</label>
+                                <input type="number" id="width" name="width" value="64" min="8" max="512" required>
+                            </div>
+                            <div class="input-group">
+                                <label for="height">Field Height</label>
+                                <input type="number" id="height" name="height" value="64" min="8" max="512" required>
+                            </div>
+                            <div class="input-group">
+                                <label for="steps">Evolution Steps</label>
+                                <input type="number" id="steps" name="steps" value="20" min="1" max="1000" required>
+                            </div>
+                            <div class="input-group">
+                                <label for="seed">Seed</label>
+                                <input type="number" id="seed" name="seed" value="1337" min="0" max="4294967295" required>
+                            </div>
+                            <div class="input-group">
+                                <label for="substancePreset">Substance Preset</label>
+                                <select id="substancePreset" name="substancePreset">
+                                    <option value="">None (baseline coupling)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="run-actions">
+                            <button type="submit" class="btn-primary" id="runButton">
+                                <span>Run Simulation</span>
+                            </button>
+                            <button type="button" class="btn-secondary" id="cancelButton" hidden>Cancel</button>
+                        </div>
+                        <label class="checkbox-row" for="preferWebGPU">
+                            <input type="checkbox" id="preferWebGPU" checked>
+                            Prefer WebGPU when available (Canvas 2D fallback)
+                        </label>
+                        <label class="checkbox-row" for="telemetryOptIn">
+                            <input type="checkbox" id="telemetryOptIn">
+                            Opt in to local diagnostic telemetry (off unless server enables it)
+                        </label>
+                        <p class="network-status" id="networkStatus" data-state="online" aria-live="polite">Online — server computation available</p>
+                        <p class="input-hint">Esc or Cancel requests server-side job cancellation.</p>
+                    </form>
                 </div>
             </section>
 

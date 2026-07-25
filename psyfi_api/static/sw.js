@@ -2,10 +2,11 @@
 // Strategies follow MOBILE_PWA_GUIDE.md + docs/PWA_GPU_ROUTE.md.
 // Decision: /gpu/ is a separate route (not embedded); not shell-precached.
 
-const CACHE_NAME = 'psyfi-shell-v14';
+const CACHE_NAME = 'psyfi-shell-v15';
 const SHELL_URLS = [
   '/',
   '/static/style.css',
+  '/static/fonts/fonts.css',
   '/static/app.js',
   '/static/renderer.js',
   '/static/render_worker.js',
@@ -19,6 +20,7 @@ const SHELL_URLS = [
   '/static/manifest.json',
   '/static/icon-192.png',
   '/static/icon-512.png',
+  '/static/apple-touch-icon.png',
 ];
 
 self.addEventListener('install', (event) => {

@@ -11,6 +11,18 @@
       "nav": "N9",
       "footer": "Ft2",
       "designed_as_app": true
+    },
+    {
+      "date": "2026-07-25",
+      "target": "shell UI + graphic assets + /gpu/ chrome",
+      "verb": "fix",
+      "genre": "atmospheric",
+      "macrostructure": "Workbench",
+      "theme": "design.md",
+      "nav": "N9",
+      "footer": "Ft2",
+      "designed_as_app": true,
+      "notes": "Cleared aurora chrome, regenerated cyan-only icons/PWA marks, self-hosted fonts, field-first Workbench, marketing SVG rewrite, GPU token align"
     }
   ]
 }

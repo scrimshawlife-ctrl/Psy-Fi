@@ -17,8 +17,8 @@ export function LightingRig({
   const fogFar = cfg.post.volumetricFog && !neutral ? 9.5 : 40
   return (
     <>
-      <color attach="background" args={['#07070B']} />
-      <fog attach="fog" args={['#07070B', fogNear, fogFar]} />
+      <color attach="background" args={['#0a0e14']} />
+      <fog attach="fog" args={['#0a0e14', fogNear, fogFar]} />
       <ambientLight intensity={ambient} />
       <directionalLight
         castShadow={cfg.post.contactShadows}
@@ -27,7 +27,8 @@ export function LightingRig({
         shadow-mapSize-width={cfg.tier === 'ultra' ? 2048 : 1024}
         shadow-mapSize-height={cfg.tier === 'ultra' ? 2048 : 1024}
       />
-      <pointLight position={[-2, 1.5, -1]} intensity={0.4} color="#8F7BFF" />
+      {/* Field-only violet fill; chrome stays cyan-signal per design.md */}
+      <pointLight position={[-2, 1.5, -1]} intensity={0.4} color="#7a8fd4" />
     </>
   )
 }

@@ -50,7 +50,7 @@ def test_template_wires_cancel_recovery_and_renderer() -> None:
 
 def test_service_worker_precaches_renderer_assets() -> None:
     sw = (STATIC / "sw.js").read_text(encoding="utf-8")
-    assert "psyfi-shell-v14" in sw
+    assert "psyfi-shell-v15" in sw
     assert "/static/renderer.js" in sw
     assert "/static/render_worker.js" in sw
     assert "/static/viz/math.js" in sw
@@ -83,7 +83,21 @@ def test_pwa_gpu_route_decision_documented() -> None:
 def test_pwa_png_icons_exist() -> None:
     assert (STATIC / "icon-192.png").exists()
     assert (STATIC / "icon-512.png").exists()
+    assert (STATIC / "apple-touch-icon.png").exists()
     assert (STATIC / "icon-192.png").read_bytes()[:8] == b"\x89PNG\r\n\x1a\n"
+    # Solid cyan placeholders are forbidden — brand mark must have structure.
+    assert (STATIC / "icon-192.png").stat().st_size > 2048
+    assert (STATIC / "fonts" / "fonts.css").exists()
+    html = TEMPLATE.read_text(encoding="utf-8")
+    assert "fonts.googleapis.com" not in html
+    assert "/static/fonts/fonts.css" in html
+    assert "/static/apple-touch-icon.png" in html
+    assert 'class="sigil-mark"' in html
+    style = (STATIC / "style.css").read_text(encoding="utf-8")
+    assert "design-system: design.md" in style
+    assert "tabular-nums" in style
+    # Live Experience leads Workbench (field before sim form).
+    assert html.index('id="experiencePanel"') < html.index('id="workspace"')
 
 
 def test_app_uses_abort_controller_and_worker_renderer() -> None:

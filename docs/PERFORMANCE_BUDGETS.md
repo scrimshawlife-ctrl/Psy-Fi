@@ -26,7 +26,7 @@ Related: [`docs/BASELINES.md`](BASELINES.md), [`PLANS.md`](../PLANS.md)
 ## Renderer Policy
 
 1. Rasterize in a **Web Worker** when available (legacy heatmap).
-2. Legacy Live Experience: Canvas 2D default; optional WebGL ParameterField path.
+2. Legacy Live Experience: Prefer WebGL ParameterField by default; Canvas 2D fallback. LOD from `quality_tier` (+ adaptive drop).
 3. GPU platform (`/gpu/`): WebGPU-first via `packages/psyfi-gpu-renderer` with tier budgets in [`docs/rendering/GPU_PERFORMANCE_BUDGET.md`](rendering/GPU_PERFORMANCE_BUDGET.md).
 4. Fall back to **Canvas 2D** / legacy shell without blocking metrics/provenance.
 5. Never require WebGPU for core workspace simulation workflow completion.

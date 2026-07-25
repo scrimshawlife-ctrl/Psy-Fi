@@ -6,9 +6,10 @@
   'use strict';
 
   const math = () => global.PsyFiViz.math;
+  const SKIP = 0.05;
 
   function kaleidoscope(ux, uy, weight, symmetry) {
-    if (weight <= 0.05) return { ux, uy };
+    if (weight <= SKIP) return { ux, uy };
     let ang = Math.atan2(uy, ux);
     let rad = Math.hypot(ux, uy);
     const seg = Math.PI / symmetry;
@@ -19,8 +20,9 @@
   }
 
   function recursiveFeedback(ux, uy, weight, ctx) {
-    if (weight <= 0.05) return { ux, uy, feedbackF: 0, orbit: 0 };
+    if (weight <= SKIP) return { ux, uy, feedbackF: 0, orbit: 0 };
     const { fbm, radPhase, fractalFold } = math();
+    const oct = ctx.fbmOctaves != null ? ctx.fbmOctaves : 5;
     const z = 1 + ctx.zoom * 1.8 * Math.sin(ctx.time * (0.4 + ctx.recursion) + radPhase(ux, uy, ctx.seed));
     let nx = ux * z;
     let ny = uy * z;
@@ -46,20 +48,22 @@
       nx * (3 + ctx.recursion * 6),
       ny * (3 + ctx.recursion * 6) - ctx.time * ctx.feedback,
       ctx.seed + 11,
-      5 + Math.floor(ctx.recursion * 2)
+      oct
     );
-    const layered =
-      feedbackF * (0.55 + ctx.recursion * 0.2) +
-      orbit * (0.35 + ctx.feedback * 0.35) +
-      fbm(nx * 7.5 + ctx.time * 0.2, ny * 7.5, ctx.seed + 41, 4) * ctx.recursion * 0.25;
+    let layered =
+      feedbackF * (0.55 + ctx.recursion * 0.2) + orbit * (0.35 + ctx.feedback * 0.35);
+    if (ctx.deepDetail !== false) {
+      layered += fbm(nx * 7.5 + ctx.time * 0.2, ny * 7.5, ctx.seed + 41, Math.max(3, oct - 1)) * ctx.recursion * 0.25;
+    }
     return { ux: nx, uy: ny, feedbackF: Math.min(1, layered), orbit };
   }
 
   function flowField(ux, uy, weight, ctx) {
-    if (weight <= 0.05) return { ux, uy };
+    if (weight <= SKIP) return { ux, uy };
     const { fbm } = math();
-    const n1 = fbm(ux * 2.2 + ctx.time * 0.15, uy * 2.2, ctx.seed);
-    const n2 = fbm(ux * 2.2 + 5.2, uy * 2.2 + ctx.time * 0.12, ctx.seed + 9);
+    const oct = ctx.fbmOctaves != null ? ctx.fbmOctaves : 5;
+    const n1 = fbm(ux * 2.2 + ctx.time * 0.15, uy * 2.2, ctx.seed, oct);
+    const n2 = fbm(ux * 2.2 + 5.2, uy * 2.2 + ctx.time * 0.12, ctx.seed + 9, oct);
     const trailPull = (ctx.trail || 0) * 0.35;
     return {
       ux: ux + (n1 - 0.5) * ctx.disp * (0.9 + trailPull) * weight,
@@ -68,28 +72,35 @@
   }
 
   function organicBloom(ux, uy, weight, ctx) {
-    if (weight <= 0.05) return 0;
+    if (weight <= SKIP) return 0;
     const { fbm } = math();
-    let organic = fbm(ux * 1.4, uy * 1.4 + ctx.time * 0.08, ctx.seed + 3, 5);
-    const vein = fbm(ux * 4.2, uy * 4.2 - ctx.time * 0.05, ctx.seed + 19, 4);
-    organic = organic * 0.72 + vein * 0.28;
+    const oct = ctx.fbmOctaves != null ? ctx.fbmOctaves : 5;
+    let organic = fbm(ux * 1.4, uy * 1.4 + ctx.time * 0.08, ctx.seed + 3, oct);
+    if (ctx.deepDetail !== false) {
+      const vein = fbm(ux * 4.2, uy * 4.2 - ctx.time * 0.05, ctx.seed + 19, Math.max(3, oct - 1));
+      organic = organic * 0.72 + vein * 0.28;
+    }
     return Math.pow(organic, 1.2 - ctx.complex * 0.4);
   }
 
   function voidExpansion(ux, uy, weight, ctx) {
-    if (weight <= 0.05) return 0;
+    if (weight <= SKIP) return 0;
     const r = Math.hypot(ux, uy);
     let voidF = Math.exp(-Math.pow((r - (0.15 + ctx.depth * 0.35 + (ctx.time * 0.03) % 0.4)) * 3.5, 2));
     return voidF * (0.4 + ctx.voidB);
   }
 
   function entityLattice(ux, uy, weight, ctx) {
-    if (weight <= 0.05) return 0;
+    if (weight <= SKIP) return 0;
     const { clamp } = math();
     const lx = Math.sin(ux * (18 + ctx.complex * 40) + ctx.time * (1 + ctx.entropy));
     const ly = Math.cos(uy * (18 + ctx.complex * 40) - ctx.time * 0.8);
     const lz = Math.sin((ux + uy) * (22 + ctx.complex * 30) + ctx.time * 1.3);
     const base = Math.pow(Math.abs(lx * ly * lz), 0.35 + (1 - ctx.complex) * 0.4);
+
+    if (ctx.latticeDetail === false) {
+      return clamp(base, 0, 1);
+    }
 
     // Hex cell lattice + radial petal rings for fractal/entity styles.
     const scale = 7 + ctx.complex * 26;

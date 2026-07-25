@@ -26,6 +26,7 @@ def test_template_wires_cancel_recovery_and_renderer() -> None:
     assert 'id="phaseScrub"' in html
     assert 'id="phaseAdvanceChk"' in html
     assert 'id="phaseSpeedSelect"' in html
+    assert 'id="qualityTierSelect"' in html
     assert 'id="gridPresetSelect"' in html
     assert 'data-tip=' in html
     assert 'id="sensorEnableSelect"' in html
@@ -57,7 +58,7 @@ def test_template_wires_cancel_recovery_and_renderer() -> None:
 
 def test_service_worker_precaches_renderer_assets() -> None:
     sw = (STATIC / "sw.js").read_text(encoding="utf-8")
-    assert "psyfi-shell-v26" in sw
+    assert "psyfi-shell-v27" in sw
     assert ".woff2" in sw
     assert "/assets/icons/pf-icon-reset-24.svg" in sw
     assert "/assets/icons/pf-icon-valence-meter-24.svg" in sw
@@ -210,13 +211,23 @@ def test_app_uses_abort_controller_and_worker_renderer() -> None:
     assert "u_chroma" in gl_js
     assert "u_edge" in gl_js
     assert "u_trail" in gl_js
+    assert "u_lod" in gl_js
     assert "fractalFold" in gl_js
+    assert "Cheap chroma" in gl_js
     math_js = (STATIC / "viz" / "math.js").read_text(encoding="utf-8")
     assert "fractalFold" in math_js
+    assert "resolveRenderLod" in math_js
     eng_js = (STATIC / "viz" / "engines" / "index.js").read_text(encoding="utf-8")
     assert "fractalFold" in eng_js
     assert "orbit" in eng_js
+    assert "SKIP" in eng_js or "0.05" in eng_js
+    player_lod = (STATIC / "viz" / "experiencePlayer.js").read_text(encoding="utf-8")
+    assert "resolveRenderLod" in player_lod
+    assert "lodDrop" in player_lod
     prefer_html = TEMPLATE.read_text(encoding="utf-8")
     assert 'id="preferWebGLChk" checked' in prefer_html
+    assert 'id="qualityTierSelect"' in prefer_html
+    app_lod = (STATIC / "app.js").read_text(encoding="utf-8")
+    assert "qualityTierSelect" in app_lod
     safety_js = (STATIC / "viz" / "safetyPass.js").read_text(encoding="utf-8")
     assert "measureAtten" in safety_js

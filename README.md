@@ -36,20 +36,20 @@ PsyFi keeps **simulation truth in Python** and puts an expressive, safety-clampe
 
 Full board: [`docs/PRODUCTION_READINESS.md`](docs/PRODUCTION_READINESS.md).
 
-| Track                                | Status           | Notes                                              |
-| ------------------------------------ | ---------------- | -------------------------------------------------- |
-| `/api/v1` contracts                  | **hard\_frozen** | `psyfi-api-v1-hard-2026-07-25`                     |
-| CI (pytest + hallmark + GPU build)   | **green path**   | `.github/workflows/ci.yml`                         |
-| Docker deploy                        | **ready**        | Compose + urllib healthcheck + GPU `dist/` bake    |
-| Live Experience + safety             | **ready**        | Neutral View · ParameterField authority            |
-| GPU platform G0–G3                   | **ready**        | `/gpu/` present · compute · TAA · premium post     |
-| GPU G4 cutover ship gates            | **ready**        | assets · parity · goldens · [`G4_CUTOVER.md`](docs/rendering/G4_CUTOVER.md) |
-| Desktop Ultra (30/40/50 + peers)     | **ready**        | NVIDIA · AMD RX · Intel Arc · Apple Pro/Max        |
-| PWA (`/` shell + `/gpu/` route)      | **ready**        | separate `/gpu/` · SW v9 · [`PWA_GPU_ROUTE.md`](docs/PWA_GPU_ROUTE.md) |
-| Device matrix + Phase 4              | **filled**       | 2026-07-25 human + simulated Ultra QA              |
-| Simulated Ultra QA                   | **passed**       | [`SIMULATED_ULTRA_QA.md`](docs/SIMULATED_ULTRA_QA.md) |
-| Soft-present pixel goldens           | **ready**        | [`PIXEL_GOLDENS.md`](docs/rendering/PIXEL_GOLDENS.md) |
-| Native iOS                           | deferred         | `docs/IOS_MIGRATION.md`                            |
+| Track                              | Status           | Notes                                                                       |
+| ---------------------------------- | ---------------- | --------------------------------------------------------------------------- |
+| `/api/v1` contracts                | **hard\_frozen** | `psyfi-api-v1-hard-2026-07-25`                                              |
+| CI (pytest + hallmark + GPU build) | **green path**   | `.github/workflows/ci.yml`                                                  |
+| Docker deploy                      | **ready**        | Compose + urllib healthcheck + GPU `dist/` bake                             |
+| Live Experience + safety           | **ready**        | Neutral View · ParameterField authority                                     |
+| GPU platform G0–G3                 | **ready**        | `/gpu/` present · compute · TAA · premium post                              |
+| GPU G4 cutover ship gates          | **ready**        | assets · parity · goldens · [`G4_CUTOVER.md`](docs/rendering/G4_CUTOVER.md) |
+| Desktop Ultra (30/40/50 + peers)   | **ready**        | NVIDIA · AMD RX · Intel Arc · Apple Pro/Max                                 |
+| PWA (`/` shell + `/gpu/` route)    | **ready**        | separate `/gpu/` · SW v9 · [`PWA_GPU_ROUTE.md`](docs/PWA_GPU_ROUTE.md)      |
+| Device matrix + Phase 4            | **filled**       | 2026-07-25 human + simulated Ultra QA                                       |
+| Simulated Ultra QA                 | **passed**       | [`SIMULATED_ULTRA_QA.md`](docs/SIMULATED_ULTRA_QA.md)                       |
+| Soft-present pixel goldens         | **ready**        | [`PIXEL_GOLDENS.md`](docs/rendering/PIXEL_GOLDENS.md)                       |
+| Native iOS                         | deferred         | `docs/IOS_MIGRATION.md`                                                     |
 
 Ship checklist: `pytest` → `npm test && npm run gpu:test && npm run gpu:build` → `docker compose up -d --build` → `/health` `/ready` `/` `/gpu/`.
 
@@ -154,27 +154,27 @@ Canonical browser API is **`/api/v1`** (**hard-frozen**). Legacy `/api/*` and `/
 
 ## Documentation
 
-| Doc                                                                                | Purpose                    |
-| ---------------------------------------------------------------------------------- | -------------------------- |
-| [`docs/PRODUCTION_READINESS.md`](docs/PRODUCTION_READINESS.md)                     | Production readiness board |
-| [`docs/CONTINUATION_PLAN.md`](docs/CONTINUATION_PLAN.md)                           | Web-track next steps       |
-| [`docs/rendering/ROADMAP.md`](docs/rendering/ROADMAP.md)                           | GPU G0–G5 roadmap          |
-| [`docs/rendering/G4_CUTOVER.md`](docs/rendering/G4_CUTOVER.md)                     | G4 cutover checklist       |
-| [`docs/rendering/PIXEL_GOLDENS.md`](docs/rendering/PIXEL_GOLDENS.md)               | Soft-present pixel goldens |
-| [`docs/DESKTOP_GPU.md`](docs/DESKTOP_GPU.md)                                       | Multi-vendor WebGPU Ultra  |
+| Doc                                                                                | Purpose                         |
+| ---------------------------------------------------------------------------------- | ------------------------------- |
+| [`docs/PRODUCTION_READINESS.md`](docs/PRODUCTION_READINESS.md)                     | Production readiness board      |
+| [`docs/CONTINUATION_PLAN.md`](docs/CONTINUATION_PLAN.md)                           | Web-track next steps            |
+| [`docs/rendering/ROADMAP.md`](docs/rendering/ROADMAP.md)                           | GPU G0–G5 roadmap               |
+| [`docs/rendering/G4_CUTOVER.md`](docs/rendering/G4_CUTOVER.md)                     | G4 cutover checklist            |
+| [`docs/rendering/PIXEL_GOLDENS.md`](docs/rendering/PIXEL_GOLDENS.md)               | Soft-present pixel goldens      |
+| [`docs/DESKTOP_GPU.md`](docs/DESKTOP_GPU.md)                                       | Multi-vendor WebGPU Ultra       |
 | [`docs/PWA_GPU_ROUTE.md`](docs/PWA_GPU_ROUTE.md)                                   | `/gpu/` separate-route decision |
-| [`docs/SIMULATED_ULTRA_QA.md`](docs/SIMULATED_ULTRA_QA.md)                         | Simulated P0 Ultra desktop QA |
-| [`docs/NVIDIA_GPU.md`](docs/NVIDIA_GPU.md)                                         | NVIDIA drivers + Compose   |
-| [`PLANS.md`](PLANS.md)                                                             | Product phases + gates     |
-| [`docs/VISUAL_EXPERIENCES.md`](docs/VISUAL_EXPERIENCES.md)                         | Live Experience guide      |
-| [`docs/rendering/README.md`](docs/rendering/README.md)                             | WebGPU platform docs       |
-| [`DEPLOYMENT.md`](DEPLOYMENT.md)                                                   | Docker deploy guide        |
-| [`docs/PHENOMENOLOGY_PIPELINE.md`](docs/PHENOMENOLOGY_PIPELINE.md)                 | Scraped → overlays         |
-| [`docs/BROWSER_CAPABILITY_MATRIX.md`](docs/BROWSER_CAPABILITY_MATRIX.md)           | Device QA (filled)         |
-| [`docs/contracts/frozen/API_V1_FREEZE.md`](docs/contracts/frozen/API_V1_FREEZE.md) | Contract hard freeze       |
-| [`docs/PHASE4_USABILITY.md`](docs/PHASE4_USABILITY.md)                             | Usability checklist        |
-| [`MOBILE_PWA_GUIDE.md`](MOBILE_PWA_GUIDE.md)                                       | PWA guidance               |
-| [`docs/IOS_MIGRATION.md`](docs/IOS_MIGRATION.md)                                   | Deferred native notes      |
+| [`docs/SIMULATED_ULTRA_QA.md`](docs/SIMULATED_ULTRA_QA.md)                         | Simulated P0 Ultra desktop QA   |
+| [`docs/NVIDIA_GPU.md`](docs/NVIDIA_GPU.md)                                         | NVIDIA drivers + Compose        |
+| [`PLANS.md`](PLANS.md)                                                             | Product phases + gates          |
+| [`docs/VISUAL_EXPERIENCES.md`](docs/VISUAL_EXPERIENCES.md)                         | Live Experience guide           |
+| [`docs/rendering/README.md`](docs/rendering/README.md)                             | WebGPU platform docs            |
+| [`DEPLOYMENT.md`](DEPLOYMENT.md)                                                   | Docker deploy guide             |
+| [`docs/PHENOMENOLOGY_PIPELINE.md`](docs/PHENOMENOLOGY_PIPELINE.md)                 | Scraped → overlays              |
+| [`docs/BROWSER_CAPABILITY_MATRIX.md`](docs/BROWSER_CAPABILITY_MATRIX.md)           | Device QA (filled)              |
+| [`docs/contracts/frozen/API_V1_FREEZE.md`](docs/contracts/frozen/API_V1_FREEZE.md) | Contract hard freeze            |
+| [`docs/PHASE4_USABILITY.md`](docs/PHASE4_USABILITY.md)                             | Usability checklist             |
+| [`MOBILE_PWA_GUIDE.md`](MOBILE_PWA_GUIDE.md)                                       | PWA guidance                    |
+| [`docs/IOS_MIGRATION.md`](docs/IOS_MIGRATION.md)                                   | Deferred native notes           |
 
 ## Non-claims
 

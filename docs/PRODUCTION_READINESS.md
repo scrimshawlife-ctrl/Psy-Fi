@@ -52,7 +52,7 @@ Canonical queue: [`CONTINUATION_PLAN.md`](CONTINUATION_PLAN.md).
 | Priority | Action | Owner |
 | --- | --- | --- |
 | **P0** | Validate Ultra auto-tier on real NVIDIA / AMD / Intel desktops via `/gpu/` | Human QA |
-| **P1** | Profiling HUD polish in `/gpu/` (frame ms + pass list) | Eng |
+| **P1** | Profiling HUD polish in `/gpu/` (FPS · avg/p95/max · budget) | **done** |
 | **P1** | Draco/KTX2 WASM GPU upload beyond header decode | Eng |
 | **P1** | G4 cutover smoke: parity checklist + visual goldens | Eng |
 | **P2** | Re-run device matrix after major UI changes | QA |

@@ -51,7 +51,7 @@ Full board: [`docs/PRODUCTION_READINESS.md`](docs/PRODUCTION_READINESS.md).
 
 Ship checklist: `pytest` → `npm test && npm run gpu:build` → `docker compose up -d --build` → `/health` `/ready` `/` `/gpu/`.
 
-**Next steps:** validate Ultra on real NVIDIA/AMD/Intel desktops → profiling HUD → Draco/KTX2 GPU upload → G4 cutover goldens. Details: [`docs/CONTINUATION_PLAN.md`](docs/CONTINUATION_PLAN.md).
+**Next steps:** validate Ultra on real NVIDIA/AMD/Intel desktops → Draco/KTX2 GPU upload → G4 cutover goldens. Details: [`docs/CONTINUATION_PLAN.md`](docs/CONTINUATION_PLAN.md).
 
 ## Install
 

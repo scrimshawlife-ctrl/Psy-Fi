@@ -45,7 +45,7 @@ Platform package: `packages/psyfi-gpu-renderer`
 - [x] CI budget smoke (`budgetSmoke.test.ts`)
 - [x] Device matrix + Phase 4 human QA filled (2026-07-25)
 - [x] Multi-vendor Ultra auto-tier (NVIDIA 30/40/50 · AMD RX 6/7/9xxx · Intel Arc · Apple Pro/Max)
-- [ ] Profiling overlay polish in `/gpu/` UI (**P1** — see [`CONTINUATION_PLAN.md`](../CONTINUATION_PLAN.md))
+- [x] Profiling overlay polish in `/gpu/` UI (FPS · avg/p95/max · tier budget)
 
 ## Phase G4 — Cutover readiness (**recommended next eng slice after hardware QA**)
 

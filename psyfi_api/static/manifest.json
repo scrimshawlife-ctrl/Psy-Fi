@@ -4,21 +4,21 @@
   "description": "Modular consciousness field simulation engine with ABX-Core v1.3",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0a0a0f",
-  "theme_color": "#00ffff",
-  "orientation": "portrait",
+  "background_color": "#05070B",
+  "theme_color": "#3EE7F2",
+  "orientation": "any",
   "icons": [
     {
-      "src": "/static/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "src": "/assets/icons/pf-icon-core-sigil-48.svg",
+      "sizes": "48x48",
+      "type": "image/svg+xml",
+      "purpose": "any"
     },
     {
-      "src": "/static/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "src": "/assets/icons/pf-icon-core-sigil-24.svg",
+      "sizes": "24x24",
+      "type": "image/svg+xml",
+      "purpose": "any"
     }
   ],
   "categories": ["science", "education", "utilities"],

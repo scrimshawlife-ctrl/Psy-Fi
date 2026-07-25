@@ -27,7 +27,14 @@ app.add_middleware(
 
 # Setup static files and templates
 BASE_DIR = Path(__file__).resolve().parent
+REPO_ROOT = BASE_DIR.parent
 app.mount("/static", StaticFiles(directory=str(BASE_DIR / "static")), name="static")
+# Reuse the existing docs/icons pack for PWA/browser icons.
+app.mount(
+    "/assets/icons",
+    StaticFiles(directory=str(REPO_ROOT / "docs" / "icons")),
+    name="icons",
+)
 templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 
 # Include routers

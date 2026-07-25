@@ -8,15 +8,22 @@ The installable PWA is PsyFi's first mobile application surface. It is not descr
 
 ## Supported Experience
 
-The core workflow must remain available without optional device APIs:
+### Implemented now (existing web shell)
 
-1. Configure or select a simulation preset.
-2. Run or cancel a simulation.
-3. Inspect metrics, assumptions, and provenance.
-4. Save and restore a versioned session.
-5. Export results and session data.
+1. Configure grid size / steps / seed, or choose a quick size preset.
+2. Run a server-backed simulation while online.
+3. Inspect metrics plus seed / provenance / module chain.
+4. Save/restore the last versioned session via `localStorage`.
+5. Export the last session as JSON.
 
-Camera, motion, MIDI, audio, haptics, WebGPU, persistent storage, and installability are progressive enhancements. Unsupported capabilities must produce an explicit fallback state.
+### Planned (not yet in the client)
+
+- Cancel an in-flight simulation.
+- IndexedDB session history with migrations.
+- Offline compute parity with the Python engine.
+- Full capability diagnostics UI for camera/motion/MIDI/audio/haptics/WebGPU.
+
+Camera, motion, MIDI, audio, haptics, WebGPU, persistent storage, and installability remain progressive enhancements. Unsupported capabilities must produce an explicit fallback state and must not block the core online workflow.
 
 ## Installation
 

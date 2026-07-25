@@ -23,18 +23,21 @@ PsyFi is web-first. The existing deterministic Python engine and FastAPI service
 - [x] Declare web-first product strategy.
 - [x] Preserve Python/FastAPI as the initial computation authority.
 - [x] Define web architecture, design system, and iOS migration constraints.
-- [ ] Inventory current API routes, response schemas, static assets, and service-worker behavior.
-- [ ] Add machine-readable API schemas and representative fixtures.
-- [ ] Establish performance and accessibility baselines.
+- [x] Inventory current API routes, response schemas, static assets, and service-worker behavior.
+- [x] Add machine-readable API schemas and representative fixtures.
+- [x] Establish performance and accessibility baselines.
+- [x] Decide frontend boundary using existing FastAPI static shell (see `docs/FRONTEND_BOUNDARY.md`).
+- [x] Extract design tokens as semantic aliases over existing `--pf-*` CSS.
+- [x] Define deterministic session schema via Pydantic + exported JSON Schema.
 
 Exit gate: all active implementation work can be traced to a documented contract or acceptance criterion.
 
 ### Phase 1 — Web Product Foundation
 
-- [ ] Establish a dedicated frontend application boundary.
+- [x] Establish a dedicated frontend application boundary.
 - [ ] Build responsive navigation, simulation workspace, preset browser, results inspector, and provenance panel.
-- [ ] Centralize design tokens and component states.
-- [ ] Add deterministic session serialization and shareable configuration files.
+- [x] Centralize design tokens and component states.
+- [x] Add deterministic session serialization and shareable configuration files.
 - [ ] Add error boundaries, loading states, empty states, and capability diagnostics.
 - [ ] Implement telemetry that is privacy-preserving and disabled by default until governance is approved.
 
@@ -83,17 +86,17 @@ Exit gate: iPhone adds verified platform value without creating a second product
 ## Near-Term Work Queue
 
 Priority 0:
-- API contract inventory and OpenAPI review.
-- Frontend boundary decision based on current repository constraints.
-- Design token extraction.
-- Accessibility and performance baselines.
-- Deterministic session schema.
+- [x] API contract inventory and OpenAPI review.
+- [x] Frontend boundary decision based on current repository constraints.
+- [x] Design token extraction.
+- [x] Accessibility and performance baselines.
+- [x] Deterministic session schema.
 
 Priority 1:
-- Simulation workspace redesign.
-- Results/provenance inspector.
-- Visualization schema and renderer prototype.
-- IndexedDB history and import/export.
+- Simulation workspace redesign (continue enhancing existing shell).
+- Results/provenance inspector enrichment beyond the current panel.
+- Visualization schema consumer / Canvas renderer prototype.
+- IndexedDB history replacing interim localStorage.
 - Browser capability matrix.
 
 Priority 2:

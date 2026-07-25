@@ -32,32 +32,15 @@ Secondary surfaces:
 
 ## Semantic Tokens
 
-Store tokens in a platform-neutral source such as JSON and generate CSS variables first, then Swift constants later.
+Store tokens in a platform-neutral source and bind them to CSS variables first, then Swift constants later.
 
-```json
-{
-  "color": {
-    "surface.canvas": "#07070B",
-    "surface.panel": "#101018",
-    "surface.elevated": "#171724",
-    "text.primary": "#F4F4F8",
-    "text.secondary": "#B8B8C7",
-    "text.muted": "#858597",
-    "signal.primary": "#63F3E8",
-    "signal.secondary": "#D56CFF",
-    "signal.tertiary": "#8D7CFF",
-    "status.success": "#74D99F",
-    "status.warning": "#F1C76A",
-    "status.danger": "#FF7A8A"
-  },
-  "space": {"1":4,"2":8,"3":12,"4":16,"5":24,"6":32,"7":48,"8":64},
-  "radius": {"sm":6,"md":10,"lg":16,"pill":999},
-  "duration": {"instant":0,"fast":120,"standard":220,"slow":420},
-  "opacity": {"disabled":0.42,"muted":0.68,"scrim":0.72}
-}
-```
+Live integration (Phase 0):
 
-Values are initial defaults, not permission to hardcode duplicates throughout the UI.
+- semantic map: [`docs/style/tokens.json`](style/tokens.json)
+- CSS aliases on existing brand tokens: [`docs/style/psyfi-colors.css`](style/psyfi-colors.css) and `psyfi_api/static/style.css`
+- semantic names (`--color-surface-canvas`, `--color-signal-primary`, …) currently alias `--pf-*` values so the live UI is not forked
+
+Target semantic palette from this document may diverge visually later; until a deliberate refresh, **implemented `--pf-*` values remain authoritative for pixels**.
 
 ## Typography
 

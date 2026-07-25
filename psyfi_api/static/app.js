@@ -49,19 +49,51 @@ document.addEventListener('DOMContentLoaded', () => {
         el.hidden = hidden;
     }
 
+    let loadingWatchdog = 0;
+
     function showLoading(show, statusText) {
         setHidden(loadingOverlay, !show);
+        if (loadingOverlay) {
+            loadingOverlay.setAttribute('aria-hidden', show ? 'false' : 'true');
+        }
         runButton.disabled = show;
         if (cancelButton) {
             setHidden(cancelButton, !show);
             cancelButton.disabled = !show;
         }
+        const dismissBtn = document.getElementById('loadingDismissBtn');
+        if (dismissBtn) setHidden(dismissBtn, !show);
         if (loadingStatus && statusText) {
             loadingStatus.textContent = statusText;
         } else if (loadingStatus && show) {
             loadingStatus.textContent = 'Computing consciousness field…';
         }
+        if (loadingWatchdog) {
+            clearTimeout(loadingWatchdog);
+            loadingWatchdog = 0;
+        }
+        // Never leave the overlay stuck if a job poll hangs.
+        if (show) {
+            loadingWatchdog = setTimeout(() => {
+                showLoading(false);
+                showError('Simulation timed out. Dismissed the loading overlay — try a smaller grid or fewer steps.');
+                cancelRequested = true;
+                if (activeJobId) {
+                    fetch(`${API_V1}/jobs/${activeJobId}`, { method: 'DELETE' }).catch(() => {});
+                }
+            }, 90000);
+        }
     }
+
+    document.getElementById('loadingDismissBtn')?.addEventListener('click', () => {
+        cancelRequested = true;
+        if (activeAbort) activeAbort.abort();
+        if (activeJobId) {
+            fetch(`${API_V1}/jobs/${activeJobId}`, { method: 'DELETE' }).catch(() => {});
+        }
+        showLoading(false);
+        showError('Loading dismissed. No result was applied.');
+    });
 
     function showError(message) {
         document.getElementById('errorMessage').textContent = message;
@@ -501,7 +533,11 @@ document.addEventListener('DOMContentLoaded', () => {
         activeJobId = created.id;
         showLoading(true, `Job ${activeJobId} running…`);
 
+        const started = Date.now();
         while (true) {
+            if (Date.now() - started > 85000) {
+                throw new Error('Simulation job timed out');
+            }
             if (cancelRequested && activeJobId) {
                 await fetch(`${API_V1}/jobs/${activeJobId}`, { method: 'DELETE' });
             }
@@ -742,6 +778,17 @@ document.addEventListener('DOMContentLoaded', () => {
     loadPresets();
     refreshHistory().then(maybeShowRecoveryBanner);
     renderCapabilities();
+
+    // Splash finished (or skipped) — refresh capability/sensor UI against final probes.
+    window.PsyFiBoot = window.PsyFiBoot || {};
+    window.PsyFiBoot.onLaunchReady = function onLaunchReady() {
+        renderCapabilities();
+    };
+    window.addEventListener('psyfi:launch-ready', () => renderCapabilities());
+    // If splash already entered before this handler bound, sync once.
+    if (!document.body.classList.contains('launch-pending')) {
+        renderCapabilities();
+    }
 });
 
 // ===== Live Experience workspace =====

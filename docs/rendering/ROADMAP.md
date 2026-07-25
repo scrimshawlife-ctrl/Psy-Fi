@@ -51,8 +51,10 @@ Platform package: `packages/psyfi-gpu-renderer`
 
 - [x] Draco/KTX2 GPU upload path (`ktx2Parse` · `dracoBridge` · `GpuAssetUploader` · `loadAndUpload`)
 - [x] Cutover checklist doc [`G4_CUTOVER.md`](G4_CUTOVER.md)
-- [ ] Feature parity table evidence vs legacy Live Experience
-- [ ] Visual regression goldens (canonical seeds)
+- [x] Feature parity matrix in CI (`g4Parity.ts`) — no ship blockers
+- [x] `SceneAssetLayer` wires snapshot `assets.ktx2` into SceneRoot
+- [x] Canonical visual seed list (`G4_VISUAL_SEEDS`)
+- [ ] Pixel / histogram goldens on WebGPU CI runner
 - [ ] Vendor real Draco WASM / Basis transcoder (optional; bridges ready)
 - [ ] PWA integration decision (embed vs route)
 - [x] Soft → **hard** freeze includes scene-snapshot schema

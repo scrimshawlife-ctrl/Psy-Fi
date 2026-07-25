@@ -36,6 +36,8 @@ Prefer **procedural** geometry (glyphs, SDF, ribbons, metaballs, volumes, crysta
 ## Worker loading + GPU upload
 
 ```text
+SceneRoot
+  └─ SceneAssetLayer (snapshot.assets.ktx2 → DataTexture plane)
 Main / OffscreenCanvas renderer
         ▲ GpuAssetUploader (writeTexture / writeBuffer)
 AssetLoader.loadAndUpload
@@ -46,6 +48,8 @@ AssetWorker pool
   ├─ glTF + KTX2 header/meta decode
   └─ Splat (optional)
 ```
+
+Snapshot asset refs use `{ id, url, role? }`. Python emits empty arrays until packs are productized.
 
 ## Repo placement
 

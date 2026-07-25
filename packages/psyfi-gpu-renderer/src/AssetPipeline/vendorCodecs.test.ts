@@ -21,10 +21,13 @@ describe('vendored GPU codecs', () => {
     expect(existsSync(join(repoRoot, VENDOR_BASIS_FS, 'basis_transcoder.js'))).toBe(true)
   })
 
-  it('decodes a real Draco bitstream with draco3d WASM', async () => {
+  it('decodes a real Draco bitstream with vendored glTF WASM', async () => {
     const bitstream = await encodeDracoTriangle()
     const decoder = createDracoWasmDecoder({ mode: 'wasm' })
     expect(decoder).toBeInstanceOf(Draco3dWasmDecoder)
+    await decoder.ensureReady?.()
+    expect(decoder.ready).toBe(true)
+    expect((decoder as Draco3dWasmDecoder).vendorPath).toContain('draco')
     const plan = await planDracoMeshUpload('tri', bitstream, decoder)
     expect(plan.kind).toBe('mesh')
     if (plan.kind !== 'mesh') return

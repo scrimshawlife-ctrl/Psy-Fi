@@ -17,22 +17,24 @@ import {
 } from './contracts/QualityTier'
 import { enabledPasses } from './contracts/RenderGraph'
 import type { SceneSnapshotV1 } from './contracts/SceneSnapshot'
+import { readGpuLaunchParams } from './bridge/launchParams'
 
 export function App() {
+  const launch = useMemo(() => readGpuLaunchParams(), [])
   const store = useMemo(() => new SnapshotStore(), [])
   const interpolator = useMemo(() => new SnapshotInterpolator(), [])
   const publisher = useMemo(() => new AnalysisPublisher(store), [store])
   const [caps, setCaps] = useState<DeviceCaps>(() => probeDeviceCaps())
 
   const [tier, setTier] = useState<QualityTier>(() =>
-    resolveTier('balanced', probeDeviceCaps()),
+    resolveTier(launch.tier || 'balanced', probeDeviceCaps()),
   )
   const [snapshot, setSnapshot] = useState<SceneSnapshotV1 | null>(null)
-  const [status, setStatus] = useState('Idle')
-  const [substance, setSubstance] = useState('lsd')
-  const [mode, setMode] = useState('open')
-  const [intensity, setIntensity] = useState(0.75)
-  const [seed, setSeed] = useState(42)
+  const [status, setStatus] = useState(launch.fromShell ? 'Loading from shell…' : 'Idle')
+  const [substance, setSubstance] = useState(launch.substance || 'lsd')
+  const [mode, setMode] = useState(launch.mode || 'open')
+  const [intensity, setIntensity] = useState(launch.intensity ?? 0.75)
+  const [seed, setSeed] = useState(launch.seed ?? 42)
   const [showHud, setShowHud] = useState(true)
   const [stats, setStats] = useState(store.stats())
   const profiler = useMemo(() => new FrameProfiler(), [])
@@ -51,6 +53,7 @@ export function App() {
         intensity,
         seed,
         quality_tier: tier,
+        experience_id: launch.experienceId ?? null,
         include_simulation: true,
         reduce_motion: window.matchMedia?.('(prefers-reduced-motion: reduce)').matches,
       })
@@ -68,13 +71,15 @@ export function App() {
       console.error(err)
       setStatus(err instanceof Error ? err.message : 'Publish failed')
     }
-  }, [publisher, store, interpolator, substance, mode, intensity, seed, tier])
+  }, [publisher, store, interpolator, substance, mode, intensity, seed, tier, launch.experienceId])
 
   useEffect(() => {
     void refineDeviceCaps(probeDeviceCaps()).then((next) => {
       setCaps(next)
-      // Auto-select Ultra/High on high-end discrete unless user already picked.
+      // Auto-select Ultra/High on high-end discrete unless shell handoff set a tier
+      // or the user already left balanced.
       setTier((prev) => {
+        if (launch.tier) return resolveTier(launch.tier, next)
         const suggested = recommendedTier(next)
         if (prev === 'balanced' && (suggested === 'ultra' || suggested === 'high')) {
           return resolveTier(suggested, next)
@@ -82,7 +87,7 @@ export function App() {
         return resolveTier(prev, next)
       })
     })
-  }, [])
+  }, [launch.tier])
 
   useEffect(() => {
     void refresh()

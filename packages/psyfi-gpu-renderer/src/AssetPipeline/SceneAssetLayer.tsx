@@ -2,13 +2,16 @@ import { useEffect, useMemo, useState } from 'react'
 import * as THREE from 'three'
 import type { SceneSnapshotV1 } from '../contracts/SceneSnapshot'
 import { AssetLoader } from './AssetLoader'
-import { planKtx2Upload } from './uploadPlan'
+import { planKtx2UploadAsync } from './uploadPlan'
+import { createBasisTranscoder } from './basisTranscoder'
 import { normalizeSceneAssets, rgbaPreviewFromPlan } from './sceneAssets'
 
 /**
  * Loads snapshot `assets.ktx2` refs and applies the first GPU-ready texture
  * as a soft ground/tint plane. Procedural scene remains authoritative when
  * no assets are present (current Python default).
+ *
+ * Uses async BasisLZ transcode when the KTX2 container needs it.
  */
 export function SceneAssetLayer({
   snapshot,
@@ -33,6 +36,7 @@ export function SceneAssetLayer({
 
     let cancelled = false
     const loader = new AssetLoader()
+    const basis = createBasisTranscoder()
     const primary = refs[0]
     setStatus(`loading ${primary.id}`)
 
@@ -40,7 +44,7 @@ export function SceneAssetLayer({
       try {
         const asset = await loader.load({ id: primary.id, kind: 'ktx2', url: primary.url })
         if (cancelled) return
-        const plan = planKtx2Upload(asset.id, asset.bytes)
+        const plan = await planKtx2UploadAsync(asset.id, asset.bytes, basis)
         const preview = rgbaPreviewFromPlan(plan)
         if (!preview) {
           setStatus(plan.kind === 'deferred' ? `deferred:${plan.needs}` : 'no-preview')
@@ -77,12 +81,14 @@ export function SceneAssetLayer({
         }
       } finally {
         loader.dispose()
+        basis.dispose()
       }
     })()
 
     return () => {
       cancelled = true
       loader.dispose()
+      basis.dispose()
     }
   }, [enabled, refs])
 

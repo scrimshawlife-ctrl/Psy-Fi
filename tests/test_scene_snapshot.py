@@ -6,9 +6,31 @@ from fastapi.testclient import TestClient
 
 from psyfi_api.main import app
 from psyfi_core.experiences.parameter_mapper import map_parameters
-from psyfi_core.visualization.scene_snapshot import SCENE_SNAPSHOT_SCHEMA, build_scene_snapshot
+from psyfi_core.visualization.scene_snapshot import (
+    SCENE_SNAPSHOT_SCHEMA,
+    build_scene_snapshot,
+    normalize_snapshot_quality_tier,
+)
 
 client = TestClient(app)
+
+
+def test_normalize_snapshot_quality_tier_aliases() -> None:
+    assert normalize_snapshot_quality_tier("battery_saver") == "battery"
+    assert normalize_snapshot_quality_tier("survival") == "battery"
+    assert normalize_snapshot_quality_tier("efficient") == "balanced"
+    assert normalize_snapshot_quality_tier("ultra") == "ultra"
+    assert normalize_snapshot_quality_tier("nope") == "balanced"
+
+
+def test_battery_saver_uses_battery_post_stack() -> None:
+    """Regression: battery_saver must not collapse to balanced before aliasing."""
+    field = map_parameters(substance="lsd", mode="open", intensity=0.7, seed=9).to_dict()
+    snap = build_scene_snapshot(parameter_field=field, quality_tier="battery_saver", sequence=1)
+    assert snap["quality_tier"] == "battery"
+    assert snap["post"]["ssr"] is False
+    assert snap["post"]["hdr"] is False
+    assert snap["post"]["bloom"] is True
 
 
 def test_build_scene_snapshot_deterministic_procedural() -> None:

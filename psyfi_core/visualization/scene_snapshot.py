@@ -183,6 +183,21 @@ def _procedural_from_field(parameter_field: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def normalize_snapshot_quality_tier(quality_tier: str | None) -> str:
+    """Map client/shell aliases onto the scene-snapshot post stack keys."""
+    tier = (quality_tier or "balanced").lower().replace("-", "_")
+    aliases = {
+        "battery_saver": "battery",
+        # Shell Live Experience LOD vocabulary → GPU post tiers
+        "survival": "battery",
+        "efficient": "balanced",
+    }
+    tier = aliases.get(tier, tier)
+    if tier not in _QUALITY_POST:
+        tier = "balanced"
+    return tier
+
+
 def build_scene_snapshot(
     *,
     parameter_field: dict[str, Any],
@@ -193,11 +208,7 @@ def build_scene_snapshot(
     snapshot_id: str | None = None,
 ) -> dict[str, Any]:
     """Build an immutable scene snapshot for the GPU renderer."""
-    tier = (quality_tier or "balanced").lower()
-    if tier not in _QUALITY_POST:
-        tier = "balanced"
-    if tier == "battery_saver":
-        tier = "battery"
+    tier = normalize_snapshot_quality_tier(quality_tier)
 
     field = dict(parameter_field)
     # Prefer snapshot quality when client asks; keep field copy intact otherwise.

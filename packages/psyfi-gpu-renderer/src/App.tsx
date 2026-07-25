@@ -133,11 +133,15 @@ export function App() {
           gap: 10,
           alignItems: 'center',
           padding: '10px 14px',
-          borderBottom: '1px solid rgba(99,243,232,0.18)',
+          borderBottom: '1px solid #2a3344',
+          background: '#121820',
+          fontFamily: '"IBM Plex Sans", system-ui, sans-serif',
         }}
       >
-        <strong style={{ letterSpacing: '0.04em' }}>PsyFi GPU</strong>
-        <span style={{ color: '#8aa8a4', fontSize: 13 }}>{status}</span>
+        <strong style={{ letterSpacing: '-0.02em', fontFamily: '"Space Grotesk", "IBM Plex Sans", sans-serif' }}>
+          PsyFi GPU
+        </strong>
+        <span style={{ color: '#9aa6b8', fontSize: 13 }}>{status}</span>
         <label>
           Substance{' '}
           <select value={substance} onChange={(e) => setSubstance(e.target.value)}>
@@ -200,7 +204,7 @@ export function App() {
         {caps.webgpu ? (
           <PsyFiGPUCanvas snapshot={snapshot} tier={effectiveTier} />
         ) : (
-          <div style={{ padding: 24, color: '#8aa8a4' }}>
+          <div style={{ padding: 24, color: '#9aa6b8' }}>
             <p>WebGPU is not available in this browser.</p>
             <p>
               On discrete desktops (NVIDIA RTX 30/40/50, AMD RX 6000/7000/9000, Intel Arc), use

@@ -48,3 +48,11 @@ Live CSS maps these onto existing `--pf-*` / `--color-*` aliases in `psyfi_api/s
 - Rounded-full pill navigation chips
 - Aurora radial body blooms as chrome decoration
 - Emoji as control icons
+- Solid-fill PWA icons (always ship the core sigil mark)
+- Magenta/violet in chrome icons (field metrics only)
+- Third-party font CDNs (self-host under `psyfi_api/static/fonts/`)
+
+## Brand marks
+- Core sigil: `docs/icons/pf-icon-core-sigil-{24,48}.svg` (served at `/assets/icons/`)
+- PWA: `psyfi_api/static/icon-{192,512}.png` + `apple-touch-icon.png`
+- Marketing headers/footers: `docs/images/psyfi-{header,footer}-*.svg` (Space Grotesk + one cyan signal)

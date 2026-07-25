@@ -1,9 +1,9 @@
 /* Hallmark · genre: atmospheric · macrostructure: Workbench · design-system: design.md · designed-as-app · nav: N9 · footer: Ft2
-   Hallmark · pre-emit critique: P4 H4 E4 S4 R4 V4
-   PsyFi shell — calm chrome, expressive field. */
+   Hallmark · pre-emit critique: P5 H5 E4 S5 R5 V4 · honest: pass · chrome: pass · tokens: pass · responsive: pass · icons: pass
+   PsyFi shell — calm chrome, expressive field. Field viewport leads; chrome stays quiet. */
 
 :root {
-    /* Surfaces — tinted void, not pure black */
+    /* Surfaces — tinted void, not pure black (maps design.md --color-paper*) */
     --pf-bg-0: #0a0e14;
     --pf-bg-1: #121820;
     --pf-bg-2: #1a222e;
@@ -14,6 +14,7 @@
     --pf-text-muted: #9aa6b8;
     --pf-text-soft: #6d7a8f;
     --pf-text-accent: #eef2f7;
+    --pf-ink-on-accent: #071016;
 
     /* One UI signal; magenta/violet reserved for field metrics, not chrome fill */
     --pf-cyan: #3ee7f2;
@@ -29,7 +30,7 @@
     --pf-info: #34c3ff;
 
     --pf-focus-ring: color-mix(in srgb, var(--pf-cyan) 35%, transparent);
-    --pf-shadow-subtle: 0 8px 24px rgba(6, 10, 16, 0.45);
+    --pf-elevation: 0 8px 24px color-mix(in srgb, var(--pf-bg-0) 70%, transparent);
 
     --pf-font-display: "Space Grotesk", "IBM Plex Sans", system-ui, sans-serif;
     --pf-font-main: "IBM Plex Sans", system-ui, sans-serif;
@@ -53,7 +54,7 @@
     --border-subtle: var(--pf-border-subtle);
     --shadow-cyan: none;
     --shadow-magenta: none;
-    --shadow-subtle: var(--pf-shadow-subtle);
+    --shadow-subtle: var(--pf-elevation);
     --font-primary: var(--pf-font-main);
     --font-mono: var(--pf-font-mono);
     --font-display: var(--pf-font-display);
@@ -110,10 +111,6 @@ body {
     color: var(--pf-text-main);
     line-height: 1.55;
     min-height: 100vh;
-    background-image:
-        linear-gradient(180deg, color-mix(in srgb, var(--pf-cyan) 6%, transparent) 0%, transparent 28%),
-        radial-gradient(120% 80% at 100% 0%, color-mix(in srgb, var(--pf-bg-2) 80%, transparent) 0%, transparent 55%);
-    background-attachment: fixed;
 }
 
 .container {
@@ -143,25 +140,19 @@ body {
 
 .sigil {
     flex-shrink: 0;
-}
-
-.sigil-inner {
     width: 44px;
     height: 44px;
-    border: 1px solid var(--pf-cyan);
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--pf-border-subtle);
     border-radius: var(--radius-sm);
-    background:
-        linear-gradient(135deg, color-mix(in srgb, var(--pf-cyan) 18%, transparent) 0%, transparent 55%),
-        var(--pf-bg-1);
-    position: relative;
+    background: var(--pf-bg-1);
 }
 
-.sigil-inner::before {
-    content: "";
-    position: absolute;
-    inset: 10px;
-    border: 1px solid color-mix(in srgb, var(--pf-cyan) 55%, transparent);
-    border-radius: 2px;
+.sigil-mark {
+    display: block;
+    width: 28px;
+    height: 28px;
 }
 
 .brand-copy {
@@ -450,7 +441,7 @@ body {
 
 .btn-primary {
     background: var(--pf-cyan);
-    color: #071016;
+    color: var(--pf-ink-on-accent);
     border: 1px solid var(--pf-cyan);
     padding: 0.85rem 1.4rem;
     border-radius: var(--radius-sm);
@@ -631,10 +622,10 @@ body {
 }
 
 .metric-label {
-    font-size: 0.72rem;
+    font-size: 0.78rem;
     color: var(--pf-text-soft);
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    text-transform: none;
     margin-bottom: var(--space-2);
 }
 
@@ -642,6 +633,7 @@ body {
     font-size: 1.6rem;
     font-weight: 500;
     font-family: var(--pf-font-mono);
+    font-variant-numeric: tabular-nums;
     color: var(--pf-text-main);
     margin-bottom: var(--space-3);
 }
@@ -783,9 +775,13 @@ body.launch-ready #appShell {
     inset: 0;
     z-index: 2000;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: var(--space-5);
+    align-items: stretch;
+    justify-content: flex-start;
+    padding:
+        max(var(--space-5), env(safe-area-inset-top))
+        max(var(--space-5), env(safe-area-inset-right))
+        max(var(--space-5), env(safe-area-inset-bottom))
+        max(var(--space-5), env(safe-area-inset-left));
     color: var(--pf-text-main);
 }
 
@@ -796,27 +792,28 @@ body.launch-ready #appShell {
 .launch-splash-bg {
     position: absolute;
     inset: 0;
-    background:
-        radial-gradient(ellipse 80% 55% at 50% 0%, color-mix(in srgb, var(--pf-cyan) 14%, transparent), transparent 70%),
-        linear-gradient(165deg, #0c121a 0%, var(--pf-bg-0) 45%, #0a1018 100%);
+    background: var(--pf-bg-0);
 }
 
 .launch-splash-inner {
     position: relative;
+    align-self: center;
     width: min(36rem, 100%);
     max-height: min(92vh, 44rem);
     overflow: auto;
+    margin-right: auto;
     padding: clamp(1.25rem, 3vw, 2rem);
     border: 1px solid var(--pf-border-subtle);
     border-radius: var(--radius-md);
-    background: color-mix(in srgb, var(--pf-bg-1) 92%, transparent);
-    box-shadow: var(--pf-shadow-subtle);
+    background: var(--pf-bg-1);
+    box-shadow: none;
 }
 
 .launch-brand {
     font-family: var(--pf-font-display);
     font-size: clamp(2.4rem, 6vw, 3.4rem);
     font-weight: 600;
+    font-style: normal;
     letter-spacing: -0.03em;
     color: var(--pf-text-main);
     margin: 0 0 0.35rem;
@@ -994,13 +991,17 @@ body.launch-ready #appShell {
     gap: var(--space-5);
 }
 
+.experience-panel {
+    border-color: var(--pf-border-strong);
+}
+
 .experience-viewport-wrap {
     position: relative;
     background: var(--pf-bg-0);
     border: 1px solid var(--pf-border-subtle);
     border-radius: var(--radius-md);
     overflow: hidden;
-    min-height: 260px;
+    min-height: clamp(280px, 42vh, 520px);
 }
 
 #experienceCanvas,

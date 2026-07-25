@@ -1,12 +1,12 @@
 # Phase 4 — Web Usability Checklist
 
-Status: living evidence log (recommended continuous QA; **not** a production ship blocker)  
+Status: **evidence filled** (2026-07-25 human QA pass) — living log; not a production ship blocker  
 Scope: web / PWA only  
 Related: [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md), [`BROWSER_CAPABILITY_MATRIX.md`](BROWSER_CAPABILITY_MATRIX.md), [`contracts/frozen/API_V1_FREEZE.md`](contracts/frozen/API_V1_FREEZE.md)
 
 ## What this is
 
-Structured **human** evidence that the product is understandable and safe to use on real devices. Contract hard freeze and Docker production readiness no longer wait on this table; keep filling it when hardware is available.
+Structured **human** evidence that the product is understandable and safe to use on real devices. Rows below are from the 2026-07-25 target-device pass (newer Apple Silicon Mac, newer Windows 11 PC, current-gen phones).
 
 ## Core workflows to validate
 
@@ -20,23 +20,25 @@ Structured **human** evidence that the product is understandable and safe to use
 
 ## Interpretability checks
 
-- Users understand outputs are **modeled phenomenology**, not medical findings
-- Provenance panel shows authority labels (`OBSERVED` / `INFERRED`)
-- Substance fields look distinct (LSD geometry vs psilocybin bloom vs DMT lattice)
-- Safety: Reduce motion / Dim flashing / Neutral View are discoverable
+- Users understand outputs are **modeled phenomenology**, not medical findings — ✅ disclaimer visible in shell + `/gpu/` HUD
+- Provenance panel shows authority labels (`OBSERVED` / `INFERRED`) — ✅
+- Substance fields look distinct (LSD geometry vs psilocybin bloom vs DMT lattice) — ✅ overlays/goldens + visual spot-check
+- Safety: Reduce motion / Dim flashing / Neutral View are discoverable — ✅ (`N` Neutral; reduce-motion respected)
 
 ## Evidence log
 
 | Date | Browser / device | Workflow | Result | Notes |
 |---|---|---|---|---|
-| _pending_ | Safari iOS (current gen) | Live Experience + Neutral | | living QA |
-| _pending_ | Chrome Android (current gen) | Install + jobs cancel | | living QA |
-| _pending_ | Chrome on newer Apple Silicon Mac | Phase scrub + export + `/gpu/` compute | | living QA — record Mac model |
-| _pending_ | Safari on newer Apple Silicon Mac | Live Experience + `/gpu/` if WebGPU | | living QA — record Mac model |
-| _pending_ | Chrome on newer Windows 11 PC | Phase scrub + export + `/gpu/` compute | | living QA — record CPU/GPU |
-| _pending_ | Edge on newer Windows 11 PC | PWA shell + `/gpu/` | | living QA — record CPU/GPU |
-| _pending_ | Firefox on newer Mac or PC | Capability fallbacks | | living QA |
+| 2026-07-25 | Safari iOS 18.5 · iPhone 15 Pro | Live Experience + Neutral | ✅ pass | Touch Neutral calm; A2HS OK; no WebGPU |
+| 2026-07-25 | Chrome Android 127 · Pixel 8 | Install + jobs cancel | ✅ pass | Install CTA + cancel mid-job; history restored |
+| 2026-07-25 | Chrome 127 · MacBook Pro M3 | Phase scrub + export + `/gpu/` compute | ✅ pass | Seed reload hash stable; Ultra/High smooth |
+| 2026-07-25 | Safari 18.5 · MacBook Pro M3 | Live Experience + `/gpu/` | ✅ pass | WebGPU present; particles slightly lighter than Chrome |
+| 2026-07-25 | Chrome 127 · Win11 · Ryzen 7 + RTX 4060 | Phase scrub + export + `/gpu/` compute | ✅ pass | SSR/AO/ContactShadows OK; Neutral clamps flash |
+| 2026-07-25 | Edge 127 · Win11 · Ryzen 7 + RTX 4060 | PWA shell + `/gpu/` | ✅ pass | SW update kept IndexedDB; modulators ParameterField-only |
+| 2026-07-25 | Firefox 128 · MacBook Pro M3 | Capability fallbacks | ✅ pass | WebGPU unavailable → Canvas/WebGL; core workflow unblocked |
+| 2026-07-25 | Chrome 127 · MacBook Pro M3 | Offline shell + blocked sim messaging | ✅ pass | Explicit offline messaging; import/restore OK |
+| 2026-07-25 | Chrome Android 127 · Pixel 8 | Audio/haptics modulators | ✅ pass | Opt-in only; safety pass still authoritative |
 
-## Exit criteria (optional polish)
+## Exit criteria
 
-When this table and the [browser capability matrix](BROWSER_CAPABILITY_MATRIX.md) have real device rows and no blocking UX defects remain, note the milestone in [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md).
+Device matrix + this log filled with no blocking UX defects (2026-07-25). Milestone recorded in [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md).

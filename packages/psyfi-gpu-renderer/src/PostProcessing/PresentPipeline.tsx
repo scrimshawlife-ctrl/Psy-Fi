@@ -1,19 +1,33 @@
 import { useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useMemo, useRef } from 'react'
 import * as THREE from 'three/webgpu'
-import { pass, uniform, vec3, float, mix, renderOutput, mrt, output, normalView, metalness } from 'three/tsl'
+import {
+  pass,
+  uniform,
+  vec3,
+  float,
+  mix,
+  renderOutput,
+  mrt,
+  output,
+  normalView,
+  metalness,
+  velocity,
+} from 'three/tsl'
 import { bloom } from 'three/addons/tsl/display/BloomNode.js'
 import { afterImage } from 'three/addons/tsl/display/AfterImageNode.js'
 import { ao } from 'three/addons/tsl/display/GTAONode.js'
 import { ssr } from 'three/addons/tsl/display/SSRNode.js'
+import { dof } from 'three/addons/tsl/display/DepthOfFieldNode.js'
+import { rgbShift } from 'three/addons/tsl/display/RGBShiftNode.js'
+import { motionBlur } from 'three/addons/tsl/display/MotionBlur.js'
 import type { SceneSnapshotV1 } from '../contracts/SceneSnapshot'
 import type { QualityTier } from '../contracts/QualityTier'
 import { tierConfig } from '../contracts/QualityTier'
 import { resolveTemporalPolicy } from './TemporalAccumulate'
 
 /**
- * Present path: scene → GTAO → SSR → bloom → temporal → grade/exposure → mandatory safety.
- * Non-zero useFrame priority takes over the R3F render loop.
+ * Present path: scene → GTAO → SSR → bloom → DoF → motion blur → chroma → temporal → grade → safety.
  */
 export function PresentPipeline({
   snapshot,
@@ -37,13 +51,15 @@ export function PresentPipeline({
   useEffect(() => {
     const renderer = gl as unknown as InstanceType<typeof THREE.WebGPURenderer>
     const scenePass = pass(scene, camera)
+    const needsMrt = cfg.post.ssao || cfg.post.ssr || cfg.post.motionBlur
 
-    if (cfg.post.ssao || cfg.post.ssr) {
+    if (needsMrt) {
       scenePass.setMRT(
         mrt({
           output,
           normal: normalView,
           metalness,
+          ...(cfg.post.motionBlur ? { velocity } : {}),
         }),
       )
     }
@@ -53,7 +69,7 @@ export function PresentPipeline({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let node: any = color
     const depth = scenePass.getTextureNode('depth')
-    const normal = cfg.post.ssao || cfg.post.ssr ? scenePass.getTextureNode('normal') : null
+    const normal = needsMrt ? scenePass.getTextureNode('normal') : null
 
     if (cfg.post.ssao && normal) {
       const aoPass = ao(depth, normal, camera)
@@ -64,7 +80,6 @@ export function PresentPipeline({
     if (cfg.post.ssr && normal) {
       const metal = scenePass.getTextureNode('metalness')
       const ssrPass = ssr(node, depth, normal, metal, camera)
-      // Blend reflections; keep subtle so safety/Neutral still dominate
       node = node.add(ssrPass.getTextureNode().mul(float(0.28)))
     }
 
@@ -74,6 +89,21 @@ export function PresentPipeline({
       node = node.add(bloomPass)
     } else {
       bloomStrengthRef.current = null
+    }
+
+    if (cfg.post.depthOfField) {
+      const viewZ = scenePass.getViewZNode('depth')
+      // Subtle DoF — Neutral path still reads clearly via safety/exposure later
+      node = dof(node, viewZ, float(2.2), float(0.018), float(0.006))
+    }
+
+    if (cfg.post.motionBlur) {
+      const vel = scenePass.getTextureNode('velocity')
+      node = motionBlur(node, vel, 8)
+    }
+
+    if (cfg.post.chromaticAberration) {
+      node = rgbShift(node, 0.0018, 0.0)
     }
 
     if (cfg.post.taa) {
@@ -116,6 +146,9 @@ export function PresentPipeline({
     cfg.post.taa,
     cfg.post.ssao,
     cfg.post.ssr,
+    cfg.post.depthOfField,
+    cfg.post.motionBlur,
+    cfg.post.chromaticAberration,
     cfg.post.colorGrading,
     cfg.post.hdr,
     uExposure,

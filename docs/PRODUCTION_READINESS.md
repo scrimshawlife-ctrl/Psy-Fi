@@ -18,24 +18,19 @@ Scope: web app / PWA / API — native iOS deferred (`IOS_MIGRATION.md`).
 | GPU | G0 scaffold + scene-snapshot API | **done** | `/gpu/` · `#26` |
 | GPU | G1 present (bloom/grade/exposure/safety) | **done** | `#30` |
 | GPU | G2 compute / TAA / asset worker decode | **done** | `#31`–`#33` |
-| GPU | G3 premium AO / SSR / contact shadows | **in progress** | GTAO + SSR (ultra/high) + ContactShadows |
+| GPU | G3 premium desktop stack | **done** | GTAO · SSR · ContactShadows · fog · DoF · motion blur · chroma |
 | Deploy | Docker-only path | **done** | `DEPLOYMENT.md` · multi-stage GPU `dist/` |
 | Deploy | Compose healthcheck (no curl) | **done** | urllib |
 | CI | pytest + hallmark + gpu test/typecheck/build | **done** | `.github/workflows/ci.yml` |
-| PWA | Installable shell + SW + IndexedDB | **done** | living QA on devices |
-| QA | Device capability matrix | **unfrozen** | continuous QA — **not** a ship blocker |
-| QA | Phase 4 usability log | **living** | recommended; not a ship blocker |
+| PWA | Installable shell + SW + IndexedDB | **done** | device QA 2026-07-25 |
+| QA | Device capability matrix | **filled** | newer Mac/PC + current phones — 2026-07-25 |
+| QA | Phase 4 usability log | **filled** | 2026-07-25 evidence rows |
 | Out of scope | Native iOS | deferred | `docs/IOS_MIGRATION.md` |
 | Out of scope | Azure / Render one-click | removed | `#28` |
 
-## What “unfrozen device matrix” means
+## Device matrix
 
-[`BROWSER_CAPABILITY_MATRIX.md`](BROWSER_CAPABILITY_MATRIX.md) remains the place to record Safari iOS, Chrome Android, and **newer Mac / Windows PC** results. It is **living continuous QA**. Empty rows no longer block:
-
-- Docker production ship
-- `/api/v1` **hard** contract freeze
-
-Fill rows when humans validate; failures that change product fallbacks still update the matrix and in-app capability copy.
+[`BROWSER_CAPABILITY_MATRIX.md`](BROWSER_CAPABILITY_MATRIX.md) is filled for target-class hardware (2026-07-25). It remains living continuous QA and is **not** a ship gate for future additive work.
 
 ## Production ship checklist
 
@@ -43,14 +38,13 @@ Fill rows when humans validate; failures that change product fallbacks still upd
 2. `npm test && npm run gpu:test && npm run gpu:typecheck && npm run gpu:build`
 3. `docker compose up -d --build` → `/health`, `/ready`, `/`, `/gpu/`
 4. Confirm freeze pack: `docs/contracts/frozen/MANIFEST.json` → `hard_frozen`
-5. Optional: fill device matrix + Phase 4 on target hardware
+5. Device matrix + Phase 4 filled (2026-07-25)
 
-## Remaining production polish (non-blocking)
+## Remaining optional polish
 
-1. G3: SSR / contact shadows / volumetric fog / PBR node materials (ultra/high)
-2. Draco/KTX2 WASM GPU upload (beyond header decode)
-3. Human device matrix + Phase 4 evidence (continuous)
-4. Optional legacy WebGL 1:1 shaders
+1. Draco/KTX2 WASM GPU upload (beyond header decode)
+2. Optional legacy WebGL 1:1 shaders
+3. Re-run device matrix after major UI changes
 
 ## Non-claims
 

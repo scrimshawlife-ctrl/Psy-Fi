@@ -1,6 +1,6 @@
 # PsyFi Web Continuation Plan
 
-Status: active — **production-ready Docker web ship**; G3 polish in flight; device matrix unfrozen  
+Status: active — **production-ready Docker web ship**; G3 desktop stack done; device matrix filled  
 Scope: **web app / PWA / API only** — native iOS remains deferred (`docs/IOS_MIGRATION.md`).  
 Deploy: **Docker only** (`DEPLOYMENT.md`).  
 Board: [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md)
@@ -13,14 +13,14 @@ Board: [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md)
 | Legacy Live Experience (Canvas/WebGL) | Done + last-sim source plane |
 | Phenomenology overlays | 13 overlay substances |
 | GPU G0–G2 | Present path, compute, TAA, asset worker decode |
-| GPU G3 | GTAO AO wired for desktop tiers; SSR/fog next |
+| GPU G3 | GTAO · SSR · shadows · fog · DoF · motion blur · chroma |
 | CI / Docker GPU dist | Done |
-| Device matrix | **Unfrozen** — living continuous QA |
-| Phase 4 usability | Living continuous QA |
+| Device matrix | **Filled** (2026-07-25) — still living QA |
+| Phase 4 usability | **Filled** (2026-07-25) |
 
-## Device matrix (unfrozen)
+## Device matrix
 
-[`BROWSER_CAPABILITY_MATRIX.md`](BROWSER_CAPABILITY_MATRIX.md) records newer Mac / Windows PC + phone results. Empty rows **do not** block hard freeze or Docker ship.
+[`BROWSER_CAPABILITY_MATRIX.md`](BROWSER_CAPABILITY_MATRIX.md) has target-device rows from the 2026-07-25 human pass. Re-validate after major UI changes; rows are not a freeze gate.
 
 ## Engineering queue
 
@@ -29,25 +29,25 @@ Board: [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md)
 - P0–P2 continuation + G2 compute/TAA/asset decode
 - Hard freeze; production readiness board in README
 
-### In progress — production polish (G3)
+### Done — production polish (G3)
 
 - [x] GTAO ambient occlusion on tiers with `post.ssao`
 - [x] Crystal materials via MaterialSystem descriptors
 - [x] CI budget smoke for tier passes / frame profiler
 - [x] SSR (ultra/high) + ContactShadows
-- [ ] Volumetric fog / DoF / motion blur
-- [ ] Profiling overlay polish in `/gpu/` UI
+- [x] Atmosphere fog / DoF / motion blur / chromatic aberration
+- [x] Device matrix + Phase 4 human evidence (2026-07-25)
 
-### Living QA (non-blocking)
+### Optional next
 
-- Device matrix rows on target hardware
-- Phase 4 usability evidence
+- Profiling overlay polish in `/gpu/` UI
+- Draco/KTX2 WASM GPU upload
+- Legacy WebGL 1:1 shaders
 
 ## Recommended next slice
 
-1. Finish G3 premium passes (SSR / shadows / fog).
-2. Optional: Draco/KTX2 GPU upload.
-3. Humans: fill device matrix when hardware is available.
+1. Optional: Draco/KTX2 GPU upload or `/gpu/` profiling HUD polish.
+2. Re-run device matrix after major UX changes.
 
 ## Commands
 

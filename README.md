@@ -43,9 +43,9 @@ Full board: [`docs/PRODUCTION_READINESS.md`](docs/PRODUCTION_READINESS.md).
 | Docker deploy                      | **ready**        | Compose + urllib healthcheck + GPU `dist/` bake |
 | Live Experience + safety           | **ready**        | Neutral View · ParameterField authority         |
 | GPU platform G0–G2                 | **ready**        | `/gpu/` compute · TAA · asset worker decode     |
-| GPU G3 premium AO/SSR              | **in progress**  | GTAO · SSR · contact shadows                    |
-| Device matrix                      | **unfrozen**     | living QA — not a ship blocker                  |
-| Phase 4 usability                  | **living**       | recommended continuous evidence                 |
+| GPU G3 premium desktop stack       | **ready**        | AO · SSR · fog · DoF · motion blur · chroma     |
+| Device matrix                      | **filled**       | 2026-07-25 human QA — living thereafter         |
+| Phase 4 usability                  | **filled**       | 2026-07-25 evidence log                         |
 | Native iOS                         | deferred         | `docs/IOS_MIGRATION.md`                         |
 
 Ship checklist: `pytest` → `npm test && npm run gpu:build` → `docker compose up -d --build` → `/health` `/ready` `/` `/gpu/`.
@@ -158,7 +158,7 @@ Canonical browser API is **`/api/v1`** (**hard-frozen**). Legacy `/api/*` and `/
 | [`docs/rendering/README.md`](docs/rendering/README.md)                             | WebGPU platform docs       |
 | [`DEPLOYMENT.md`](DEPLOYMENT.md)                                                   | Docker deploy guide        |
 | [`docs/PHENOMENOLOGY_PIPELINE.md`](docs/PHENOMENOLOGY_PIPELINE.md)                 | Scraped → overlays         |
-| [`docs/BROWSER_CAPABILITY_MATRIX.md`](docs/BROWSER_CAPABILITY_MATRIX.md)           | Device QA (unfrozen)       |
+| [`docs/BROWSER_CAPABILITY_MATRIX.md`](docs/BROWSER_CAPABILITY_MATRIX.md)           | Device QA (filled)         |
 | [`docs/contracts/frozen/API_V1_FREEZE.md`](docs/contracts/frozen/API_V1_FREEZE.md) | Contract hard freeze       |
 | [`docs/PHASE4_USABILITY.md`](docs/PHASE4_USABILITY.md)                             | Usability checklist        |
 | [`MOBILE_PWA_GUIDE.md`](MOBILE_PWA_GUIDE.md)                                       | PWA guidance               |

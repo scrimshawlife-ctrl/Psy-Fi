@@ -12,15 +12,18 @@ const caps: DeviceCaps = {
 }
 
 describe('G3 production budget smoke', () => {
-  it('ultra enables SSAO/SSR while battery keeps safety without SSR', () => {
+  it('ultra enables SSAO/SSR/DoF while battery keeps safety without SSR', () => {
     const ultra = enabledPasses('ultra', caps)
     const battery = enabledPasses('battery', caps)
     expect(ultra).toContain('post.ssao')
     expect(ultra).toContain('post.ssr')
+    expect(ultra).toContain('post.dof')
+    expect(ultra).toContain('post.motion_blur')
     expect(ultra).toContain('post.safety')
     expect(battery).toContain('post.safety')
     expect(battery).not.toContain('post.ssr')
     expect(battery).not.toContain('post.ssao')
+    expect(battery).not.toContain('post.dof')
   })
 
   it('frame profiler averages stay under tier target when samples are healthy', () => {

@@ -578,6 +578,7 @@ def build_parameter_timeline(
     reduce_motion: bool = False,
     dim_flashing: bool = False,
     quality_tier: str = "balanced",
+    neutral_view: bool = False,
 ) -> dict[str, Any]:
     """Build a deterministic timeline of parameter snapshots."""
     steps = max(2, min(int(steps), 256))
@@ -592,6 +593,7 @@ def build_parameter_timeline(
             experience=experience,
             modulators=modulators,
             phase_t=t,
+            neutral_view=neutral_view,
             reduce_motion=reduce_motion,
             dim_flashing=dim_flashing,
             quality_tier=quality_tier,

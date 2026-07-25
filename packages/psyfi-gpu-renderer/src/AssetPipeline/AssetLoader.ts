@@ -37,6 +37,7 @@ export class AssetLoader {
   private cache = new Map<string, LoadedAsset>()
   private mode: AssetLoadMode = 'main'
   private worker: Worker | null = null
+  private loadSeq = 0
   private draco: DracoWasmDecoder
   private basis: BasisTranscoder
 
@@ -97,17 +98,21 @@ export class AssetLoader {
   private loadViaWorker(req: AssetRequest, signal?: AbortSignal): Promise<LoadedAsset> {
     const worker = this.worker
     if (!worker) return this.loadMain(req, signal)
+    const seq = ++this.loadSeq
     return new Promise((resolve, reject) => {
       const onMessage = (ev: MessageEvent) => {
         const data = ev.data as {
           type: string
           id: string
+          seq?: number
           kind?: AssetKind
           bytes?: ArrayBuffer
           meta?: AssetDecodeMeta
           error?: string
         }
         if (data.id !== req.id) return
+        // Ignore stale generations for the same asset id.
+        if (data.seq != null && data.seq !== seq) return
         cleanup()
         if (data.type === 'error') reject(new Error(data.error || 'worker asset error'))
         else {
@@ -121,7 +126,7 @@ export class AssetLoader {
       }
       const onAbort = () => {
         cleanup()
-        worker.postMessage({ type: 'abort', id: req.id })
+        worker.postMessage({ type: 'abort', id: req.id, seq })
         reject(new DOMException('Aborted', 'AbortError'))
       }
       const cleanup = () => {
@@ -130,7 +135,7 @@ export class AssetLoader {
       }
       signal?.addEventListener('abort', onAbort, { once: true })
       worker.addEventListener('message', onMessage)
-      worker.postMessage({ type: 'load', id: req.id, url: req.url, kind: req.kind })
+      worker.postMessage({ type: 'load', id: req.id, url: req.url, kind: req.kind, seq })
     })
   }
 

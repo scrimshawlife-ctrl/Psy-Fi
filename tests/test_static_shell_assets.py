@@ -42,7 +42,7 @@ def test_template_wires_cancel_recovery_and_renderer() -> None:
 
 def test_service_worker_precaches_renderer_assets() -> None:
     sw = (STATIC / "sw.js").read_text(encoding="utf-8")
-    assert "psyfi-shell-v11" in sw
+    assert "psyfi-shell-v12" in sw
     assert "/static/renderer.js" in sw
     assert "/static/render_worker.js" in sw
     assert "/static/viz/math.js" in sw
@@ -98,6 +98,12 @@ def test_app_uses_abort_controller_and_worker_renderer() -> None:
     assert "packSourceField" in player_js
     assert "audio:" in player_js
     assert "haptics:" in player_js
+    assert "neutralOn" in player_js
+    assert "_materializeNeutral" in player_js
     gl_js = (STATIC / "viz" / "parameterFieldWebGL.js").read_text(encoding="utf-8")
     assert "u_sourceMix" in gl_js
     assert "u_source" in gl_js
+    assert "u_safetyAtten" in gl_js
+    assert "measureAtten" in gl_js
+    safety_js = (STATIC / "viz" / "safetyPass.js").read_text(encoding="utf-8")
+    assert "measureAtten" in safety_js

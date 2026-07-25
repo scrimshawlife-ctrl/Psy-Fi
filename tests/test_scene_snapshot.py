@@ -74,6 +74,55 @@ def test_scene_snapshot_applies_substance_intensity_cap() -> None:
     assert snapshot.json()["parameter_field"]["intensity"] == 0.55
 
 
+def test_intensity_cap_uses_strictest_of_experience_and_overlay() -> None:
+    """Recipe intensity_cap: 1.0 must not mask a lower substance overlay cap."""
+    mismatched = client.post(
+        "/api/v1/visualize/scene-snapshot",
+        json={
+            "substance": "pcp",
+            "experience_id": "exp_lsd_floral_geometry",
+            "intensity": 1.0,
+            "include_simulation": False,
+            "seed": 1,
+        },
+    )
+    assert mismatched.status_code == 400, mismatched.text
+
+    capped = client.post(
+        "/api/v1/visualize/parameter-timeline",
+        json={
+            "substance": "pcp",
+            "experience_id": "exp_src_pcp_6d99000a",
+            "intensity": 1.0,
+            "steps": 4,
+            "seed": 1,
+        },
+    )
+    assert capped.status_code == 200, capped.text
+    assert capped.json()["intensity"] == 0.55
+    assert all(f["intensity"] == 0.55 for f in capped.json()["frames"])
+
+
+def test_parameter_timeline_neutral_view_rematerializes_all_frames() -> None:
+    res = client.post(
+        "/api/v1/visualize/parameter-timeline",
+        json={
+            "substance": "lsd",
+            "intensity": 0.9,
+            "seed": 3,
+            "steps": 4,
+            "neutral_view": True,
+        },
+    )
+    assert res.status_code == 200, res.text
+    frames = res.json()["frames"]
+    assert len(frames) == 4
+    for frame in frames:
+        assert frame["neutral_view"] is True
+        assert frame["engines"].get("neutral_view", 0) >= 0.99
+        assert float(frame["parameters"].get("flash_energy", 1)) == 0.0
+
+
 def test_scene_snapshot_neutral_view_rematerializes_engines() -> None:
     """neutral_view must collapse engines/params — not just set a boolean flag."""
     res = client.post(

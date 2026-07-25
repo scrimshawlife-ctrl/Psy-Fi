@@ -37,6 +37,7 @@ uniform float u_wO;
 uniform float u_wV;
 uniform float u_wE;
 uniform float u_neutral;
+uniform float u_safetyAtten;
 uniform vec3 u_palette;
 uniform float u_seed;
 uniform sampler2D u_source;
@@ -74,7 +75,9 @@ void main() {
   if (u_neutral > 0.8) {
     float r = length(uv);
     float v = 0.08 + 0.04 * sin(u_time * 0.5 + r * 3.0);
-    gl_FragColor = vec4(vec3(0.04 + v * 0.12), 1.0);
+    vec3 ncol = vec3(0.04 + v * 0.12);
+    ncol = mix(vec3(0.047, 0.047, 0.055), ncol, clamp(u_safetyAtten, 0.0, 1.0));
+    gl_FragColor = vec4(ncol, 1.0);
     return;
   }
 
@@ -127,9 +130,10 @@ void main() {
   col.b += lattice * 0.3;
   float bAmt = u_bloom * v * v;
   col = mix(col, vec3(1.0), bAmt * 0.85);
-  // soft safety ceiling
+  // Mandatory peak clamp + flash/luma attenuator (SafetyPass parity)
   float m = max(col.r, max(col.g, col.b));
   if (m > 0.96) col *= 0.96 / m;
+  col = mix(vec3(0.047, 0.047, 0.055), col, clamp(u_safetyAtten, 0.0, 1.0));
   gl_FragColor = vec4(col, 1.0);
 }`;
 
@@ -145,6 +149,12 @@ void main() {
       this.t0 = performance.now();
       this.running = false;
       this.raf = 0;
+      this.safety =
+        global.PsyFiViz && global.PsyFiViz.SafetyPass
+          ? new global.PsyFiViz.SafetyPass()
+          : null;
+      this._safetyAtten = 1.0;
+      this._sampleBuf = null;
       if (this.ok) this._init();
     }
 
@@ -282,6 +292,8 @@ void main() {
       set('u_wV', eng.void_expansion || 0.15);
       set('u_wE', eng.entity_lattice || 0.1);
       set('u_neutral', f.neutral_view || (eng.neutral_view || 0) > 0.8 ? 1 : 0);
+      // Measure from an unattenuated present, then re-draw if SafetyPass pulls down.
+      set('u_safetyAtten', 1.0);
       set('u_seed', (f.master_seed || 42) % 1000);
       const pl = gl.getUniformLocation(this.program, 'u_palette');
       if (pl) gl.uniform3f(pl, pal.r / 255, pal.g / 255, pal.b / 255);
@@ -296,6 +308,36 @@ void main() {
       }
 
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      this._updateSafetyAtten(f, now);
+      if (this._safetyAtten < 0.999) {
+        set('u_safetyAtten', this._safetyAtten);
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      }
+    }
+
+    _updateSafetyAtten(frame, now) {
+      if (!this.safety || !this.gl || !this.ok) return;
+      const gl = this.gl;
+      const sw = Math.min(48, this.canvas.width | 0);
+      const sh = Math.min(48, this.canvas.height | 0);
+      if (sw < 2 || sh < 2) return;
+      const x = Math.max(0, ((this.canvas.width - sw) / 2) | 0);
+      const y = Math.max(0, ((this.canvas.height - sh) / 2) | 0);
+      const need = sw * sh * 4;
+      if (!this._sampleBuf || this._sampleBuf.length !== need) {
+        this._sampleBuf = new Uint8Array(need);
+      }
+      try {
+        gl.readPixels(x, y, sw, sh, gl.RGBA, gl.UNSIGNED_BYTE, this._sampleBuf);
+      } catch (_e) {
+        return;
+      }
+      this._safetyAtten = this.safety.measureAtten(
+        this._sampleBuf,
+        (frame && frame.safety) || {},
+        now,
+        16
+      );
     }
 
     _fallbackTex() {

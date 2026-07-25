@@ -258,6 +258,7 @@
       this.timeline = null;
       this.idx = 0;
       this.playing = false;
+      this.neutralOn = false;
       this.statusEl = opts.statusEl || null;
       this.provenanceEl = opts.provenanceEl || null;
       this.renderer.onFrameInfo = (info) => this._status(info);
@@ -361,14 +362,40 @@
     setPhaseIndex(i) {
       if (!this.timeline || !this.timeline.frames) return;
       this.idx = Math.max(0, Math.min(this.timeline.frames.length - 1, i | 0));
-      this.setFrame(this.timeline.frames[this.idx]);
+      this._applyFrameForIndex(this.idx);
+      const shown = this.frame || this.timeline.frames[this.idx];
       this._status({
-        phase: this.timeline.frames[this.idx].phase,
-        hash: this.timeline.frames[this.idx].hash,
-        mode: this.timeline.frames[this.idx].mode,
-        substance: this.timeline.frames[this.idx].substance,
+        phase: shown.phase,
+        hash: shown.hash,
+        mode: shown.mode,
+        substance: shown.substance,
         backend: this.backend,
       });
+    }
+
+    /** Rematerialize Neutral over the timeline frame so phase ticks cannot undo it. */
+    _materializeNeutral(base) {
+      const neut = JSON.parse(JSON.stringify(base));
+      neut.neutral_view = true;
+      neut.engines = Object.fromEntries(
+        Object.keys(neut.engines || {}).map((k) => [k, k === 'neutral_view' ? 1 : 0])
+      );
+      if (!neut.engines.neutral_view) neut.engines.neutral_view = 1;
+      Object.keys(neut.parameters || {}).forEach((k) => {
+        neut.parameters[k] = k === 'stability' ? 0.98 : 0.05;
+      });
+      neut.parameters.flash_energy = 0;
+      neut.phase = 'neutral';
+      return neut;
+    }
+
+    _applyFrameForIndex(i) {
+      if (!this.timeline || !this.timeline.frames) return;
+      const base = this.timeline.frames[i];
+      if (!base) return;
+      const frame = this.neutralOn ? this._materializeNeutral(base) : base;
+      this.frame = frame;
+      this.setFrame(frame);
     }
 
     play() {
@@ -388,23 +415,8 @@
 
     neutral(on) {
       if (!this.timeline || !this.timeline.frames || !this.timeline.frames.length) return;
-      if (on) {
-        const base = this.timeline.frames[this.idx] || this.timeline.frames[0];
-        const neut = JSON.parse(JSON.stringify(base));
-        neut.neutral_view = true;
-        neut.engines = Object.fromEntries(
-          Object.keys(neut.engines || {}).map((k) => [k, k === 'neutral_view' ? 1 : 0])
-        );
-        if (!neut.engines.neutral_view) neut.engines.neutral_view = 1;
-        Object.keys(neut.parameters || {}).forEach((k) => {
-          neut.parameters[k] = k === 'stability' ? 0.98 : 0.05;
-        });
-        neut.parameters.flash_energy = 0;
-        neut.phase = 'neutral';
-        this.setFrame(neut);
-      } else if (this.timeline.frames[this.idx]) {
-        this.setFrame(this.timeline.frames[this.idx]);
-      }
+      this.neutralOn = !!on;
+      this._applyFrameForIndex(this.idx);
     }
 
     setModulators(mods) {
@@ -463,7 +475,7 @@
           return;
         }
         this.idx = (this.idx + 1) % frames.length;
-        this.setFrame(frames[this.idx]);
+        this._applyFrameForIndex(this.idx);
         if (typeof this.onPhaseIndex === 'function') this.onPhaseIndex(this.idx, frames.length);
       }, 900);
     }

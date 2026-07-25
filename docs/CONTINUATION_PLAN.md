@@ -67,7 +67,7 @@ Guide: [`DESKTOP_GPU.md`](DESKTOP_GPU.md).
 | --- | --- |
 | Full R3F WebGPU stills | Needs GPU CI runner; soft-present goldens already in CI |
 | Vendor Draco WASM / Basis transcoder | Bridges ready; not required for ship |
-| GPU PresentPipeline dispose on tier rebuild | Leak hardening on Ultra |
+| GPU PresentPipeline dispose on tier rebuild | **done** — dispose effect RTs; quantize particle budgets; worker abort listener cleanup |
 | Legacy WebGL 1:1 shaders | Only if keeping `/` long-term parity |
 | CUDA/HIP workers | Compose `nvidia` profile already reserves GPU |
 | XR readiness | [`rendering/XR_COMPATIBILITY.md`](rendering/XR_COMPATIBILITY.md) |

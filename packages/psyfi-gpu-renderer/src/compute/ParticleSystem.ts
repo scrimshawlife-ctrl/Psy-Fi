@@ -58,5 +58,8 @@ export function integrateParticles(particles: Particle[], dt: number, flow: Flow
 
 export function particleBudgetForTier(particleBudget: number, intensity: number): number {
   const scaled = Math.floor(particleBudget * (0.15 + intensity * 0.55))
-  return Math.max(64, Math.min(particleBudget, scaled))
+  const clamped = Math.max(64, Math.min(particleBudget, scaled))
+  // Quantize so snapshot intensity lerps do not rebuild GPU compute pipelines every frame.
+  const step = Math.max(32, Math.floor(particleBudget / 16))
+  return Math.max(64, Math.min(particleBudget, Math.round(clamped / step) * step))
 }

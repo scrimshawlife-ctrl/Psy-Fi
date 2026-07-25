@@ -17,6 +17,9 @@ describe('render graph budgets', () => {
     expect(battery).toContain('post.safety')
     expect(ultra).toContain('post.ssr')
     expect(battery).not.toContain('post.ssr')
+    expect(battery).not.toContain('compute.flow')
+    expect(ultra).toContain('compute.flow')
+    expect(ultra).toContain('compute.particles')
   })
 
   it('tier particle budgets are monotonic', () => {

@@ -963,3 +963,114 @@ body {
         min-height: 80px;
     }
 }
+
+/* ===== Live Experience Workspace ===== */
+.experience-panel .panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+.field-status {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.75rem;
+  color: var(--pf-cyan, #63F3E8);
+  opacity: 0.85;
+}
+.experience-body {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 1.25rem;
+}
+@media (max-width: 900px) {
+  .experience-body {
+    grid-template-columns: 1fr;
+  }
+}
+.experience-viewport-wrap {
+  position: relative;
+  background: #07070B;
+  border: 1px solid rgba(99, 243, 232, 0.18);
+  border-radius: 12px;
+  overflow: hidden;
+  min-height: 260px;
+}
+#experienceCanvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: #07070B;
+}
+.experience-chrome {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.65rem;
+  background: linear-gradient(transparent, rgba(7, 7, 11, 0.92));
+}
+.experience-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.experience-controls select,
+.experience-controls input[type="number"] {
+  width: 100%;
+  background: #101018;
+  color: #F4F4F8;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 8px;
+  padding: 0.55rem 0.7rem;
+}
+.experience-controls input[type="range"] {
+  width: 100%;
+}
+.checkbox-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  font-size: 0.9rem;
+  color: var(--text-secondary, #B8B8C7);
+}
+.btn-danger {
+  background: #3a1520;
+  color: #FF7A8A;
+  border: 1px solid rgba(255, 122, 138, 0.45);
+  border-radius: 8px;
+  padding: 0.45rem 0.75rem;
+  cursor: pointer;
+  font-weight: 600;
+}
+.btn-danger:hover { filter: brightness(1.1); }
+.btn-secondary {
+  background: #171724;
+  color: #F4F4F8;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 8px;
+  padding: 0.45rem 0.75rem;
+  cursor: pointer;
+}
+.provenance-panel {
+  background: #101018;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  padding: 0.75rem;
+  font-size: 0.8rem;
+  font-family: "JetBrains Mono", monospace;
+  line-height: 1.45;
+  color: #B8B8C7;
+}
+.provenance-panel .muted,
+.disclaimer {
+  color: #858597;
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+.disclaimer { margin: 0.25rem 0 0; }
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}

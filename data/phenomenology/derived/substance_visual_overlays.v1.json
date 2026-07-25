@@ -1,0 +1,637 @@
+{
+  "schema_version": "1.0.0",
+  "generator": "scripts/build_experience_catalog.py",
+  "disclaimer": "Distilled visual settings from curated phenomenology recipes. INFERRED parameters for research/visualization only \u2014 not medical advice.",
+  "overlays": {
+    "5-meo-dmt": {
+      "schema_version": "1.0.0",
+      "substance": "5-meo-dmt",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "motif_means": {
+        "space_void": 0.95,
+        "body_somatic": 0.5,
+        "color_light": 0.35
+      },
+      "sample_count": 1,
+      "tracers_color": "#FFFFFF",
+      "recommended_mode": "void",
+      "oscillation_style": "minimal",
+      "visual_signature": {
+        "tracers_color": "#FFFFFF",
+        "tracers_length": 0.53,
+        "oscillation_style": "minimal",
+        "symmetry_bias": 0.455,
+        "depth_distortion": 0.88,
+        "color_enhancement": 0.515,
+        "pattern_complexity": 0.682
+      },
+      "engine_weights": {
+        "recursive_feedback": 0.0,
+        "kaleidoscope": 0.0,
+        "flow_field": 0.0,
+        "organic_bloom": 0.3571,
+        "void_expansion": 0.6429,
+        "entity_lattice": 0.0,
+        "neutral_view": 0.0
+      },
+      "primary_engines": [
+        "void_expansion"
+      ],
+      "secondary_engines": [
+        "organic_bloom"
+      ],
+      "parameter_bias": {
+        "bloom": 0.34,
+        "depth_distortion": 0.823,
+        "displacement": 0.15,
+        "edge_gain": 0.35,
+        "entropy": 0.725,
+        "feedback_strength": 0.4,
+        "palette_energy": 0.593,
+        "pattern_complexity": 0.35,
+        "recursion_gain": 0.823,
+        "stability": 0.557,
+        "symmetry_order": 0.35,
+        "trail_length": 0.475,
+        "turbulence": 0.3,
+        "zoom_velocity": 0.382
+      },
+      "palette": {
+        "tracers": "#FFFFFF",
+        "energy": 0.35,
+        "contrast": 0.55
+      },
+      "phase_profile": {
+        "comeup": {
+          "duration_norm": 0.15,
+          "intensity": 0.35
+        },
+        "peak": {
+          "duration_norm": 0.45,
+          "intensity": 1.0
+        },
+        "plateau": {
+          "duration_norm": 0.25,
+          "intensity": 0.75
+        },
+        "comedown": {
+          "duration_norm": 0.15,
+          "intensity": 0.3
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.28,
+        "intensity_cap": 1.0
+      }
+    },
+    "dmt": {
+      "schema_version": "1.0.0",
+      "substance": "dmt",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "motif_means": {
+        "space_void": 0.394,
+        "geometry": 0.213,
+        "machines": 0.328,
+        "entities": 0.369,
+        "body_somatic": 0.206,
+        "color_light": 0.125,
+        "time_memory": 0.266,
+        "nature": 0.062
+      },
+      "sample_count": 8,
+      "tracers_color": "#FF42C1",
+      "recommended_mode": "power",
+      "oscillation_style": "fractal",
+      "visual_signature": {
+        "tracers_color": "#FF42C1",
+        "tracers_length": 0.363,
+        "oscillation_style": "fractal",
+        "symmetry_bias": 0.382,
+        "depth_distortion": 0.525,
+        "color_enhancement": 0.344,
+        "pattern_complexity": 0.559
+      },
+      "engine_weights": {
+        "recursive_feedback": 0.3991,
+        "kaleidoscope": 0.172,
+        "flow_field": 0.0,
+        "organic_bloom": 0.0287,
+        "void_expansion": 0.0287,
+        "entity_lattice": 0.3716,
+        "neutral_view": 0.0
+      },
+      "primary_engines": [
+        "recursive_feedback",
+        "entity_lattice"
+      ],
+      "secondary_engines": [
+        "kaleidoscope"
+      ],
+      "parameter_bias": {
+        "bloom": 0.25,
+        "depth_distortion": 0.517,
+        "displacement": 0.237,
+        "edge_gain": 0.446,
+        "entropy": 0.5,
+        "feedback_strength": 0.565,
+        "palette_energy": 0.469,
+        "pattern_complexity": 0.569,
+        "recursion_gain": 0.578,
+        "stability": 0.526,
+        "symmetry_order": 0.467,
+        "trail_length": 0.362,
+        "turbulence": 0.353,
+        "zoom_velocity": 0.188
+      },
+      "palette": {
+        "tracers": "#FF42C1",
+        "energy": 0.519,
+        "contrast": 0.583
+      },
+      "phase_profile": {
+        "comeup": {
+          "duration_norm": 0.15,
+          "intensity": 0.35
+        },
+        "peak": {
+          "duration_norm": 0.45,
+          "intensity": 1.0
+        },
+        "plateau": {
+          "duration_norm": 0.25,
+          "intensity": 0.75
+        },
+        "comedown": {
+          "duration_norm": 0.15,
+          "intensity": 0.3
+        }
+      },
+      "safety": {
+        "max_flash_hz": 1.5,
+        "max_luminance_delta": 0.35,
+        "intensity_cap": 1.0
+      }
+    },
+    "ketamine": {
+      "schema_version": "1.0.0",
+      "substance": "ketamine",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "motif_means": {
+        "space_void": 0.8,
+        "body_somatic": 0.45,
+        "geometry": 0.3
+      },
+      "sample_count": 1,
+      "tracers_color": "#7EC8E3",
+      "recommended_mode": "void",
+      "oscillation_style": "smooth",
+      "visual_signature": {
+        "tracers_color": "#7EC8E3",
+        "tracers_length": 0.555,
+        "oscillation_style": "smooth",
+        "symmetry_bias": 0.42,
+        "depth_distortion": 0.775,
+        "color_enhancement": 0.55,
+        "pattern_complexity": 0.625
+      },
+      "engine_weights": {
+        "recursive_feedback": 0.2294,
+        "kaleidoscope": 0.0,
+        "flow_field": 0.4128,
+        "organic_bloom": 0.0,
+        "void_expansion": 0.3578,
+        "entity_lattice": 0.0,
+        "neutral_view": 0.0
+      },
+      "primary_engines": [
+        "flow_field",
+        "void_expansion"
+      ],
+      "secondary_engines": [
+        "recursive_feedback"
+      ],
+      "parameter_bias": {
+        "bloom": 0.2,
+        "depth_distortion": 0.74,
+        "displacement": 0.15,
+        "edge_gain": 0.485,
+        "entropy": 0.65,
+        "feedback_strength": 0.535,
+        "palette_energy": 0.4,
+        "pattern_complexity": 0.53,
+        "recursion_gain": 0.74,
+        "stability": 0.58,
+        "symmetry_order": 0.515,
+        "trail_length": 0.3,
+        "turbulence": 0.29,
+        "zoom_velocity": 0.33
+      },
+      "palette": {
+        "tracers": "#7EC8E3",
+        "energy": 0.6,
+        "contrast": 0.64
+      },
+      "phase_profile": {
+        "comeup": {
+          "duration_norm": 0.15,
+          "intensity": 0.35
+        },
+        "peak": {
+          "duration_norm": 0.45,
+          "intensity": 1.0
+        },
+        "plateau": {
+          "duration_norm": 0.25,
+          "intensity": 0.75
+        },
+        "comedown": {
+          "duration_norm": 0.15,
+          "intensity": 0.3
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "intensity_cap": 1.0
+      }
+    },
+    "lsd": {
+      "schema_version": "1.0.0",
+      "substance": "lsd",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "motif_means": {
+        "geometry": 0.335,
+        "color_light": 0.377,
+        "nature": 0.252,
+        "body_somatic": 0.229,
+        "space_void": 0.152,
+        "time_memory": 0.333,
+        "entities": 0.094,
+        "machines": 0.0
+      },
+      "sample_count": 12,
+      "tracers_color": "#3EE7F2",
+      "recommended_mode": "open",
+      "oscillation_style": "geometric",
+      "visual_signature": {
+        "tracers_color": "#3EE7F2",
+        "tracers_length": 0.545,
+        "oscillation_style": "geometric",
+        "symmetry_bias": 0.434,
+        "depth_distortion": 0.306,
+        "color_enhancement": 0.539,
+        "pattern_complexity": 0.515
+      },
+      "engine_weights": {
+        "recursive_feedback": 0.3401,
+        "kaleidoscope": 0.1539,
+        "flow_field": 0.1599,
+        "organic_bloom": 0.2515,
+        "void_expansion": 0.0653,
+        "entity_lattice": 0.0293,
+        "neutral_view": 0.0
+      },
+      "primary_engines": [
+        "kaleidoscope",
+        "recursive_feedback"
+      ],
+      "secondary_engines": [
+        "organic_bloom"
+      ],
+      "parameter_bias": {
+        "bloom": 0.351,
+        "depth_distortion": 0.384,
+        "displacement": 0.238,
+        "edge_gain": 0.501,
+        "entropy": 0.326,
+        "feedback_strength": 0.551,
+        "palette_energy": 0.607,
+        "pattern_complexity": 0.551,
+        "recursion_gain": 0.519,
+        "stability": 0.677,
+        "symmetry_order": 0.534,
+        "trail_length": 0.488,
+        "turbulence": 0.246,
+        "zoom_velocity": 0.103
+      },
+      "palette": {
+        "tracers": "#3EE7F2",
+        "energy": 0.575,
+        "contrast": 0.617
+      },
+      "phase_profile": {
+        "comeup": {
+          "duration_norm": 0.15,
+          "intensity": 0.35
+        },
+        "peak": {
+          "duration_norm": 0.45,
+          "intensity": 1.0
+        },
+        "plateau": {
+          "duration_norm": 0.25,
+          "intensity": 0.75
+        },
+        "comedown": {
+          "duration_norm": 0.15,
+          "intensity": 0.3
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "intensity_cap": 1.0
+      }
+    },
+    "mescaline": {
+      "schema_version": "1.0.0",
+      "substance": "mescaline",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "motif_means": {
+        "geometry": 0.8,
+        "color_light": 0.75,
+        "nature": 0.45
+      },
+      "sample_count": 1,
+      "tracers_color": "#FFB547",
+      "recommended_mode": "attractor",
+      "oscillation_style": "geometric",
+      "visual_signature": {
+        "tracers_color": "#FFB547",
+        "tracers_length": 0.858,
+        "oscillation_style": "geometric",
+        "symmetry_bias": 0.77,
+        "depth_distortion": 0.425,
+        "color_enhancement": 0.82,
+        "pattern_complexity": 0.8
+      },
+      "engine_weights": {
+        "recursive_feedback": 0.3578,
+        "kaleidoscope": 0.4128,
+        "flow_field": 0.0,
+        "organic_bloom": 0.2294,
+        "void_expansion": 0.0,
+        "entity_lattice": 0.0,
+        "neutral_view": 0.0
+      },
+      "primary_engines": [
+        "kaleidoscope",
+        "recursive_feedback"
+      ],
+      "secondary_engines": [
+        "organic_bloom"
+      ],
+      "parameter_bias": {
+        "bloom": 0.5,
+        "depth_distortion": 0.3,
+        "displacement": 0.307,
+        "edge_gain": 0.71,
+        "entropy": 0.25,
+        "feedback_strength": 0.76,
+        "palette_energy": 0.812,
+        "pattern_complexity": 0.83,
+        "recursion_gain": 0.74,
+        "stability": 0.7,
+        "symmetry_order": 0.79,
+        "trail_length": 0.675,
+        "turbulence": 0.2,
+        "zoom_velocity": 0.05
+      },
+      "palette": {
+        "tracers": "#FFB547",
+        "energy": 0.75,
+        "contrast": 0.79
+      },
+      "phase_profile": {
+        "comeup": {
+          "duration_norm": 0.15,
+          "intensity": 0.35
+        },
+        "peak": {
+          "duration_norm": 0.45,
+          "intensity": 1.0
+        },
+        "plateau": {
+          "duration_norm": 0.25,
+          "intensity": 0.75
+        },
+        "comedown": {
+          "duration_norm": 0.15,
+          "intensity": 0.3
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "intensity_cap": 1.0
+      }
+    },
+    "pcp": {
+      "schema_version": "1.0.0",
+      "substance": "pcp",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "motif_means": {
+        "entities": 0.4,
+        "nature": 0.7,
+        "geometry": 0.175,
+        "color_light": 0.0,
+        "space_void": 0.062,
+        "body_somatic": 0.188,
+        "time_memory": 0.312,
+        "machines": 0.0
+      },
+      "sample_count": 2,
+      "tracers_color": "#A0FF9A",
+      "recommended_mode": "open",
+      "oscillation_style": "unstable",
+      "visual_signature": {
+        "tracers_color": "#A0FF9A",
+        "tracers_length": 0.276,
+        "oscillation_style": "unstable",
+        "symmetry_bias": 0.323,
+        "depth_distortion": 0.243,
+        "color_enhancement": 0.32,
+        "pattern_complexity": 0.225
+      },
+      "engine_weights": {
+        "recursive_feedback": 0.3264,
+        "kaleidoscope": 0.0,
+        "flow_field": 0.2929,
+        "organic_bloom": 0.2929,
+        "void_expansion": 0.0879,
+        "entity_lattice": 0.0,
+        "neutral_view": 0.0
+      },
+      "primary_engines": [
+        "organic_bloom",
+        "recursive_feedback"
+      ],
+      "secondary_engines": [
+        "flow_field",
+        "void_expansion"
+      ],
+      "parameter_bias": {
+        "bloom": 0.155,
+        "depth_distortion": 0.267,
+        "displacement": 0.33,
+        "edge_gain": 0.315,
+        "entropy": 0.225,
+        "feedback_strength": 0.353,
+        "palette_energy": 0.31,
+        "pattern_complexity": 0.329,
+        "recursion_gain": 0.32,
+        "stability": 0.533,
+        "symmetry_order": 0.324,
+        "trail_length": 0.232,
+        "turbulence": 0.193,
+        "zoom_velocity": 0.061
+      },
+      "palette": {
+        "tracers": "#A0FF9A",
+        "energy": 0.5,
+        "contrast": 0.578
+      },
+      "phase_profile": {
+        "comeup": {
+          "duration_norm": 0.15,
+          "intensity": 0.35
+        },
+        "peak": {
+          "duration_norm": 0.45,
+          "intensity": 1.0
+        },
+        "plateau": {
+          "duration_norm": 0.25,
+          "intensity": 0.75
+        },
+        "comedown": {
+          "duration_norm": 0.15,
+          "intensity": 0.3
+        }
+      },
+      "safety": {
+        "max_flash_hz": 1.5,
+        "max_luminance_delta": 0.35,
+        "intensity_cap": 0.55
+      }
+    },
+    "psilocybin": {
+      "schema_version": "1.0.0",
+      "substance": "psilocybin",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "motif_means": {
+        "geometry": 0.103,
+        "nature": 0.419,
+        "space_void": 0.15,
+        "body_somatic": 0.178,
+        "color_light": 0.25,
+        "time_memory": 0.175,
+        "entities": 0.109,
+        "machines": 0.0
+      },
+      "sample_count": 8,
+      "tracers_color": "#8F7BFF",
+      "recommended_mode": "open",
+      "oscillation_style": "organic",
+      "visual_signature": {
+        "tracers_color": "#8F7BFF",
+        "tracers_length": 0.428,
+        "oscillation_style": "organic",
+        "symmetry_bias": 0.272,
+        "depth_distortion": 0.305,
+        "color_enhancement": 0.467,
+        "pattern_complexity": 0.387
+      },
+      "engine_weights": {
+        "recursive_feedback": 0.2701,
+        "kaleidoscope": 0.0219,
+        "flow_field": 0.1971,
+        "organic_bloom": 0.3754,
+        "void_expansion": 0.1356,
+        "entity_lattice": 0.0,
+        "neutral_view": 0.0
+      },
+      "primary_engines": [
+        "organic_bloom",
+        "recursive_feedback"
+      ],
+      "secondary_engines": [
+        "flow_field",
+        "void_expansion"
+      ],
+      "parameter_bias": {
+        "bloom": 0.3,
+        "depth_distortion": 0.382,
+        "displacement": 0.297,
+        "edge_gain": 0.396,
+        "entropy": 0.325,
+        "feedback_strength": 0.446,
+        "palette_energy": 0.537,
+        "pattern_complexity": 0.412,
+        "recursion_gain": 0.4,
+        "stability": 0.677,
+        "symmetry_order": 0.407,
+        "trail_length": 0.425,
+        "turbulence": 0.236,
+        "zoom_velocity": 0.103
+      },
+      "palette": {
+        "tracers": "#8F7BFF",
+        "energy": 0.512,
+        "contrast": 0.55
+      },
+      "phase_profile": {
+        "comeup": {
+          "duration_norm": 0.15,
+          "intensity": 0.35
+        },
+        "peak": {
+          "duration_norm": 0.45,
+          "intensity": 1.0
+        },
+        "plateau": {
+          "duration_norm": 0.25,
+          "intensity": 0.75
+        },
+        "comedown": {
+          "duration_norm": 0.15,
+          "intensity": 0.3
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "intensity_cap": 1.0
+      }
+    }
+  }
+}

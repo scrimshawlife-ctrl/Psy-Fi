@@ -38,6 +38,7 @@
 
         <nav class="workspace-nav" aria-label="Workspace sections">
             <a href="#workspace" class="nav-link">Workspace</a>
+            <a href="#experiencePanel" class="nav-link">Live Experience</a>
             <a href="#presets" class="nav-link">Presets</a>
             <a href="#results" class="nav-link">Results</a>
             <a href="#history" class="nav-link">History</a>
@@ -126,6 +127,63 @@
                         <p class="network-status" id="networkStatus" data-state="online" aria-live="polite">Online — server computation available</p>
                         <p class="input-hint">Esc or Cancel requests server-side job cancellation.</p>
                     </form>
+                </div>
+            </section>
+
+            <!-- Live Experience Workspace -->
+            <section class="panel experience-panel" id="experiencePanel">
+                <div class="panel-header">
+                    <h2>Live Experience</h2>
+                    <div class="field-status" id="experienceStatus">Field idle</div>
+                </div>
+                <div class="panel-body experience-body">
+                    <div class="experience-viewport-wrap">
+                        <canvas id="experienceCanvas" aria-label="PsyFi visual field"></canvas>
+                        <div class="experience-chrome">
+                            <button type="button" class="btn-danger" id="neutralBtn" title="Emergency neutral view">Neutral View</button>
+                            <button type="button" class="btn-secondary" id="playExperienceBtn">Play Field</button>
+                            <button type="button" class="btn-secondary" id="pauseExperienceBtn">Pause</button>
+                        </div>
+                    </div>
+                    <div class="experience-controls">
+                        <div class="input-group">
+                            <label for="substanceSelect">Substance</label>
+                            <select id="substanceSelect"></select>
+                        </div>
+                        <div class="input-group">
+                            <label for="experienceSelect">Experience recipe</label>
+                            <select id="experienceSelect"></select>
+                        </div>
+                        <div class="input-group">
+                            <label for="modeSelect">Mode</label>
+                            <select id="modeSelect">
+                                <option value="open">Open</option>
+                                <option value="attractor">Attractor</option>
+                                <option value="void">Void</option>
+                                <option value="power">Power</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label for="intensityRange">Intensity <span id="intensityValue">0.70</span></label>
+                            <input type="range" id="intensityRange" min="0" max="1" step="0.01" value="0.7">
+                        </div>
+                        <div class="input-group">
+                            <label for="seedInput">Seed</label>
+                            <input type="number" id="seedInput" value="42" min="0">
+                        </div>
+                        <div class="checkbox-row">
+                            <label><input type="checkbox" id="reduceMotionChk"> Reduce motion</label>
+                            <label><input type="checkbox" id="dimFlashChk"> Dim flashing</label>
+                        </div>
+                        <button type="button" class="btn-primary" id="loadExperienceBtn">
+                            <span class="btn-icon">◎</span>
+                            <span>Load Experience</span>
+                        </button>
+                        <div class="provenance-panel" id="experienceProvenancePanel">
+                            <div class="muted">Load an experience to inspect provenance.</div>
+                        </div>
+                        <p class="disclaimer">Modeled phenomenology for research/visualization only. Not medical, diagnostic, or therapeutic advice. Interpretation is speculative.</p>
+                    </div>
                 </div>
             </section>
 
@@ -243,6 +301,7 @@
     </div>
 
     <script src="/static/renderer.js"></script>
+    <script src="/static/viz/experiencePlayer.js"></script>
     <script src="/static/app.js"></script>
     <script>
         if ('serviceWorker' in navigator) {

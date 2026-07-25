@@ -47,10 +47,11 @@ PsyFi embodies five ontological commitments:
 | 🔧 **Modular Engines** | 20+ pluggable consciousness field processors (eurorack-style) |
 | 📐 **Real Mathematics** | Kuramoto coupling, divisive normalization, Gestalt principles |
 | 🌈 **Psychedelic Modeling** | LSD, psilocybin, DMT state simulation with 22+ substance presets |
+| ◈ **Live Visual Experiences** | Phenomenology catalog → parameter field → Canvas multi-engine field (Open/Attractor/Void/Power) |
 | 🧘 **Meditative States** | Jhana absorption and attention modulation |
 | 💫 **Valence Assessment** | Multi-dimensional hedonic tone analysis |
 | 🎹 **MIDI Integration** | Real-time control via MIDI controllers, DAWs, and hardware |
-| 🌐 **Web UI** | Dark-mode interface for interactive simulation |
+| 🌐 **Web UI** | Dark-mode interface for simulation + live experience viewport |
 | 🚀 **FastAPI Backend** | REST API with automatic documentation |
 | 📱 **Mobile & PWA** | Progressive Web App with offline support |
 
@@ -80,6 +81,25 @@ python scripts/run_dev_server.py
 ```
 
 Then open your browser to **http://localhost:8000**
+
+### Live Visual Experiences
+
+The web UI includes a **Live Experience** workspace: pick a substance and phenomenology recipe, choose mode (`Open` / `Attractor` / `Void` / `Power`), set intensity, and render a deterministic multi-engine field with Neutral View and provenance.
+
+```bash
+# Rebuild derived experience catalog from data/phenomenology/
+python scripts/build_experience_catalog.py
+
+# API examples
+curl -s 'http://localhost:8000/api/v1/experiences?substance=lsd' | head
+curl -s -X POST http://localhost:8000/api/v1/visualize/parameter-timeline \
+  -H 'Content-Type: application/json' \
+  -d '{"substance":"dmt","mode":"power","intensity":0.8,"seed":42,"steps":12}'
+```
+
+Docs: [VISUAL_EXPERIENCES.md](docs/VISUAL_EXPERIENCES.md) · [PHENOMENOLOGY_PIPELINE.md](docs/PHENOMENOLOGY_PIPELINE.md) · Cursor build prompt: [CURSOR_PROMPT_VISUAL_EXPERIENCES_FROM_SCRAPED_DATA.md](docs/CURSOR_PROMPT_VISUAL_EXPERIENCES_FROM_SCRAPED_DATA.md)
+
+> Modeled phenomenology for research/visualization only. Not medical or therapeutic advice.
 
 ![PsyFi Web UI](docs/images/psyfi-ui-main.png)
 *Dark-mode interface with real-time consciousness field simulation*
@@ -586,12 +606,14 @@ Canonical delivery sequence and engineering gates live in [`PLANS.md`](PLANS.md)
 - [x] **Web-first plans**: architecture, design system, PWA, iOS migration docs ✅
 - [x] **Phase 0 contracts**: OpenAPI snapshot, session schema, token aliases, baselines ✅
 - [x] **Deployment**: Docker, Railway, Render, Fly.io, Heroku configs ✅
-- [ ] **Phase 1 web foundation**: workspace redesign, richer provenance, capability diagnostics
-- [ ] **Field Visualization**: renderer-independent schema + Canvas/WebGL path
-- [ ] **PWA hardening**: IndexedDB history, capability matrix, installable PNG icons
-- [ ] **Native iPhone**: only after Phase 4 validation gate in `PLANS.md`
+- [x] **Field Visualization**: Live Experience multi-engine Canvas field + phenomenology catalog + distilled substance overlays
+- [x] **Phase 1–3 web foundation**: workspace, jobs, PWA shell, IndexedDB history (physical-device matrix still open)
+- [ ] **Multi-layer Simulations**: Stack multiple consciousness fields
+- [ ] **Time Series**: Track valence evolution over time
+- [ ] **Batch Simulations**: Run multiple simulations in parallel
+- [ ] **Native iPhone**: separate deferred track after Phase 4 (`docs/IOS_MIGRATION.md`)
 
-Supporting docs: [`docs/WEB_ARCHITECTURE.md`](docs/WEB_ARCHITECTURE.md) · [`docs/DESIGN_SYSTEM.md`](docs/DESIGN_SYSTEM.md) · [`docs/IOS_MIGRATION.md`](docs/IOS_MIGRATION.md) · [`MOBILE_PWA_GUIDE.md`](MOBILE_PWA_GUIDE.md)
+Supporting docs: [`docs/VISUAL_EXPERIENCES.md`](docs/VISUAL_EXPERIENCES.md) · [`docs/WEB_ARCHITECTURE.md`](docs/WEB_ARCHITECTURE.md) · [`docs/DESIGN_SYSTEM.md`](docs/DESIGN_SYSTEM.md) · [`MOBILE_PWA_GUIDE.md`](MOBILE_PWA_GUIDE.md)
 
 ---
 

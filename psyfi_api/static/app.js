@@ -656,3 +656,166 @@ document.addEventListener('DOMContentLoaded', () => {
     refreshHistory().then(maybeShowRecoveryBanner);
     renderCapabilities();
 });
+
+// ===== Live Experience workspace =====
+(function initExperienceWorkspace() {
+    const canvas = document.getElementById('experienceCanvas');
+    if (!canvas || !window.PsyFiViz) {
+        console.warn('[PsyFi] Experience player not available');
+        return;
+    }
+
+    const substanceSelect = document.getElementById('substanceSelect');
+    const experienceSelect = document.getElementById('experienceSelect');
+    const modeSelect = document.getElementById('modeSelect');
+    const intensityRange = document.getElementById('intensityRange');
+    const intensityValue = document.getElementById('intensityValue');
+    const seedInput = document.getElementById('seedInput');
+    const reduceMotionChk = document.getElementById('reduceMotionChk');
+    const dimFlashChk = document.getElementById('dimFlashChk');
+    const loadBtn = document.getElementById('loadExperienceBtn');
+    const playBtn = document.getElementById('playExperienceBtn');
+    const pauseBtn = document.getElementById('pauseExperienceBtn');
+    const neutralBtn = document.getElementById('neutralBtn');
+    const statusEl = document.getElementById('experienceStatus');
+    const provenanceEl = document.getElementById('experienceProvenancePanel');
+
+    const player = new PsyFiViz.ExperiencePlayer({
+        canvas,
+        statusEl,
+        provenanceEl,
+    });
+    player.resize();
+    window.addEventListener('resize', () => player.resize());
+
+    // Prefer system reduced motion
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        reduceMotionChk.checked = true;
+    }
+
+    intensityRange.addEventListener('input', () => {
+        intensityValue.textContent = Number(intensityRange.value).toFixed(2);
+    });
+
+    let neutralOn = false;
+    neutralBtn.addEventListener('click', () => {
+        neutralOn = !neutralOn;
+        player.neutral(neutralOn);
+        neutralBtn.textContent = neutralOn ? 'Exit Neutral' : 'Neutral View';
+        statusEl.textContent = neutralOn ? 'Neutral view enabled' : 'Field restored';
+    });
+
+    playBtn.addEventListener('click', () => {
+        player.play();
+        statusEl.textContent = 'Field running';
+    });
+    pauseBtn.addEventListener('click', () => {
+        player.pause();
+        statusEl.textContent = 'Field paused';
+    });
+
+    async function loadSubstances() {
+        const res = await fetch('/api/v1/substances');
+        const data = await res.json();
+        substanceSelect.innerHTML = '';
+        (data.substances || []).forEach((s) => {
+            if (!s.recipe_count && !['lsd','psilocybin','dmt','mescaline','ketamine','5-meo-dmt'].includes(s.id)) return;
+            const opt = document.createElement('option');
+            opt.value = s.id;
+            opt.textContent = `${s.id} (${s.recipe_count || 0})`;
+            substanceSelect.appendChild(opt);
+        });
+        if (!substanceSelect.value) {
+            const opt = document.createElement('option');
+            opt.value = 'lsd';
+            opt.textContent = 'lsd';
+            substanceSelect.appendChild(opt);
+        }
+        substanceSelect.value = 'lsd';
+    }
+
+    async function loadExperiences() {
+        const substance = substanceSelect.value || 'lsd';
+        const res = await fetch(`/api/v1/experiences?substance=${encodeURIComponent(substance)}&valence=positive`);
+        const data = await res.json();
+        experienceSelect.innerHTML = '';
+        const items = data.items || [];
+        if (!items.length) {
+            const opt = document.createElement('option');
+            opt.value = '';
+            opt.textContent = 'No positive recipes';
+            experienceSelect.appendChild(opt);
+            return;
+        }
+        items.forEach((item) => {
+            const opt = document.createElement('option');
+            opt.value = item.id;
+            opt.textContent = item.title || item.id;
+            experienceSelect.appendChild(opt);
+        });
+        // sync mode default from first
+        if (items[0] && items[0].mode_default) {
+            modeSelect.value = items[0].mode_default;
+        }
+    }
+
+    experienceSelect.addEventListener('change', async () => {
+        const id = experienceSelect.value;
+        if (!id) return;
+        try {
+            const res = await fetch(`/api/v1/experiences/${encodeURIComponent(id)}`);
+            const data = await res.json();
+            const mode = data.recipe && data.recipe.visual_recipe && data.recipe.visual_recipe.mode_default;
+            if (mode) modeSelect.value = mode;
+        } catch (e) {
+            console.warn(e);
+        }
+    });
+
+    substanceSelect.addEventListener('change', () => loadExperiences());
+
+    loadBtn.addEventListener('click', async () => {
+        loadBtn.disabled = true;
+        statusEl.textContent = 'Loading timeline…';
+        neutralOn = false;
+        neutralBtn.textContent = 'Neutral View';
+        try {
+            await player.loadTimeline({
+                substance: substanceSelect.value || 'lsd',
+                experience_id: experienceSelect.value || null,
+                mode: modeSelect.value || 'open',
+                intensity: Number(intensityRange.value),
+                seed: Number(seedInput.value) || 42,
+                steps: 20,
+                reduce_motion: !!reduceMotionChk.checked,
+                dim_flashing: !!dimFlashChk.checked,
+                quality_tier: 'balanced',
+            });
+            player.resize();
+            player.play();
+            statusEl.textContent = 'Experience loaded';
+        } catch (err) {
+            console.error(err);
+            statusEl.textContent = 'Load failed';
+            alert(err.message || String(err));
+        } finally {
+            loadBtn.disabled = false;
+        }
+    });
+
+    // Keyboard: N for neutral
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'n' || e.key === 'N') {
+            if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA')) return;
+            neutralBtn.click();
+        }
+    });
+
+    loadSubstances()
+        .then(loadExperiences)
+        .then(() => {
+            // Auto-load a default experience so the field isn't empty
+            return loadBtn.click();
+        })
+        .catch((e) => console.error('[PsyFi] experience init failed', e));
+})();

@@ -28,9 +28,10 @@ def test_template_wires_cancel_recovery_and_renderer() -> None:
 
 def test_service_worker_precaches_renderer_assets() -> None:
     sw = (STATIC / "sw.js").read_text(encoding="utf-8")
-    assert "psyfi-shell-v5" in sw
+    assert "psyfi-shell-v6" in sw
     assert "/static/renderer.js" in sw
     assert "/static/render_worker.js" in sw
+    assert "/static/viz/experiencePlayer.js" in sw
     assert "/static/icon-192.png" in sw
     assert "/simulate" in sw  # still treated as network-only path matcher
 

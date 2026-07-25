@@ -33,6 +33,10 @@ REQUIRED_PATHS = {
     "/api/midi/start",
     "/api/v1/midi/devices",
     "/api/v1/midi/start",
+    "/api/v1/experiences",
+    "/api/v1/experiences/{experience_id}",
+    "/api/v1/substances",
+    "/api/v1/visualize/parameter-timeline",
 }
 
 

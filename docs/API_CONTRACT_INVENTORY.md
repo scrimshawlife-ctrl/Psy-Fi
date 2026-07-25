@@ -25,6 +25,10 @@ Canonical browser client paths are under `/api/v1/*`. Legacy `/api/*` and `/simu
 | `GET` | `/api/v1/presets/{id}` | — | `PresetDetail` | Id or alias lookup |
 | `GET/POST` | `/api/v1/telemetry/*` | opt-in | status/events | Disabled unless env + client consent |
 | `GET` | `/api/v1/midi/*` | MIDI models | MIDI models / dicts | Process-global MIDI service |
+| `GET` | `/api/v1/experiences` | filters | recipe summaries | Phenomenology catalog |
+| `GET` | `/api/v1/experiences/{id}` | — | full recipe | Derived motifs + visual_recipe |
+| `GET` | `/api/v1/substances` | — | visual_signature + overlay | Distilled substance visual settings |
+| `POST` | `/api/v1/visualize/parameter-timeline` | timeline body | frames + hash | Immutable parameter field snapshots |
 | `*` | `/api/jobs/*`, `/api/presets/*`, `/api/telemetry/*`, `/api/midi/*` | same | same | Legacy mirrors of v1 |
 | `GET` | `/assets/icons/*` | — | static files | Mount of existing `docs/icons` |
 | `GET` | `/static/*` | — | static files | Existing UI assets + SW |

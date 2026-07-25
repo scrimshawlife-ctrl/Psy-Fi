@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "psyfi_parameter_field.v1.json",
+  "title": "PsyFiParameterField.v1",
+  "type": "object",
+  "required": ["schema_version", "master_seed", "mode", "intensity", "parameters", "hash"],
+  "properties": {
+    "schema_version": { "type": "string" },
+    "master_seed": { "type": "integer" },
+    "mode": { "type": "string", "enum": ["open", "attractor", "void", "power"] },
+    "substance": { "type": "string" },
+    "experience_id": { "type": ["string", "null"] },
+    "intensity": { "type": "number", "minimum": 0, "maximum": 1 },
+    "phase": { "type": "string" },
+    "phase_t": { "type": "number" },
+    "neutral_view": { "type": "boolean" },
+    "quality_tier": { "type": "string" },
+    "parameters": {
+      "type": "object",
+      "additionalProperties": { "type": "number" }
+    },
+    "engines": {
+      "type": "object",
+      "additionalProperties": { "type": "number" }
+    },
+    "palette": { "type": "object" },
+    "safety": { "type": "object" },
+    "hash": { "type": "string" }
+  }
+}

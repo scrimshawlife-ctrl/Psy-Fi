@@ -1022,6 +1022,92 @@
         "title": "TelemetryStatus",
         "type": "object"
       },
+      "TimelineRequest": {
+        "properties": {
+          "dim_flashing": {
+            "default": false,
+            "title": "Dim Flashing",
+            "type": "boolean"
+          },
+          "experience_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Experience Id"
+          },
+          "intensity": {
+            "default": 0.7,
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Intensity",
+            "type": "number"
+          },
+          "mode": {
+            "default": "open",
+            "enum": [
+              "open",
+              "attractor",
+              "void",
+              "power"
+            ],
+            "title": "Mode",
+            "type": "string"
+          },
+          "neutral_view": {
+            "default": false,
+            "title": "Neutral View",
+            "type": "boolean"
+          },
+          "phase_t": {
+            "anyOf": [
+              {
+                "maximum": 1.0,
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Phase T"
+          },
+          "quality_tier": {
+            "default": "balanced",
+            "title": "Quality Tier",
+            "type": "string"
+          },
+          "reduce_motion": {
+            "default": false,
+            "title": "Reduce Motion",
+            "type": "boolean"
+          },
+          "seed": {
+            "default": 42,
+            "minimum": 0.0,
+            "title": "Seed",
+            "type": "integer"
+          },
+          "steps": {
+            "default": 24,
+            "maximum": 128.0,
+            "minimum": 2.0,
+            "title": "Steps",
+            "type": "integer"
+          },
+          "substance": {
+            "default": "lsd",
+            "title": "Substance",
+            "type": "string"
+          }
+        },
+        "title": "TimelineRequest",
+        "type": "object"
+      },
       "ValidationError": {
         "properties": {
           "ctx": {
@@ -1748,6 +1834,158 @@
         ]
       }
     },
+    "/api/v1/experiences": {
+      "get": {
+        "operationId": "list_experiences_api_v1_experiences_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "substance",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Substance"
+            }
+          },
+          {
+            "in": "query",
+            "name": "valence",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": "positive",
+              "title": "Valence"
+            }
+          },
+          {
+            "in": "query",
+            "name": "mode",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Mode"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response List Experiences Api V1 Experiences Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Experiences",
+        "tags": [
+          "experiences"
+        ]
+      }
+    },
+    "/api/v1/experiences/reload-catalog": {
+      "post": {
+        "description": "Reload catalog from disk (dev helper).",
+        "operationId": "reload_catalog_api_v1_experiences_reload_catalog_post",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Reload Catalog Api V1 Experiences Reload Catalog Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Reload Catalog",
+        "tags": [
+          "experiences"
+        ]
+      }
+    },
+    "/api/v1/experiences/{experience_id}": {
+      "get": {
+        "operationId": "get_experience_api_v1_experiences__experience_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "experience_id",
+            "required": true,
+            "schema": {
+              "title": "Experience Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Get Experience Api V1 Experiences  Experience Id  Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Experience",
+        "tags": [
+          "experiences"
+        ]
+      }
+    },
     "/api/v1/info": {
       "get": {
         "description": "API info endpoint (legacy + v1).",
@@ -2288,6 +2526,29 @@
         ]
       }
     },
+    "/api/v1/substances": {
+      "get": {
+        "operationId": "list_substances_api_v1_substances_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response List Substances Api V1 Substances Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List Substances",
+        "tags": [
+          "experiences"
+        ]
+      }
+    },
     "/api/v1/telemetry/events": {
       "get": {
         "description": "List locally buffered events (empty unless active).",
@@ -2373,6 +2634,49 @@
         "summary": "Telemetry Status",
         "tags": [
           "telemetry"
+        ]
+      }
+    },
+    "/api/v1/visualize/parameter-timeline": {
+      "post": {
+        "operationId": "parameter_timeline_api_v1_visualize_parameter_timeline_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TimelineRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Parameter Timeline Api V1 Visualize Parameter Timeline Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Parameter Timeline",
+        "tags": [
+          "experiences"
         ]
       }
     },

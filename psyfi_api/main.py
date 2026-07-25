@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from psyfi_api.routers import simulate, midi, presets, jobs, telemetry
+from psyfi_api.routers import experiences, jobs, midi, presets, simulate, telemetry
 from psyfi_api.telemetry import TELEMETRY_ENABLED
 from psyfi_core.models.substance_preset import get_registry
 
@@ -52,6 +52,8 @@ app.include_router(midi.router, prefix="/api/v1")  # /api/v1/midi
 app.include_router(presets.router, prefix="/api/v1")  # /api/v1/presets
 app.include_router(jobs.router, prefix="/api/v1")  # /api/v1/jobs
 app.include_router(telemetry.router, prefix="/api/v1")  # /api/v1/telemetry
+# Experiences router already uses /api/v1 prefix internally
+app.include_router(experiences.router)
 
 
 @app.get("/")
@@ -93,6 +95,13 @@ async def ready() -> dict:
     checks["icon_192"] = (BASE_DIR / "static" / "icon-192.png").exists()
     checks["icon_512"] = (BASE_DIR / "static" / "icon-512.png").exists()
     checks["renderer_js"] = (BASE_DIR / "static" / "renderer.js").exists()
+    checks["experience_player"] = (BASE_DIR / "static" / "viz" / "experiencePlayer.js").exists()
+    checks["experience_catalog"] = (
+        REPO_ROOT / "data" / "phenomenology" / "derived" / "experience_catalog.v1.json"
+    ).exists()
+    checks["visual_overlays"] = (
+        REPO_ROOT / "data" / "phenomenology" / "derived" / "substance_visual_overlays.v1.json"
+    ).exists()
 
     ready_ok = all(checks.values())
     return {

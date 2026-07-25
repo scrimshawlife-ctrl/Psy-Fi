@@ -68,6 +68,10 @@ npm run gpu:build
 # Dev server
 python3 scripts/run_dev_server.py
 # → http://localhost:8000
+
+# Production-style Docker
+docker compose up -d --build
+# → http://localhost:8000
 ```
 
 ## Live Experience
@@ -132,6 +136,7 @@ Canonical browser API is **`/api/v1`** (soft-frozen). Legacy `/api/*` and `/simu
 | [`docs/CONTINUATION_PLAN.md`](docs/CONTINUATION_PLAN.md)                           | Web-track next steps   |
 | [`docs/VISUAL_EXPERIENCES.md`](docs/VISUAL_EXPERIENCES.md)                         | Live Experience guide  |
 | [`docs/rendering/README.md`](docs/rendering/README.md)                             | WebGPU platform docs   |
+| [`DEPLOYMENT.md`](DEPLOYMENT.md)                                                   | Docker deploy guide    |
 | [`docs/PHENOMENOLOGY_PIPELINE.md`](docs/PHENOMENOLOGY_PIPELINE.md)                 | Scraped → overlays     |
 | [`docs/BROWSER_CAPABILITY_MATRIX.md`](docs/BROWSER_CAPABILITY_MATRIX.md)           | Device QA matrix       |
 | [`docs/contracts/frozen/API_V1_FREEZE.md`](docs/contracts/frozen/API_V1_FREEZE.md) | Contract soft freeze   |

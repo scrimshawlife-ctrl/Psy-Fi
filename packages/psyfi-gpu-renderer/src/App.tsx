@@ -220,7 +220,6 @@ export function App() {
     passes.length,
     tierCfg.targetFrameMs,
     measuring,
-    measureFramesRef,
     snapshot,
     caps.adapter,
     effectiveTier,

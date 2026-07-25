@@ -130,6 +130,9 @@ python3 -m pytest tests/ -q
 npm test && npm run gpu:test && npm run gpu:typecheck
 npm run gpu:build
 npm run gpu:goldens:pixel   # regenerate soft-present pixel goldens
+# Hardware Ultra fps (on discrete GPU desktop):
+#   open http://localhost:8000/gpu/?measure_fps=1&tier=ultra
+#   python3 scripts/merge_ultra_fps_measured.py ~/Downloads/psyfi-ultra-fps-*.json
 docker compose up -d --build
 ./scripts/check_nvidia_host.sh   # optional NVIDIA host
 python3 scripts/run_dev_server.py

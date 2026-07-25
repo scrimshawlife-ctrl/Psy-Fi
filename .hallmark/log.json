@@ -107,6 +107,18 @@
       "footer": "Ft2",
       "designed_as_app": true,
       "notes": "CTA-first launch; scan hairlines; sensor chips removed; input 2-col; viewport under advanced; GPU probe once; native monitor buffer; reduced-motion snap; SW v23"
+    },
+    {
+      "date": "2026-07-25",
+      "target": "Live Experience + Workspace control surfaces",
+      "verb": "fix",
+      "genre": "atmospheric",
+      "macrostructure": "Photographic\u2192Workbench",
+      "theme": "design.md",
+      "nav": "N9",
+      "footer": "Ft2",
+      "designed_as_app": true,
+      "notes": "UX density: phase Advance+Speed; compact control rows; drawers for seed/options/sensors/I/O/provenance; workspace preset select; data-tip tooltips; SW v24"
     }
   ]
 }

@@ -7,6 +7,61 @@ const DB_VERSION = 1;
 const STORE_NAME = 'history';
 const API_V1 = '/api/v1';
 
+window.PsyFiTips = {
+    bind(root) {
+        const host = root || document;
+        let tip = document.getElementById('pfTip');
+        if (!tip) {
+            tip = document.createElement('div');
+            tip.id = 'pfTip';
+            tip.className = 'pf-tip';
+            tip.setAttribute('role', 'tooltip');
+            document.body.appendChild(tip);
+        }
+        let showTimer = 0;
+        let hideTimer = 0;
+        let active = null;
+        const place = (el) => {
+            const r = el.getBoundingClientRect();
+            const pad = 8;
+            tip.style.left = `${Math.min(window.innerWidth - tip.offsetWidth - pad, Math.max(pad, r.left))}px`;
+            tip.style.top = `${Math.min(window.innerHeight - tip.offsetHeight - pad, r.bottom + 6)}px`;
+        };
+        const show = (el, immediate) => {
+            const text = el.getAttribute('data-tip');
+            if (!text) return;
+            active = el;
+            clearTimeout(hideTimer);
+            const run = () => {
+                if (active !== el) return;
+                tip.textContent = text;
+                tip.dataset.open = 'true';
+                place(el);
+            };
+            if (immediate) run();
+            else {
+                clearTimeout(showTimer);
+                showTimer = setTimeout(run, 900);
+            }
+        };
+        const hide = () => {
+            clearTimeout(showTimer);
+            hideTimer = setTimeout(() => {
+                tip.dataset.open = 'false';
+                active = null;
+            }, 80);
+        };
+        host.querySelectorAll('[data-tip]').forEach((el) => {
+            if (el.dataset.tipBound === '1') return;
+            el.dataset.tipBound = '1';
+            el.addEventListener('pointerenter', () => show(el, false));
+            el.addEventListener('pointerleave', hide);
+            el.addEventListener('focus', () => show(el, true));
+            el.addEventListener('blur', hide);
+        });
+    },
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('simulationForm');
     const runButton = document.getElementById('runButton');
@@ -44,19 +99,39 @@ document.addEventListener('DOMContentLoaded', () => {
         deep: { width: 256, height: 256, steps: 100, resolution: '256x256' },
     };
     const resolutionSelect = document.getElementById('resolutionSelect');
+    const gridPresetSelect = document.getElementById('gridPresetSelect');
     const widthInput = document.getElementById('width');
     const heightInput = document.getElementById('height');
+    const customSizeGroup = document.getElementById('customSizeGroup');
+    const customHeightGroup = document.getElementById('customHeightGroup');
+
+    function syncCustomSizeVisibility() {
+        const custom = resolutionSelect && resolutionSelect.value === 'custom';
+        if (customSizeGroup) customSizeGroup.hidden = !custom;
+        if (customHeightGroup) customHeightGroup.hidden = !custom;
+    }
 
     function syncResolutionSelectFromInputs() {
         if (!resolutionSelect || !widthInput || !heightInput) return;
         const key = `${widthInput.value}x${heightInput.value}`;
         const known = ['32x32', '64x64', '128x128', '256x256', '512x512'];
         resolutionSelect.value = known.includes(key) ? key : 'custom';
+        if (gridPresetSelect) {
+            const byRes = {
+                '32x32': 'quick',
+                '64x64': 'standard',
+                '128x128': 'detailed',
+                '256x256': 'deep',
+            };
+            gridPresetSelect.value = byRes[resolutionSelect.value] || 'custom';
+        }
+        syncCustomSizeVisibility();
     }
 
     function applyResolutionSelection(value, { syncSteps } = { syncSteps: true }) {
         if (window.PsyFiViz && typeof window.PsyFiViz.applyFieldResolution === 'function' && value !== 'custom') {
             window.PsyFiViz.applyFieldResolution(value, { syncSteps });
+            syncCustomSizeVisibility();
             return;
         }
         const map = {
@@ -67,7 +142,10 @@ document.addEventListener('DOMContentLoaded', () => {
             '512x512': { width: 512, height: 512, steps: 100 },
         };
         const preset = map[value];
-        if (!preset) return;
+        if (!preset) {
+            syncCustomSizeVisibility();
+            return;
+        }
         if (widthInput) widthInput.value = String(preset.width);
         if (heightInput) heightInput.value = String(preset.height);
         if (syncSteps) {
@@ -75,7 +153,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (stepsEl) stepsEl.value = String(preset.steps);
         }
         if (resolutionSelect) resolutionSelect.value = value;
+        syncCustomSizeVisibility();
     }
+
+    const bindTooltips = (root) => window.PsyFiTips.bind(root);
 
     function setHidden(el, hidden) {
         if (!el) return;
@@ -162,22 +243,44 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('.preset-btn').forEach((btn) => btn.classList.remove('active'));
             button.classList.add('active');
             if (resolutionSelect) resolutionSelect.value = preset.resolution || 'custom';
+            if (gridPresetSelect) gridPresetSelect.value = button.dataset.preset;
             try {
                 sessionStorage.setItem('psyfi.resolution.v1', preset.resolution || 'custom');
             } catch (_e) {
                 /* ignore */
             }
+            syncCustomSizeVisibility();
         });
     });
 
+    gridPresetSelect?.addEventListener('change', () => {
+        const key = gridPresetSelect.value;
+        if (key === 'custom') {
+            if (resolutionSelect) resolutionSelect.value = 'custom';
+            syncCustomSizeVisibility();
+            return;
+        }
+        const preset = gridPresets[key];
+        if (!preset) return;
+        document.querySelector(`.preset-btn[data-preset="${key}"]`)?.click();
+        applyResolutionSelection(preset.resolution, { syncSteps: true });
+        if (gridPresetSelect) gridPresetSelect.value = key;
+    });
+
     resolutionSelect?.addEventListener('change', () => {
-        if (resolutionSelect.value === 'custom') return;
+        if (resolutionSelect.value === 'custom') {
+            if (gridPresetSelect) gridPresetSelect.value = 'custom';
+            syncCustomSizeVisibility();
+            return;
+        }
         applyResolutionSelection(resolutionSelect.value, { syncSteps: true });
+        syncResolutionSelectFromInputs();
     });
     widthInput?.addEventListener('change', syncResolutionSelectFromInputs);
     heightInput?.addEventListener('change', syncResolutionSelectFromInputs);
     window.addEventListener('psyfi:resolution-change', () => syncResolutionSelectFromInputs());
     syncResolutionSelectFromInputs();
+    bindTooltips(document);
 
     function normalizeValue(value, min, max) {
         return (value - min) / (max - min);
@@ -517,6 +620,21 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!btn) return;
             btn.disabled = !ok;
             btn.title = ok ? '' : 'Not available on this device/browser';
+        });
+        const select = document.getElementById('sensorEnableSelect');
+        if (!select) return;
+        const avail = {
+            camera: sensors.camera,
+            audio: sensors.microphone,
+            motion: sensors.deviceMotion || sensors.deviceOrientation,
+            midi: sensors.webMidi,
+            gamepad: sensors.gamepad,
+            ambient: sensors.ambientLight,
+            haptics: sensors.vibrate,
+        };
+        Array.from(select.options).forEach((opt) => {
+            if (!opt.value) return;
+            opt.disabled = !avail[opt.value];
         });
     }
 
@@ -874,6 +992,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const seedInput = document.getElementById('seedInput');
     const phaseScrub = document.getElementById('phaseScrub');
     const phaseLabel = document.getElementById('phaseLabel');
+    const phaseHint = document.getElementById('phaseHint');
+    const phaseAdvanceChk = document.getElementById('phaseAdvanceChk');
+    const phaseSpeedSelect = document.getElementById('phaseSpeedSelect');
     const reduceMotionChk = document.getElementById('reduceMotionChk');
     const dimFlashChk = document.getElementById('dimFlashChk');
     const preferWebGLChk = document.getElementById('preferWebGLChk');
@@ -1014,7 +1135,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     playBtn.addEventListener('click', () => {
         player.play();
-        statusEl.textContent = 'Field running';
+        statusEl.textContent = player.phaseAdvance ? 'Field running · phase advance on' : 'Field running';
     });
     pauseBtn.addEventListener('click', () => {
         player.pause();
@@ -1043,11 +1164,43 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    if (phaseAdvanceChk) {
+        player.setPhaseAdvance(!!phaseAdvanceChk.checked);
+        phaseAdvanceChk.addEventListener('change', () => {
+            player.setPhaseAdvance(!!phaseAdvanceChk.checked);
+            statusEl.textContent = phaseAdvanceChk.checked
+                ? 'Phase advance on'
+                : 'Phase advance off · scrub still works';
+        });
+    }
+    if (phaseSpeedSelect) {
+        player.setPhaseSpeed(Number(phaseSpeedSelect.value) || 1);
+        phaseSpeedSelect.addEventListener('change', () => {
+            player.setPhaseSpeed(Number(phaseSpeedSelect.value) || 1);
+            statusEl.textContent = `Phase speed ${phaseSpeedSelect.value}×`;
+        });
+    }
+
     phaseScrub?.addEventListener('input', () => {
-        player.pause();
         player.setPhaseIndex(Number(phaseScrub.value));
         const frame = player.timeline && player.timeline.frames[player.idx];
         if (phaseLabel && frame) phaseLabel.textContent = frame.phase || phaseScrub.value;
+    });
+
+    const sensorEnableSelect = document.getElementById('sensorEnableSelect');
+    document.getElementById('sensorEnableBtn')?.addEventListener('click', () => {
+        const key = sensorEnableSelect && sensorEnableSelect.value;
+        const map = {
+            camera: 'enableCameraBtn',
+            motion: 'enableMotionBtn',
+            audio: 'enableAudioBtn',
+            midi: 'enableMidiBtn',
+            gamepad: 'enableGamepadBtn',
+            ambient: 'enableAmbientBtn',
+            haptics: 'enableHapticsBtn',
+        };
+        const id = map[key];
+        if (id) document.getElementById(id)?.click();
     });
 
     document.getElementById('exportTimelineBtn')?.addEventListener('click', () => {
@@ -1286,10 +1439,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 phaseScrub.max = String(Math.max(0, data.frames.length - 1));
                 phaseScrub.value = '0';
                 if (phaseLabel) phaseLabel.textContent = data.frames[0].phase || 'comeup';
+                if (phaseHint) phaseHint.textContent = 'Scrub to jump phases. Advance steps while playing.';
             }
             player.resize();
             player.play();
-            statusEl.textContent = 'Experience loaded';
+            statusEl.textContent = player.phaseAdvance
+                ? 'Experience loaded · phase advance on'
+                : 'Experience loaded';
         } catch (err) {
             console.error(err);
             statusEl.textContent = 'Load failed';
@@ -1305,6 +1461,10 @@ document.addEventListener('DOMContentLoaded', () => {
             neutralBtn.click();
         }
     });
+
+    if (window.PsyFiTips && typeof window.PsyFiTips.bind === 'function') {
+        window.PsyFiTips.bind(document.getElementById('experiencePanel') || document);
+    }
 
     loadSubstances()
         .then(loadExperiences)

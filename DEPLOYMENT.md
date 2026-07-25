@@ -61,6 +61,23 @@ python3 scripts/run_dev_server.py
 # → http://localhost:8000/gpu/
 ```
 
+### NVIDIA desktop (RTX 5060 / 40-series / etc.)
+
+`/gpu/` uses **browser WebGPU** on your discrete NVIDIA GPU (not CUDA in Python).
+
+```bash
+# Host driver check
+./scripts/check_nvidia_host.sh
+
+# Optional: Compose with NVIDIA Container Toolkit GPU reservation
+docker compose --profile nvidia up -d --build
+
+# Then open Chrome/Edge → http://localhost:8000/gpu/
+# Force High-performance NVIDIA GPU for the browser if hybrid graphics.
+```
+
+Full guide: [`docs/NVIDIA_GPU.md`](docs/NVIDIA_GPU.md).
+
 See [`docs/PRODUCTION_READINESS.md`](docs/PRODUCTION_READINESS.md) for the ship board.
 
 ## Health

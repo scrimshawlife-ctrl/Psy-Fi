@@ -1,3 +1,5 @@
+import { probeGpuAdapter, type GpuAdapterInfo } from './GpuAdapter'
+
 export type QualityTier = 'ultra' | 'high' | 'balanced' | 'battery'
 
 export interface DeviceCaps {
@@ -5,6 +7,11 @@ export interface DeviceCaps {
   maxTextureSize: number
   preferBattery: boolean
   isMobile: boolean
+  /** Prefer Ultra when a high-end NVIDIA discrete adapter is present (e.g. RTX 5060). */
+  preferUltra: boolean
+  isNvidia: boolean
+  isDiscrete: boolean
+  adapter: GpuAdapterInfo
 }
 
 export interface TierConfig {
@@ -121,6 +128,15 @@ export function tierConfig(tier: QualityTier): TierConfig {
   return TIERS[tier]
 }
 
+/** Suggested default tier from probed caps (NVIDIA discrete → Ultra). */
+export function recommendedTier(caps: DeviceCaps): QualityTier {
+  if (!caps.webgpu) return 'battery'
+  if (caps.preferBattery || caps.isMobile) return caps.isMobile ? 'battery' : 'balanced'
+  if (caps.preferUltra || caps.adapter.isHighEndNvidia) return 'ultra'
+  if (caps.isDiscrete || caps.isNvidia) return 'high'
+  return 'balanced'
+}
+
 /** Clamp requested tier downward based on device capabilities. */
 export function resolveTier(requested: QualityTier, caps: DeviceCaps): QualityTier {
   if (!caps.webgpu) return 'battery'
@@ -141,6 +157,18 @@ export function probeDeviceCaps(): DeviceCaps {
     maxTextureSize: 8192,
     preferBattery,
     isMobile,
+    preferUltra: false,
+    isNvidia: false,
+    isDiscrete: false,
+    adapter: {
+      vendor: 'unknown',
+      description: '',
+      device: '',
+      architecture: '',
+      isDiscrete: false,
+      isNvidia: false,
+      isHighEndNvidia: false,
+    },
   }
 }
 
@@ -157,4 +185,24 @@ export async function refineBatteryCaps(caps: DeviceCaps): Promise<DeviceCaps> {
     /* ignore */
   }
   return caps
+}
+
+/** Async WebGPU adapter probe — picks high-performance NVIDIA dGPU when present. */
+export async function refineGpuAdapterCaps(caps: DeviceCaps): Promise<DeviceCaps> {
+  if (!caps.webgpu) return caps
+  const adapter = await probeGpuAdapter()
+  return {
+    ...caps,
+    isNvidia: adapter.isNvidia,
+    isDiscrete: adapter.isDiscrete,
+    preferUltra: adapter.isHighEndNvidia && !caps.preferBattery && !caps.isMobile,
+    maxTextureSize: adapter.isHighEndNvidia ? 16384 : caps.maxTextureSize,
+    adapter,
+  }
+}
+
+/** Full async refine: adapter then battery. */
+export async function refineDeviceCaps(caps: DeviceCaps = probeDeviceCaps()): Promise<DeviceCaps> {
+  const withGpu = await refineGpuAdapterCaps(caps)
+  return refineBatteryCaps(withGpu)
 }

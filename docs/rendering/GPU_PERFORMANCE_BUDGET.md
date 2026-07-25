@@ -7,10 +7,13 @@ Extends (does not replace) shell budgets in [`PERFORMANCE_BUDGETS.md`](../PERFOR
 
 | Class | Examples | Default tier |
 | --- | --- | --- |
-| Desktop discrete / high Apple Silicon | M-series Max/Pro, dGPU Chromebooks | High (Ultra opt-in) |
+| High-end NVIDIA discrete | RTX 30/40/**50** (incl. **RTX 5060**) via WebGPU | **Ultra** (auto) |
+| Other discrete / high Apple Silicon | AMD dGPU, M-series Max/Pro | High |
 | Apple Silicon laptop | M1–M3 laptop | Balanced |
 | Future iPhone (WebGPU) | Mobile Safari WebGPU | Battery Saver → Balanced |
 | No WebGPU | Legacy browsers | Fall back to `/` Live Experience |
+
+See [`docs/NVIDIA_GPU.md`](../NVIDIA_GPU.md) for driver / browser / Compose `nvidia` profile setup.
 
 ## Quality tiers
 

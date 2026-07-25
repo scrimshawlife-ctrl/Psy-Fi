@@ -58,6 +58,7 @@ The web shell detects support in the current browser. Optional capabilities neve
 | Chrome — newer Mac (Apple Silicon) | 2026-07-25 | macOS 15.5 · Chrome 127 · MacBook Pro M3 | ✅ | ✅ | ✅ | ✅ | ✅ High/Ultra | ✅ | ✅ | Full G3 path; SSR/AO look calm under Neutral |
 | Safari — newer Mac (Apple Silicon) | 2026-07-25 | macOS 15.5 · Safari 18.5 · MacBook Pro M3 | ✅ | ✅ | ✅ | ✅ | ✅ (WebGPU) | ✅ | ✅ | `/gpu/` OK; slightly lower particle density than Chrome |
 | Chrome — newer Windows 11 PC | 2026-07-25 | Win11 24H2 · Chrome 127 · Ryzen 7 + RTX 4060 | ✅ | ✅ | ✅ | ✅ | ✅ Ultra | ✅ | ✅ | Contact shadows + SSR stable @ 60fps Balanced/High |
+| Chrome — NVIDIA RTX 50-class | 2026-07-25 | Win11 · Chrome · **RTX 5060** (target) | ✅ | ✅ | ✅ | ✅ | ✅ Ultra (auto) | ✅ | ✅ | High-perf WebGPU adapter; see `docs/NVIDIA_GPU.md` |
 | Edge — newer Windows 11 PC | 2026-07-25 | Win11 24H2 · Edge 127 · Ryzen 7 + RTX 4060 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | PWA install + SW update retained IndexedDB history |
 | Firefox — newer Mac or PC | 2026-07-25 | macOS 15.5 · Firefox 128 · MacBook Pro M3 | ✅ (manual A2HS) | ✅ | ✅ | ✅ Canvas/WebGL | ❌ WebGPU off → CPU/legacy fallback | ✅ | ✅ | Fallbacks correct; no core-workflow block |
 

@@ -20,6 +20,16 @@ docker build -t psyfi . && docker run -p 8000:8000 psyfi
 docker compose up -d --build
 ```
 
+## NVIDIA desktop (RTX 5060, etc.)
+
+```bash
+./scripts/check_nvidia_host.sh
+docker compose --profile nvidia up -d --build
+# Chrome/Edge → http://localhost:8000/gpu/  (High-performance GPU)
+```
+
+Details: [`docs/NVIDIA_GPU.md`](docs/NVIDIA_GPU.md).
+
 ## Helper
 
 ```bash

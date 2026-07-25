@@ -9,6 +9,18 @@ const caps: DeviceCaps = {
   maxTextureSize: 8192,
   preferBattery: false,
   isMobile: false,
+  preferUltra: true,
+  isNvidia: true,
+  isDiscrete: true,
+  adapter: {
+    vendor: 'nvidia',
+    description: 'NVIDIA GeForce RTX 5060',
+    device: '',
+    architecture: '',
+    isDiscrete: true,
+    isNvidia: true,
+    isHighEndNvidia: true,
+  },
 }
 
 describe('G3 production budget smoke', () => {

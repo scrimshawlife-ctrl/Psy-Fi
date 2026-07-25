@@ -19,6 +19,7 @@ Scope: web app / PWA / API — native iOS deferred (`IOS_MIGRATION.md`).
 | GPU | G1 present (bloom/grade/exposure/safety) | **done** | `#30` |
 | GPU | G2 compute / TAA / asset worker decode | **done** | `#31`–`#33` |
 | GPU | G3 premium desktop stack | **done** | GTAO · SSR · ContactShadows · fog · DoF · motion blur · chroma |
+| GPU | NVIDIA desktop integration | **done** | WebGPU high-perf adapter · Ultra on RTX 50xx · `docs/NVIDIA_GPU.md` |
 | Deploy | Docker-only path | **done** | `DEPLOYMENT.md` · multi-stage GPU `dist/` |
 | Deploy | Compose healthcheck (no curl) | **done** | urllib |
 | CI | pytest + hallmark + gpu test/typecheck/build | **done** | `.github/workflows/ci.yml` |
@@ -40,11 +41,16 @@ Scope: web app / PWA / API — native iOS deferred (`IOS_MIGRATION.md`).
 4. Confirm freeze pack: `docs/contracts/frozen/MANIFEST.json` → `hard_frozen`
 5. Device matrix + Phase 4 filled (2026-07-25)
 
+## NVIDIA note
+
+Python simulation does **not** use CUDA. Your RTX card (e.g. **5060**) accelerates `/gpu/` through **browser WebGPU**. Setup: [`NVIDIA_GPU.md`](NVIDIA_GPU.md).
+
 ## Remaining optional polish
 
 1. Draco/KTX2 WASM GPU upload (beyond header decode)
 2. Optional legacy WebGL 1:1 shaders
 3. Re-run device matrix after major UI changes
+4. Future optional CUDA workers (Compose `nvidia` profile already reserves the GPU)
 
 ## Non-claims
 

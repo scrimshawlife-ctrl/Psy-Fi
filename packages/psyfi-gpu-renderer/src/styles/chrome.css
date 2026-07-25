@@ -8,6 +8,7 @@
   --pf-bg-1: #121820;
   --pf-bg-2: #1a222e;
   --pf-border-subtle: #2a3344;
+  --pf-border-strong: #3d4a60;
   --pf-text-main: #eef2f7;
   --pf-text-muted: #9aa6b8;
   --pf-text-soft: #6d7a8f;
@@ -17,9 +18,20 @@
   --pf-font-display: "Space Grotesk", "IBM Plex Sans", system-ui, sans-serif;
   --pf-font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --color-paper: var(--pf-bg-0);
+  --color-paper-2: var(--pf-bg-1);
   --color-ink: var(--pf-text-main);
   --color-ink-2: var(--pf-text-muted);
   --color-accent: var(--pf-cyan);
+  --color-focus: var(--pf-cyan);
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --duration-fast: 120ms;
+  --control-disabled-opacity: 0.55;
 }
 
 .gpu-app {
@@ -34,9 +46,9 @@
 .gpu-header {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: var(--space-3);
   align-items: center;
-  padding: 10px 14px;
+  padding: var(--space-3) var(--space-4);
   border-bottom: 1px solid var(--pf-border-subtle);
   background: var(--pf-bg-1);
 }
@@ -49,15 +61,15 @@
 
 .gpu-status {
   color: var(--pf-text-muted);
-  font-size: 13px;
+  font-size: 0.8125rem;
 }
 
 .gpu-header label {
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--pf-text-muted);
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: var(--space-1);
 }
 
 .gpu-header select,
@@ -68,13 +80,30 @@
   color: var(--pf-text-main);
   background: var(--pf-bg-0);
   border: 1px solid var(--pf-border-subtle);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   padding: 0.35rem 0.5rem;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  min-height: 44px;
+}
+
+.gpu-header select:hover,
+.gpu-header input[type="number"]:hover,
+.gpu-header input[type="range"]:hover {
+  border-color: var(--pf-border-strong);
+}
+
+.gpu-header select:focus-visible,
+.gpu-header input[type="number"]:focus-visible,
+.gpu-header input[type="range"]:focus-visible,
+.gpu-header button:focus-visible,
+.gpu-header a:focus-visible {
+  border-color: var(--color-focus);
+  outline-color: var(--color-focus);
 }
 
 .gpu-header button {
   cursor: pointer;
-  min-height: 36px;
 }
 
 .gpu-header button:hover,
@@ -83,12 +112,36 @@
   outline: none;
 }
 
+.gpu-header button:active {
+  background: var(--pf-bg-2);
+}
+
+.gpu-header button:disabled,
+.gpu-header select:disabled,
+.gpu-header input:disabled {
+  opacity: var(--control-disabled-opacity);
+  cursor: not-allowed;
+}
+
 .gpu-header a {
   margin-left: auto;
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--pf-cyan);
   text-decoration: none;
   white-space: nowrap;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.gpu-header a:hover,
+.gpu-header a:focus-visible {
+  color: var(--pf-text-main);
+  outline: none;
+}
+
+.gpu-header a:active {
+  opacity: 0.85;
 }
 
 .gpu-controls {
@@ -98,22 +151,28 @@
 .gpu-controls > summary {
   cursor: pointer;
   list-style: none;
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--pf-text-muted);
   border: 1px solid var(--pf-border-subtle);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   padding: 0.4rem 0.65rem;
-  min-height: 36px;
+  min-height: 44px;
   display: inline-flex;
   align-items: center;
   background: var(--pf-bg-0);
+  outline: 2px solid transparent;
+  outline-offset: 2px;
 }
 
 .gpu-controls > summary:hover,
 .gpu-controls > summary:focus-visible {
   border-color: var(--pf-cyan);
   color: var(--pf-text-main);
-  outline: none;
+  outline-color: var(--color-focus);
+}
+
+.gpu-controls > summary:active {
+  background: var(--pf-bg-2);
 }
 
 .gpu-controls > summary::-webkit-details-marker {
@@ -131,13 +190,19 @@
   left: 0;
   z-index: 20;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
-  gap: 0.65rem;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--space-3);
   min-width: min(28rem, 80vw);
-  padding: 0.75rem;
+  padding: var(--space-3);
   border: 1px solid var(--pf-border-subtle);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   background: var(--pf-bg-1);
+}
+
+@media (max-width: 640px) {
+  .gpu-controls-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 .gpu-stage {
@@ -147,7 +212,7 @@
 }
 
 .gpu-fallback {
-  padding: 24px;
+  padding: var(--space-5);
   color: var(--pf-text-muted);
   max-width: 40rem;
   line-height: 1.5;
@@ -157,16 +222,21 @@
   color: var(--pf-cyan);
 }
 
+.gpu-fallback a:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
 .gpu-seed-input {
   width: 90px;
 }
 
 .gpu-hud {
   position: absolute;
-  left: 12px;
-  bottom: 12px;
-  padding: 8px 10px;
-  font-size: 12px;
+  left: var(--space-3);
+  bottom: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  font-size: 0.75rem;
   line-height: 1.45;
   background: color-mix(in srgb, var(--pf-bg-0) 88%, transparent);
   border: 1px solid var(--pf-border-subtle);
@@ -195,4 +265,16 @@
 
 .gpu-hud-over {
   color: var(--pf-danger);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation: none !important;
+    transition: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
 }

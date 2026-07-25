@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Modular consciousness field simulation engine with ABX-Core v1.3">
+    <!-- theme-color mirrors design.md --color-accent / --pf-cyan -->
     <meta name="theme-color" content="#3ee7f2">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -36,17 +37,17 @@
         <div class="launch-splash-inner">
             <div class="launch-brand-row">
                 <img class="launch-sigil" src="/assets/icons/pf-icon-core-sigil-48.svg" width="40" height="40" alt="">
-                <p class="launch-brand">PsyFi</p>
+                <h1 id="launchTitle" class="launch-brand">PsyFi</h1>
             </div>
             <p class="launch-caption">Field plate · consciousness simulation</p>
-            <h1 id="launchTitle" class="launch-title">Device scan</h1>
             <p class="launch-sub">Checking components that can feed the field. No permissions yet.</p>
-            <ul class="launch-scan-list" id="launchScanList" aria-live="polite"></ul>
-            <p class="launch-scan-status" id="launchScanStatus">Initializing…</p>
             <div class="launch-actions">
                 <button type="button" class="btn-primary" id="launchEnterBtn" disabled>Enter workspace</button>
                 <button type="button" class="btn-secondary" id="launchSkipBtn">Skip scan</button>
             </div>
+            <p class="launch-title" id="launchScanHeading">Device scan</p>
+            <ul class="launch-scan-list" id="launchScanList" aria-live="polite"></ul>
+            <p class="launch-scan-status" id="launchScanStatus">Initializing…</p>
             <p class="launch-disclaimer">Modeled phenomenology for research/visualization only. Not medical advice.</p>
         </div>
     </div>
@@ -382,10 +383,10 @@
         <footer class="footer">
             <div class="footer-links">
                 <a href="/docs" target="_blank">API Docs</a>
-                <span class="separator">•</span>
+                <span class="separator" aria-hidden="true">·</span>
                 <a href="https://github.com/scrimshawlife-ctrl/Psy-Fi" target="_blank">GitHub</a>
-                <span class="separator">•</span>
-                <span class="abx-badge"><span class="pf-icon pf-icon-ethics" aria-hidden="true"></span>ABX-Core v1.3</span>
+                <span class="separator" aria-hidden="true">·</span>
+                <span class="abx-credit"><span class="pf-icon pf-icon-ethics" aria-hidden="true"></span>ABX-Core v1.3</span>
             </div>
         </footer>
     </div>

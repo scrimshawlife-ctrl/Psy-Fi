@@ -48,6 +48,7 @@ Board: [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md)
 - [x] HUD adapter / vendor / perf-band + `docs/DESKTOP_GPU.md` · `docs/NVIDIA_GPU.md`
 - [x] Compose `--profile nvidia` + `scripts/check_nvidia_host.sh`
 - [x] `/gpu/` profiling HUD (FPS · avg/p95/max · tier budget · full pass list)
+- [x] Draco/KTX2 GPU upload path (uncompressed KTX2 + Draco WASM bridge) · `G4_CUTOVER.md`
 
 ## Recommended next steps (priority order)
 
@@ -68,8 +69,8 @@ Guide: [`DESKTOP_GPU.md`](DESKTOP_GPU.md).
 | Priority | Item | Why |
 | --- | --- | --- |
 | 1 | `/gpu/` profiling HUD polish | **done** — FPS · avg/p95/max ms · budget vs tier target · full pass list |
-| 2 | Draco/KTX2 **WASM GPU upload** | Asset path already decodes headers; upload unlocks denser scenes |
-| 3 | G4 cutover smoke | Feature-parity checklist vs legacy `/` + visual goldens for canonical seeds |
+| 2 | Draco/KTX2 **WASM GPU upload** | **done** — uncompressed KTX2 → GPUTexture; Draco bridge + mesh buffers; Basis/WASM deferred hooks |
+| 3 | G4 cutover smoke | Parity evidence + visual goldens — checklist in [`rendering/G4_CUTOVER.md`](rendering/G4_CUTOVER.md) |
 
 ### P2 — Later / opportunistic
 

@@ -14,14 +14,17 @@ Prefer **procedural** geometry (glyphs, SDF, ribbons, metaballs, volumes, crysta
 ## Draco
 
 - Compress mesh attributes for crystal/glyph caches generated offline.
-- Decode **only** in `AssetPipeline` workers (`draco3d` / three DRACOLoader).
-- Never decode on the render critical path.
+- Decode **only** via `AssetPipeline` (`dracoBridge` + optional worker) — never on the render critical path.
+- Runtime: `createDracoWasmDecoder({ wasmUrl | impl })` → `planDracoMeshUpload` → `GpuAssetUploader` (vertex/index buffers).
+- Until WASM is vendored, Draco glTF plans are **deferred** (`needs: draco-wasm`). Tests use the PSYD passthrough pack.
 
 ## KTX2 / BasisU
 
 - Color + normal + ORM atlases when procedural detail is insufficient.
 - Prefer UASTC for normals/ORM, ETC1S for color when size-bound (Battery Saver downloads).
-- Runtime: KTX2Loader in worker → transfer `ImageBitmap` / GPU texture upload on renderer thread.
+- Runtime: worker/main `decodeKtx2Bytes` + `parseKtx2Container` (level index) → `planKtx2Upload`.
+- **Uncompressed** RGBA8 (`vkFormat` R8G8B8A8_UNORM, supercompression none) uploads via `queue.writeTexture`.
+- BasisLZ / Zstd containers return a **deferred** plan (`needs: basis-transcoder`) until a transcoder is wired.
 
 ## Optional Gaussian Splats
 
@@ -30,14 +33,17 @@ Prefer **procedural** geometry (glyphs, SDF, ribbons, metaballs, volumes, crysta
 - Gated behind quality ≥ High and explicit snapshot flag `assets.splats[]`.
 - Must degrade to crystalline LOD proxy when unsupported.
 
-## Worker loading
+## Worker loading + GPU upload
 
 ```text
 Main / OffscreenCanvas renderer
-        ▲ transferables only
+        ▲ GpuAssetUploader (writeTexture / writeBuffer)
+AssetLoader.loadAndUpload
+  ├─ planKtx2Upload (uncompressed ready · Basis deferred)
+  ├─ planDracoMeshUpload (WASM / deferred)
+  └─ planLoadedAssetUpload (glTF structure → deferred)
 AssetWorker pool
-  ├─ glTF + Draco
-  ├─ KTX2
+  ├─ glTF + KTX2 header/meta decode
   └─ Splat (optional)
 ```
 

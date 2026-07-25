@@ -69,7 +69,7 @@ Update [`BROWSER_CAPABILITY_MATRIX.md`](BROWSER_CAPABILITY_MATRIX.md) if results
 
 ## Recommended engineering follow-ups
 
-See [`CONTINUATION_PLAN.md`](CONTINUATION_PLAN.md) — after hardware validation: Draco/KTX2 GPU upload → G4 cutover goldens. Profiling HUD (FPS / avg / p95 / budget) is already in `/gpu/`.
+See [`CONTINUATION_PLAN.md`](CONTINUATION_PLAN.md) — after hardware validation: G4 cutover parity/goldens ([`rendering/G4_CUTOVER.md`](rendering/G4_CUTOVER.md)). Profiling HUD and KTX2/Draco upload bridges are in `/gpu/`.
 
 ## Non-claims
 

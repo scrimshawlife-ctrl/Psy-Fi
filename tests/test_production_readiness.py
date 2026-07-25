@@ -33,6 +33,14 @@ def test_desktop_gpu_doc_covers_multi_vendor_ultra() -> None:
     assert "WebGPU" in doc
 
 
+def test_g4_cutover_checklist_exists() -> None:
+    doc = (ROOT / "docs" / "rendering" / "G4_CUTOVER.md").read_text(encoding="utf-8")
+    assert "Cutover" in doc
+    assert "KTX2" in doc
+    assert "Draco" in doc
+    assert "parity" in doc.lower()
+
+
 def test_production_readiness_board_doc() -> None:
     board = (ROOT / "docs" / "PRODUCTION_READINESS.md").read_text(encoding="utf-8")
     assert "Production Readiness Board" in board

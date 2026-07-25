@@ -54,3 +54,59 @@ def test_scene_snapshot_endpoint() -> None:
     assert body["magnitude_field"] is not None
     assert body["procedural"]["metaballs"]
     assert body["kind"] == "scene_snapshot"
+
+
+def test_scene_snapshot_applies_substance_intensity_cap() -> None:
+    """GPU publish surface must honor the same safety caps as parameter-timeline."""
+    body = {
+        "substance": "pcp",
+        "intensity": 1.0,
+        "seed": 7,
+        "steps": 8,
+        "include_simulation": False,
+    }
+    timeline = client.post("/api/v1/visualize/parameter-timeline", json=body)
+    snapshot = client.post("/api/v1/visualize/scene-snapshot", json=body)
+    assert timeline.status_code == 200, timeline.text
+    assert snapshot.status_code == 200, snapshot.text
+    mid = timeline.json()["frames"][len(timeline.json()["frames"]) // 2]
+    assert mid["intensity"] == 0.55
+    assert snapshot.json()["parameter_field"]["intensity"] == 0.55
+
+
+def test_scene_snapshot_neutral_view_rematerializes_engines() -> None:
+    """neutral_view must collapse engines/params — not just set a boolean flag."""
+    res = client.post(
+        "/api/v1/visualize/scene-snapshot",
+        json={
+            "substance": "lsd",
+            "mode": "open",
+            "intensity": 0.8,
+            "seed": 3,
+            "steps": 8,
+            "neutral_view": True,
+            "include_simulation": False,
+        },
+    )
+    assert res.status_code == 200, res.text
+    field = res.json()["parameter_field"]
+    assert field["neutral_view"] is True
+    assert field["engines"].get("neutral_view", 0) >= 0.99
+    assert field["engines"].get("recursive_feedback", 1) == 0.0
+    assert float(field["parameters"].get("flash_energy", 1)) == 0.0
+
+
+def test_scene_snapshot_rejects_oversized_seed() -> None:
+    res = client.post(
+        "/api/v1/visualize/scene-snapshot",
+        json={
+            "substance": "lsd",
+            "intensity": 0.5,
+            "seed": 2**40,
+            "include_simulation": True,
+            "width": 16,
+            "height": 16,
+            "sim_steps": 2,
+        },
+    )
+    assert res.status_code == 422

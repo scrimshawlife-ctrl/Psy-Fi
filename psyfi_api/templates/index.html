@@ -19,8 +19,24 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 </head>
-<body>
-    <div class="container">
+<body class="launch-pending">
+    <div class="launch-splash" id="launchSplash" role="dialog" aria-modal="true" aria-labelledby="launchTitle">
+        <div class="launch-splash-bg" aria-hidden="true"></div>
+        <div class="launch-splash-inner">
+            <p class="launch-brand">PsyFi</p>
+            <h1 id="launchTitle" class="launch-title">Device scan</h1>
+            <p class="launch-sub">Checking components that can feed the consciousness field. No permissions are requested yet.</p>
+            <ul class="launch-scan-list" id="launchScanList" aria-live="polite"></ul>
+            <p class="launch-scan-status" id="launchScanStatus">Initializing…</p>
+            <div class="launch-actions">
+                <button type="button" class="btn-primary" id="launchEnterBtn" disabled>Enter workspace</button>
+                <button type="button" class="btn-secondary" id="launchSkipBtn">Skip scan</button>
+            </div>
+            <p class="launch-disclaimer">Modeled phenomenology for research/visualization only. Not medical advice.</p>
+        </div>
+    </div>
+
+    <div class="container" id="appShell" aria-hidden="true">
         <header class="header">
             <div class="brand-row">
                 <div class="sigil" aria-hidden="true">
@@ -334,6 +350,7 @@
             <div class="loading-overlay" id="loadingOverlay" hidden>
                 <div class="spinner"></div>
                 <p id="loadingStatus">Computing consciousness field…</p>
+                <button type="button" class="btn-secondary" id="loadingDismissBtn">Dismiss</button>
             </div>
         </main>
 
@@ -357,6 +374,7 @@
     <script src="/static/viz/parameterFieldWebGL.js"></script>
     <script src="/static/viz/deviceSensors.js"></script>
     <script src="/static/viz/experiencePlayer.js"></script>
+    <script src="/static/viz/launchSplash.js"></script>
     <script src="/static/app.js"></script>
     <script>
         if ('serviceWorker' in navigator) {

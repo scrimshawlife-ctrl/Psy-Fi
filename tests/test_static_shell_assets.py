@@ -33,10 +33,15 @@ def test_template_wires_cancel_recovery_and_renderer() -> None:
     assert 'id="enableHapticsBtn"' in html
     assert 'id="enableAvailableSensorsBtn"' in html
     assert 'id="sensorChipRow"' in html
+    assert 'id="launchSplash"' in html
+    assert 'id="launchEnterBtn"' in html
+    assert 'id="loadingDismissBtn"' in html
+    assert 'launch-pending' in html
     assert 'href="/gpu/"' in html
     assert 'src="/static/renderer.js"' in html
     assert 'src="/static/viz/parameterFieldWebGL.js"' in html
     assert 'src="/static/viz/deviceSensors.js"' in html
+    assert 'src="/static/viz/launchSplash.js"' in html
     assert 'src="/static/app.js"' in html
     # Root-scoped SW registration (not /static/sw.js — that cannot control `/`).
     assert "serviceWorker.register('/sw.js'" in html
@@ -45,13 +50,14 @@ def test_template_wires_cancel_recovery_and_renderer() -> None:
 
 def test_service_worker_precaches_renderer_assets() -> None:
     sw = (STATIC / "sw.js").read_text(encoding="utf-8")
-    assert "psyfi-shell-v13" in sw
+    assert "psyfi-shell-v14" in sw
     assert "/static/renderer.js" in sw
     assert "/static/render_worker.js" in sw
     assert "/static/viz/math.js" in sw
     assert "/static/viz/engines/index.js" in sw
     assert "/static/viz/parameterFieldWebGL.js" in sw
     assert "/static/viz/deviceSensors.js" in sw
+    assert "/static/viz/launchSplash.js" in sw
     assert "/static/viz/experiencePlayer.js" in sw
     assert "/static/icon-192.png" in sw
     assert "/simulate" in sw  # still treated as network-only path matcher
@@ -96,6 +102,17 @@ def test_app_uses_abort_controller_and_worker_renderer() -> None:
     assert "DeviceSensorHub" in app_js
     assert "enableAvailableSensorsBtn" in app_js
     assert "probeSensorCapabilities" in app_js
+    assert "loadingDismissBtn" in app_js
+    assert "timed out" in app_js
+    style_css = (STATIC / "style.css").read_text(encoding="utf-8")
+    assert "[hidden]" in style_css
+    assert "loading-overlay[hidden]" in style_css
+    assert "launch-splash" in style_css
+    launch_js = (STATIC / "viz" / "launchSplash.js").read_text(encoding="utf-8")
+    assert "probeHealth" in launch_js
+    assert "buildChecks" in launch_js
+    assert "runScan" in launch_js
+    assert "psyfi:launch-ready" in launch_js
     renderer_js = (STATIC / "renderer.js").read_text(encoding="utf-8")
     assert "render_worker.js" in renderer_js
     assert "navigator.gpu" in renderer_js

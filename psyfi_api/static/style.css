@@ -745,6 +745,11 @@ body {
     white-space: pre-wrap;
 }
 
+/* Author styles must not override the hidden attribute (was trapping the sim overlay). */
+[hidden] {
+    display: none !important;
+}
+
 .loading-overlay {
     position: fixed;
     inset: 0;
@@ -755,6 +760,160 @@ body {
     justify-content: center;
     gap: var(--space-4);
     z-index: 1000;
+}
+
+.loading-overlay[hidden] {
+    display: none !important;
+}
+
+/* ===== Launch splash (device scan before workspace) ===== */
+
+body.launch-pending #appShell {
+    visibility: hidden;
+    pointer-events: none;
+}
+
+body.launch-ready #appShell {
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.launch-splash {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-5);
+    color: var(--pf-text-main);
+}
+
+.launch-splash[hidden] {
+    display: none !important;
+}
+
+.launch-splash-bg {
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(ellipse 80% 55% at 50% 0%, color-mix(in srgb, var(--pf-cyan) 14%, transparent), transparent 70%),
+        linear-gradient(165deg, #0c121a 0%, var(--pf-bg-0) 45%, #0a1018 100%);
+}
+
+.launch-splash-inner {
+    position: relative;
+    width: min(36rem, 100%);
+    max-height: min(92vh, 44rem);
+    overflow: auto;
+    padding: clamp(1.25rem, 3vw, 2rem);
+    border: 1px solid var(--pf-border-subtle);
+    border-radius: var(--radius-md);
+    background: color-mix(in srgb, var(--pf-bg-1) 92%, transparent);
+    box-shadow: var(--pf-shadow-subtle);
+}
+
+.launch-brand {
+    font-family: var(--pf-font-display);
+    font-size: clamp(2.4rem, 6vw, 3.4rem);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    color: var(--pf-text-main);
+    margin: 0 0 0.35rem;
+    line-height: 1.05;
+}
+
+.launch-title {
+    font-family: var(--pf-font-display);
+    font-size: 1.15rem;
+    font-weight: 500;
+    color: var(--pf-cyan);
+    margin: 0 0 0.5rem;
+}
+
+.launch-sub,
+.launch-disclaimer,
+.launch-scan-status {
+    color: var(--pf-text-muted);
+    font-size: 0.92rem;
+    line-height: 1.45;
+    margin: 0 0 1rem;
+}
+
+.launch-disclaimer {
+    margin: 1rem 0 0;
+    font-size: 0.78rem;
+    color: var(--pf-text-soft);
+}
+
+.launch-scan-list {
+    list-style: none;
+    margin: 0 0 1rem;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.launch-scan-list li {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) auto minmax(0, 1fr);
+    gap: 0.5rem;
+    align-items: baseline;
+    padding: 0.4rem 0.55rem;
+    border: 1px solid var(--pf-border-subtle);
+    border-radius: var(--radius-sm);
+    background: var(--pf-bg-0);
+    font-size: 0.82rem;
+}
+
+.launch-scan-label {
+    color: var(--pf-text-main);
+}
+
+.launch-scan-mark {
+    font-family: var(--pf-font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--pf-text-soft);
+}
+
+.launch-scan-list li[data-state="ok"] .launch-scan-mark {
+    color: var(--pf-success);
+}
+
+.launch-scan-list li[data-state="miss"] .launch-scan-mark {
+    color: var(--pf-warning);
+}
+
+.launch-scan-list li[data-state="err"] .launch-scan-mark {
+    color: var(--pf-danger);
+}
+
+.launch-scan-list li[data-state="run"] .launch-scan-mark {
+    color: var(--pf-cyan);
+}
+
+.launch-scan-detail {
+    color: var(--pf-text-soft);
+    text-align: right;
+}
+
+.launch-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+}
+
+@media (max-width: 640px) {
+    .launch-scan-list li {
+        grid-template-columns: 1fr auto;
+    }
+    .launch-scan-detail {
+        grid-column: 1 / -1;
+        text-align: left;
+    }
 }
 
 .spinner {

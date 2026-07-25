@@ -76,6 +76,16 @@ def test_production_readiness_board_doc() -> None:
     assert "hard freeze" in board.lower() or "hard_frozen" in board
     assert "Docker" in board
     assert "G3 premium desktop stack" in board
+    assert "G4 cutover" in board
+    assert "Simulated P0 Ultra" in board or "simulated" in board.lower()
+
+
+def test_readme_lists_g4_and_simulated_qa() -> None:
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    assert "G4" in readme
+    assert "SIMULATED_ULTRA_QA" in readme
+    assert "PIXEL_GOLDENS" in readme or "pixel goldens" in readme.lower()
+    assert "PWA_GPU_ROUTE" in readme
 
 
 def test_device_matrix_filled() -> None:

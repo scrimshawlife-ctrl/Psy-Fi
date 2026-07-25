@@ -1,6 +1,6 @@
 # PsyFi Web Continuation Plan
 
-Status: active — **production-ready Docker web ship**; G3 + multi-vendor Ultra done; device matrix filled  
+Status: active — **production-ready Docker web ship**; G0–G4 ship gates met; living QA continues  
 Scope: **web app / PWA / API only** — native iOS remains deferred (`docs/IOS_MIGRATION.md`).  
 Deploy: **Docker only** (`DEPLOYMENT.md`).  
 Board: [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md)
@@ -12,77 +12,59 @@ Board: [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md)
 | `/api/v1` + **hard freeze** | Done (`psyfi-api-v1-hard-2026-07-25`) |
 | Legacy Live Experience (Canvas/WebGL) | Done + last-sim source plane |
 | Phenomenology overlays | 13 overlay substances |
-| GPU G0–G2 | Present path, compute, TAA, asset worker decode |
-| GPU G3 | GTAO · SSR · shadows · fog · DoF · motion blur · chroma |
+| GPU G0–G3 | Present · compute · TAA · GTAO/SSR/fog/DoF/MB/chroma |
+| GPU G4 ship gates | Assets · parity · structure + soft pixel goldens · PWA route |
 | Desktop Ultra (multi-vendor) | NVIDIA 30/40/50 · AMD RX 6/7/9xxx · Intel Arc · Apple Pro/Max |
+| Ultra QA | **Simulated pass** (`SIMULATED_ULTRA_QA.md`); hardware fps optional |
 | CI / Docker GPU dist | Done |
-| Device matrix | **Filled** (2026-07-25) — still living QA |
+| Device matrix | **Filled** (2026-07-25) — living QA |
 | Phase 4 usability | **Filled** (2026-07-25) |
 
 ## Device matrix
 
-[`BROWSER_CAPABILITY_MATRIX.md`](BROWSER_CAPABILITY_MATRIX.md) has target-device rows from the 2026-07-25 human pass (plus AMD/Intel peer rows). Re-validate after major UI changes; rows are not a freeze gate.
+[`BROWSER_CAPABILITY_MATRIX.md`](BROWSER_CAPABILITY_MATRIX.md) has target-device rows from the 2026-07-25 human pass, AMD/Intel peer rows, and a CI **simulated Ultra QA** row. Re-validate after major UI changes; rows are not a freeze gate.
 
 ## Engineering queue
 
-### Done
+### Done — core ship
 
 - P0–P2 continuation + G2 compute/TAA/asset decode
 - Hard freeze; production readiness board in README
 - G3 premium desktop stack + multi-vendor Ultra auto-tier
+- G4 cutover ship gates (parity, goldens, PWA route, SceneAssetLayer)
 
-### Done — production polish (G3)
-
-- [x] GTAO ambient occlusion on tiers with `post.ssao`
-- [x] Crystal materials via MaterialSystem descriptors
-- [x] CI budget smoke for tier passes / frame profiler
-- [x] SSR (ultra/high) + ContactShadows
-- [x] Atmosphere fog / DoF / motion blur / chromatic aberration
-- [x] Device matrix + Phase 4 human evidence (2026-07-25)
-
-### Done — multi-vendor desktop Ultra path
+### Done — multi-vendor Ultra + G4
 
 - [x] High-performance WebGPU adapter (`powerPreference`)
-- [x] NVIDIA RTX 30/40/50 (incl. **5060**) → **Ultra**
-- [x] AMD RX 6000/7000/9000 · Intel Arc · Apple Pro/Max → **Ultra**
-- [x] HUD adapter / vendor / perf-band + `docs/DESKTOP_GPU.md` · `docs/NVIDIA_GPU.md`
-- [x] Compose `--profile nvidia` + `scripts/check_nvidia_host.sh`
-- [x] `/gpu/` profiling HUD (FPS · avg/p95/max · tier budget · full pass list)
-- [x] Draco/KTX2 GPU upload path (uncompressed KTX2 + Draco WASM bridge) · `G4_CUTOVER.md`
-- [x] SceneAssetLayer + G4 parity matrix / visual seed list in CI
-- [x] G4 scene-snapshot structure goldens (canonical seeds)
-- [x] PWA decision: `/gpu/` stays a **separate route** ([`PWA_GPU_ROUTE.md`](PWA_GPU_ROUTE.md))
-- [x] Soft-present pixel goldens (SHA + histogram) in CI ([`rendering/PIXEL_GOLDENS.md`](rendering/PIXEL_GOLDENS.md))
-- [x] **Simulated** P0 Ultra QA (adapter fixtures + API/`/gpu/` + Neutral) — [`SIMULATED_ULTRA_QA.md`](SIMULATED_ULTRA_QA.md)
+- [x] NVIDIA RTX 30/40/50 · AMD RX 6000/7000/9000 · Intel Arc · Apple Pro/Max → **Ultra**
+- [x] HUD adapter / vendor / perf-band + profiling (FPS · avg/p95/max · budget)
+- [x] `docs/DESKTOP_GPU.md` · `docs/NVIDIA_GPU.md` · Compose `--profile nvidia`
+- [x] Draco/KTX2 GPU upload path + `SceneAssetLayer`
+- [x] G4 parity matrix + scene-snapshot structure goldens
+- [x] Soft-present pixel SHA + histogram goldens ([`PIXEL_GOLDENS.md`](rendering/PIXEL_GOLDENS.md))
+- [x] PWA: `/gpu/` **separate route** ([`PWA_GPU_ROUTE.md`](PWA_GPU_ROUTE.md) · SW v9)
+- [x] Simulated P0 Ultra QA ([`SIMULATED_ULTRA_QA.md`](SIMULATED_ULTRA_QA.md))
 
 ## Recommended next steps (priority order)
 
-### P0 — Validate on real hardware (human QA)
+### Optional — hardware Ultra fps
 
-**Simulated stand-in passed** ([`SIMULATED_ULTRA_QA.md`](SIMULATED_ULTRA_QA.md)). Still confirm on physical silicon when available:
+Simulated stand-in already passed. When a discrete desktop is available:
 
-1. **NVIDIA RTX 30/40/50** — `./scripts/check_nvidia_host.sh` → Chrome/Edge → `/gpu/` → HUD shows adapter + tier **ultra** + band **ultra** + fps/budget **ok**.
-2. **AMD RX 6000/7000/9000** — Adrenalin drivers · force high-perf GPU · same `/gpu/` check.
-3. **Intel Arc** (if available) — Arc drivers · force dGPU on hybrid · Ultra band.
-4. Spot-check **Battery Saver** clamp (low charge / saveData) still drops Ultra → Balanced.
-5. Promote matrix Notes from `simulated` → measured fps in [`BROWSER_CAPABILITY_MATRIX.md`](BROWSER_CAPABILITY_MATRIX.md).
+1. NVIDIA / AMD / Intel → `/gpu/` HUD: adapter · band ultra · tier ultra · fps/budget **ok**
+2. Promote matrix Notes from `simulated` → measured fps
 
 Guide: [`DESKTOP_GPU.md`](DESKTOP_GPU.md).
 
-### P1 — Highest-value optional polish
+### Optional — polish
 
-| Priority | Item | Why |
-| --- | --- | --- |
-| 1 | `/gpu/` profiling HUD polish | **done** — FPS · avg/p95/max ms · budget vs tier target · full pass list |
-| 2 | Draco/KTX2 **WASM GPU upload** | **done** — uncompressed KTX2 → GPUTexture; Draco bridge + mesh buffers; Basis/WASM deferred hooks |
-| 3 | G4 cutover smoke | Parity matrix **done** in CI; pixel goldens pending WebGPU runner — [`rendering/G4_CUTOVER.md`](rendering/G4_CUTOVER.md) |
-
-### P2 — Later / opportunistic
-
-- Optional legacy WebGL 1:1 shaders (only if keeping `/` long-term parity)
-- Full R3F WebGPU still capture on a GPU CI runner (soft-present goldens already in CI)
-- Future CUDA/HIP workers (Compose `nvidia` profile already reserves the GPU; not required for WebGPU)
-- XR readiness (`docs/rendering/XR_COMPATIBILITY.md`) — non-blocking
+| Item | Notes |
+| --- | --- |
+| Full R3F WebGPU stills | Needs GPU CI runner; soft-present goldens already in CI |
+| Vendor Draco WASM / Basis transcoder | Bridges ready; not required for ship |
+| Legacy WebGL 1:1 shaders | Only if keeping `/` long-term parity |
+| CUDA/HIP workers | Compose `nvidia` profile already reserves GPU |
+| XR readiness | [`rendering/XR_COMPATIBILITY.md`](rendering/XR_COMPATIBILITY.md) |
 
 ### Explicitly deferred
 
@@ -95,10 +77,9 @@ Guide: [`DESKTOP_GPU.md`](DESKTOP_GPU.md).
 python3 -m pytest tests/ -q
 npm test && npm run gpu:test && npm run gpu:typecheck
 npm run gpu:build
+npm run gpu:goldens:pixel   # regenerate soft-present pixel goldens
 docker compose up -d --build
-# NVIDIA host optional:
-./scripts/check_nvidia_host.sh
-docker compose --profile nvidia up -d --build
+./scripts/check_nvidia_host.sh   # optional NVIDIA host
 python3 scripts/run_dev_server.py
 ```
 

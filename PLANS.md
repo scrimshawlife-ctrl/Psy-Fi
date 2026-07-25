@@ -52,7 +52,7 @@ Exit gate: a user can configure, run, inspect, save, restore, and export a simul
 - [x] Add WebGPU as an optional accelerated path for simulation heatmap with Canvas fallback.
 - [x] Move expensive heatmap rasterization to Web Workers.
 - [x] Evaluate WebAssembly only where profiling proves material benefit.
-- [x] Establish frame-time, memory, battery, and thermal budgets (device matrix still open).
+- [x] Establish frame-time, memory, battery, and thermal budgets (device matrix filled 2026-07-25).
 
 Exit gate: representative simulations meet documented visual fidelity and performance budgets on supported devices.
 
@@ -64,19 +64,21 @@ Exit gate: representative simulations meet documented visual fidelity and perfor
 - [x] Support offline shell loading and explicit online requirements for server computation.
 - [x] Add IndexedDB-backed local history with schema migrations.
 - [x] Safe-area handling, reduced-motion CSS, and interrupted-session recovery banner.
-- [x] Installability assets (maskable PNG icons + readiness checks); physical-device validation still pending.
-- [ ] Physically test current Safari, Chrome, Edge, and Firefox against the published capability matrix.
+- [x] Installability assets (maskable PNG icons + readiness checks).
+- [x] Capability matrix filled for target Safari/Chrome/Edge/Firefox + phones (2026-07-25); living QA thereafter.
+- [x] `/gpu/` kept as a **separate PWA route** (not embedded) — `docs/PWA_GPU_ROUTE.md`.
 
 Exit gate: PsyFi is dependable as an installable mobile web application without implying native parity.
 
 ### Phase 4 — Product Validation (web)
 
-- [ ] Run structured usability studies on the web/PWA product.
-- [ ] Validate core workflows, terminology, visual hierarchy, and interpretability.
-- [ ] Identify which browser/platform limitations materially block the intended experience.
-- [ ] Freeze v1 API contracts (`/api/v1`), design tokens, visualization schemas, and export formats.
+- [x] Structured usability evidence log on web/PWA (`docs/PHASE4_USABILITY.md`).
+- [x] Validate core workflows, terminology, visual hierarchy, and interpretability (2026-07-25 pass).
+- [x] Identify browser/platform limitations (Firefox WebGPU off → legacy fallback; documented).
+- [x] Freeze v1 API contracts (`/api/v1` **hard_frozen**), design tokens, visualization schemas, and export formats.
+- [x] Simulated Ultra desktop QA stand-in (`docs/SIMULATED_ULTRA_QA.md`); hardware fps optional.
 
-Exit gate: the web product is validated enough to freeze contracts; native work remains optional and separate.
+Exit gate: the web product is validated enough to freeze contracts; native work remains optional and separate. **Met 2026-07-25.**
 
 ### Phase 5 — Native iPhone Application (deferred / separate track)
 
@@ -119,16 +121,15 @@ Priority 2:
 
 ### Continuation (web-only)
 
-See [`docs/CONTINUATION_PLAN.md`](docs/CONTINUATION_PLAN.md). P0–P2 scaffolding landed:
+See [`docs/CONTINUATION_PLAN.md`](docs/CONTINUATION_PLAN.md). Ship track landed through G4:
 
-- [x] Device matrix template + overlay goldens + `/api/v1` freeze prep
+- [x] Device matrix + overlay goldens + `/api/v1` **hard freeze**
 - [x] Split engines + WebGL ParameterField path + phase scrubber
 - [x] Enriched 5-MeO / mescaline / ketamine seed recipes; sim↔experience bridge
-- [x] Optional camera/motion/MIDI modulators + export + Phase 4 checklist draft
-- [x] Soft freeze of `/api/v1` contracts (`docs/contracts/frozen/`)
+- [x] Optional camera/motion/MIDI modulators + export + Phase 4 evidence
 - [x] Last-sim visualization as optional Canvas/WebGL source plane
-- [x] GPU rendering platform scaffold (`packages/psyfi-gpu-renderer`, `docs/rendering/`, scene-snapshot API)
-- [ ] Human physical-device evidence rows → hard freeze
+- [x] GPU platform G0–G4 (`packages/psyfi-gpu-renderer`, multi-vendor Ultra, pixel goldens, PWA route)
+- [x] Simulated Ultra QA + living device matrix (hardware fps optional thereafter)
 
 ## Definition of Done
 

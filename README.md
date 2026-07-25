@@ -36,22 +36,24 @@ PsyFi keeps **simulation truth in Python** and puts an expressive, safety-clampe
 
 Full board: [`docs/PRODUCTION_READINESS.md`](docs/PRODUCTION_READINESS.md).
 
-| Track                              | Status           | Notes                                           |
-| ---------------------------------- | ---------------- | ----------------------------------------------- |
-| `/api/v1` contracts                | **hard\_frozen** | `psyfi-api-v1-hard-2026-07-25`                  |
-| CI (pytest + hallmark + GPU build) | **green path**   | `.github/workflows/ci.yml`                      |
-| Docker deploy                      | **ready**        | Compose + urllib healthcheck + GPU `dist/` bake |
-| Live Experience + safety           | **ready**        | Neutral View · ParameterField authority         |
-| GPU platform G0–G2                 | **ready**        | `/gpu/` compute · TAA · asset worker decode     |
-| GPU G3 premium desktop stack       | **ready**        | AO · SSR · fog · DoF · motion blur · chroma     |
-| Desktop GPU Ultra (30/40/50 + peers) | **ready**     | NVIDIA · AMD RX · Intel Arc · `docs/DESKTOP_GPU.md` |
-| Device matrix                      | **filled**       | 2026-07-25 human QA — living thereafter         |
-| Phase 4 usability                  | **filled**       | 2026-07-25 evidence log                         |
-| Native iOS                         | deferred         | `docs/IOS_MIGRATION.md`                         |
+| Track                                | Status           | Notes                                              |
+| ------------------------------------ | ---------------- | -------------------------------------------------- |
+| `/api/v1` contracts                  | **hard\_frozen** | `psyfi-api-v1-hard-2026-07-25`                     |
+| CI (pytest + hallmark + GPU build)   | **green path**   | `.github/workflows/ci.yml`                         |
+| Docker deploy                        | **ready**        | Compose + urllib healthcheck + GPU `dist/` bake    |
+| Live Experience + safety             | **ready**        | Neutral View · ParameterField authority            |
+| GPU platform G0–G3                   | **ready**        | `/gpu/` present · compute · TAA · premium post     |
+| GPU G4 cutover ship gates            | **ready**        | assets · parity · goldens · [`G4_CUTOVER.md`](docs/rendering/G4_CUTOVER.md) |
+| Desktop Ultra (30/40/50 + peers)     | **ready**        | NVIDIA · AMD RX · Intel Arc · Apple Pro/Max        |
+| PWA (`/` shell + `/gpu/` route)      | **ready**        | separate `/gpu/` · SW v9 · [`PWA_GPU_ROUTE.md`](docs/PWA_GPU_ROUTE.md) |
+| Device matrix + Phase 4              | **filled**       | 2026-07-25 human + simulated Ultra QA              |
+| Simulated Ultra QA                   | **passed**       | [`SIMULATED_ULTRA_QA.md`](docs/SIMULATED_ULTRA_QA.md) |
+| Soft-present pixel goldens           | **ready**        | [`PIXEL_GOLDENS.md`](docs/rendering/PIXEL_GOLDENS.md) |
+| Native iOS                           | deferred         | `docs/IOS_MIGRATION.md`                            |
 
-Ship checklist: `pytest` → `npm test && npm run gpu:build` → `docker compose up -d --build` → `/health` `/ready` `/` `/gpu/`.
+Ship checklist: `pytest` → `npm test && npm run gpu:test && npm run gpu:build` → `docker compose up -d --build` → `/health` `/ready` `/` `/gpu/`.
 
-**Next steps:** optional hardware Ultra fps confirmation (simulated QA already passed — [`docs/SIMULATED_ULTRA_QA.md`](docs/SIMULATED_ULTRA_QA.md)). Queue: [`docs/CONTINUATION_PLAN.md`](docs/CONTINUATION_PLAN.md).
+**Optional next:** hardware Ultra fps confirmation; full R3F stills on a GPU CI runner. Queue: [`docs/CONTINUATION_PLAN.md`](docs/CONTINUATION_PLAN.md).
 
 ## Install
 
@@ -155,12 +157,15 @@ Canonical browser API is **`/api/v1`** (**hard-frozen**). Legacy `/api/*` and `/
 | Doc                                                                                | Purpose                    |
 | ---------------------------------------------------------------------------------- | -------------------------- |
 | [`docs/PRODUCTION_READINESS.md`](docs/PRODUCTION_READINESS.md)                     | Production readiness board |
+| [`docs/CONTINUATION_PLAN.md`](docs/CONTINUATION_PLAN.md)                           | Web-track next steps       |
+| [`docs/rendering/ROADMAP.md`](docs/rendering/ROADMAP.md)                           | GPU G0–G5 roadmap          |
+| [`docs/rendering/G4_CUTOVER.md`](docs/rendering/G4_CUTOVER.md)                     | G4 cutover checklist       |
+| [`docs/rendering/PIXEL_GOLDENS.md`](docs/rendering/PIXEL_GOLDENS.md)               | Soft-present pixel goldens |
 | [`docs/DESKTOP_GPU.md`](docs/DESKTOP_GPU.md)                                       | Multi-vendor WebGPU Ultra  |
 | [`docs/PWA_GPU_ROUTE.md`](docs/PWA_GPU_ROUTE.md)                                   | `/gpu/` separate-route decision |
-| [`docs/SIMULATED_ULTRA_QA.md`](docs/SIMULATED_ULTRA_QA.md)                         | Simulated P0 Ultra desktop QA  |
+| [`docs/SIMULATED_ULTRA_QA.md`](docs/SIMULATED_ULTRA_QA.md)                         | Simulated P0 Ultra desktop QA |
 | [`docs/NVIDIA_GPU.md`](docs/NVIDIA_GPU.md)                                         | NVIDIA drivers + Compose   |
 | [`PLANS.md`](PLANS.md)                                                             | Product phases + gates     |
-| [`docs/CONTINUATION_PLAN.md`](docs/CONTINUATION_PLAN.md)                           | Web-track next steps       |
 | [`docs/VISUAL_EXPERIENCES.md`](docs/VISUAL_EXPERIENCES.md)                         | Live Experience guide      |
 | [`docs/rendering/README.md`](docs/rendering/README.md)                             | WebGPU platform docs       |
 | [`DEPLOYMENT.md`](DEPLOYMENT.md)                                                   | Docker deploy guide        |

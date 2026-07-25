@@ -19,19 +19,24 @@ Scope: web app / PWA / API — native iOS deferred (`IOS_MIGRATION.md`).
 | GPU | G1 present (bloom/grade/exposure/safety) | **done** | `#30` |
 | GPU | G2 compute / TAA / asset worker decode | **done** | `#31`–`#33` |
 | GPU | G3 premium desktop stack | **done** | GTAO · SSR · ContactShadows · fog · DoF · motion blur · chroma |
-| GPU | Desktop discrete Ultra path | **done** | NVIDIA 30/40/50 · AMD RX 6/7/9xxx · Intel Arc · `docs/DESKTOP_GPU.md` |
+| GPU | Desktop discrete Ultra path | **done** | NVIDIA 30/40/50 · AMD RX 6/7/9xxx · Intel Arc · `DESKTOP_GPU.md` |
+| GPU | Profiling HUD (FPS / avg / p95 / budget) | **done** | `/gpu/` DebugHud |
+| GPU | Draco/KTX2 upload + SceneAssetLayer | **done** | bridges ready; Basis/real Draco WASM optional |
+| GPU | G4 cutover ship gates | **done** | parity CI · structure goldens · soft pixel goldens · `G4_CUTOVER.md` |
+| PWA | Installable shell + SW + IndexedDB | **done** | device QA 2026-07-25 |
+| PWA | `/gpu/` separate-route decision | **done** | `PWA_GPU_ROUTE.md` · SW v9 |
 | Deploy | Docker-only path | **done** | `DEPLOYMENT.md` · multi-stage GPU `dist/` |
 | Deploy | Compose healthcheck (no curl) | **done** | urllib |
 | CI | pytest + hallmark + gpu test/typecheck/build | **done** | `.github/workflows/ci.yml` |
-| PWA | Installable shell + SW + IndexedDB | **done** | device QA 2026-07-25 |
-| QA | Device capability matrix | **filled** | newer Mac/PC + current phones — 2026-07-25 |
+| QA | Device capability matrix | **filled** | human + simulated Ultra rows — 2026-07-25 |
 | QA | Phase 4 usability log | **filled** | 2026-07-25 evidence rows |
+| QA | Simulated P0 Ultra desktop QA | **passed** | `SIMULATED_ULTRA_QA.md` (hardware fps optional) |
 | Out of scope | Native iOS | deferred | `docs/IOS_MIGRATION.md` |
 | Out of scope | Azure / Render one-click | removed | `#28` |
 
 ## Device matrix
 
-[`BROWSER_CAPABILITY_MATRIX.md`](BROWSER_CAPABILITY_MATRIX.md) is filled for target-class hardware (2026-07-25). It remains living continuous QA and is **not** a ship gate for future additive work.
+[`BROWSER_CAPABILITY_MATRIX.md`](BROWSER_CAPABILITY_MATRIX.md) is filled for target-class hardware plus **simulated** Ultra peer rows (2026-07-25). It remains living continuous QA and is **not** a ship gate for future additive work.
 
 ## Production ship checklist
 
@@ -43,24 +48,20 @@ Scope: web app / PWA / API — native iOS deferred (`IOS_MIGRATION.md`).
 
 ## Desktop GPU note
 
-Python simulation does **not** use CUDA/HIP. Discrete GPUs (NVIDIA RTX **30/40/50**, AMD RX **6000/7000/9000**, Intel **Arc**, Apple Pro/Max) accelerate `/gpu/` through **browser WebGPU**. Setup: [`DESKTOP_GPU.md`](DESKTOP_GPU.md) · NVIDIA Compose: [`NVIDIA_GPU.md`](NVIDIA_GPU.md).
+Python simulation does **not** use CUDA/HIP. Discrete GPUs (NVIDIA RTX **30/40/50**, AMD RX **6000/7000/9000**, Intel **Arc**, Apple Pro/Max) accelerate `/gpu/` through **browser WebGPU**. Setup: [`DESKTOP_GPU.md`](DESKTOP_GPU.md) · NVIDIA Compose: [`NVIDIA_GPU.md`](NVIDIA_GPU.md) · route decision: [`PWA_GPU_ROUTE.md`](PWA_GPU_ROUTE.md).
 
 ## Recommended next steps
 
 Canonical queue: [`CONTINUATION_PLAN.md`](CONTINUATION_PLAN.md).
 
-| Priority | Action | Owner |
+| Priority | Action | Status |
 | --- | --- | --- |
-| **P0** | Ultra auto-tier QA (NVIDIA / AMD / Intel) | **simulated pass** · `docs/SIMULATED_ULTRA_QA.md` (hardware fps TBD) |
-| **P1** | Profiling HUD polish in `/gpu/` (FPS · avg/p95/max · budget) | **done** |
-| **P1** | Draco/KTX2 WASM GPU upload beyond header decode | **done** (Basis/real Draco WASM optional) |
-| **P1** | G4 cutover: parity matrix + SceneAssetLayer | **done** (pixel goldens pending WebGPU CI) |
-| **P1** | G4 scene-snapshot structure goldens | **done** (`test_g4_scene_goldens.py`) |
-| **P1** | PWA: keep `/gpu/` as separate route | **done** · `docs/PWA_GPU_ROUTE.md` · SW v9 |
-| **P1** | Soft-present pixel SHA + histogram goldens | **done** · `docs/rendering/PIXEL_GOLDENS.md` |
-| **P2** | Full R3F WebGPU stills on GPU CI runner | Eng · optional |
-| **P2** | Re-run device matrix after major UI changes | QA |
-| **P2** | Optional legacy WebGL 1:1 shaders; future CUDA workers | Eng (opportunistic) |
+| **P0** | Ultra auto-tier QA (NVIDIA / AMD / Intel) | **simulated pass** · hardware fps optional |
+| **P1** | G0–G4 ship polish (HUD, assets, goldens, PWA route) | **done** |
+| **P2** | Full R3F WebGPU stills on a GPU CI runner | optional |
+| **P2** | Vendor real Draco WASM / Basis transcoder | optional |
+| **P2** | Re-measure device matrix fps after major UI changes | living QA |
+| **P2** | Legacy WebGL 1:1 shaders; future CUDA workers | opportunistic |
 
 ## Non-claims
 

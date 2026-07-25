@@ -1,8 +1,8 @@
 # PsyFi GPU Rendering Platform
 
-Status: **G0–G3 ready** for Docker web ship; multi-vendor Ultra auto-tier live  
+Status: **G0–G4 ship gates ready** for Docker web ship · multi-vendor Ultra · soft pixel goldens · separate `/gpu/` route  
 Does **not** patch `psyfi_api/static/viz/*` (legacy Canvas / WebGL Live Experience remains the production fallback).  
-Next steps: [`../CONTINUATION_PLAN.md`](../CONTINUATION_PLAN.md) · desktop setup: [`../DESKTOP_GPU.md`](../DESKTOP_GPU.md).
+Next: optional hardware Ultra fps · [`../CONTINUATION_PLAN.md`](../CONTINUATION_PLAN.md) · [`../DESKTOP_GPU.md`](../DESKTOP_GPU.md) · [`../SIMULATED_ULTRA_QA.md`](../SIMULATED_ULTRA_QA.md).
 
 ## Documents
 

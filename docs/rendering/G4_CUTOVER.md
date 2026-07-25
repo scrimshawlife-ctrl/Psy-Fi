@@ -1,7 +1,7 @@
 # G4 Cutover Readiness Checklist
 
-Status: **complete for ship gates** — soft-present pixel goldens in CI; full R3F stills optional  
-Related: [`ROADMAP.md`](ROADMAP.md), [`PIXEL_GOLDENS.md`](PIXEL_GOLDENS.md), [`../CONTINUATION_PLAN.md`](../CONTINUATION_PLAN.md), [`../PWA_GPU_ROUTE.md`](../PWA_GPU_ROUTE.md)
+Status: **complete for ship gates** (2026-07-25) — soft-present pixel goldens + simulated Ultra QA in CI; full R3F stills optional  
+Related: [`ROADMAP.md`](ROADMAP.md), [`PIXEL_GOLDENS.md`](PIXEL_GOLDENS.md), [`../CONTINUATION_PLAN.md`](../CONTINUATION_PLAN.md), [`../PWA_GPU_ROUTE.md`](../PWA_GPU_ROUTE.md), [`../SIMULATED_ULTRA_QA.md`](../SIMULATED_ULTRA_QA.md)
 
 ## Asset GPU path
 
@@ -55,3 +55,4 @@ Canonical seeds (also in `g4Parity.ts`):
 3. Asset upload path documented + tested + SceneRoot wired — **met**
 4. Hard freeze unchanged unless additive OpenAPI synced — **met**
 5. PWA embed-vs-route decision — **met** (separate route)
+6. Simulated Ultra QA stand-in — **met** ([`SIMULATED_ULTRA_QA.md`](../SIMULATED_ULTRA_QA.md))

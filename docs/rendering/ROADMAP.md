@@ -32,7 +32,7 @@ Platform package: `packages/psyfi-gpu-renderer`
 - [x] AssetLoader worker-mode hook (bytes fetch; decode still deferred)
 - [x] Dispatch compute via `WebGPURenderer` / TSL (`GpuFlowCompute` + SpriteNodeMaterial; CPU fallback)
 - [x] Temporal accumulation / TAA (`afterImage` + `TemporalAccumulate` policy; safety after history)
-- [ ] Worker glTF/Draco/KTX2 decode
+- [x] Worker glTF/GLB + KTX2 header decode (`asset.worker.ts`; Draco flagged, GPU upload later)
 
 ## Phase G3 — Premium desktop stack
 

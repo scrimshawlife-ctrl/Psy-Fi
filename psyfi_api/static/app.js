@@ -342,6 +342,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderCapabilities() {
         const renderer = window.PsyFiRenderer ? window.PsyFiRenderer.getRendererState() : {};
+        const sensors =
+            (window.PsyFiViz && window.PsyFiViz.probeSensorCapabilities
+                ? window.PsyFiViz.probeSensorCapabilities()
+                : {}) || {};
         const rows = [
             { name: 'Canvas 2D', supported: !!(canvas2d && canvas2d.getContext), fallback: 'Metrics/provenance text only' },
             { name: 'Web Worker rasterizer', supported: !!renderer.workerSupported, fallback: 'Main-thread Canvas rasterize' },
@@ -355,7 +359,28 @@ document.addEventListener('DOMContentLoaded', () => {
             },
             { name: 'IndexedDB', supported: !!window.indexedDB, fallback: 'localStorage last-session only' },
             { name: 'Service Worker', supported: 'serviceWorker' in navigator, fallback: 'Online-only shell caching' },
-            { name: 'Web MIDI', supported: !!navigator.requestMIDIAccess, fallback: 'REST MIDI routes when server has devices' },
+            { name: 'Web MIDI', supported: !!sensors.webMidi, fallback: 'REST MIDI routes when server has devices' },
+            { name: 'Camera (getUserMedia)', supported: !!sensors.camera, fallback: 'Manual camera modulator slider' },
+            { name: 'Microphone (getUserMedia)', supported: !!sensors.microphone, fallback: 'Manual audio modulator slider' },
+            {
+                name: 'DeviceMotion',
+                supported: !!sensors.deviceMotion,
+                fallback: sensors.motionNeedsGesture
+                    ? 'Needs user gesture / permission'
+                    : 'Manual motion slider',
+            },
+            {
+                name: 'DeviceOrientation',
+                supported: !!sensors.deviceOrientation,
+                fallback: sensors.orientationNeedsGesture
+                    ? 'Needs user gesture / permission'
+                    : 'Blended into motion channel when enabled',
+            },
+            { name: 'AmbientLightSensor', supported: !!sensors.ambientLight, fallback: 'Camera luminance proxy / manual slider' },
+            { name: 'Gamepad', supported: !!sensors.gamepad, fallback: 'Manual motion slider' },
+            { name: 'Vibration / Haptics', supported: !!sensors.vibrate, fallback: 'Visual state feedback only' },
+            { name: 'Battery Status', supported: !!sensors.battery, fallback: 'Used for GPU quality tier only — not a field modulator' },
+            { name: 'Geolocation', supported: !!sensors.geolocation, fallback: 'Not used as a modulator (privacy)' },
             { name: 'AbortController cancel', supported: typeof AbortController !== 'undefined', fallback: 'Wait for request completion' },
             {
                 name: 'GPU Lab route',
@@ -373,6 +398,47 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td>${row.fallback}</td>
             `;
             tbody.appendChild(tr);
+        });
+        renderSensorChips(sensors);
+        syncSensorButtons(sensors);
+    }
+
+    function renderSensorChips(sensors) {
+        const row = document.getElementById('sensorChipRow');
+        if (!row) return;
+        const chips = [
+            ['Camera', sensors.camera],
+            ['Mic', sensors.microphone],
+            ['Motion', sensors.deviceMotion],
+            ['Orientation', sensors.deviceOrientation],
+            ['Web MIDI', sensors.webMidi],
+            ['Gamepad', sensors.gamepad],
+            ['Ambient', sensors.ambientLight],
+            ['Haptics', sensors.vibrate],
+        ];
+        row.innerHTML = chips
+            .map(
+                ([label, ok]) =>
+                    `<span class="sensor-chip" data-ok="${!!ok}">${label}: ${ok ? 'available' : 'unavailable'}</span>`,
+            )
+            .join('');
+    }
+
+    function syncSensorButtons(sensors) {
+        const map = [
+            ['enableCameraBtn', sensors.camera],
+            ['enableAudioBtn', sensors.microphone],
+            ['enableMotionBtn', sensors.deviceMotion || sensors.deviceOrientation],
+            ['enableMidiBtn', sensors.webMidi],
+            ['enableGamepadBtn', sensors.gamepad],
+            ['enableAmbientBtn', sensors.ambientLight],
+            ['enableHapticsBtn', sensors.vibrate],
+        ];
+        map.forEach(([id, ok]) => {
+            const btn = document.getElementById(id);
+            if (!btn) return;
+            btn.disabled = !ok;
+            btn.title = ok ? '' : 'Not available on this device/browser';
         });
     }
 
@@ -737,17 +803,17 @@ document.addEventListener('DOMContentLoaded', () => {
     player.resize();
     window.addEventListener('resize', () => player.resize());
 
-    // Optional: poll server MIDI activity into the MIDI modulator slider
+    // Optional: poll server MIDI activity into the MIDI modulator slider (fallback if no Web MIDI)
     let midiPoll = null;
     function startMidiPoll() {
         if (midiPoll) return;
+        if (sensorHub && sensorHub.active && sensorHub.active.webMidi) return;
         midiPoll = setInterval(async () => {
             try {
                 const res = await fetch('/api/v1/midi/status');
                 if (!res.ok) return;
                 const st = await res.json();
                 if (!st.running || !modMidi) return;
-                // Map any active output level-ish signal; fall back to gentle pulse when running.
                 const level = typeof st.activity === 'number' ? st.activity : 0.35;
                 modMidi.value = Math.min(1, Math.max(Number(modMidi.value), level)).toFixed(2);
                 syncModulators();
@@ -755,6 +821,23 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 1200);
     }
     document.getElementById('modMidi')?.addEventListener('pointerdown', startMidiPoll);
+
+    const sensorHub =
+        window.PsyFiViz && window.PsyFiViz.DeviceSensorHub
+            ? new window.PsyFiViz.DeviceSensorHub({
+                  status: (msg) => {
+                      if (statusEl) statusEl.textContent = msg;
+                  },
+                  onChannels: (ch) => {
+                      if (modCamera) modCamera.value = Number(ch.camera || 0).toFixed(2);
+                      if (modMotion) modMotion.value = Number(ch.motion || 0).toFixed(2);
+                      if (modMidi) modMidi.value = Number(ch.midi || 0).toFixed(2);
+                      if (modAudio) modAudio.value = Number(ch.audio || 0).toFixed(2);
+                      if (modHaptics) modHaptics.value = Number(ch.haptics || 0).toFixed(2);
+                      syncModulators();
+                  },
+              })
+            : null;
     player.onPhaseIndex = (idx, total) => {
         if (!phaseScrub) return;
         phaseScrub.max = String(Math.max(0, total - 1));
@@ -930,117 +1013,51 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Optional camera luminance meter → modulator (never direct-to-shader)
-    let cameraStream = null;
-    document.getElementById('enableCameraBtn')?.addEventListener('click', async () => {
-        if (!navigator.mediaDevices?.getUserMedia) {
-            alert('Camera API unavailable in this browser.');
+    async function withSensorError(label, fn) {
+        if (!sensorHub) {
+            alert('Device sensor hub unavailable.');
             return;
         }
         try {
-            cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
-            const video = document.createElement('video');
-            video.srcObject = cameraStream;
-            video.playsInline = true;
-            await video.play();
-            const meter = document.createElement('canvas');
-            meter.width = 32;
-            meter.height = 32;
-            const mctx = meter.getContext('2d', { willReadFrequently: true });
-            const tick = () => {
-                if (!cameraStream) return;
-                mctx.drawImage(video, 0, 0, 32, 32);
-                const px = mctx.getImageData(0, 0, 32, 32).data;
-                let sum = 0;
-                for (let i = 0; i < px.length; i += 4) sum += (px[i] + px[i + 1] + px[i + 2]) / 3;
-                const energy = Math.min(1, sum / (255 * (px.length / 4)));
-                if (modCamera) modCamera.value = energy.toFixed(2);
-                syncModulators();
-                requestAnimationFrame(tick);
-            };
-            tick();
-            statusEl.textContent = 'Camera meter active (ParameterField only)';
+            await fn();
         } catch (err) {
-            alert('Camera permission denied or unavailable.');
+            alert(`${label}: ${err.message || err}`);
         }
-    });
+    }
 
-    document.getElementById('enableMotionBtn')?.addEventListener('click', () => {
-        const handler = (event) => {
-            const x = Math.abs(event.accelerationIncludingGravity?.x || event.acceleration?.x || 0);
-            const y = Math.abs(event.accelerationIncludingGravity?.y || event.acceleration?.y || 0);
-            const z = Math.abs(event.accelerationIncludingGravity?.z || event.acceleration?.z || 0);
-            const mag = Math.min(1, Math.sqrt(x * x + y * y + z * z) / 20);
-            if (modMotion) modMotion.value = mag.toFixed(2);
-            syncModulators();
-        };
-        if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
-            DeviceMotionEvent.requestPermission().then((state) => {
-                if (state === 'granted') window.addEventListener('devicemotion', handler);
-            }).catch(() => alert('Motion permission denied.'));
-        } else {
-            window.addEventListener('devicemotion', handler);
-            statusEl.textContent = 'Motion meter listening (ParameterField only)';
-        }
+    document.getElementById('enableAvailableSensorsBtn')?.addEventListener('click', async () => {
+        await withSensorError('Sensors', async () => {
+            const result = await sensorHub.enableAvailable();
+            if (!result.enabled.length) {
+                alert('No sensors could be enabled on this device. Use the manual sliders instead.');
+            }
+        });
     });
-
-    let audioCtx = null;
-    let audioRaf = 0;
-    document.getElementById('enableAudioBtn')?.addEventListener('click', async () => {
-        if (!navigator.mediaDevices?.getUserMedia) {
-            alert('Microphone API unavailable in this browser.');
-            return;
-        }
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
-            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            const src = audioCtx.createMediaStreamSource(stream);
-            const analyser = audioCtx.createAnalyser();
-            analyser.fftSize = 256;
-            src.connect(analyser);
-            const data = new Uint8Array(analyser.frequencyBinCount);
-            const tick = () => {
-                analyser.getByteFrequencyData(data);
-                let sum = 0;
-                for (let i = 0; i < data.length; i++) sum += data[i];
-                const level = Math.min(1, sum / (255 * data.length * 0.35));
-                if (modAudio) modAudio.value = level.toFixed(2);
-                syncModulators();
-                audioRaf = requestAnimationFrame(tick);
-            };
-            tick();
-            statusEl.textContent = 'Audio meter active (ParameterField only)';
-        } catch (_err) {
-            alert('Microphone permission denied or unavailable.');
-        }
+    document.getElementById('disableSensorsBtn')?.addEventListener('click', () => {
+        sensorHub?.disableAll();
+        syncModulators();
     });
-
-    document.getElementById('enableHapticsBtn')?.addEventListener('click', () => {
-        if (!navigator.vibrate) {
-            alert('Vibration API unavailable in this browser.');
-            return;
-        }
-        let on = true;
-        const pulse = () => {
-            if (!on) return;
-            const level = Number(modHaptics?.value || 0.35);
-            const ms = Math.max(10, Math.floor(20 + level * 60));
-            navigator.vibrate(ms);
-            if (modHaptics && Number(modHaptics.value) < 0.2) modHaptics.value = '0.35';
-            syncModulators();
-            setTimeout(pulse, 400);
-        };
-        pulse();
-        statusEl.textContent = 'Haptics pulse active (ParameterField only)';
-        // Allow a second click to stop via level zero
-        modHaptics?.addEventListener(
-            'change',
-            () => {
-                if (Number(modHaptics.value) === 0) on = false;
-            },
-            { once: false },
-        );
-    });
+    document.getElementById('enableCameraBtn')?.addEventListener('click', () =>
+        withSensorError('Camera', () => sensorHub.enableCamera()),
+    );
+    document.getElementById('enableMotionBtn')?.addEventListener('click', () =>
+        withSensorError('Motion', () => sensorHub.enableMotion()),
+    );
+    document.getElementById('enableAudioBtn')?.addEventListener('click', () =>
+        withSensorError('Microphone', () => sensorHub.enableAudio()),
+    );
+    document.getElementById('enableMidiBtn')?.addEventListener('click', () =>
+        withSensorError('Web MIDI', () => sensorHub.enableWebMidi()),
+    );
+    document.getElementById('enableGamepadBtn')?.addEventListener('click', () =>
+        withSensorError('Gamepad', () => sensorHub.enableGamepad()),
+    );
+    document.getElementById('enableAmbientBtn')?.addEventListener('click', () =>
+        withSensorError('Ambient light', () => sensorHub.enableAmbientLight()),
+    );
+    document.getElementById('enableHapticsBtn')?.addEventListener('click', () =>
+        withSensorError('Haptics', () => sensorHub.enableHaptics()),
+    );
 
     async function loadSubstances() {
         const res = await fetch('/api/v1/substances');

@@ -886,6 +886,37 @@ body {
     min-width: 0;
 }
 
+.sensor-chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin: 0.55rem 0 0.75rem;
+}
+
+.sensor-chip {
+    font-size: 0.78rem;
+    letter-spacing: 0.02em;
+    padding: 0.28rem 0.55rem;
+    border: 1px solid var(--pf-border-subtle);
+    background: var(--pf-bg-2);
+    color: var(--pf-text-muted);
+}
+
+.sensor-chip[data-ok="true"] {
+    color: var(--pf-cyan);
+    border-color: color-mix(in srgb, var(--pf-cyan) 45%, var(--pf-border-subtle));
+}
+
+.sensor-chip[data-ok="false"] {
+    opacity: 0.55;
+}
+
+.sensor-actions {
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin: 0.4rem 0 0.75rem;
+}
+
 .modulator-panel {
     border: 1px solid var(--pf-border-subtle);
     border-radius: var(--radius-sm);

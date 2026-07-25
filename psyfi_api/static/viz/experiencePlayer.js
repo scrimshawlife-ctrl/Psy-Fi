@@ -263,6 +263,11 @@
       this.provenanceEl = opts.provenanceEl || null;
       this.renderer.onFrameInfo = (info) => this._status(info);
       this.modulators = { camera: 0, motion: 0, midi: 0, audio: 0, haptics: 0 };
+      this.loadContext = null;
+      this.liveModulators = true;
+      this._liveAbort = null;
+      this._liveModTimer = 0;
+      this._lastLiveModMs = 0;
       this.fieldBridge = null;
       this.sourcePlane = null;
       this.setPreferWebGL(this.preferWebGL);
@@ -328,6 +333,16 @@
     }
 
     async loadTimeline(payload) {
+      this.loadContext = {
+        substance: payload.substance,
+        experience_id: payload.experience_id || null,
+        mode: payload.mode || 'open',
+        intensity: payload.intensity,
+        seed: payload.seed,
+        reduce_motion: !!payload.reduce_motion,
+        dim_flashing: !!payload.dim_flashing,
+        quality_tier: payload.quality_tier || 'balanced',
+      };
       const body = {
         ...payload,
         modulators: this.modulators,
@@ -391,11 +406,75 @@
 
     _applyFrameForIndex(i) {
       if (!this.timeline || !this.timeline.frames) return;
-      const base = this.timeline.frames[i];
+      this.idx = Math.max(0, Math.min(this.timeline.frames.length - 1, i | 0));
+      if (this.liveModulators && this._hasActiveModulators() && this.loadContext && !this.neutralOn) {
+        this._scheduleLiveRematerialize();
+        return;
+      }
+      const base = this.timeline.frames[this.idx];
       if (!base) return;
       const frame = this.neutralOn ? this._materializeNeutral(base) : base;
       this.frame = frame;
       this.setFrame(frame);
+    }
+
+    _hasActiveModulators() {
+      const m = this.modulators || {};
+      return ['camera', 'motion', 'midi', 'audio', 'haptics'].some((k) => Number(m[k] || 0) > 0.02);
+    }
+
+    _scheduleLiveRematerialize() {
+      if (!this.loadContext || !this.timeline) return;
+      const now = performance.now();
+      const wait = Math.max(0, 320 - (now - (this._lastLiveModMs || 0)));
+      if (this._liveModTimer) clearTimeout(this._liveModTimer);
+      this._liveModTimer = setTimeout(() => {
+        this._liveRematerialize();
+      }, wait);
+    }
+
+    async _liveRematerialize() {
+      if (!this.loadContext || !this.timeline || !this.timeline.frames) return;
+      if (this._liveAbort) this._liveAbort.abort();
+      const ac = new AbortController();
+      this._liveAbort = ac;
+      this._lastLiveModMs = performance.now();
+      const base = this.timeline.frames[this.idx] || this.timeline.frames[0];
+      const phase_t =
+        base && base.phase_t != null
+          ? Number(base.phase_t)
+          : this.idx / Math.max(1, this.timeline.frames.length - 1);
+      const body = {
+        ...this.loadContext,
+        phase_t,
+        modulators: this.modulators,
+        neutral_view: !!this.neutralOn,
+      };
+      try {
+        const res = await fetch('/api/v1/visualize/parameter-timeline', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+          signal: ac.signal,
+        });
+        if (!res.ok || ac.signal.aborted) return;
+        const data = await res.json();
+        if (ac.signal.aborted) return;
+        const frame = data.frame || (data.frames && data.frames[0]);
+        if (!frame) return;
+        const applied = this.neutralOn ? this._materializeNeutral(frame) : frame;
+        this.frame = applied;
+        this.setFrame(applied);
+        this._status({
+          phase: applied.phase,
+          hash: applied.hash,
+          mode: applied.mode,
+          substance: applied.substance,
+          backend: this.backend,
+        });
+      } catch (err) {
+        if (err && err.name === 'AbortError') return;
+      }
     }
 
     play() {
@@ -427,6 +506,9 @@
         audio: Number(mods.audio || 0),
         haptics: Number(mods.haptics || 0),
       };
+      if (this.liveModulators && this.timeline && this._hasActiveModulators()) {
+        this._scheduleLiveRematerialize();
+      }
     }
 
     exportTimelineJson() {

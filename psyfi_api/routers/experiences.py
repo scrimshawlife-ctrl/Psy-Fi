@@ -28,6 +28,8 @@ class Modulators(BaseModel):
     camera: float = Field(default=0.0, ge=0.0, le=1.0)
     motion: float = Field(default=0.0, ge=0.0, le=1.0)
     midi: float = Field(default=0.0, ge=0.0, le=1.0)
+    audio: float = Field(default=0.0, ge=0.0, le=1.0)
+    haptics: float = Field(default=0.0, ge=0.0, le=1.0)
 
 
 class TimelineRequest(BaseModel):

@@ -2,7 +2,7 @@
   "schema_version": "1.0.0",
   "generator": "scripts/build_experience_catalog.py",
   "disclaimer": "Modeled phenomenological recipes for research/visualization only. Not medical, diagnostic, or therapeutic advice. Narrative hooks are short derived motifs, not republication of full source texts.",
-  "recipe_count": 39,
+  "recipe_count": 57,
   "recipes": [
     {
       "id": "exp_lsd_floral_geometry",
@@ -1707,6 +1707,941 @@
       }
     },
     {
+      "id": "exp_mdma_warm_empathic_glow",
+      "schema_version": "1.0.0",
+      "title": "Warm Empathic Glow Field",
+      "substance": "mdma",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "curated_seed",
+          "note": "Grounded in aggregate positive phenomenology motifs"
+        }
+      ],
+      "motifs": {
+        "color_light": 0.85,
+        "body_somatic": 0.7,
+        "nature": 0.45
+      },
+      "narrative_hooks": [
+        "warm connective glow; soft edges and elevated palette energy without panic"
+      ],
+      "modes": [
+        "open",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "organic_bloom",
+          "flow_field"
+        ],
+        "secondary_engines": [
+          "recursive_feedback"
+        ],
+        "mode_default": "open",
+        "palette": {
+          "tracers": "#63F3E8",
+          "energy": 0.85,
+          "contrast": 0.55
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.35,
+          "feedback_strength": 0.4,
+          "recursion_gain": 0.3,
+          "turbulence": 0.34,
+          "trail_length": 0.725,
+          "edge_gain": 0.35,
+          "zoom_velocity": 0.05,
+          "displacement": 0.307,
+          "stability": 0.7,
+          "entropy": 0.25,
+          "palette_energy": 0.868,
+          "pattern_complexity": 0.35,
+          "depth_distortion": 0.3,
+          "bloom": 0.54
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.15,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.45,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.25,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.15,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
+      }
+    },
+    {
+      "id": "exp_mdma_heartbeat_bloom",
+      "schema_version": "1.0.0",
+      "title": "Heartbeat Social Bloom",
+      "substance": "mdma",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "curated_seed",
+          "note": "Grounded in aggregate positive phenomenology motifs"
+        }
+      ],
+      "motifs": {
+        "body_somatic": 0.8,
+        "color_light": 0.75,
+        "geometry": 0.35
+      },
+      "narrative_hooks": [
+        "pulse-coupled bloom with lucid social warmth and low lattice aggression"
+      ],
+      "modes": [
+        "attractor",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "organic_bloom"
+        ],
+        "secondary_engines": [
+          "flow_field",
+          "kaleidoscope"
+        ],
+        "mode_default": "attractor",
+        "palette": {
+          "tracers": "#63F3E8",
+          "energy": 0.75,
+          "contrast": 0.655
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.542,
+          "feedback_strength": 0.557,
+          "recursion_gain": 0.492,
+          "turbulence": 0.36,
+          "trail_length": 0.675,
+          "edge_gain": 0.507,
+          "zoom_velocity": 0.05,
+          "displacement": 0.15,
+          "stability": 0.7,
+          "entropy": 0.25,
+          "palette_energy": 0.812,
+          "pattern_complexity": 0.56,
+          "depth_distortion": 0.3,
+          "bloom": 0.5
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.15,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.45,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.25,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.15,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
+      }
+    },
+    {
+      "id": "exp_2cb_tactile_geometry",
+      "schema_version": "1.0.0",
+      "title": "Tactile Geometric Bloom",
+      "substance": "2c-b",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "curated_seed",
+          "note": "Grounded in aggregate positive phenomenology motifs"
+        }
+      ],
+      "motifs": {
+        "geometry": 0.8,
+        "color_light": 0.8,
+        "body_somatic": 0.55
+      },
+      "narrative_hooks": [
+        "crisp ornamental geometry with tactile color pop and stable attractors"
+      ],
+      "modes": [
+        "attractor",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "kaleidoscope",
+          "organic_bloom"
+        ],
+        "secondary_engines": [
+          "recursive_feedback"
+        ],
+        "mode_default": "attractor",
+        "palette": {
+          "tracers": "#63F3E8",
+          "energy": 0.8,
+          "contrast": 0.79
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.79,
+          "feedback_strength": 0.76,
+          "recursion_gain": 0.74,
+          "turbulence": 0.31,
+          "trail_length": 0.7,
+          "edge_gain": 0.71,
+          "zoom_velocity": 0.05,
+          "displacement": 0.15,
+          "stability": 0.7,
+          "entropy": 0.25,
+          "palette_energy": 0.84,
+          "pattern_complexity": 0.83,
+          "depth_distortion": 0.3,
+          "bloom": 0.52
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.15,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.45,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.25,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.15,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
+      }
+    },
+    {
+      "id": "exp_2cb_neon_textile",
+      "schema_version": "1.0.0",
+      "title": "Neon Textile Lattice",
+      "substance": "2c-b",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "curated_seed",
+          "note": "Grounded in aggregate positive phenomenology motifs"
+        }
+      ],
+      "motifs": {
+        "geometry": 0.75,
+        "machines": 0.35,
+        "color_light": 0.85
+      },
+      "narrative_hooks": [
+        "textile-like neon lattice with playful chroma without void overwhelm"
+      ],
+      "modes": [
+        "open",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "kaleidoscope",
+          "recursive_feedback"
+        ],
+        "secondary_engines": [
+          "flow_field"
+        ],
+        "mode_default": "open",
+        "palette": {
+          "tracers": "#63F3E8",
+          "energy": 0.85,
+          "contrast": 0.775
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.762,
+          "feedback_strength": 0.738,
+          "recursion_gain": 0.713,
+          "turbulence": 0.34,
+          "trail_length": 0.725,
+          "edge_gain": 0.688,
+          "zoom_velocity": 0.05,
+          "displacement": 0.22,
+          "stability": 0.578,
+          "entropy": 0.425,
+          "palette_energy": 0.868,
+          "pattern_complexity": 0.8,
+          "depth_distortion": 0.3,
+          "bloom": 0.54
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.15,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.45,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.25,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.15,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
+      }
+    },
+    {
+      "id": "exp_2ce_deep_pattern_hold",
+      "schema_version": "1.0.0",
+      "title": "Deep Pattern Hold",
+      "substance": "2c-e",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "curated_seed",
+          "note": "Grounded in aggregate positive phenomenology motifs"
+        }
+      ],
+      "motifs": {
+        "geometry": 0.9,
+        "space_void": 0.55,
+        "time_memory": 0.5
+      },
+      "narrative_hooks": [
+        "longer-held deep patterns; high complexity with deliberate pacing"
+      ],
+      "modes": [
+        "power",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "recursive_feedback",
+          "kaleidoscope"
+        ],
+        "secondary_engines": [
+          "entity_lattice"
+        ],
+        "mode_default": "power",
+        "palette": {
+          "tracers": "#63F3E8",
+          "energy": 0.6,
+          "contrast": 0.8200000000000001
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.845,
+          "feedback_strength": 0.805,
+          "recursion_gain": 0.795,
+          "turbulence": 0.2,
+          "trail_length": 0.3,
+          "edge_gain": 0.755,
+          "zoom_velocity": 0.242,
+          "displacement": 0.15,
+          "stability": 0.617,
+          "entropy": 0.525,
+          "palette_energy": 0.4,
+          "pattern_complexity": 0.89,
+          "depth_distortion": 0.603,
+          "bloom": 0.2
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.15,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.45,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.25,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.15,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
+      }
+    },
+    {
+      "id": "exp_2ce_analytic_mosaic",
+      "schema_version": "1.0.0",
+      "title": "Analytic Mosaic Field",
+      "substance": "2c-e",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "curated_seed",
+          "note": "Grounded in aggregate positive phenomenology motifs"
+        }
+      ],
+      "motifs": {
+        "geometry": 0.85,
+        "machines": 0.45,
+        "color_light": 0.6
+      },
+      "narrative_hooks": [
+        "analytic mosaic geometry with lucid attentional grip"
+      ],
+      "modes": [
+        "attractor",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "kaleidoscope",
+          "entity_lattice"
+        ],
+        "secondary_engines": [
+          "recursive_feedback"
+        ],
+        "mode_default": "attractor",
+        "palette": {
+          "tracers": "#63F3E8",
+          "energy": 0.6,
+          "contrast": 0.805
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.818,
+          "feedback_strength": 0.782,
+          "recursion_gain": 0.768,
+          "turbulence": 0.38,
+          "trail_length": 0.6,
+          "edge_gain": 0.732,
+          "zoom_velocity": 0.05,
+          "displacement": 0.24,
+          "stability": 0.542,
+          "entropy": 0.475,
+          "palette_energy": 0.73,
+          "pattern_complexity": 0.86,
+          "depth_distortion": 0.3,
+          "bloom": 0.44
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.15,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.45,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.25,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.15,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
+      }
+    },
+    {
+      "id": "exp_allad_lysergic_sibling",
+      "schema_version": "1.0.0",
+      "title": "Lysergic Sibling Soft Lattice",
+      "substance": "al-lad",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "curated_seed",
+          "note": "Grounded in aggregate positive phenomenology motifs"
+        }
+      ],
+      "motifs": {
+        "geometry": 0.75,
+        "color_light": 0.7,
+        "nature": 0.4
+      },
+      "narrative_hooks": [
+        "lsd-adjacent soft lattice with gentler comeup geometry"
+      ],
+      "modes": [
+        "open",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "kaleidoscope",
+          "recursive_feedback"
+        ],
+        "secondary_engines": [
+          "organic_bloom"
+        ],
+        "mode_default": "open",
+        "palette": {
+          "tracers": "#63F3E8",
+          "energy": 0.7,
+          "contrast": 0.775
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.762,
+          "feedback_strength": 0.738,
+          "recursion_gain": 0.713,
+          "turbulence": 0.2,
+          "trail_length": 0.65,
+          "edge_gain": 0.688,
+          "zoom_velocity": 0.05,
+          "displacement": 0.29,
+          "stability": 0.7,
+          "entropy": 0.25,
+          "palette_energy": 0.785,
+          "pattern_complexity": 0.8,
+          "depth_distortion": 0.3,
+          "bloom": 0.48
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.15,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.45,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.25,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.15,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
+      }
+    },
+    {
+      "id": "exp_allad_pastel_recursion",
+      "schema_version": "1.0.0",
+      "title": "Pastel Recursion Drift",
+      "substance": "al-lad",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "curated_seed",
+          "note": "Grounded in aggregate positive phenomenology motifs"
+        }
+      ],
+      "motifs": {
+        "color_light": 0.8,
+        "geometry": 0.65,
+        "time_memory": 0.4
+      },
+      "narrative_hooks": [
+        "pastel recursive drift; ornamental but less abrasive than peak LSD"
+      ],
+      "modes": [
+        "attractor",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "recursive_feedback",
+          "flow_field"
+        ],
+        "secondary_engines": [
+          "kaleidoscope"
+        ],
+        "mode_default": "attractor",
+        "palette": {
+          "tracers": "#63F3E8",
+          "energy": 0.8,
+          "contrast": 0.7450000000000001
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.708,
+          "feedback_strength": 0.693,
+          "recursion_gain": 0.657,
+          "turbulence": 0.2,
+          "trail_length": 0.7,
+          "edge_gain": 0.643,
+          "zoom_velocity": 0.05,
+          "displacement": 0.15,
+          "stability": 0.7,
+          "entropy": 0.25,
+          "palette_energy": 0.84,
+          "pattern_complexity": 0.74,
+          "depth_distortion": 0.3,
+          "bloom": 0.52
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.15,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.45,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.25,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.15,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
+      }
+    },
+    {
+      "id": "exp_mxe_dissociative_mosaic",
+      "schema_version": "1.0.0",
+      "title": "Dissociative Mosaic Soften",
+      "substance": "mxe",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "curated_seed",
+          "note": "Grounded in aggregate positive phenomenology motifs"
+        }
+      ],
+      "motifs": {
+        "space_void": 0.75,
+        "geometry": 0.4,
+        "body_somatic": 0.5
+      },
+      "narrative_hooks": [
+        "soft dissociative mosaic; muted chroma and floating depth"
+      ],
+      "modes": [
+        "void",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "flow_field",
+          "void_expansion"
+        ],
+        "secondary_engines": [
+          "recursive_feedback"
+        ],
+        "mode_default": "void",
+        "palette": {
+          "tracers": "#63F3E8",
+          "energy": 0.6,
+          "contrast": 0.67
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.57,
+          "feedback_strength": 0.58,
+          "recursion_gain": 0.713,
+          "turbulence": 0.3,
+          "trail_length": 0.3,
+          "edge_gain": 0.53,
+          "zoom_velocity": 0.312,
+          "displacement": 0.15,
+          "stability": 0.587,
+          "entropy": 0.625,
+          "palette_energy": 0.4,
+          "pattern_complexity": 0.59,
+          "depth_distortion": 0.713,
+          "bloom": 0.2
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.15,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.45,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.25,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.15,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
+      }
+    },
+    {
+      "id": "exp_mxe_warm_hole_drift",
+      "schema_version": "1.0.0",
+      "title": "Warm Hole Drift Corridor",
+      "substance": "mxe",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "curated_seed",
+          "note": "Grounded in aggregate positive phenomenology motifs"
+        }
+      ],
+      "motifs": {
+        "space_void": 0.8,
+        "body_somatic": 0.55,
+        "color_light": 0.4
+      },
+      "narrative_hooks": [
+        "warm-hole corridor drift with gentle somatic detach"
+      ],
+      "modes": [
+        "void",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "void_expansion",
+          "organic_bloom"
+        ],
+        "secondary_engines": [
+          "flow_field"
+        ],
+        "mode_default": "void",
+        "palette": {
+          "tracers": "#63F3E8",
+          "energy": 0.4,
+          "contrast": 0.55
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.35,
+          "feedback_strength": 0.4,
+          "recursion_gain": 0.74,
+          "turbulence": 0.31,
+          "trail_length": 0.5,
+          "edge_gain": 0.35,
+          "zoom_velocity": 0.33,
+          "displacement": 0.15,
+          "stability": 0.58,
+          "entropy": 0.65,
+          "palette_energy": 0.62,
+          "pattern_complexity": 0.35,
+          "depth_distortion": 0.74,
+          "bloom": 0.36
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.15,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.45,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.25,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.15,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
+      }
+    },
+    {
+      "id": "exp_mda_luminous_empathy",
+      "schema_version": "1.0.0",
+      "title": "Luminous Empathy Field",
+      "substance": "mda",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "curated_seed",
+          "note": "Grounded in aggregate positive phenomenology motifs"
+        }
+      ],
+      "motifs": {
+        "color_light": 0.9,
+        "body_somatic": 0.65,
+        "nature": 0.35
+      },
+      "narrative_hooks": [
+        "luminous empathic field; elevated glow with soft organic motion"
+      ],
+      "modes": [
+        "open",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "organic_bloom",
+          "recursive_feedback"
+        ],
+        "secondary_engines": [
+          "flow_field"
+        ],
+        "mode_default": "open",
+        "palette": {
+          "tracers": "#63F3E8",
+          "energy": 0.9,
+          "contrast": 0.55
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.35,
+          "feedback_strength": 0.4,
+          "recursion_gain": 0.3,
+          "turbulence": 0.33,
+          "trail_length": 0.75,
+          "edge_gain": 0.35,
+          "zoom_velocity": 0.05,
+          "displacement": 0.272,
+          "stability": 0.7,
+          "entropy": 0.25,
+          "palette_energy": 0.895,
+          "pattern_complexity": 0.35,
+          "depth_distortion": 0.3,
+          "bloom": 0.56
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.15,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.45,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.25,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.15,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true,
+        "intensity_cap": 1.0
+      }
+    },
+    {
       "id": "exp_src_dmt_19bf15e5",
       "schema_version": "1.0.0",
       "title": "Derived: DMT - Erowid Exp - 'First Breakthrough in Eight Years - Machine World'",
@@ -2920,6 +3855,279 @@
       }
     },
     {
+      "id": "exp_src_2cb_bed93a5a",
+      "schema_version": "1.0.0",
+      "title": "Derived: x_2cb_1",
+      "substance": "2c-b",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "curated_seed",
+          "id_hash": "sha256:bed93a5a65e5ea6c",
+          "title_hash": "sha256:d6f352641bb2049a",
+          "url_host": "curated_seed"
+        }
+      ],
+      "motifs": {
+        "geometry": 0.0,
+        "entities": 0.0,
+        "color_light": 0.25,
+        "space_void": 0.0,
+        "body_somatic": 0.0,
+        "time_memory": 0.0,
+        "nature": 0.0,
+        "machines": 0.0
+      },
+      "narrative_hooks": [
+        "beautiful textile-like geometry, neon tracers, stable attractors, amazing color salience and lucid ornamental clarity."
+      ],
+      "modes": [
+        "open",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "recursive_feedback",
+          "flow_field"
+        ],
+        "secondary_engines": [
+          "organic_bloom"
+        ],
+        "mode_default": "open",
+        "palette": {
+          "tracers": "#63F3E8",
+          "energy": 0.4,
+          "contrast": 0.5
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.35,
+          "feedback_strength": 0.4,
+          "recursion_gain": 0.3,
+          "turbulence": 0.2,
+          "trail_length": 0.425,
+          "edge_gain": 0.35,
+          "zoom_velocity": 0.05,
+          "displacement": 0.15,
+          "stability": 0.7,
+          "entropy": 0.25,
+          "palette_energy": 0.538,
+          "pattern_complexity": 0.35,
+          "depth_distortion": 0.3,
+          "bloom": 0.3
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.15,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.45,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.25,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.15,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true
+      }
+    },
+    {
+      "id": "exp_src_2ce_90b4308e",
+      "schema_version": "1.0.0",
+      "title": "Derived: x_2ce_0",
+      "substance": "2c-e",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "curated_seed",
+          "id_hash": "sha256:90b4308e5d0becff",
+          "title_hash": "sha256:adbc1860e8e16585",
+          "url_host": "curated_seed"
+        }
+      ],
+      "motifs": {
+        "geometry": 0.125,
+        "entities": 0.0,
+        "color_light": 0.0,
+        "space_void": 0.0,
+        "body_somatic": 0.0,
+        "time_memory": 0.0,
+        "nature": 0.0,
+        "machines": 0.0
+      },
+      "narrative_hooks": [
+        "deep analytic patterns held for long stretches, complex mosaics, cosmic geometry, profound focus and awe without terror."
+      ],
+      "modes": [
+        "open",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "recursive_feedback",
+          "flow_field"
+        ],
+        "secondary_engines": [
+          "organic_bloom"
+        ],
+        "mode_default": "open",
+        "palette": {
+          "tracers": "#63F3E8",
+          "energy": 0.4,
+          "contrast": 0.5375
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.419,
+          "feedback_strength": 0.456,
+          "recursion_gain": 0.369,
+          "turbulence": 0.2,
+          "trail_length": 0.3,
+          "edge_gain": 0.406,
+          "zoom_velocity": 0.05,
+          "displacement": 0.15,
+          "stability": 0.7,
+          "entropy": 0.25,
+          "palette_energy": 0.4,
+          "pattern_complexity": 0.425,
+          "depth_distortion": 0.3,
+          "bloom": 0.2
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.15,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.45,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.25,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.15,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true
+      }
+    },
+    {
+      "id": "exp_src_allad_998d42c6",
+      "schema_version": "1.0.0",
+      "title": "Derived: x_allad_0",
+      "substance": "al-lad",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "curated_seed",
+          "id_hash": "sha256:998d42c63665c32c",
+          "title_hash": "sha256:e49644fe6c0efb2f",
+          "url_host": "curated_seed"
+        }
+      ],
+      "motifs": {
+        "geometry": 0.375,
+        "entities": 0.0,
+        "color_light": 0.125,
+        "space_void": 0.0,
+        "body_somatic": 0.0,
+        "time_memory": 0.125,
+        "nature": 0.0,
+        "machines": 0.0
+      },
+      "narrative_hooks": [
+        "soft lysergic lattice, pastel recursion, gentle kaleidoscope, beautiful colors and calm geometric drift."
+      ],
+      "modes": [
+        "attractor",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "kaleidoscope",
+          "recursive_feedback"
+        ],
+        "secondary_engines": [
+          "organic_bloom"
+        ],
+        "mode_default": "attractor",
+        "palette": {
+          "tracers": "#63F3E8",
+          "energy": 0.4,
+          "contrast": 0.6125
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.556,
+          "feedback_strength": 0.569,
+          "recursion_gain": 0.506,
+          "turbulence": 0.2,
+          "trail_length": 0.362,
+          "edge_gain": 0.519,
+          "zoom_velocity": 0.05,
+          "displacement": 0.15,
+          "stability": 0.7,
+          "entropy": 0.25,
+          "palette_energy": 0.469,
+          "pattern_complexity": 0.575,
+          "depth_distortion": 0.3,
+          "bloom": 0.25
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.15,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.45,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.25,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.15,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true
+      }
+    },
+    {
       "id": "exp_src_dmt_095e4580",
       "schema_version": "1.0.0",
       "title": "Derived: x_dmt_3",
@@ -3257,6 +4465,370 @@
           "pattern_complexity": 0.425,
           "depth_distortion": 0.3,
           "bloom": 0.2
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.15,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.45,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.25,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.15,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true
+      }
+    },
+    {
+      "id": "exp_src_mda_0be849a5",
+      "schema_version": "1.0.0",
+      "title": "Derived: x_mda_0",
+      "substance": "mda",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "curated_seed",
+          "id_hash": "sha256:0be849a54e5a20f2",
+          "title_hash": "sha256:67603c9b9784153e",
+          "url_host": "curated_seed"
+        }
+      ],
+      "motifs": {
+        "geometry": 0.0,
+        "entities": 0.0,
+        "color_light": 0.375,
+        "space_void": 0.0,
+        "body_somatic": 0.0,
+        "time_memory": 0.0,
+        "nature": 0.125,
+        "machines": 0.0
+      },
+      "narrative_hooks": [
+        "luminous empathy, glowing organic bloom, music-driven color, profound warmth and positive awe."
+      ],
+      "modes": [
+        "open",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "recursive_feedback",
+          "flow_field"
+        ],
+        "secondary_engines": [
+          "organic_bloom"
+        ],
+        "mode_default": "open",
+        "palette": {
+          "tracers": "#63F3E8",
+          "energy": 0.4,
+          "contrast": 0.5
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.35,
+          "feedback_strength": 0.4,
+          "recursion_gain": 0.3,
+          "turbulence": 0.2,
+          "trail_length": 0.487,
+          "edge_gain": 0.35,
+          "zoom_velocity": 0.05,
+          "displacement": 0.194,
+          "stability": 0.7,
+          "entropy": 0.25,
+          "palette_energy": 0.606,
+          "pattern_complexity": 0.35,
+          "depth_distortion": 0.3,
+          "bloom": 0.35
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.15,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.45,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.25,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.15,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true
+      }
+    },
+    {
+      "id": "exp_src_mdma_c3e78949",
+      "schema_version": "1.0.0",
+      "title": "Derived: x_mdma_0",
+      "substance": "mdma",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "curated_seed",
+          "id_hash": "sha256:c3e789493ad0fff7",
+          "title_hash": "sha256:8fb7880f21f4f754",
+          "url_host": "curated_seed"
+        }
+      ],
+      "motifs": {
+        "geometry": 0.0,
+        "entities": 0.0,
+        "color_light": 0.25,
+        "space_void": 0.0,
+        "body_somatic": 0.125,
+        "time_memory": 0.0,
+        "nature": 0.0,
+        "machines": 0.0
+      },
+      "narrative_hooks": [
+        "warm euphoric glow, deep empathy, soft edges, beautiful colors without fear, heartbeat sync with music, life-affirming connection and peaceful awe."
+      ],
+      "modes": [
+        "open",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "recursive_feedback",
+          "flow_field"
+        ],
+        "secondary_engines": [
+          "organic_bloom"
+        ],
+        "mode_default": "open",
+        "palette": {
+          "tracers": "#63F3E8",
+          "energy": 0.4,
+          "contrast": 0.5
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.35,
+          "feedback_strength": 0.4,
+          "recursion_gain": 0.3,
+          "turbulence": 0.225,
+          "trail_length": 0.425,
+          "edge_gain": 0.35,
+          "zoom_velocity": 0.05,
+          "displacement": 0.15,
+          "stability": 0.7,
+          "entropy": 0.25,
+          "palette_energy": 0.538,
+          "pattern_complexity": 0.35,
+          "depth_distortion": 0.3,
+          "bloom": 0.3
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.15,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.45,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.25,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.15,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true
+      }
+    },
+    {
+      "id": "exp_src_mdma_5e0c0649",
+      "schema_version": "1.0.0",
+      "title": "Derived: x_mdma_1",
+      "substance": "mdma",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "curated_seed",
+          "id_hash": "sha256:5e0c0649a0531b84",
+          "title_hash": "sha256:c662bb12e0131139",
+          "url_host": "curated_seed"
+        }
+      ],
+      "motifs": {
+        "geometry": 0.0,
+        "entities": 0.0,
+        "color_light": 0.125,
+        "space_void": 0.0,
+        "body_somatic": 0.0,
+        "time_memory": 0.0,
+        "nature": 0.0,
+        "machines": 0.0
+      },
+      "narrative_hooks": [
+        "positive emotional openness, neon warmth, gentle visual bloom, music becomes tactile light, profound love and calm clarity."
+      ],
+      "modes": [
+        "open",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "recursive_feedback",
+          "flow_field"
+        ],
+        "secondary_engines": [
+          "organic_bloom"
+        ],
+        "mode_default": "open",
+        "palette": {
+          "tracers": "#63F3E8",
+          "energy": 0.4,
+          "contrast": 0.5
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.35,
+          "feedback_strength": 0.4,
+          "recursion_gain": 0.3,
+          "turbulence": 0.2,
+          "trail_length": 0.362,
+          "edge_gain": 0.35,
+          "zoom_velocity": 0.05,
+          "displacement": 0.15,
+          "stability": 0.7,
+          "entropy": 0.25,
+          "palette_energy": 0.469,
+          "pattern_complexity": 0.35,
+          "depth_distortion": 0.3,
+          "bloom": 0.25
+        },
+        "phase_profile": {
+          "comeup": {
+            "duration_norm": 0.15,
+            "intensity": 0.35
+          },
+          "peak": {
+            "duration_norm": 0.45,
+            "intensity": 1.0
+          },
+          "plateau": {
+            "duration_norm": 0.25,
+            "intensity": 0.75
+          },
+          "comedown": {
+            "duration_norm": 0.15,
+            "intensity": 0.3
+          }
+        }
+      },
+      "safety": {
+        "max_flash_hz": 2.0,
+        "max_luminance_delta": 0.35,
+        "reduced_motion_compatible": true
+      }
+    },
+    {
+      "id": "exp_src_mxe_4ecd3c4f",
+      "schema_version": "1.0.0",
+      "title": "Derived: x_mxe_0",
+      "substance": "mxe",
+      "valence": "positive",
+      "authority": {
+        "motifs": "INFERRED",
+        "parameters": "INFERRED",
+        "source_existence": "OBSERVED"
+      },
+      "source_refs": [
+        {
+          "source": "curated_seed",
+          "id_hash": "sha256:4ecd3c4f9c03ef5f",
+          "title_hash": "sha256:e6ed7dcf05fcd164",
+          "url_host": "curated_seed"
+        }
+      ],
+      "motifs": {
+        "geometry": 0.0,
+        "entities": 0.0,
+        "color_light": 0.125,
+        "space_void": 0.125,
+        "body_somatic": 0.0,
+        "time_memory": 0.0,
+        "nature": 0.0,
+        "machines": 0.0
+      },
+      "narrative_hooks": [
+        "soft dissociative corridors, warm floating drift, muted colorful mosaic, peaceful detachment and smooth void depth."
+      ],
+      "modes": [
+        "open",
+        "open"
+      ],
+      "visual_recipe": {
+        "primary_engines": [
+          "recursive_feedback",
+          "flow_field"
+        ],
+        "secondary_engines": [
+          "organic_bloom"
+        ],
+        "mode_default": "open",
+        "palette": {
+          "tracers": "#63F3E8",
+          "energy": 0.4,
+          "contrast": 0.5
+        },
+        "parameter_bias": {
+          "symmetry_order": 0.35,
+          "feedback_strength": 0.4,
+          "recursion_gain": 0.369,
+          "turbulence": 0.2,
+          "trail_length": 0.362,
+          "edge_gain": 0.35,
+          "zoom_velocity": 0.094,
+          "displacement": 0.15,
+          "stability": 0.681,
+          "entropy": 0.312,
+          "palette_energy": 0.469,
+          "pattern_complexity": 0.35,
+          "depth_distortion": 0.369,
+          "bloom": 0.25
         },
         "phase_profile": {
           "comeup": {

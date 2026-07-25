@@ -261,7 +261,7 @@
       this.statusEl = opts.statusEl || null;
       this.provenanceEl = opts.provenanceEl || null;
       this.renderer.onFrameInfo = (info) => this._status(info);
-      this.modulators = { camera: 0, motion: 0, midi: 0 };
+      this.modulators = { camera: 0, motion: 0, midi: 0, audio: 0, haptics: 0 };
       this.fieldBridge = null;
       this.sourcePlane = null;
       this.setPreferWebGL(this.preferWebGL);
@@ -412,6 +412,8 @@
         camera: Number(mods.camera || 0),
         motion: Number(mods.motion || 0),
         midi: Number(mods.midi || 0),
+        audio: Number(mods.audio || 0),
+        haptics: Number(mods.haptics || 0),
       };
     }
 

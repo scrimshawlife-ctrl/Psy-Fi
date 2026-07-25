@@ -142,6 +142,14 @@ def _engines_for(motifs: dict[str, float], substance: str) -> tuple[list[str], l
         primary, secondary, mode = ["kaleidoscope", "recursive_feedback"], ["organic_bloom"], "attractor"
     if substance == "ketamine":
         primary, secondary, mode = ["flow_field", "void_expansion"], ["recursive_feedback"], "void"
+    if substance in ("mdma", "mda"):
+        primary, secondary, mode = ["organic_bloom", "flow_field"], ["recursive_feedback"], "open"
+    if substance in ("2c-b", "al-lad"):
+        primary, secondary, mode = ["kaleidoscope", "recursive_feedback"], ["organic_bloom"], "attractor"
+    if substance == "2c-e":
+        primary, secondary, mode = ["recursive_feedback", "kaleidoscope"], ["entity_lattice"], "power"
+    if substance == "mxe":
+        primary, secondary, mode = ["flow_field", "void_expansion"], ["organic_bloom"], "void"
 
     return primary, secondary, mode
 
@@ -178,6 +186,12 @@ TRACERS = {
     "mescaline": "#FFB547",
     "ketamine": "#7EC8E3",
     "pcp": "#A0FF9A",
+    "mdma": "#FF6B9D",
+    "mda": "#FF8FB3",
+    "2c-b": "#C3FF4A",
+    "2c-e": "#9DFF6A",
+    "al-lad": "#5CE1FF",
+    "mxe": "#8BB8D8",
     "baseline": "#63F3E8",
 }
 
@@ -265,6 +279,50 @@ def seed_recipes() -> list[dict]:
          ["flow_field", "recursive_feedback"], ["organic_bloom"],
          {"entities": 0.55, "nature": 0.4, "geometry": 0.35},
          ["experimental low-intensity edge ambiguity; intensity capped"]),
+        ("mdma", "warm_empathic_glow", "Warm Empathic Glow Field", "open",
+         ["organic_bloom", "flow_field"], ["recursive_feedback"],
+         {"color_light": 0.85, "body_somatic": 0.7, "nature": 0.45},
+         ["warm connective glow; soft edges and elevated palette energy without panic"]),
+        ("mdma", "heartbeat_bloom", "Heartbeat Social Bloom", "attractor",
+         ["organic_bloom"], ["flow_field", "kaleidoscope"],
+         {"body_somatic": 0.8, "color_light": 0.75, "geometry": 0.35},
+         ["pulse-coupled bloom with lucid social warmth and low lattice aggression"]),
+        ("2c-b", "tactile_geometry", "Tactile Geometric Bloom", "attractor",
+         ["kaleidoscope", "organic_bloom"], ["recursive_feedback"],
+         {"geometry": 0.8, "color_light": 0.8, "body_somatic": 0.55},
+         ["crisp ornamental geometry with tactile color pop and stable attractors"]),
+        ("2c-b", "neon_textile", "Neon Textile Lattice", "open",
+         ["kaleidoscope", "recursive_feedback"], ["flow_field"],
+         {"geometry": 0.75, "machines": 0.35, "color_light": 0.85},
+         ["textile-like neon lattice with playful chroma without void overwhelm"]),
+        ("2c-e", "deep_pattern_hold", "Deep Pattern Hold", "power",
+         ["recursive_feedback", "kaleidoscope"], ["entity_lattice"],
+         {"geometry": 0.9, "space_void": 0.55, "time_memory": 0.5},
+         ["longer-held deep patterns; high complexity with deliberate pacing"]),
+        ("2c-e", "analytic_mosaic", "Analytic Mosaic Field", "attractor",
+         ["kaleidoscope", "entity_lattice"], ["recursive_feedback"],
+         {"geometry": 0.85, "machines": 0.45, "color_light": 0.6},
+         ["analytic mosaic geometry with lucid attentional grip"]),
+        ("al-lad", "lysergic_sibling", "Lysergic Sibling Soft Lattice", "open",
+         ["kaleidoscope", "recursive_feedback"], ["organic_bloom"],
+         {"geometry": 0.75, "color_light": 0.7, "nature": 0.4},
+         ["lsd-adjacent soft lattice with gentler comeup geometry"]),
+        ("al-lad", "pastel_recursion", "Pastel Recursion Drift", "attractor",
+         ["recursive_feedback", "flow_field"], ["kaleidoscope"],
+         {"color_light": 0.8, "geometry": 0.65, "time_memory": 0.4},
+         ["pastel recursive drift; ornamental but less abrasive than peak LSD"]),
+        ("mxe", "dissociative_mosaic", "Dissociative Mosaic Soften", "void",
+         ["flow_field", "void_expansion"], ["recursive_feedback"],
+         {"space_void": 0.75, "geometry": 0.4, "body_somatic": 0.5},
+         ["soft dissociative mosaic; muted chroma and floating depth"]),
+        ("mxe", "warm_hole_drift", "Warm Hole Drift Corridor", "void",
+         ["void_expansion", "organic_bloom"], ["flow_field"],
+         {"space_void": 0.8, "body_somatic": 0.55, "color_light": 0.4},
+         ["warm-hole corridor drift with gentle somatic detach"]),
+        ("mda", "luminous_empathy", "Luminous Empathy Field", "open",
+         ["organic_bloom", "recursive_feedback"], ["flow_field"],
+         {"color_light": 0.9, "body_somatic": 0.65, "nature": 0.35},
+         ["luminous empathic field; elevated glow with soft organic motion"]),
     ]
     recipes = []
     for substance, slug, title, mode, primary, secondary, motifs, hooks in base:

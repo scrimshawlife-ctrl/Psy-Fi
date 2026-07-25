@@ -1,47 +1,44 @@
-# Dockerfile for PsyFi
+# PsyFi — Docker image (API + legacy shell + optional GPU dist)
 # Applied Alchemy Labs
-# Production-ready container for consciousness field simulation
+
+FROM node:20-bookworm-slim AS gpu-build
+WORKDIR /src
+COPY package.json package-lock.json ./
+COPY packages/psyfi-gpu-renderer/package.json packages/psyfi-gpu-renderer/
+RUN npm ci
+COPY packages/psyfi-gpu-renderer packages/psyfi-gpu-renderer
+RUN npm run gpu:build
 
 FROM python:3.11-slim
 
-# Set working directory
 WORKDIR /app
 
-# Set environment variables
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     PIP_NO_CACHE_DIR=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=1
 
-# Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy dependency files
 COPY pyproject.toml README.md ./
-
-# Install Python dependencies
-RUN pip install --upgrade pip && \
-    pip install -e .
-
-# Copy application code
 COPY psyfi_core/ ./psyfi_core/
 COPY psyfi_api/ ./psyfi_api/
 COPY docs/ ./docs/
+COPY data/ ./data/
+RUN pip install --upgrade pip && \
+    pip install -e .
+COPY --from=gpu-build /src/packages/psyfi-gpu-renderer/dist ./packages/psyfi-gpu-renderer/dist
 
-# Create non-root user
 RUN useradd -m -u 1000 psyfi && \
     chown -R psyfi:psyfi /app
 
 USER psyfi
 
-# Expose port
 EXPOSE 8000
 
-# Health check (stdlib only — requests is not a runtime dependency)
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=5)" || exit 1
 
-# Run the application
 CMD ["uvicorn", "psyfi_api.main:app", "--host", "0.0.0.0", "--port", "8000"]

@@ -700,6 +700,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const modCamera = document.getElementById('modCamera');
     const modMotion = document.getElementById('modMotion');
     const modMidi = document.getElementById('modMidi');
+    const modAudio = document.getElementById('modAudio');
+    const modHaptics = document.getElementById('modHaptics');
     let lastBridgeField = null;
 
     function syncSourcePlaneUI() {
@@ -763,9 +765,13 @@ document.addEventListener('DOMContentLoaded', () => {
             camera: Number(modCamera?.value || 0),
             motion: Number(modMotion?.value || 0),
             midi: Number(modMidi?.value || 0),
+            audio: Number(modAudio?.value || 0),
+            haptics: Number(modHaptics?.value || 0),
         });
     }
-    [modCamera, modMotion, modMidi].forEach((el) => el?.addEventListener('change', syncModulators));
+    [modCamera, modMotion, modMidi, modAudio, modHaptics].forEach((el) =>
+        el?.addEventListener('change', syncModulators),
+    );
 
     let neutralOn = false;
     neutralBtn.addEventListener('click', () => {
@@ -967,6 +973,64 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    let audioCtx = null;
+    let audioRaf = 0;
+    document.getElementById('enableAudioBtn')?.addEventListener('click', async () => {
+        if (!navigator.mediaDevices?.getUserMedia) {
+            alert('Microphone API unavailable in this browser.');
+            return;
+        }
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const src = audioCtx.createMediaStreamSource(stream);
+            const analyser = audioCtx.createAnalyser();
+            analyser.fftSize = 256;
+            src.connect(analyser);
+            const data = new Uint8Array(analyser.frequencyBinCount);
+            const tick = () => {
+                analyser.getByteFrequencyData(data);
+                let sum = 0;
+                for (let i = 0; i < data.length; i++) sum += data[i];
+                const level = Math.min(1, sum / (255 * data.length * 0.35));
+                if (modAudio) modAudio.value = level.toFixed(2);
+                syncModulators();
+                audioRaf = requestAnimationFrame(tick);
+            };
+            tick();
+            statusEl.textContent = 'Audio meter active (ParameterField only)';
+        } catch (_err) {
+            alert('Microphone permission denied or unavailable.');
+        }
+    });
+
+    document.getElementById('enableHapticsBtn')?.addEventListener('click', () => {
+        if (!navigator.vibrate) {
+            alert('Vibration API unavailable in this browser.');
+            return;
+        }
+        let on = true;
+        const pulse = () => {
+            if (!on) return;
+            const level = Number(modHaptics?.value || 0.35);
+            const ms = Math.max(10, Math.floor(20 + level * 60));
+            navigator.vibrate(ms);
+            if (modHaptics && Number(modHaptics.value) < 0.2) modHaptics.value = '0.35';
+            syncModulators();
+            setTimeout(pulse, 400);
+        };
+        pulse();
+        statusEl.textContent = 'Haptics pulse active (ParameterField only)';
+        // Allow a second click to stop via level zero
+        modHaptics?.addEventListener(
+            'change',
+            () => {
+                if (Number(modHaptics.value) === 0) on = false;
+            },
+            { once: false },
+        );
+    });
+
     async function loadSubstances() {
         const res = await fetch('/api/v1/substances');
         const data = await res.json();
@@ -1047,6 +1111,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     camera: Number(modCamera?.value || 0),
                     motion: Number(modMotion?.value || 0),
                     midi: Number(modMidi?.value || 0),
+                    audio: Number(modAudio?.value || 0),
+                    haptics: Number(modHaptics?.value || 0),
                 },
             });
             if (phaseScrub && data.frames) {

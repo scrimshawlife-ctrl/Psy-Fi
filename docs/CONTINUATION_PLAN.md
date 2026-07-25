@@ -1,21 +1,22 @@
 # PsyFi Web Continuation Plan
 
-Status: active (reaudit 2026-07-25)  
+Status: active (P0–P2 engineering slice landed; human gates remain)  
 Scope: **web app / PWA / API only** — native iOS remains deferred (`docs/IOS_MIGRATION.md`).  
 Deploy: **Docker only** (`DEPLOYMENT.md`); Azure/Render paths removed (#28).
 
-## Baseline (on `main`)
+## Baseline (on this branch / next `main`)
 
 | Area | State |
 | --- | --- |
 | `/api/v1` + soft freeze | Done (`psyfi-api-v1-soft-2026-07-25`) |
 | Legacy Live Experience (Canvas/WebGL) | Done + last-sim source plane (#25) |
-| Phenomenology overlays | Done for 7 substances / ~39 recipes |
-| GPU platform G0 | Scaffolded (#26): R3F host, scene-snapshot API, `/gpu/` mount |
+| Phenomenology overlays | Expanded (13 overlay substances; MDMA / 2C-x / AL-LAD / MXE / MDA packs) |
+| GPU platform G0→G1 | Present path: bloom / grade / exposure + mandatory safety; Battery probe |
 | Hallmark README + design skill | Done (#24, #19) |
-| CI | pytest + OpenAPI path gate + hallmark + `gpu:test` / `gpu:typecheck` |
-| Open PRs / issues | None |
-| Tests | 71 passed (automated) |
+| CI | pytest + OpenAPI path gate + hallmark + `gpu:test` / `gpu:typecheck` / `gpu:build` |
+| Docker | Multi-stage bake of `@psyfi/gpu-renderer` `dist/`; urllib healthcheck |
+| Modulators | Camera / motion / MIDI / **audio** / **haptics** (ParameterField-only) |
+| Human gates | Device matrix + Phase 4 usability still open |
 
 ## Human gates (block hard freeze)
 
@@ -23,27 +24,25 @@ Deploy: **Docker only** (`DEPLOYMENT.md`); Azure/Render paths removed (#28).
 2. Fill evidence log in `docs/PHASE4_USABILITY.md`
 3. Then promote soft freeze → **hard freeze** in `docs/contracts/frozen/`
 
-## Engineering queue (prioritized)
+## Engineering queue
 
-### P0 — fix before treating `/gpu/` as shippable
+### P0 — done
 
-1. **Wire GPU safety clamp** — `safety_clamp.wgsl` exists but `PostStack` / render-graph passes are no-ops; Neutral/safety must execute on the present path  
-   (`packages/psyfi-gpu-renderer/src/PostProcessing/*`, `shaders/wgsl/post/safety_clamp.wgsl`)
-2. **Fix Compose healthcheck** — `docker-compose.yml` calls `curl`; slim image has none (Dockerfile already uses urllib)
+1. ~~Wire GPU safety clamp~~ — mandatory `uSafety` attenuator on WebGPU present path (`PresentPipeline`)
+2. ~~Fix Compose healthcheck~~ — `docker-compose.yml` uses Python urllib (no curl)
 
-### P1 — GPU G1 + packaging
+### P1 — done
 
-3. **GPU G1 present path** — real bloom / color grading / PBE exposure / tier probes; replace WGSL one-liners  
-   (`docs/rendering/ROADMAP.md` G1)
-4. **CI `gpu:build` + optional Docker copy of `dist/`** so `/gpu/` is present in containers
-5. **Stronger freeze drift tests** — living↔frozen body equality for OpenAPI + `psyfi_scene_snapshot.v1` (paths-only today)
+3. ~~GPU G1 present path~~ — bloom + color grading + exposure + Battery/Balanced probe
+4. ~~CI `gpu:build` + Docker `dist/`~~ — workflow + multi-stage Dockerfile
+5. ~~Stronger freeze drift tests~~ — living↔frozen body equality for OpenAPI + scene/field/frame + overlays
 
-### P2 — content & polish
+### P2 — mostly done (automation)
 
-6. **More positive phenomenology packs** for underrepresented preset substances (overlays today: lsd, psilocybin, dmt, 5-meo-dmt, mescaline, ketamine, pcp; many presets have no recipes)
-7. Legacy WebGL 1:1 engine shaders — optional; do not block GPU track
-8. Optional audio / haptics modulators (camera/motion/MIDI already wired)
-9. Phase 4 structured usability → hard freeze
+6. ~~More positive phenomenology packs~~ — underrepresented presets seeded + catalog rebuilt
+7. Legacy WebGL 1:1 engine shaders — optional; still deferred (do not block GPU track)
+8. ~~Optional audio / haptics modulators~~ — API + shell + ParameterField mapping
+9. Phase 4 structured usability → hard freeze — **human**
 
 ### Explicitly out of scope now
 
@@ -53,9 +52,9 @@ Deploy: **Docker only** (`DEPLOYMENT.md`); Azure/Render paths removed (#28).
 
 ## Recommended next slice
 
-**P0 pair:** Compose healthcheck fix + mandatory GPU safety pass on the R3F present path (still no medical claims; ParameterField remains authority via scene snapshots).
+**Human gates:** device matrix rows + Phase 4 usability evidence, then hard freeze.
 
-Then **G1:** bloom + grading + exposure + Battery/Balanced probe, with `npm run gpu:build` in CI.
+Optional engineering: G2 compute density, or legacy WebGL 1:1 shaders if product still needs them.
 
 ## Commands
 

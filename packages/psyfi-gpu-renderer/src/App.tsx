@@ -7,7 +7,9 @@ import { DebugHud } from './DebugOverlay/DebugHud'
 import {
   normalizeTier,
   probeDeviceCaps,
+  refineBatteryCaps,
   resolveTier,
+  type DeviceCaps,
   type QualityTier,
 } from './contracts/QualityTier'
 import { enabledPasses } from './contracts/RenderGraph'
@@ -17,9 +19,11 @@ export function App() {
   const store = useMemo(() => new SnapshotStore(), [])
   const interpolator = useMemo(() => new SnapshotInterpolator(), [])
   const publisher = useMemo(() => new AnalysisPublisher(store), [store])
-  const caps = useMemo(() => probeDeviceCaps(), [])
+  const [caps, setCaps] = useState<DeviceCaps>(() => probeDeviceCaps())
 
-  const [tier, setTier] = useState<QualityTier>('balanced')
+  const [tier, setTier] = useState<QualityTier>(() =>
+    resolveTier('balanced', probeDeviceCaps()),
+  )
   const [snapshot, setSnapshot] = useState<SceneSnapshotV1 | null>(null)
   const [status, setStatus] = useState('Idle')
   const [substance, setSubstance] = useState('lsd')
@@ -60,6 +64,13 @@ export function App() {
   }, [publisher, store, interpolator, substance, mode, intensity, seed, tier])
 
   useEffect(() => {
+    void refineBatteryCaps(probeDeviceCaps()).then((next) => {
+      setCaps(next)
+      setTier((prev) => resolveTier(prev, next))
+    })
+  }, [])
+
+  useEffect(() => {
     void refresh()
   }, [refresh])
 
@@ -97,7 +108,7 @@ export function App() {
         <label>
           Substance{' '}
           <select value={substance} onChange={(e) => setSubstance(e.target.value)}>
-            {['lsd', 'psilocybin', 'dmt', 'mescaline', 'ketamine', '5-meo-dmt'].map((s) => (
+            {['lsd', 'psilocybin', 'dmt', 'mescaline', 'ketamine', '5-meo-dmt', 'mdma', '2c-b', '2c-e', 'al-lad', 'mxe'].map((s) => (
               <option key={s} value={s}>
                 {s}
               </option>

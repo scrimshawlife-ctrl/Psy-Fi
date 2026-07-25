@@ -27,6 +27,10 @@ def test_template_wires_cancel_recovery_and_renderer() -> None:
     assert 'id="sourcePlaneChk"' in html
     assert 'id="sourcePlaneMix"' in html
     assert 'id="bridgeSimBtn"' in html
+    assert 'id="modAudio"' in html
+    assert 'id="modHaptics"' in html
+    assert 'id="enableAudioBtn"' in html
+    assert 'id="enableHapticsBtn"' in html
     assert 'href="/gpu/"' in html
     assert 'src="/static/renderer.js"' in html
     assert 'src="/static/viz/parameterFieldWebGL.js"' in html
@@ -61,6 +65,10 @@ def test_app_uses_abort_controller_and_worker_renderer() -> None:
     assert "importSessionInput" in app_js
     assert "setSourcePlane" in app_js
     assert "lastBridgeField" in app_js
+    assert "modAudio" in app_js
+    assert "modHaptics" in app_js
+    assert "enableAudioBtn" in app_js
+    assert "enableHapticsBtn" in app_js
     renderer_js = (STATIC / "renderer.js").read_text(encoding="utf-8")
     assert "render_worker.js" in renderer_js
     assert "navigator.gpu" in renderer_js
@@ -68,6 +76,8 @@ def test_app_uses_abort_controller_and_worker_renderer() -> None:
     assert "setSourcePlane" in player_js
     assert "sampleSourcePlane" in player_js
     assert "packSourceField" in player_js
+    assert "audio:" in player_js
+    assert "haptics:" in player_js
     gl_js = (STATIC / "viz" / "parameterFieldWebGL.js").read_text(encoding="utf-8")
     assert "u_sourceMix" in gl_js
     assert "u_source" in gl_js

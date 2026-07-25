@@ -20,6 +20,8 @@ export function DebugHud({
   perfBand,
   profile,
   particleBudget,
+  presentMode,
+  fixtureAssets,
 }: {
   tier: QualityTier
   stats: SnapshotStoreStats
@@ -31,6 +33,8 @@ export function DebugHud({
   perfBand?: string
   profile?: FrameProfilerSummary | null
   particleBudget?: number
+  presentMode?: string
+  fixtureAssets?: boolean
 }) {
   const vendorTag =
     vendorLabel && vendorLabel !== 'unknown' ? ` · ${vendorLabel.toUpperCase()}` : ''
@@ -40,6 +44,8 @@ export function DebugHud({
     <div className="gpu-hud">
       <div>
         <strong>GPU platform</strong> · tier {tier} · {webgpu ? 'WebGPU ok' : 'no navigator.gpu'}
+        {presentMode ? ` · present ${presentMode}` : ''}
+        {fixtureAssets ? ' · fixtures' : ''}
         {vendorTag}
         {bandTag}
       </div>

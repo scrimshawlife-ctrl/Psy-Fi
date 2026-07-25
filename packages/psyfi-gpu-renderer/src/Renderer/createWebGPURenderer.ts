@@ -6,7 +6,9 @@ import * as THREE from 'three/webgpu'
  * (e.g. RTX 5060) when a hybrid iGPU+dGPU system is present.
  */
 export async function createWebGPURenderer(
-  props: ConstructorParameters<typeof THREE.WebGPURenderer>[0],
+  props: ConstructorParameters<typeof THREE.WebGPURenderer>[0] & {
+    canvas?: HTMLCanvasElement | OffscreenCanvas
+  },
 ) {
   const renderer = new THREE.WebGPURenderer({
     ...(props as object),

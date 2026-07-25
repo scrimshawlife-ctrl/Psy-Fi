@@ -39,6 +39,9 @@ Prefer **procedural** geometry (glyphs, SDF, ribbons, metaballs, volumes, crysta
 ```text
 SceneRoot
   └─ SceneAssetLayer (snapshot.assets.ktx2 → DataTexture plane)
+       · default empty arrays (procedural authority)
+       · opt-in fixtures: include_fixture_assets / PSYFI_SCENE_ASSETS=fixtures
+       · public/assets/fixtures/ground_rgba8.ktx2
 Main / OffscreenCanvas renderer
         ▲ GpuAssetUploader (writeTexture / writeBuffer)
 AssetLoader.loadAndUpload

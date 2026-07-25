@@ -28,6 +28,8 @@ describe('GPU Lab launch params', () => {
       seed: 42,
       qualityTier: 'survival',
       experienceId: 'exp_a',
+      fixtureAssets: true,
+      offscreen: true,
     })
     expect(url.startsWith('/gpu/?')).toBe(true)
     const q = new URLSearchParams(url.split('?')[1])
@@ -35,5 +37,14 @@ describe('GPU Lab launch params', () => {
     expect(q.get('substance')).toBe('lsd')
     expect(q.get('tier')).toBe('battery')
     expect(q.get('experience_id')).toBe('exp_a')
+    expect(q.get('fixtures')).toBe('1')
+    expect(q.get('offscreen')).toBe('1')
+  })
+
+  it('parses fixtures + offscreen flags', () => {
+    const p = readGpuLaunchParams('?fixtures=1&offscreen=true')
+    expect(p.fixtureAssets).toBe(true)
+    expect(p.offscreen).toBe(true)
+    expect(readGpuLaunchParams('').fixtureAssets).toBe(false)
   })
 })

@@ -1,7 +1,8 @@
 /**
  * Deterministic soft-present raster of a scene snapshot.
  * Used for CI pixel goldens when headless WebGPU is unavailable.
- * Layout mirrors CrystalField instance placement + palette/safety intent.
+ * Layout mirrors CrystalField + metaballs/ribbons/particles + optional fixture tint.
+ * Not a bit-identical stand-in for full R3F/WebGPU stills.
  */
 
 import type { SceneSnapshotV1, ProceduralNode } from '../contracts/SceneSnapshot'
@@ -25,7 +26,6 @@ function parseHexColor(hex: string): [number, number, number] {
 function setPx(rgba: Uint8Array, w: number, x: number, y: number, r: number, g: number, b: number, a = 255): void {
   if (x < 0 || y < 0 || x >= w || y >= w) return
   const o = (y * w + x) * 4
-  // Alpha-over
   const sr = r / 255
   const sg = g / 255
   const sb = b / 255
@@ -67,8 +67,26 @@ function fillCircle(
   }
 }
 
+function strokeLine(
+  rgba: Uint8Array,
+  w: number,
+  x0: number,
+  y0: number,
+  x1: number,
+  y1: number,
+  r: number,
+  g: number,
+  b: number,
+  a: number,
+): void {
+  const steps = Math.max(2, Math.ceil(Math.hypot(x1 - x0, y1 - y0)))
+  for (let i = 0; i <= steps; i++) {
+    const t = i / steps
+    fillCircle(rgba, w, x0 + (x1 - x0) * t, y0 + (y1 - y0) * t, 1.1, r, g, b, a)
+  }
+}
+
 function project(pos: [number, number, number], w: number): [number, number, number] {
-  // Simple orthographic-ish map of CrystalField coords → pixel space
   const x = (pos[0] * 0.85 + 1) * 0.5 * (w - 1)
   const y = (1 - (pos[1] * 1.2 + pos[2] * 0.35 + 1) * 0.5) * (w - 1)
   const depth = clamp01(0.55 + pos[2] * 0.2)
@@ -101,7 +119,6 @@ export function softPresentSnapshot(
   size: number = PIXEL_GOLDEN_SIZE,
 ): PixelFrame {
   const rgba = new Uint8Array(size * size * 4)
-  // Soft-present clear matches design.md paper (PF_PAPER).
   const [paperR, paperG, paperB] = parseHexColor(PF_PAPER)
   for (let i = 0; i < size * size; i++) {
     const o = i * 4
@@ -118,7 +135,6 @@ export function softPresentSnapshot(
   const safety = snapshot.safety || snapshot.parameter_field.safety || {}
   const atten = clamp01(Number(safety.attenuator ?? safety.max_flash_strength ?? 0.35))
 
-  // Safety: pull toward mid-grey; Neutral: stronger desat
   const mix = neutral ? 0.72 : 0.25 + atten * 0.45
   const grey = 110
   pr = Math.round(pr * (1 - mix) + grey * mix)
@@ -126,6 +142,28 @@ export function softPresentSnapshot(
   pb = Math.round(pb * (1 - mix) + grey * mix)
 
   const engines = snapshot.parameter_field.engines || {}
+
+  // Fixture KTX2 ground band — locks SceneAssetLayer wiring into soft goldens.
+  const hasKtx2 = (snapshot.assets?.ktx2?.length || 0) > 0
+  if (hasKtx2 && !neutral) {
+    const y0 = Math.floor(size * 0.78)
+    for (let y = y0; y < size; y++) {
+      for (let x = 0; x < size; x++) {
+        const t = (y - y0) / Math.max(1, size - y0)
+        setPx(
+          rgba,
+          size,
+          x,
+          y,
+          Math.min(255, pr + 20),
+          Math.min(255, pg + 10),
+          Math.max(0, pb - 10),
+          Math.round(55 + t * 70),
+        )
+      }
+    }
+  }
+
   if (!neutral) {
     const items = crystalItems(snapshot.procedural.crystals || [], engines)
     for (const it of items) {
@@ -134,7 +172,42 @@ export function softPresentSnapshot(
       const a = Math.round((140 + intensity * 80) * depth)
       fillCircle(rgba, size, x, y, rad, pr, pg, pb, a)
     }
-    // Glyph accents
+
+    // Metaball soft disks
+    const balls = snapshot.procedural.metaballs || []
+    for (let i = 0; i < balls.length; i++) {
+      const m = balls[i]
+      const seed = Number(m.seed) || i
+      const cx = ((Math.sin(seed * 0.41) + 1) * 0.5) * (size - 1)
+      const cy = ((Math.cos(seed * 0.27) + 1) * 0.5) * (size - 1)
+      const rad = 2.2 + (Number(m.radius) || 0.2) * size * 0.08
+      fillCircle(rgba, size, cx, cy, rad, Math.max(0, pr - 30), pg, Math.min(255, pb + 35), 110)
+    }
+
+    // Ribbon strokes
+    const ribbons = snapshot.procedural.ribbons || []
+    for (let i = 0; i < ribbons.length; i++) {
+      const rb = ribbons[i]
+      const seed = Number(rb.seed) || i
+      const x0 = ((Math.sin(seed * 0.13) + 1) * 0.5) * (size - 1)
+      const y0 = ((Math.cos(seed * 0.17) + 1) * 0.5) * (size - 1)
+      const x1 = ((Math.sin(seed * 0.29 + 1.7) + 1) * 0.5) * (size - 1)
+      const y1 = ((Math.cos(seed * 0.23 + 0.9) + 1) * 0.5) * (size - 1)
+      strokeLine(rgba, size, x0, y0, x1, y1, pr, Math.min(255, pg + 40), pb, 150)
+    }
+
+    // Flow particle dots (budget-capped proxy)
+    const flow = engines.flow_field ?? 0
+    if (flow > 0.05) {
+      const n = Math.min(24, Math.max(4, Math.floor(flow * 28)))
+      for (let i = 0; i < n; i++) {
+        const a = i * 2.399 + intensity
+        const rr = 0.15 + (i % 5) * 0.06
+        const [x, y] = project([Math.cos(a) * rr, (i % 4) * 0.05, Math.sin(a) * rr], size)
+        fillCircle(rgba, size, x, y, 0.9, pr, pg, pb, 160)
+      }
+    }
+
     const glyphs = snapshot.procedural.glyphs || []
     for (let i = 0; i < glyphs.length; i++) {
       const g = glyphs[i]
@@ -144,7 +217,6 @@ export function softPresentSnapshot(
       fillCircle(rgba, size, x, y, 1.6, Math.min(255, pr + 40), pg, Math.max(0, pb - 20), 200)
     }
   } else {
-    // Neutral: soft vignette only
     for (let y = 0; y < size; y++) {
       for (let x = 0; x < size; x++) {
         const dx = (x / size - 0.5) * 2

@@ -21,7 +21,7 @@ Scope: web app / PWA / API — native iOS deferred (`IOS_MIGRATION.md`).
 | GPU | G3 premium desktop stack | **done** | GTAO · SSR · ContactShadows · fog · DoF · motion blur · chroma |
 | GPU | Desktop discrete Ultra path | **done** | NVIDIA 30/40/50 · AMD RX 6/7/9xxx · Intel Arc · `DESKTOP_GPU.md` |
 | GPU | Profiling HUD (FPS / avg / p95 / budget) | **done** | `/gpu/` DebugHud |
-| GPU | Draco/KTX2 upload + SceneAssetLayer | **done** | vendored Draco/Basis under `/gpu/vendor/` · `draco3d` |
+| GPU | Draco/KTX2 upload + SceneAssetLayer | **done** | vendored codecs · fixture KTX2 opt-in · product packs deferred |
 | GPU | G4 cutover ship gates | **done** | parity CI · structure goldens · soft pixel goldens · `G4_CUTOVER.md` |
 | GPU | Present/FX dispose + particle budget quantize | **done** | Ultra leak hardening · worker abort listener cleanup |
 | PWA | Installable shell + SW + IndexedDB | **done** | device QA 2026-07-25 · root-scoped `/sw.js` (v12) |
@@ -61,7 +61,7 @@ Canonical queue: [`CONTINUATION_PLAN.md`](CONTINUATION_PLAN.md).
 | **P0** | Ultra auto-tier QA (NVIDIA / AMD / Intel) | **simulated pass** · hardware fps optional |
 | **P1** | G0–G4 ship polish (HUD, assets, goldens, PWA route) | **done** |
 | **P2** | Full R3F WebGPU stills on a GPU CI runner | optional |
-| **P2** | Vendor real Draco WASM / Basis transcoder | optional |
+| **P2** | Vendor real Draco WASM / Basis transcoder | **done** | `/gpu/vendor/` · SceneAssetLayer async |
 | **P2** | Re-measure device matrix fps after major UI changes | living QA |
 | **P2** | Legacy WebGL 1:1 shaders; future CUDA workers | opportunistic |
 

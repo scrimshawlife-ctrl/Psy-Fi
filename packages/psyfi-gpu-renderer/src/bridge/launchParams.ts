@@ -13,6 +13,15 @@ export interface GpuLaunchParams {
   tier?: QualityTier
   experienceId?: string | null
   fromShell: boolean
+  /** Opt-in SceneAssetLayer fixture KTX2 refs. */
+  fixtureAssets: boolean
+  /** Opt-in OffscreenCanvas present target (same-thread scaffold). */
+  offscreen: boolean
+}
+
+function truthyParam(q: URLSearchParams, key: string): boolean {
+  const v = (q.get(key) || '').toLowerCase()
+  return v === '1' || v === 'true' || v === 'yes' || v === 'on'
 }
 
 export function readGpuLaunchParams(
@@ -38,6 +47,8 @@ export function readGpuLaunchParams(
     tier: tierRaw ? normalizeTier(tierRaw) : undefined,
     experienceId,
     fromShell,
+    fixtureAssets: truthyParam(q, 'fixtures') || truthyParam(q, 'fixture_assets'),
+    offscreen: truthyParam(q, 'offscreen'),
   }
 }
 
@@ -49,6 +60,8 @@ export function buildGpuLabUrl(opts: {
   seed?: number
   qualityTier?: string
   experienceId?: string | null
+  fixtureAssets?: boolean
+  offscreen?: boolean
   origin?: string
 }): string {
   const q = new URLSearchParams()
@@ -61,6 +74,8 @@ export function buildGpuLabUrl(opts: {
   if (opts.seed != null && Number.isFinite(opts.seed)) q.set('seed', String(Math.floor(opts.seed)))
   if (opts.qualityTier) q.set('tier', normalizeTier(opts.qualityTier))
   if (opts.experienceId) q.set('experience_id', opts.experienceId)
+  if (opts.fixtureAssets) q.set('fixtures', '1')
+  if (opts.offscreen) q.set('offscreen', '1')
   const base = opts.origin != null ? `${opts.origin.replace(/\/$/, '')}/gpu/` : '/gpu/'
   return `${base}?${q.toString()}`
 }

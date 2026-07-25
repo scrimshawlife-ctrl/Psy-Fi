@@ -24,7 +24,7 @@ Canonical data: `packages/psyfi-gpu-renderer/src/contracts/g4Parity.ts` (CI-test
 | Modulators (cam/motion/MIDI/audio/haptics) | yes | partial | MIDI/haptics still legacy-primary |
 | Reduce motion | yes | yes | snapshot flag |
 | Offline / PWA | yes | partial | `/gpu/` **separate route (decided)** — [`PWA_GPU_ROUTE.md`](../PWA_GPU_ROUTE.md) |
-| KTX2 / Draco optional assets | n/a | ready | Vendored codecs; SceneAssetLayer; Python arrays empty by default until packs |
+| KTX2 / Draco optional assets | n/a | yes | Vendored codecs; SceneAssetLayer; fixture KTX2 via `include_fixture_assets` / `PSYFI_SCENE_ASSETS`; product packs deferred |
 
 ## PWA decision
 

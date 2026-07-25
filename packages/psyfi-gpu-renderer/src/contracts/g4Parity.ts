@@ -52,8 +52,8 @@ export const G4_PARITY_ROWS: ParityRow[] = [
   {
     capability: 'KTX2 / Draco optional assets',
     legacy: 'n/a',
-    gpu: 'partial',
-    notes: 'upload + SceneAssetLayer; Python assets[] empty by default',
+    gpu: 'yes',
+    notes: 'upload + SceneAssetLayer; fixtures via include_fixture_assets / PSYFI_SCENE_ASSETS; product packs deferred',
   },
 ]
 

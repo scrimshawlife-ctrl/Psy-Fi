@@ -22,7 +22,7 @@ Cutover: [`G4_CUTOVER.md`](G4_CUTOVER.md) · pixels: [`PIXEL_GOLDENS.md`](PIXEL_
 - [x] Bloom + color grading + **mandatory** safety attenuator (`PresentPipeline`)
 - [x] Adaptive quality: Balanced default; Battery Saver via saveData / mobile / low-battery probe
 - [x] Device matrix evidence (shared with G0)
-- [ ] OffscreenCanvas optional path behind flag
+- [x] OffscreenCanvas optional path behind flag (`?offscreen=1` · same-thread transfer scaffold)
 
 ## Phase G2 — Compute & density
 

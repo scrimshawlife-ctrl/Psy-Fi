@@ -45,6 +45,8 @@ Board: [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md)
 - [x] PWA: `/gpu/` **separate route** ([`PWA_GPU_ROUTE.md`](PWA_GPU_ROUTE.md) · SW v28)
 - [x] Shell → GPU Lab handoff (`/gpu/?substance&mode&tier…`) + `battery_saver`/`survival` tier aliases
 - [x] Vendored Draco/Basis wired for browser decode; SceneAssetLayer async BasisLZ path
+- [x] Fixture KTX2 emission (`include_fixture_assets` / `PSYFI_SCENE_ASSETS`) + soft-present layers
+- [x] OffscreenCanvas present flag (`?offscreen=1`, same-thread scaffold)
 - [x] Simulated P0 Ultra QA ([`SIMULATED_ULTRA_QA.md`](SIMULATED_ULTRA_QA.md))
 
 ## Recommended next steps (priority order)

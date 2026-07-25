@@ -14,6 +14,13 @@ from uuid import uuid4
 
 SCENE_SNAPSHOT_SCHEMA = "psyfi.scene_snapshot.v1"
 
+# Served from packages/psyfi-gpu-renderer/public/assets/fixtures via /gpu/ StaticFiles.
+_FIXTURE_KTX2_GROUND = {
+    "id": "fixture_ground",
+    "url": "/gpu/assets/fixtures/ground_rgba8.ktx2",
+    "role": "ground",
+}
+
 _QUALITY_POST = {
     "ultra": {
         "taa": True,
@@ -198,6 +205,31 @@ def normalize_snapshot_quality_tier(quality_tier: str | None) -> str:
     return tier
 
 
+def resolve_include_fixture_assets(flag: bool | None = None) -> bool:
+    """Opt-in fixture asset refs. Env PSYFI_SCENE_ASSETS=fixtures|1 wins when set."""
+    import os
+
+    env = (os.environ.get("PSYFI_SCENE_ASSETS") or "").strip().lower()
+    if env in {"1", "true", "yes", "fixtures", "fixture"}:
+        return True
+    if env in {"0", "false", "no", "off", "none"}:
+        return False
+    return bool(flag)
+
+
+def fixture_scene_assets() -> dict[str, list[dict[str, str]]]:
+    """Tiny KTX2 ground tint for SceneAssetLayer E2E — not product art packs."""
+    return {
+        "gltf": [],
+        "ktx2": [dict(_FIXTURE_KTX2_GROUND)],
+        "splats": [],
+    }
+
+
+def empty_scene_assets() -> dict[str, list[dict[str, str]]]:
+    return {"gltf": [], "ktx2": [], "splats": []}
+
+
 def build_scene_snapshot(
     *,
     parameter_field: dict[str, Any],
@@ -206,6 +238,7 @@ def build_scene_snapshot(
     sequence: int = 1,
     camera: dict[str, Any] | None = None,
     snapshot_id: str | None = None,
+    include_fixture_assets: bool = False,
 ) -> dict[str, Any]:
     """Build an immutable scene snapshot for the GPU renderer."""
     tier = normalize_snapshot_quality_tier(quality_tier)
@@ -259,7 +292,11 @@ def build_scene_snapshot(
         "lighting": lighting,
         "post": post,
         "safety": safety,
-        "assets": {"gltf": [], "ktx2": [], "splats": []},
+        "assets": (
+            fixture_scene_assets()
+            if resolve_include_fixture_assets(include_fixture_assets)
+            else empty_scene_assets()
+        ),
         "authority": {
             "parameters": "INFERRED",
             "motifs": "INFERRED",

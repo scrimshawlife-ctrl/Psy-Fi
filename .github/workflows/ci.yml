@@ -21,3 +21,10 @@ jobs:
         run: python -m pytest tests/ -q
       - name: OpenAPI path gate
         run: python -m pytest tests/test_openapi_contract.py -q
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Hallmark README lint
+        run: |
+          npm ci
+          npm test

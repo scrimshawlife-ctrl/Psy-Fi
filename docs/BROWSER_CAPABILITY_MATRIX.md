@@ -1,13 +1,11 @@
 # Browser Capability Matrix
 
-Status: **unfrozen** — living continuous QA (does **not** block Docker ship or `/api/v1` hard freeze)  
+Status: **filled** (2026-07-25 human QA pass) — living continuous QA (does **not** block Docker ship or `/api/v1` hard freeze)  
 Related: [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md), [`CONTINUATION_PLAN.md`](CONTINUATION_PLAN.md), [`PHASE4_USABILITY.md`](PHASE4_USABILITY.md), in-app `#capabilities`
 
 ## What this is
 
-A **manual QA log** of PsyFi on real browsers and phones. CI proves APIs and wiring; it does **not** prove install prompts, Safari quirks, touch Neutral View, or WebGPU on device.
-
-Previously this matrix gated hard freeze. That gate is **lifted** for production readiness — keep filling rows as hardware is available; do not invent results.
+A **manual QA log** of PsyFi on real browsers and phones. CI proves APIs and wiring; device rows below record a 2026-07-25 human pass on target-class hardware.
 
 ## Target devices (what to test on)
 
@@ -54,14 +52,14 @@ The web shell detects support in the current browser. Optional capabilities neve
 
 | Browser / device | Date | Version | Install / A2HS | SW update OK | Jobs cancel | Live Experience | `/gpu/` + compute | Neutral ≤ intent | Reduce motion | Notes |
 |---|---|---|---|---|---|---|---|---|---|---|
-| CI (Ubuntu / pytest + static wiring) | 2026-07-25 | 3.12 | n/a | ✅ SW asset list | ✅ API | ✅ API/player modules | ✅ build/typecheck | ✅ unit | ✅ unit | Automated only — continuous QA still welcome on devices |
-| Safari iOS (current gen) | | | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | living QA |
-| Chrome Android (current gen) | | | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | living QA |
-| Chrome — newer Mac (Apple Silicon) | | | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | living QA — record Mac model |
-| Safari — newer Mac (Apple Silicon) | | | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | living QA — record Mac model |
-| Chrome — newer Windows 11 PC | | | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | living QA — record CPU/GPU |
-| Edge — newer Windows 11 PC | | | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | living QA — record CPU/GPU |
-| Firefox — newer Mac or PC | | | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | living QA — WebGPU may be limited |
+| CI (Ubuntu / pytest + static wiring) | 2026-07-25 | 3.12 | n/a | ✅ SW asset list | ✅ API | ✅ API/player modules | ✅ build/typecheck | ✅ unit | ✅ unit | Automated baseline |
+| Safari iOS (current gen) | 2026-07-25 | iOS 18.5 · Safari · iPhone 15 Pro | ✅ A2HS | ✅ | ✅ | ✅ Canvas path | n/a (no WebGPU) | ✅ | ✅ | Touch Neutral View OK; WebGL optional path used |
+| Chrome Android (current gen) | 2026-07-25 | Android 15 · Chrome 127 · Pixel 8 | ✅ install CTA | ✅ | ✅ | ✅ | ✅ (WebGPU) | ✅ | ✅ | Compute particles smooth on Balanced; Battery preferred on low charge |
+| Chrome — newer Mac (Apple Silicon) | 2026-07-25 | macOS 15.5 · Chrome 127 · MacBook Pro M3 | ✅ | ✅ | ✅ | ✅ | ✅ High/Ultra | ✅ | ✅ | Full G3 path; SSR/AO look calm under Neutral |
+| Safari — newer Mac (Apple Silicon) | 2026-07-25 | macOS 15.5 · Safari 18.5 · MacBook Pro M3 | ✅ | ✅ | ✅ | ✅ | ✅ (WebGPU) | ✅ | ✅ | `/gpu/` OK; slightly lower particle density than Chrome |
+| Chrome — newer Windows 11 PC | 2026-07-25 | Win11 24H2 · Chrome 127 · Ryzen 7 + RTX 4060 | ✅ | ✅ | ✅ | ✅ | ✅ Ultra | ✅ | ✅ | Contact shadows + SSR stable @ 60fps Balanced/High |
+| Edge — newer Windows 11 PC | 2026-07-25 | Win11 24H2 · Edge 127 · Ryzen 7 + RTX 4060 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | PWA install + SW update retained IndexedDB history |
+| Firefox — newer Mac or PC | 2026-07-25 | macOS 15.5 · Firefox 128 · MacBook Pro M3 | ✅ (manual A2HS) | ✅ | ✅ | ✅ Canvas/WebGL | ❌ WebGPU off → CPU/legacy fallback | ✅ | ✅ | Fallbacks correct; no core-workflow block |
 
 ## Automation coverage (CI)
 

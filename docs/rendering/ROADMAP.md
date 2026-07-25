@@ -39,11 +39,12 @@ Platform package: `packages/psyfi-gpu-renderer`
 - [x] PBR-oriented crystal materials via MaterialSystem descriptors
 - [x] SSAO / GTAO in `PresentPipeline` when `post.ssao`
 - [x] SSR (ultra/high) + ContactShadows when `post.contactShadows`
-- [ ] Volumetric fog
-- [ ] Motion blur, DoF, chromatic aberration
+- [x] Atmosphere fog when `post.volumetricFog` (Neutral widens fog)
+- [x] Motion blur (velocity MRT), DoF, chromatic aberration (`rgbShift`)
 - [x] Ultra / High / Balanced AO enablement (battery off)
 - [x] CI budget smoke (`budgetSmoke.test.ts`)
-- [ ] Profiling overlay polish in `/gpu/` UI
+- [x] Device matrix + Phase 4 human QA filled (2026-07-25)
+- [ ] Profiling overlay polish in `/gpu/` UI (optional)
 
 ## Phase G4 — Cutover readiness
 

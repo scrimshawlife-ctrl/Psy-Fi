@@ -12,9 +12,13 @@ export function LightingRig({
   const cfg = tierConfig(tier)
   const ambient = Number(snapshot.lighting.ambient_intensity) || 0.25
   const key = Number(snapshot.lighting.key_intensity) || 1.2
+  const neutral = !!snapshot.parameter_field.neutral_view
+  const fogNear = cfg.post.volumetricFog && !neutral ? 1.6 : 8
+  const fogFar = cfg.post.volumetricFog && !neutral ? 9.5 : 40
   return (
     <>
       <color attach="background" args={['#07070B']} />
+      <fog attach="fog" args={['#07070B', fogNear, fogFar]} />
       <ambientLight intensity={ambient} />
       <directionalLight
         castShadow={cfg.post.contactShadows}

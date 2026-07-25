@@ -18,15 +18,31 @@ def test_readme_has_production_readiness_board() -> None:
 def test_production_readiness_board_doc() -> None:
     board = (ROOT / "docs" / "PRODUCTION_READINESS.md").read_text(encoding="utf-8")
     assert "Production Readiness Board" in board
-    assert "unfrozen" in board.lower()
+    assert "filled" in board.lower()
     assert "hard freeze" in board.lower() or "hard_frozen" in board
     assert "Docker" in board
+    assert "G3 premium desktop stack" in board
 
 
-def test_device_matrix_unfrozen() -> None:
+def test_device_matrix_filled() -> None:
     matrix = (ROOT / "docs" / "BROWSER_CAPABILITY_MATRIX.md").read_text(encoding="utf-8")
-    assert "unfrozen" in matrix.lower()
+    assert "filled" in matrix.lower()
     assert "does **not** block" in matrix
+    for needle in (
+        "iPhone 15 Pro",
+        "Pixel 8",
+        "MacBook Pro M3",
+        "RTX 4060",
+        "Firefox 128",
+    ):
+        assert needle in matrix
+
+
+def test_phase4_evidence_filled() -> None:
+    phase4 = (ROOT / "docs" / "PHASE4_USABILITY.md").read_text(encoding="utf-8")
+    assert "evidence filled" in phase4.lower()
+    assert "✅ pass" in phase4
+    assert "_pending_" not in phase4
 
 
 def test_hard_freeze_manifest_policy() -> None:

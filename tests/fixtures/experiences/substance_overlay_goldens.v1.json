@@ -1,0 +1,136 @@
+{
+  "schema_version": "1.0.0",
+  "seed": 1337,
+  "intensity": 0.8,
+  "mode": "open",
+  "phase_t": 0.5,
+  "steps": 8,
+  "substances": {
+    "lsd": {
+      "snapshot_hash": "98a56240fbf60ca8",
+      "timeline_hash": "cd99a821ab5332ca",
+      "palette_tracers": "#3EE7F2",
+      "pattern_complexity": 0.4041,
+      "symmetry_order": 0.534,
+      "top_engines": [
+        {
+          "name": "recursive_feedback",
+          "weight": 0.3758
+        },
+        {
+          "name": "kaleidoscope",
+          "weight": 0.2823
+        },
+        {
+          "name": "organic_bloom",
+          "weight": 0.1541
+        }
+      ]
+    },
+    "psilocybin": {
+      "snapshot_hash": "a80aeec6a5a93ba6",
+      "timeline_hash": "fe737d2f1f67e6e5",
+      "palette_tracers": "#8F7BFF",
+      "pattern_complexity": 0.3021,
+      "symmetry_order": 0.407,
+      "top_engines": [
+        {
+          "name": "organic_bloom",
+          "weight": 0.4032
+        },
+        {
+          "name": "recursive_feedback",
+          "weight": 0.2499
+        },
+        {
+          "name": "flow_field",
+          "weight": 0.2213
+        }
+      ]
+    },
+    "dmt": {
+      "snapshot_hash": "214e992234ca8504",
+      "timeline_hash": "f3c3782ac12218d5",
+      "palette_tracers": "#FF42C1",
+      "pattern_complexity": 0.4173,
+      "symmetry_order": 0.467,
+      "top_engines": [
+        {
+          "name": "recursive_feedback",
+          "weight": 0.3857
+        },
+        {
+          "name": "entity_lattice",
+          "weight": 0.3317
+        },
+        {
+          "name": "kaleidoscope",
+          "weight": 0.1759
+        }
+      ]
+    },
+    "5-meo-dmt": {
+      "snapshot_hash": "2af8e9aade9029c9",
+      "timeline_hash": "3260f6e38d9118bd",
+      "palette_tracers": "#FFFFFF",
+      "pattern_complexity": 0.2787,
+      "symmetry_order": 0.377,
+      "top_engines": [
+        {
+          "name": "void_expansion",
+          "weight": 0.5462
+        },
+        {
+          "name": "organic_bloom",
+          "weight": 0.2591
+        },
+        {
+          "name": "flow_field",
+          "weight": 0.1121
+        }
+      ]
+    },
+    "mescaline": {
+      "snapshot_hash": "8d0652e6f65b8dab",
+      "timeline_hash": "4f9c83b412bcff09",
+      "palette_tracers": "#FFB547",
+      "pattern_complexity": 0.572,
+      "symmetry_order": 0.744,
+      "top_engines": [
+        {
+          "name": "kaleidoscope",
+          "weight": 0.3809
+        },
+        {
+          "name": "recursive_feedback",
+          "weight": 0.3726
+        },
+        {
+          "name": "organic_bloom",
+          "weight": 0.1309
+        }
+      ]
+    },
+    "ketamine": {
+      "snapshot_hash": "89515845892eaefe",
+      "timeline_hash": "8fb7195baa69109f",
+      "palette_tracers": "#7EC8E3",
+      "pattern_complexity": 0.3887,
+      "symmetry_order": 0.515,
+      "top_engines": [
+        {
+          "name": "flow_field",
+          "weight": 0.4343
+        },
+        {
+          "name": "void_expansion",
+          "weight": 0.315
+        },
+        {
+          "name": "recursive_feedback",
+          "weight": 0.2164
+        }
+      ]
+    }
+  }
+}

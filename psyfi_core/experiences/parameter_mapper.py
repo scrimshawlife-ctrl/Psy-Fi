@@ -353,6 +353,24 @@ def _resolve_overlay(substance: str, substance_overlay: dict[str, Any] | None) -
         return None
 
 
+def _apply_modulators(params: dict[str, float], modulators: dict[str, float] | None) -> dict[str, float]:
+    """Optional camera/motion/MIDI modulators — ParameterField only, never direct-to-shader."""
+    if not modulators:
+        return params
+    camera = _clamp(float(modulators.get("camera", 0.0)))
+    motion = _clamp(float(modulators.get("motion", 0.0)))
+    midi = _clamp(float(modulators.get("midi", 0.0)))
+    # Keep modulators subtle and safety-friendly.
+    params["palette_energy"] = _clamp(params.get("palette_energy", 0.5) + 0.15 * camera)
+    params["depth_distortion"] = _clamp(params.get("depth_distortion", 0.35) + 0.12 * camera)
+    params["peripheral_flow"] = _clamp(params.get("peripheral_flow", 0.25) + 0.18 * motion)
+    params["displacement"] = _clamp(params.get("displacement", 0.2) + 0.12 * motion)
+    params["feedback_strength"] = _clamp(params.get("feedback_strength", 0.4) + 0.2 * midi)
+    params["recursion_gain"] = _clamp(params.get("recursion_gain", 0.35) + 0.15 * midi)
+    params["flash_energy"] = _clamp(params.get("flash_energy", 0.05) + 0.04 * max(camera, midi))
+    return params
+
+
 def map_parameters(
     *,
     substance: str = "lsd",
@@ -362,6 +380,7 @@ def map_parameters(
     experience: dict[str, Any] | None = None,
     substance_visual: dict[str, Any] | None = None,
     substance_overlay: dict[str, Any] | None = None,
+    modulators: dict[str, float] | None = None,
     phase_t: float = 0.4,
     neutral_view: bool = False,
     reduce_motion: bool = False,
@@ -449,6 +468,7 @@ def map_parameters(
             params[k] = _clamp(base * (0.25 + 0.75 * scale))
 
     params["stability"] = _clamp(params.get("stability", 0.55) * (1.15 - 0.35 * scale) + 0.1)
+    params = _apply_modulators(params, modulators)
 
     safety = {
         "max_flash_hz": float((experience or {}).get("safety", {}).get("max_flash_hz", 2.0)),
@@ -549,6 +569,7 @@ def build_parameter_timeline(
     intensity: float = 0.7,
     seed: int = 42,
     experience: dict[str, Any] | None = None,
+    modulators: dict[str, float] | None = None,
     reduce_motion: bool = False,
     dim_flashing: bool = False,
     quality_tier: str = "balanced",
@@ -564,6 +585,7 @@ def build_parameter_timeline(
             intensity=intensity,
             seed=seed,
             experience=experience,
+            modulators=modulators,
             phase_t=t,
             reduce_motion=reduce_motion,
             dim_flashing=dim_flashing,

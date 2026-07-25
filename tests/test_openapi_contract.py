@@ -37,6 +37,7 @@ REQUIRED_PATHS = {
     "/api/v1/experiences/{experience_id}",
     "/api/v1/substances",
     "/api/v1/visualize/parameter-timeline",
+    "/api/v1/visualize/field-frame",
 }
 
 

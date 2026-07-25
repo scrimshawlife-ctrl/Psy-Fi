@@ -138,7 +138,8 @@
                 </div>
                 <div class="panel-body experience-body">
                     <div class="experience-viewport-wrap">
-                        <canvas id="experienceCanvas" aria-label="PsyFi visual field"></canvas>
+                        <canvas id="experienceCanvas" aria-label="PsyFi visual field (Canvas)"></canvas>
+                        <canvas id="experienceCanvasGL" aria-label="PsyFi visual field (WebGL)" hidden></canvas>
                         <div class="experience-chrome">
                             <button type="button" class="btn-danger" id="neutralBtn" title="Emergency neutral view">Neutral View</button>
                             <button type="button" class="btn-secondary" id="playExperienceBtn">Play Field</button>
@@ -169,16 +170,38 @@
                         </div>
                         <div class="input-group">
                             <label for="seedInput">Seed</label>
-                            <input type="number" id="seedInput" value="42" min="0">
+                            <div class="seed-row">
+                                <input type="number" id="seedInput" value="42" min="0">
+                                <button type="button" class="btn-secondary" id="regenSeedBtn" title="Regenerate seed">↻</button>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label for="phaseScrub">Phase timeline <span id="phaseLabel">peak</span></label>
+                            <input type="range" id="phaseScrub" min="0" max="19" step="1" value="8" disabled>
                         </div>
                         <div class="checkbox-row">
                             <label><input type="checkbox" id="reduceMotionChk"> Reduce motion</label>
                             <label><input type="checkbox" id="dimFlashChk"> Dim flashing</label>
+                            <label><input type="checkbox" id="preferWebGLChk"> Prefer WebGL field</label>
                         </div>
-                        <button type="button" class="btn-primary" id="loadExperienceBtn">
-                            <span class="btn-icon">◎</span>
-                            <span>Load Experience</span>
-                        </button>
+                        <details class="modulator-panel">
+                            <summary>Optional modulators (ParameterField only)</summary>
+                            <label>Camera energy <input type="range" id="modCamera" min="0" max="1" step="0.01" value="0"></label>
+                            <label>Motion tilt <input type="range" id="modMotion" min="0" max="1" step="0.01" value="0"></label>
+                            <label>MIDI intensity <input type="range" id="modMidi" min="0" max="1" step="0.01" value="0"></label>
+                            <p class="input-hint">Optional. Never bypasses ParameterField or safety pass. Camera capture remains opt-in.</p>
+                            <button type="button" class="btn-secondary" id="enableCameraBtn">Enable camera meter</button>
+                            <button type="button" class="btn-secondary" id="enableMotionBtn">Enable motion meter</button>
+                        </details>
+                        <div class="session-actions">
+                            <button type="button" class="btn-primary" id="loadExperienceBtn">
+                                <span class="btn-icon">◎</span>
+                                <span>Load Experience</span>
+                            </button>
+                            <button type="button" class="btn-secondary" id="bridgeSimBtn">Bridge from sim</button>
+                            <button type="button" class="btn-secondary" id="exportTimelineBtn">Export timeline</button>
+                            <button type="button" class="btn-secondary" id="exportViewportBtn">Export viewport</button>
+                        </div>
                         <div class="provenance-panel" id="experienceProvenancePanel">
                             <div class="muted">Load an experience to inspect provenance.</div>
                         </div>
@@ -301,6 +324,10 @@
     </div>
 
     <script src="/static/renderer.js"></script>
+    <script src="/static/viz/math.js"></script>
+    <script src="/static/viz/safetyPass.js"></script>
+    <script src="/static/viz/engines/index.js"></script>
+    <script src="/static/viz/parameterFieldWebGL.js"></script>
     <script src="/static/viz/experiencePlayer.js"></script>
     <script src="/static/app.js"></script>
     <script>

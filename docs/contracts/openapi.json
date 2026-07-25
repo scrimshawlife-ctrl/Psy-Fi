@@ -1,6 +1,80 @@
 {
   "components": {
     "schemas": {
+      "FieldFrameRequest": {
+        "description": "Bridge: run a bounded Python simulation and return visualizable channels.",
+        "properties": {
+          "height": {
+            "default": 32,
+            "maximum": 128.0,
+            "minimum": 8.0,
+            "title": "Height",
+            "type": "integer"
+          },
+          "intensity": {
+            "default": 0.7,
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Intensity",
+            "type": "number"
+          },
+          "mode": {
+            "default": "open",
+            "enum": [
+              "open",
+              "attractor",
+              "void",
+              "power"
+            ],
+            "title": "Mode",
+            "type": "string"
+          },
+          "preset": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Preset"
+          },
+          "seed": {
+            "default": 42,
+            "minimum": 0.0,
+            "title": "Seed",
+            "type": "integer"
+          },
+          "steps": {
+            "default": 4,
+            "maximum": 64.0,
+            "minimum": 1.0,
+            "title": "Steps",
+            "type": "integer"
+          },
+          "substance": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Substance"
+          },
+          "width": {
+            "default": 32,
+            "maximum": 128.0,
+            "minimum": 8.0,
+            "title": "Width",
+            "type": "integer"
+          }
+        },
+        "title": "FieldFrameRequest",
+        "type": "object"
+      },
       "HTTPValidationError": {
         "properties": {
           "detail": {
@@ -338,6 +412,34 @@
           "current_params"
         ],
         "title": "MIDIStatusResponse",
+        "type": "object"
+      },
+      "Modulators": {
+        "description": "Optional progressive enhancers routed only through ParameterField.",
+        "properties": {
+          "camera": {
+            "default": 0.0,
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Camera",
+            "type": "number"
+          },
+          "midi": {
+            "default": 0.0,
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Midi",
+            "type": "number"
+          },
+          "motion": {
+            "default": 0.0,
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Motion",
+            "type": "number"
+          }
+        },
+        "title": "Modulators",
         "type": "object"
       },
       "PresetDetail": {
@@ -1057,6 +1159,16 @@
             ],
             "title": "Mode",
             "type": "string"
+          },
+          "modulators": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Modulators"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "neutral_view": {
             "default": false,
@@ -2634,6 +2746,50 @@
         "summary": "Telemetry Status",
         "tags": [
           "telemetry"
+        ]
+      }
+    },
+    "/api/v1/visualize/field-frame": {
+      "post": {
+        "description": "Run a bounded simulation and pair it with a ParameterField snapshot.",
+        "operationId": "field_frame_api_v1_visualize_field_frame_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FieldFrameRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Field Frame Api V1 Visualize Field Frame Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Field Frame",
+        "tags": [
+          "experiences"
         ]
       }
     },

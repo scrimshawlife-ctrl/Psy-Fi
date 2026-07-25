@@ -660,7 +660,8 @@ document.addEventListener('DOMContentLoaded', () => {
 // ===== Live Experience workspace =====
 (function initExperienceWorkspace() {
     const canvas = document.getElementById('experienceCanvas');
-    if (!canvas || !window.PsyFiViz) {
+    const glCanvas = document.getElementById('experienceCanvasGL');
+    if (!canvas || !window.PsyFiViz || !window.PsyFiViz.ExperiencePlayer) {
         console.warn('[PsyFi] Experience player not available');
         return;
     }
@@ -671,24 +672,57 @@ document.addEventListener('DOMContentLoaded', () => {
     const intensityRange = document.getElementById('intensityRange');
     const intensityValue = document.getElementById('intensityValue');
     const seedInput = document.getElementById('seedInput');
+    const phaseScrub = document.getElementById('phaseScrub');
+    const phaseLabel = document.getElementById('phaseLabel');
     const reduceMotionChk = document.getElementById('reduceMotionChk');
     const dimFlashChk = document.getElementById('dimFlashChk');
+    const preferWebGLChk = document.getElementById('preferWebGLChk');
     const loadBtn = document.getElementById('loadExperienceBtn');
     const playBtn = document.getElementById('playExperienceBtn');
     const pauseBtn = document.getElementById('pauseExperienceBtn');
     const neutralBtn = document.getElementById('neutralBtn');
     const statusEl = document.getElementById('experienceStatus');
     const provenanceEl = document.getElementById('experienceProvenancePanel');
+    const modCamera = document.getElementById('modCamera');
+    const modMotion = document.getElementById('modMotion');
+    const modMidi = document.getElementById('modMidi');
 
     const player = new PsyFiViz.ExperiencePlayer({
         canvas,
+        glCanvas,
         statusEl,
         provenanceEl,
+        preferWebGL: !!(preferWebGLChk && preferWebGLChk.checked),
     });
     player.resize();
     window.addEventListener('resize', () => player.resize());
 
-    // Prefer system reduced motion
+    // Optional: poll server MIDI activity into the MIDI modulator slider
+    let midiPoll = null;
+    function startMidiPoll() {
+        if (midiPoll) return;
+        midiPoll = setInterval(async () => {
+            try {
+                const res = await fetch('/api/v1/midi/status');
+                if (!res.ok) return;
+                const st = await res.json();
+                if (!st.running || !modMidi) return;
+                // Map any active output level-ish signal; fall back to gentle pulse when running.
+                const level = typeof st.activity === 'number' ? st.activity : 0.35;
+                modMidi.value = Math.min(1, Math.max(Number(modMidi.value), level)).toFixed(2);
+                syncModulators();
+            } catch (_e) { /* ignore */ }
+        }, 1200);
+    }
+    document.getElementById('modMidi')?.addEventListener('pointerdown', startMidiPoll);
+    player.onPhaseIndex = (idx, total) => {
+        if (!phaseScrub) return;
+        phaseScrub.max = String(Math.max(0, total - 1));
+        phaseScrub.value = String(idx);
+        const frame = player.timeline && player.timeline.frames[idx];
+        if (phaseLabel && frame) phaseLabel.textContent = frame.phase || String(idx);
+    };
+
     if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         reduceMotionChk.checked = true;
     }
@@ -696,6 +730,15 @@ document.addEventListener('DOMContentLoaded', () => {
     intensityRange.addEventListener('input', () => {
         intensityValue.textContent = Number(intensityRange.value).toFixed(2);
     });
+
+    function syncModulators() {
+        player.setModulators({
+            camera: Number(modCamera?.value || 0),
+            motion: Number(modMotion?.value || 0),
+            midi: Number(modMidi?.value || 0),
+        });
+    }
+    [modCamera, modMotion, modMidi].forEach((el) => el?.addEventListener('change', syncModulators));
 
     let neutralOn = false;
     neutralBtn.addEventListener('click', () => {
@@ -712,6 +755,124 @@ document.addEventListener('DOMContentLoaded', () => {
     pauseBtn.addEventListener('click', () => {
         player.pause();
         statusEl.textContent = 'Field paused';
+    });
+
+    document.getElementById('regenSeedBtn')?.addEventListener('click', () => {
+        seedInput.value = String(Math.floor(Math.random() * 1e9));
+    });
+
+    preferWebGLChk?.addEventListener('change', () => {
+        player.setPreferWebGL(!!preferWebGLChk.checked);
+        statusEl.textContent = `Renderer preference: ${player.backend}`;
+    });
+
+    phaseScrub?.addEventListener('input', () => {
+        player.pause();
+        player.setPhaseIndex(Number(phaseScrub.value));
+        const frame = player.timeline && player.timeline.frames[player.idx];
+        if (phaseLabel && frame) phaseLabel.textContent = frame.phase || phaseScrub.value;
+    });
+
+    document.getElementById('exportTimelineBtn')?.addEventListener('click', () => {
+        try {
+            player.exportTimelineJson();
+        } catch (err) {
+            alert(err.message || String(err));
+        }
+    });
+    document.getElementById('exportViewportBtn')?.addEventListener('click', () => {
+        player.exportViewportPng();
+    });
+
+    document.getElementById('bridgeSimBtn')?.addEventListener('click', async () => {
+        statusEl.textContent = 'Bridging simulation field…';
+        try {
+            const data = await player.loadFieldBridge({
+                width: 32,
+                height: 32,
+                steps: 4,
+                seed: Number(seedInput.value) || 42,
+                substance: substanceSelect.value || 'lsd',
+                preset: substanceSelect.value || 'lsd',
+                mode: modeSelect.value || 'open',
+                intensity: Number(intensityRange.value),
+            });
+            if (data.parameter_field) {
+                player.timeline = {
+                    frames: [data.parameter_field],
+                    timeline_hash: data.parameter_field.hash,
+                    seed: data.seed,
+                    experience_id: null,
+                };
+                player.setFrame(data.parameter_field);
+                player.play();
+            }
+            provenanceEl.innerHTML = `
+              <div><strong>Bridge</strong> simulation → ParameterField</div>
+              <div><strong>Provenance</strong> ${data.simulation?.provenance_id || '—'}</div>
+              <div><strong>Field hash</strong> ${data.parameter_field?.hash || '—'}</div>
+              <div class="muted">${data.note || ''}</div>
+            `;
+            statusEl.textContent = 'Simulation bridge loaded';
+        } catch (err) {
+            console.error(err);
+            statusEl.textContent = 'Bridge failed';
+            alert(err.message || String(err));
+        }
+    });
+
+    // Optional camera luminance meter → modulator (never direct-to-shader)
+    let cameraStream = null;
+    document.getElementById('enableCameraBtn')?.addEventListener('click', async () => {
+        if (!navigator.mediaDevices?.getUserMedia) {
+            alert('Camera API unavailable in this browser.');
+            return;
+        }
+        try {
+            cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
+            const video = document.createElement('video');
+            video.srcObject = cameraStream;
+            video.playsInline = true;
+            await video.play();
+            const meter = document.createElement('canvas');
+            meter.width = 32;
+            meter.height = 32;
+            const mctx = meter.getContext('2d', { willReadFrequently: true });
+            const tick = () => {
+                if (!cameraStream) return;
+                mctx.drawImage(video, 0, 0, 32, 32);
+                const px = mctx.getImageData(0, 0, 32, 32).data;
+                let sum = 0;
+                for (let i = 0; i < px.length; i += 4) sum += (px[i] + px[i + 1] + px[i + 2]) / 3;
+                const energy = Math.min(1, sum / (255 * (px.length / 4)));
+                if (modCamera) modCamera.value = energy.toFixed(2);
+                syncModulators();
+                requestAnimationFrame(tick);
+            };
+            tick();
+            statusEl.textContent = 'Camera meter active (ParameterField only)';
+        } catch (err) {
+            alert('Camera permission denied or unavailable.');
+        }
+    });
+
+    document.getElementById('enableMotionBtn')?.addEventListener('click', () => {
+        const handler = (event) => {
+            const x = Math.abs(event.accelerationIncludingGravity?.x || event.acceleration?.x || 0);
+            const y = Math.abs(event.accelerationIncludingGravity?.y || event.acceleration?.y || 0);
+            const z = Math.abs(event.accelerationIncludingGravity?.z || event.acceleration?.z || 0);
+            const mag = Math.min(1, Math.sqrt(x * x + y * y + z * z) / 20);
+            if (modMotion) modMotion.value = mag.toFixed(2);
+            syncModulators();
+        };
+        if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
+            DeviceMotionEvent.requestPermission().then((state) => {
+                if (state === 'granted') window.addEventListener('devicemotion', handler);
+            }).catch(() => alert('Motion permission denied.'));
+        } else {
+            window.addEventListener('devicemotion', handler);
+            statusEl.textContent = 'Motion meter listening (ParameterField only)';
+        }
     });
 
     async function loadSubstances() {
@@ -753,7 +914,6 @@ document.addEventListener('DOMContentLoaded', () => {
             opt.textContent = item.title || item.id;
             experienceSelect.appendChild(opt);
         });
-        // sync mode default from first
         if (items[0] && items[0].mode_default) {
             modeSelect.value = items[0].mode_default;
         }
@@ -779,8 +939,9 @@ document.addEventListener('DOMContentLoaded', () => {
         statusEl.textContent = 'Loading timeline…';
         neutralOn = false;
         neutralBtn.textContent = 'Neutral View';
+        syncModulators();
         try {
-            await player.loadTimeline({
+            const data = await player.loadTimeline({
                 substance: substanceSelect.value || 'lsd',
                 experience_id: experienceSelect.value || null,
                 mode: modeSelect.value || 'open',
@@ -790,7 +951,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 reduce_motion: !!reduceMotionChk.checked,
                 dim_flashing: !!dimFlashChk.checked,
                 quality_tier: 'balanced',
+                modulators: {
+                    camera: Number(modCamera?.value || 0),
+                    motion: Number(modMotion?.value || 0),
+                    midi: Number(modMidi?.value || 0),
+                },
             });
+            if (phaseScrub && data.frames) {
+                phaseScrub.disabled = false;
+                phaseScrub.max = String(Math.max(0, data.frames.length - 1));
+                phaseScrub.value = '0';
+                if (phaseLabel) phaseLabel.textContent = data.frames[0].phase || 'comeup';
+            }
             player.resize();
             player.play();
             statusEl.textContent = 'Experience loaded';
@@ -803,7 +975,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Keyboard: N for neutral
     document.addEventListener('keydown', (e) => {
         if (e.key === 'n' || e.key === 'N') {
             if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA')) return;
@@ -813,9 +984,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     loadSubstances()
         .then(loadExperiences)
-        .then(() => {
-            // Auto-load a default experience so the field isn't empty
-            return loadBtn.click();
-        })
+        .then(() => loadBtn.click())
         .catch((e) => console.error('[PsyFi] experience init failed', e));
 })();

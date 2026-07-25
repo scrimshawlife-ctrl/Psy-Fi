@@ -22,15 +22,21 @@ def test_template_wires_cancel_recovery_and_renderer() -> None:
     assert 'id="installButton"' in html
     assert 'id="importSessionInput"' in html
     assert 'id="loadingStatus"' in html
+    assert 'id="experienceCanvasGL"' in html
+    assert 'id="phaseScrub"' in html
     assert 'src="/static/renderer.js"' in html
+    assert 'src="/static/viz/parameterFieldWebGL.js"' in html
     assert 'src="/static/app.js"' in html
 
 
 def test_service_worker_precaches_renderer_assets() -> None:
     sw = (STATIC / "sw.js").read_text(encoding="utf-8")
-    assert "psyfi-shell-v6" in sw
+    assert "psyfi-shell-v7" in sw
     assert "/static/renderer.js" in sw
     assert "/static/render_worker.js" in sw
+    assert "/static/viz/math.js" in sw
+    assert "/static/viz/engines/index.js" in sw
+    assert "/static/viz/parameterFieldWebGL.js" in sw
     assert "/static/viz/experiencePlayer.js" in sw
     assert "/static/icon-192.png" in sw
     assert "/simulate" in sw  # still treated as network-only path matcher

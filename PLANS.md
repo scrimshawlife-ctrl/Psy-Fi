@@ -119,12 +119,13 @@ Priority 2:
 
 ### Continuation (web-only)
 
-See [`docs/CONTINUATION_PLAN.md`](docs/CONTINUATION_PLAN.md) for the next P0–P2 queue after substance-overlay distillation:
+See [`docs/CONTINUATION_PLAN.md`](docs/CONTINUATION_PLAN.md). P0–P2 scaffolding landed:
 
-- physical-device matrix + visual differentiation QA
-- split Live Experience engines + WebGL ParameterField port
-- enrich thin substance source packs; simulation↔experience bridge
-- optional camera/motion adapters; Phase 4 usability freeze
+- [x] Device matrix template + overlay goldens + `/api/v1` freeze prep
+- [x] Split engines + WebGL ParameterField path + phase scrubber
+- [x] Enriched 5-MeO / mescaline / ketamine seed recipes; sim↔experience bridge
+- [x] Optional camera/motion/MIDI modulators + export + Phase 4 checklist draft
+- [ ] Human physical-device evidence rows + formal contract freeze
 
 ## Definition of Done
 

@@ -6,6 +6,15 @@
   'use strict';
 
   const SESSION_KEY = 'psyfi.launch.v1.completed';
+  const RESOLUTION_KEY = 'psyfi.resolution.v1';
+
+  const FIELD_RESOLUTIONS = [
+    { value: '32x32', width: 32, height: 32, label: '32 × 32 — Quick', steps: 10 },
+    { value: '64x64', width: 64, height: 64, label: '64 × 64 — Standard', steps: 20 },
+    { value: '128x128', width: 128, height: 128, label: '128 × 128 — Detailed', steps: 50 },
+    { value: '256x256', width: 256, height: 256, label: '256 × 256 — Deep', steps: 100 },
+    { value: '512x512', width: 512, height: 512, label: '512 × 512 — Max', steps: 100 },
+  ];
 
   function delay(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -22,14 +31,48 @@
     }
   }
 
+  function suggestResolution(monitor) {
+    const px = Math.max(Number(monitor && monitor.width) || 0, Number(monitor && monitor.height) || 0);
+    if (px >= 2560) return '256x256';
+    if (px >= 1600) return '128x128';
+    if (px >= 1024) return '64x64';
+    return '32x32';
+  }
+
+  function applyFieldResolution(value, { syncSteps } = { syncSteps: true }) {
+    const preset = FIELD_RESOLUTIONS.find((r) => r.value === value);
+    if (!preset) return null;
+    const widthEl = document.getElementById('width');
+    const heightEl = document.getElementById('height');
+    const stepsEl = document.getElementById('steps');
+    const resSelect = document.getElementById('resolutionSelect');
+    const launchSelect = document.getElementById('launchResolutionSelect');
+    if (widthEl) widthEl.value = String(preset.width);
+    if (heightEl) heightEl.value = String(preset.height);
+    if (syncSteps && stepsEl) stepsEl.value = String(preset.steps);
+    if (resSelect) resSelect.value = preset.value;
+    if (launchSelect && launchSelect.value !== preset.value) launchSelect.value = preset.value;
+    document.querySelectorAll('.preset-btn').forEach((btn) => {
+      const map = { '32x32': 'quick', '64x64': 'standard', '128x128': 'detailed', '256x256': 'deep' };
+      btn.classList.toggle('active', btn.dataset.preset === map[preset.value]);
+    });
+    try {
+      sessionStorage.setItem(RESOLUTION_KEY, preset.value);
+    } catch (_e) {
+      /* ignore */
+    }
+    window.dispatchEvent(
+      new CustomEvent('psyfi:resolution-change', {
+        detail: { value: preset.value, width: preset.width, height: preset.height, steps: preset.steps },
+      }),
+    );
+    return preset;
+  }
+
   function buildChecks() {
     const sensors =
       global.PsyFiViz && typeof global.PsyFiViz.probeSensorCapabilities === 'function'
         ? global.PsyFiViz.probeSensorCapabilities()
-        : {};
-    const renderer =
-      global.PsyFiRenderer && typeof global.PsyFiRenderer.getRendererState === 'function'
-        ? global.PsyFiRenderer.getRendererState()
         : {};
     const canvas = document.createElement('canvas');
     return [
@@ -37,6 +80,31 @@
         id: 'api',
         label: 'API / health',
         run: async () => probeHealth(),
+      },
+      {
+        id: 'monitor',
+        label: 'Monitor / display',
+        run: async () => {
+          if (global.PsyFiViz && typeof global.PsyFiViz.probeMonitor === 'function') {
+            return global.PsyFiViz.probeMonitor();
+          }
+          const w = (global.screen && global.screen.width) || 0;
+          const h = (global.screen && global.screen.height) || 0;
+          return { ok: w > 0 && h > 0, detail: w && h ? `${w}×${h}` : 'unavailable' };
+        },
+      },
+      {
+        id: 'gpu',
+        label: 'GPU adapter',
+        run: async () => {
+          if (global.PsyFiViz && typeof global.PsyFiViz.probeGpu === 'function') {
+            return global.PsyFiViz.probeGpu();
+          }
+          return {
+            ok: !!(navigator.gpu && typeof navigator.gpu.requestAdapter === 'function'),
+            detail: 'feature probe only',
+          };
+        },
       },
       {
         id: 'canvas2d',
@@ -54,10 +122,16 @@
       {
         id: 'webgpu',
         label: 'WebGPU / GPU Lab',
-        run: async () => ({
-          ok: !!(renderer.webgpuSupported || (navigator.gpu && typeof navigator.gpu.requestAdapter === 'function')),
-          detail: renderer.webgpuSupported ? '/gpu/ ready' : 'optional separate route',
-        }),
+        run: async () => {
+          const gpu =
+            global.PsyFiViz && typeof global.PsyFiViz.probeGpu === 'function'
+              ? await global.PsyFiViz.probeGpu()
+              : { webgpu: !!(navigator.gpu && navigator.gpu.requestAdapter) };
+          return {
+            ok: !!gpu.webgpu,
+            detail: gpu.webgpu ? '/gpu/ adapter ready' : 'optional separate route',
+          };
+        },
       },
       {
         id: 'worker',
@@ -140,8 +214,11 @@
       this.status = document.getElementById('launchScanStatus');
       this.enterBtn = document.getElementById('launchEnterBtn');
       this.skipBtn = document.getElementById('launchSkipBtn');
+      this.resolutionSelect = document.getElementById('launchResolutionSelect');
+      this.resolutionHint = document.getElementById('launchResolutionHint');
       this.results = [];
       this.done = false;
+      this._resolutionTouched = false;
     }
 
     setStatus(text) {
@@ -177,14 +254,36 @@
           ]);
           const ok = !!(result && result.ok);
           this.renderItem(check, ok ? 'ok' : 'miss', (result && result.detail) || '');
-          this.results.push({ id: check.id, label: check.label, ok, detail: (result && result.detail) || '' });
+          this.results.push({
+            id: check.id,
+            label: check.label,
+            ok,
+            detail: (result && result.detail) || '',
+            raw: result || null,
+          });
         } catch (err) {
           this.renderItem(check, 'err', err.message || 'failed');
-          this.results.push({ id: check.id, label: check.label, ok: false, detail: err.message || 'failed' });
+          this.results.push({ id: check.id, label: check.label, ok: false, detail: err.message || 'failed', raw: null });
         }
       }
       const ready = this.results.filter((r) => r.ok).length;
       this.setStatus(`Scan complete · ${ready}/${this.results.length} components ready`);
+      const monitor = this.results.find((r) => r.id === 'monitor');
+      if (monitor && monitor.ok && this.resolutionHint) {
+        this.resolutionHint.textContent = `Display ${monitor.detail}. Sets the simulation grid used after Enter.`;
+      }
+      if (!this._resolutionTouched && monitor && monitor.ok) {
+        const suggested = suggestResolution(monitor.raw || {});
+        // Prefer stored choice, else monitor-sized suggestion.
+        let stored = '';
+        try {
+          stored = sessionStorage.getItem(RESOLUTION_KEY) || '';
+        } catch (_e) {
+          stored = '';
+        }
+        const next = FIELD_RESOLUTIONS.some((r) => r.value === stored) ? stored : suggested;
+        if (this.resolutionSelect) this.resolutionSelect.value = next;
+      }
       if (this.enterBtn) this.enterBtn.disabled = false;
       this.done = true;
       try {
@@ -199,6 +298,16 @@
     }
 
     enter() {
+      const value =
+        (this.resolutionSelect && this.resolutionSelect.value) ||
+        (() => {
+          try {
+            return sessionStorage.getItem(RESOLUTION_KEY) || '64x64';
+          } catch (_e) {
+            return '64x64';
+          }
+        })();
+      applyFieldResolution(value, { syncSteps: true });
       document.body.classList.remove('launch-pending');
       document.body.classList.add('launch-ready');
       if (this.root) {
@@ -221,6 +330,10 @@
         if (this.enterBtn) this.enterBtn.disabled = false;
         this.enter();
       });
+      this.resolutionSelect?.addEventListener('change', () => {
+        this._resolutionTouched = true;
+        applyFieldResolution(this.resolutionSelect.value, { syncSteps: true });
+      });
     }
 
     async start() {
@@ -238,6 +351,8 @@
     const splash = new LaunchSplash();
     global.PsyFiViz = global.PsyFiViz || {};
     global.PsyFiViz.LaunchSplash = LaunchSplash;
+    global.PsyFiViz.FIELD_RESOLUTIONS = FIELD_RESOLUTIONS;
+    global.PsyFiViz.applyFieldResolution = applyFieldResolution;
     global.PsyFiBoot = global.PsyFiBoot || {};
     splash.start();
   }

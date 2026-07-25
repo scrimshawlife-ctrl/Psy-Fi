@@ -71,10 +71,12 @@
       this.sourcePlane = plane || null;
     }
 
-    resize(w, h) {
+    resize(w, h, opts) {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      this.canvas.width = Math.floor(w * dpr);
-      this.canvas.height = Math.floor(h * dpr);
+      const bufferW = opts && opts.bufferW ? Math.floor(opts.bufferW) : Math.floor(w * dpr);
+      const bufferH = opts && opts.bufferH ? Math.floor(opts.bufferH) : Math.floor(h * dpr);
+      this.canvas.width = Math.max(16, bufferW);
+      this.canvas.height = Math.max(16, bufferH);
       this.canvas.style.width = w + 'px';
       this.canvas.style.height = h + 'px';
       this.w = this.canvas.width;
@@ -270,7 +272,17 @@
       this._lastLiveModMs = 0;
       this.fieldBridge = null;
       this.sourcePlane = null;
+      this.viewportResolution = 'auto';
       this.setPreferWebGL(this.preferWebGL);
+    }
+
+    /**
+     * Viewport buffer mode: auto | native | WxH (e.g. 1280x720).
+     * CSS size still fits the panel; buffer pixels follow the selection.
+     */
+    setViewportResolution(value) {
+      this.viewportResolution = value || 'auto';
+      this.resize();
     }
 
     /**
@@ -328,8 +340,25 @@
       const parent = (this.canvas && this.canvas.parentElement) || (this.glCanvas && this.glCanvas.parentElement);
       const w = Math.max(280, parent ? parent.clientWidth : 480);
       const h = Math.max(220, Math.floor(w * 0.62));
-      this.renderer.resize(w, h);
-      if (this.webgl) this.webgl.resize(w, h);
+      let opts;
+      const mode = this.viewportResolution || 'auto';
+      if (mode === 'native') {
+        const mon =
+          global.PsyFiViz && typeof global.PsyFiViz.probeMonitor === 'function'
+            ? global.PsyFiViz.probeMonitor()
+            : { width: global.screen && global.screen.width, height: global.screen && global.screen.height };
+        const bw = Math.max(320, Math.min(3840, Number(mon.width) || w));
+        const bh = Math.max(200, Math.round(bw * (h / w)));
+        opts = { bufferW: bw, bufferH: bh };
+      } else if (/^\d+x\d+$/.test(mode)) {
+        const parts = mode.split('x');
+        opts = {
+          bufferW: Math.max(16, parseInt(parts[0], 10) || w),
+          bufferH: Math.max(16, parseInt(parts[1], 10) || h),
+        };
+      }
+      this.renderer.resize(w, h, opts);
+      if (this.webgl) this.webgl.resize(w, h, opts);
     }
 
     async loadTimeline(payload) {

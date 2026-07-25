@@ -40,7 +40,18 @@
                 <h1 id="launchTitle" class="launch-brand">PsyFi</h1>
             </div>
             <p class="launch-caption">Field plate · consciousness simulation</p>
-            <p class="launch-sub">Checking components that can feed the field. No permissions yet.</p>
+            <p class="launch-sub">Checking monitor, GPU, and components that can feed the field. No permissions yet.</p>
+            <div class="launch-resolution input-group">
+                <label for="launchResolutionSelect">Field resolution</label>
+                <select id="launchResolutionSelect">
+                    <option value="32x32">32 × 32 — Quick</option>
+                    <option value="64x64" selected>64 × 64 — Standard</option>
+                    <option value="128x128">128 × 128 — Detailed</option>
+                    <option value="256x256">256 × 256 — Deep</option>
+                    <option value="512x512">512 × 512 — Max</option>
+                </select>
+                <p class="input-hint" id="launchResolutionHint">Sets the simulation grid used after Enter.</p>
+            </div>
             <div class="launch-actions">
                 <button type="button" class="btn-primary" id="launchEnterBtn" disabled>Enter workspace</button>
                 <button type="button" class="btn-secondary" id="launchSkipBtn">Skip scan</button>
@@ -127,6 +138,17 @@
                                 <option value="attractor">Attractor</option>
                                 <option value="void">Void</option>
                                 <option value="power">Power</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label for="viewportResolutionSelect">Viewport resolution</label>
+                            <select id="viewportResolutionSelect">
+                                <option value="auto" selected>Auto (fit panel · DPR capped)</option>
+                                <option value="640x400">640 × 400</option>
+                                <option value="960x540">960 × 540</option>
+                                <option value="1280x720">1280 × 720</option>
+                                <option value="1920x1080">1920 × 1080</option>
+                                <option value="native">Native monitor pixels</option>
                             </select>
                         </div>
                         <div class="input-group">
@@ -232,6 +254,18 @@
                         <div class="divider"></div>
 
                         <div class="input-grid">
+                            <div class="input-group">
+                                <label for="resolutionSelect">Field resolution</label>
+                                <select id="resolutionSelect">
+                                    <option value="32x32">32 × 32 — Quick</option>
+                                    <option value="64x64" selected>64 × 64 — Standard</option>
+                                    <option value="128x128">128 × 128 — Detailed</option>
+                                    <option value="256x256">256 × 256 — Deep</option>
+                                    <option value="512x512">512 × 512 — Max</option>
+                                    <option value="custom">Custom (width × height below)</option>
+                                </select>
+                                <p class="input-hint">Chooses the simulation grid. Custom unlocks the width/height fields.</p>
+                            </div>
                             <div class="input-group">
                                 <label for="width">Field Width</label>
                                 <input type="number" id="width" name="width" value="64" min="8" max="512" required>

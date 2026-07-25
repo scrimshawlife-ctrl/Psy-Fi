@@ -1139,6 +1139,33 @@ body.launch-ready #appShell {
     text-align: right;
 }
 
+.launch-resolution {
+    margin: 0 0 1rem;
+}
+
+.launch-resolution label {
+    color: var(--pf-text-muted);
+}
+
+.launch-resolution select {
+    width: 100%;
+    background: var(--pf-bg-0);
+    border: 1px solid var(--pf-border-subtle);
+    color: var(--pf-text-main);
+    padding: 0.65rem 0.75rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.95rem;
+    font-family: var(--pf-font-mono);
+    min-height: 44px;
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+}
+
+.launch-resolution select:focus-visible {
+    border-color: var(--color-focus);
+    outline-color: var(--color-focus);
+}
+
 .launch-actions {
     display: flex;
     flex-wrap: wrap;

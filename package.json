@@ -1,0 +1,30 @@
+{
+  "name": "psyfi",
+  "private": true,
+  "description": "PsyFi web shell markdown tooling (Python package lives in pyproject.toml)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/scrimshawlife-ctrl/Psy-Fi.git"
+  },
+  "scripts": {
+    "test": "hallmark lint README.md",
+    "markdown:lint": "hallmark lint README.md",
+    "markdown:fix": "hallmark fix README.md"
+  },
+  "devDependencies": {
+    "hallmark": "^5.0.2"
+  },
+  "hallmark": {
+    "ignore": [
+      "docs/**",
+      "PLANS.md",
+      "MOBILE_PWA_GUIDE.md",
+      "DEPLOYMENT.md",
+      "QUICK_DEPLOY.md",
+      "RENDER_DEPLOY.md",
+      "CHANGELOG.md"
+    ],
+    "validateLinks": true,
+    "paddedTable": true
+  }
+}

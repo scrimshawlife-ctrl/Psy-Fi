@@ -17,6 +17,7 @@ import numpy as np
 IMAGE_SEED_SCHEMA = "psyfi.image_seed.v1"
 _MAX_EDGE = 384
 _PREVIEW_EDGE = 128
+_TEXTURE_EDGE = 256
 _SOURCE_EDGE = 64
 
 # Hint deltas stay subtle — SafetyPass / intensity caps still apply in map_parameters.
@@ -269,6 +270,36 @@ def encode_preview_png_base64(rgba: np.ndarray, edge: int = _PREVIEW_EDGE) -> st
     return base64.b64encode(buf.getvalue()).decode("ascii")
 
 
+def texture_asset_ref(png_b64: str | None, *, asset_id: str = "image_seed") -> dict[str, str] | None:
+    """Ephemeral data-URL asset ref for GPU SceneAssetLayer (PNG, not KTX2)."""
+    if not png_b64:
+        return None
+    return {
+        "id": asset_id,
+        "url": f"data:image/png;base64,{png_b64}",
+        "role": "image_seed",
+    }
+
+
+def attach_image_seed_texture(
+    assets: dict[str, list[dict[str, str]]] | None,
+    png_b64: str | None,
+) -> dict[str, list[dict[str, str]]]:
+    """Merge conditioned PNG into snapshot assets.images (additive; procedural stays authority)."""
+    base = {
+        "gltf": list((assets or {}).get("gltf") or []),
+        "ktx2": list((assets or {}).get("ktx2") or []),
+        "splats": list((assets or {}).get("splats") or []),
+        "images": list((assets or {}).get("images") or []),
+    }
+    ref = texture_asset_ref(png_b64)
+    if not ref:
+        return base
+    if not any(r.get("id") == ref["id"] for r in base["images"]):
+        base["images"].append(ref)
+    return base
+
+
 def recommend_mode_intensity(features: dict[str, Any], mode: str, intensity: float) -> dict[str, Any]:
     """Soft recommendation — client may keep user overrides."""
     edges = float(features.get("edge_density") or 0.0)
@@ -297,6 +328,7 @@ def build_image_seed(
     influence: float = 0.65,
     include_preview: bool = True,
     include_source_field: bool = True,
+    include_texture: bool = True,
 ) -> dict[str, Any]:
     """Run Pass 1 and return psyfi.image_seed.v1 payload."""
     if isinstance(image, (bytes, bytearray)):
@@ -322,6 +354,7 @@ def build_image_seed(
     master_seed = derive_master_seed(conditioned)
     hints = parameter_hints_from_features(features, drive, influence)
     recommended = recommend_mode_intensity(features, mode, intensity)
+    tex_b64 = encode_preview_png_base64(conditioned, edge=_TEXTURE_EDGE) if include_texture else None
 
     return {
         "schema": IMAGE_SEED_SCHEMA,
@@ -336,10 +369,13 @@ def build_image_seed(
         "conditioned_preview_png_base64": (
             encode_preview_png_base64(conditioned) if include_preview else None
         ),
+        "conditioned_texture_png_base64": tex_b64,
+        "texture_asset": texture_asset_ref(tex_b64),
         "recommended": recommended,
         "note": (
             "Pass-1 experience-conditioned image seed. "
             "Use master_seed + modulators.image for Pass-2 live ParameterField present. "
+            "Optional conditioned_texture attaches as ephemeral assets.images data-URL. "
             "Modeled phenomenology for research/visualization only — not medical advice. "
             "Image bytes are not stored."
         ),

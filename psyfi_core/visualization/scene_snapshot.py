@@ -223,11 +223,12 @@ def fixture_scene_assets() -> dict[str, list[dict[str, str]]]:
         "gltf": [],
         "ktx2": [dict(_FIXTURE_KTX2_GROUND)],
         "splats": [],
+        "images": [],
     }
 
 
 def empty_scene_assets() -> dict[str, list[dict[str, str]]]:
-    return {"gltf": [], "ktx2": [], "splats": []}
+    return {"gltf": [], "ktx2": [], "splats": [], "images": []}
 
 
 def build_scene_snapshot(
@@ -240,9 +241,11 @@ def build_scene_snapshot(
     snapshot_id: str | None = None,
     include_fixture_assets: bool = False,
     asset_pack_id: str | None = None,
+    image_seed_png_base64: str | None = None,
 ) -> dict[str, Any]:
     """Build an immutable scene snapshot for the GPU renderer."""
     from psyfi_core.visualization.asset_packs import attach_pack_assets
+    from psyfi_core.visualization.image_seed import attach_image_seed_texture
 
     tier = normalize_snapshot_quality_tier(quality_tier)
 
@@ -288,6 +291,7 @@ def build_scene_snapshot(
         else empty_scene_assets(),
         pack_id,
     )
+    assets = attach_image_seed_texture(assets, image_seed_png_base64)
 
     return {
         "schema_version": SCENE_SNAPSHOT_SCHEMA,

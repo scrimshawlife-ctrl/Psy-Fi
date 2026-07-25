@@ -66,6 +66,8 @@ export interface SceneSnapshotV1 {
     gltf: unknown[]
     ktx2: unknown[]
     splats: unknown[]
+    /** Ephemeral PNG/data-URL refs (e.g. conditioned image seed). */
+    images?: unknown[]
   }
   /** Optional product art pack id (`psyfi.asset_pack.v1`); null/omit = procedural only. */
   asset_pack_id?: string | null

@@ -32,9 +32,20 @@ describe('scene asset normalize + upload intents', () => {
   })
 
   it('empty snapshot assets yield no refs (procedural-only path)', () => {
-    const n = normalizeSceneAssets({ gltf: [], ktx2: [], splats: [] })
+    const n = normalizeSceneAssets({ gltf: [], ktx2: [], splats: [], images: [] })
     expect(n.all).toHaveLength(0)
     const plan = planKtx2Upload('x', makeUncompressedRgba8Ktx2(4, 4, 1))
     expect(rgbaPreviewFromPlan(plan)?.height).toBe(4)
+  })
+
+  it('normalizes image-seed PNG refs ahead of ktx2 in all[]', () => {
+    const n = normalizeSceneAssets({
+      gltf: [],
+      ktx2: [{ id: 'fixture', url: '/t.ktx2' }],
+      splats: [],
+      images: [{ id: 'image_seed', url: 'data:image/png;base64,aa', role: 'image_seed' }],
+    })
+    expect(n.images[0].id).toBe('image_seed')
+    expect(n.all[0].id).toBe('image_seed')
   })
 })

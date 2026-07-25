@@ -47,7 +47,7 @@ def test_g4_canonical_scene_snapshot_goldens() -> None:
             sequence=1,
             snapshot_id="golden",
         )
-        assert snap["assets"] == {"gltf": [], "ktx2": [], "splats": []}
+        assert snap["assets"] == {"gltf": [], "ktx2": [], "splats": [], "images": []}
         assert snap["parameter_field"]["hash"] == expected["parameter_field_hash"], key
         counts = {k: len(v) for k, v in snap["procedural"].items()}
         assert counts == expected["counts"], key

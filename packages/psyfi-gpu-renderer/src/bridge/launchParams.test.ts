@@ -53,4 +53,9 @@ describe('GPU Lab launch params', () => {
     expect(p.offscreen).toBe(true)
     expect(p.offscreenWorker).toBe(true)
   })
+
+  it('parses image_seed handoff flag', () => {
+    expect(readGpuLaunchParams('?image_seed=1').imageSeed).toBe(true)
+    expect(readGpuLaunchParams('').imageSeed).toBe(false)
+  })
 })

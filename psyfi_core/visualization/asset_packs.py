@@ -95,6 +95,7 @@ def attach_pack_assets(
         "gltf": list((assets or {}).get("gltf") or []),
         "ktx2": list((assets or {}).get("ktx2") or []),
         "splats": list((assets or {}).get("splats") or []),
+        "images": list((assets or {}).get("images") or []),
     }
     pack = resolve_pack(pack_id)
     if not pack:

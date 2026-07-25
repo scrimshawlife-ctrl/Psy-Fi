@@ -19,6 +19,8 @@ export interface GpuLaunchParams {
   offscreen: boolean
   /** Prefer dedicated present-worker remoting (`?offscreen=worker`). */
   offscreenWorker: boolean
+  /** Consume sessionStorage image-seed handoff from Live Experience. */
+  imageSeed: boolean
 }
 
 function truthyParam(q: URLSearchParams, key: string): boolean {
@@ -52,6 +54,7 @@ export function readGpuLaunchParams(
     fixtureAssets: truthyParam(q, 'fixtures') || truthyParam(q, 'fixture_assets'),
     offscreen: truthyParam(q, 'offscreen') || (q.get('offscreen') || '').toLowerCase() === 'worker',
     offscreenWorker: (q.get('offscreen') || '').toLowerCase() === 'worker',
+    imageSeed: truthyParam(q, 'image_seed'),
   }
 }
 
@@ -65,6 +68,7 @@ export function buildGpuLabUrl(opts: {
   experienceId?: string | null
   fixtureAssets?: boolean
   offscreen?: boolean
+  imageSeed?: boolean
   origin?: string
 }): string {
   const q = new URLSearchParams()
@@ -79,6 +83,7 @@ export function buildGpuLabUrl(opts: {
   if (opts.experienceId) q.set('experience_id', opts.experienceId)
   if (opts.fixtureAssets) q.set('fixtures', '1')
   if (opts.offscreen) q.set('offscreen', '1')
+  if (opts.imageSeed) q.set('image_seed', '1')
   const base = opts.origin != null ? `${opts.origin.replace(/\/$/, '')}/gpu/` : '/gpu/'
   return `${base}?${q.toString()}`
 }

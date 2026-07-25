@@ -15,6 +15,7 @@ from psyfi_core.experiences.parameter_mapper import (
     build_parameter_timeline,
     map_parameters,
 )
+from psyfi_core.visualization.export_journey import build_export_journey
 from psyfi_core.visualization.image_seed import build_image_seed
 from psyfi_core.visualization.scene_snapshot import build_scene_snapshot
 
@@ -100,10 +101,24 @@ class SceneSnapshotRequest(BaseModel):
     include_fixture_assets: bool = False
     asset_pack_id: str | None = None
     image_hints: dict[str, float] | None = None
+    image_seed_png_base64: str | None = Field(
+        default=None,
+        description="Ephemeral conditioned PNG (base64) attached as assets.images data-URL.",
+    )
     width: int = Field(default=32, ge=8, le=128)
     height: int = Field(default=32, ge=8, le=128)
     sim_steps: int = Field(default=4, ge=1, le=64)
     modulators: Modulators | None = None
+
+
+class ExportJourneyRequest(BaseModel):
+    """Package stills + formula prompt for optional external text-to-video."""
+
+    timeline: dict[str, Any]
+    stills: list[dict[str, Any]] | None = None
+    image_seed: dict[str, Any] | None = None
+    experience_id: str | None = None
+    t2v_provider: str = "external"
 
 
 def _capped_intensity(
@@ -539,12 +554,33 @@ async def scene_snapshot(body: SceneSnapshotRequest) -> dict[str, Any]:
         sequence=body.sequence,
         include_fixture_assets=body.include_fixture_assets,
         asset_pack_id=body.asset_pack_id,
+        image_seed_png_base64=body.image_seed_png_base64,
     )
     snap["kind"] = "scene_snapshot"
     snap["substance"] = substance
     snap["experience_id"] = body.experience_id
     snap["timeline_hash"] = timeline.get("timeline_hash")
     return snap
+
+
+@router.post("/visualize/export-journey")
+async def export_journey(body: ExportJourneyRequest) -> dict[str, Any]:
+    """Build an export-journey package (stills + T2V prompt sidecar). No provider call."""
+    catalog = get_default_catalog()
+    experience = catalog.get(body.experience_id) if body.experience_id else None
+    if body.experience_id and experience is None:
+        # Fall back to timeline experience_id when present.
+        tid = (body.timeline or {}).get("experience_id")
+        experience = catalog.get(tid) if tid else None
+    package = build_export_journey(
+        timeline=body.timeline,
+        stills=body.stills,
+        image_seed=body.image_seed,
+        experience=experience,
+        t2v_provider=body.t2v_provider or "external",
+    )
+    package["kind"] = "export_journey"
+    return package
 
 
 @router.post("/experiences/reload-catalog")

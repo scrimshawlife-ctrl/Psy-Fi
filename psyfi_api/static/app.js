@@ -1034,6 +1034,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const openGpuLabBtn = document.getElementById('openGpuLabBtn');
     const gpuLabNavLink = document.getElementById('gpuLabNavLink');
     const statusEl = document.getElementById('experienceStatus');
+    /** Pass-1 image seed payload (also mirrored to sessionStorage for /gpu/). */
+    let imageSeedState = null;
 
     /** Map shell LOD → GPU Lab tier query param. */
     function mapShellQualityToGpuTier(raw) {
@@ -1042,6 +1044,32 @@ document.addEventListener('DOMContentLoaded', () => {
         if (t === 'efficient') return 'balanced';
         if (t === 'ultra' || t === 'high' || t === 'balanced') return t;
         return 'balanced';
+    }
+
+    function persistImageSeedHandoff(body) {
+        if (!body || typeof sessionStorage === 'undefined') return;
+        try {
+            sessionStorage.setItem(
+                'psyfi.imageSeed.v1',
+                JSON.stringify({
+                    schema: 'psyfi.imageSeed.v1',
+                    master_seed: body.master_seed,
+                    influence: body.influence,
+                    parameter_hints: body.parameter_hints || {},
+                    conditioned_texture_png_base64: body.conditioned_texture_png_base64 || null,
+                    substance: body.substance || substanceSelect?.value || 'lsd',
+                    experience_id: body.experience_id || experienceSelect?.value || null,
+                    mode: body.applied_mode || body.mode || modeSelect?.value || 'open',
+                    features: body.features || null,
+                }),
+            );
+        } catch (_e) { /* ignore quota */ }
+    }
+
+    function clearImageSeedHandoff() {
+        try {
+            sessionStorage?.removeItem('psyfi.imageSeed.v1');
+        } catch (_e) { /* ignore */ }
     }
 
     function buildGpuLabUrl() {
@@ -1059,6 +1087,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (Number.isFinite(seed)) q.set('seed', String(Math.floor(seed)));
         q.set('tier', tier);
         if (experienceId) q.set('experience_id', experienceId);
+        if (imageSeedState) q.set('image_seed', '1');
         return `/gpu/?${q.toString()}`;
     }
 
@@ -1189,7 +1218,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const imageSeedStatus = document.getElementById('imageSeedStatus');
     const imageSeedPreview = document.getElementById('imageSeedPreview');
     const imageSeedPreviewEmpty = document.getElementById('imageSeedPreviewEmpty');
-    let imageSeedState = null;
 
     function imageInfluence() {
         return imageSeedInfluence ? Number(imageSeedInfluence.value) : 0;
@@ -1239,9 +1267,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     imageSeedClearBtn?.addEventListener('click', () => {
         imageSeedState = null;
+        clearImageSeedHandoff();
         if (typeof player.clearImageHints === 'function') player.clearImageHints();
         if (imageSeedFile) imageSeedFile.value = '';
         showImageSeedPreview(null);
+        syncGpuLabLinks();
         // Keep sim source plane if user still has that checkbox; only clear image plane when not bridging.
         if (!(sourcePlaneChk && sourcePlaneChk.checked && lastBridgeField)) {
             player.clearSourcePlane();
@@ -1276,6 +1306,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error(body.detail || res.statusText || 'image-seed failed');
             }
             imageSeedState = body;
+            persistImageSeedHandoff(body);
             seedInput.value = String(body.master_seed >>> 0);
             if (imageSeedApplyRecommended?.checked && body.applied_mode) {
                 modeSelect.value = body.applied_mode;
@@ -1287,7 +1318,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (typeof player.setImageHints === 'function') {
                 player.setImageHints(body.parameter_hints || null);
             }
-            showImageSeedPreview(body.conditioned_preview_png_base64 || null);
+            showImageSeedPreview(
+                body.conditioned_preview_png_base64 || body.conditioned_texture_png_base64 || null,
+            );
             if (body.source_field) {
                 lastBridgeField = body.source_field;
                 if (sourcePlaneChk) sourcePlaneChk.checked = true;
@@ -1412,6 +1445,72 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     document.getElementById('exportViewportBtn')?.addEventListener('click', () => {
         player.exportViewportPng();
+    });
+
+    document.getElementById('exportJourneyBtn')?.addEventListener('click', async () => {
+        if (!player.timeline) {
+            alert('Load an experience first');
+            return;
+        }
+        statusEl.textContent = 'Building export journey…';
+        try {
+            const stills = [];
+            const frames = player.timeline.frames || [];
+            const picks = [0, Math.floor((frames.length - 1) / 2), frames.length - 1].filter(
+                (v, i, a) => a.indexOf(v) === i && v >= 0 && frames[v],
+            );
+            const prevIdx = player.idx;
+            for (const idx of picks) {
+                player.setPhaseIndex(idx);
+                // Allow one paint
+                await new Promise((r) => requestAnimationFrame(() => r()));
+                const target =
+                    player.backend === 'webgl' && player.glCanvas && !player.glCanvas.hidden
+                        ? player.glCanvas
+                        : player.canvas;
+                const dataUrl = target.toDataURL('image/png');
+                const b64 = dataUrl.includes(',') ? dataUrl.split(',')[1] : dataUrl;
+                stills.push({
+                    id: `still_${idx}`,
+                    phase: frames[idx].phase,
+                    phase_t: frames[idx].phase_t,
+                    png_base64: b64,
+                });
+            }
+            player.setPhaseIndex(prevIdx);
+            const res = await fetch('/api/v1/visualize/export-journey', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    timeline: player.timeline,
+                    stills,
+                    image_seed: imageSeedState
+                        ? {
+                              master_seed: imageSeedState.master_seed,
+                              influence: imageSeedState.influence,
+                              features: imageSeedState.features,
+                              parameter_hints: imageSeedState.parameter_hints,
+                          }
+                        : null,
+                    experience_id: experienceSelect.value || player.timeline.experience_id || null,
+                    t2v_provider: 'external',
+                }),
+            });
+            const body = await res.json().catch(() => ({}));
+            if (!res.ok) throw new Error(body.detail || res.statusText || 'export-journey failed');
+            const blob = new Blob([JSON.stringify(body, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `psyfi-journey-${body.timeline_hash || body.master_seed || 'export'}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            statusEl.textContent = 'Export journey downloaded · T2V prompt ready (external)';
+        } catch (err) {
+            console.error(err);
+            statusEl.textContent = 'Export journey failed';
+            alert(err.message || String(err));
+        }
     });
 
     document.getElementById('bridgeSimBtn')?.addEventListener('click', async () => {

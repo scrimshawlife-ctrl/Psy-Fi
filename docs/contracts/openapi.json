@@ -67,6 +67,64 @@
         "title": "Body_image_seed_multipart_api_v1_visualize_image_seed_post",
         "type": "object"
       },
+      "ExportJourneyRequest": {
+        "description": "Package stills + formula prompt for optional external text-to-video.",
+        "properties": {
+          "experience_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Experience Id"
+          },
+          "image_seed": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Image Seed"
+          },
+          "stills": {
+            "anyOf": [
+              {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Stills"
+          },
+          "t2v_provider": {
+            "default": "external",
+            "title": "T2V Provider",
+            "type": "string"
+          },
+          "timeline": {
+            "additionalProperties": true,
+            "title": "Timeline",
+            "type": "object"
+          }
+        },
+        "required": [
+          "timeline"
+        ],
+        "title": "ExportJourneyRequest",
+        "type": "object"
+      },
       "FieldFrameRequest": {
         "description": "Bridge: run a bounded Python simulation and return visualizable channels.",
         "properties": {
@@ -935,6 +993,18 @@
               }
             ],
             "title": "Image Hints"
+          },
+          "image_seed_png_base64": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Ephemeral conditioned PNG (base64) attached as assets.images data-URL.",
+            "title": "Image Seed Png Base64"
           },
           "include_fixture_assets": {
             "default": false,
@@ -3066,6 +3136,50 @@
         "summary": "Telemetry Status",
         "tags": [
           "telemetry"
+        ]
+      }
+    },
+    "/api/v1/visualize/export-journey": {
+      "post": {
+        "description": "Build an export-journey package (stills + T2V prompt sidecar). No provider call.",
+        "operationId": "export_journey_api_v1_visualize_export_journey_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExportJourneyRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Export Journey Api V1 Visualize Export Journey Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Export Journey",
+        "tags": [
+          "experiences"
         ]
       }
     },

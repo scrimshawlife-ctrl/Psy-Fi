@@ -8,7 +8,7 @@
       "seed": 42,
       "intensity": 0.75,
       "parameter_field_hash": "126d9f00440f9a21",
-      "fingerprint": "86561394d1e840d1649a95fcc50e32bb34399cb3f39810da797ae6e97792db96",
+      "fingerprint": "493b492e521d0d7d475ab1d27dea0fab2a753b9dad7e74f387a6b979232eeec3",
       "counts": {
         "glyphs": 6,
         "sdf_nodes": 1,
@@ -24,7 +24,7 @@
       "seed": 7,
       "intensity": 0.6,
       "parameter_field_hash": "81e82f10dc541f80",
-      "fingerprint": "7136a4b77bdd9cadfc05d126edd2b022d6b8aa61e4c489857b27ac779027ca5a",
+      "fingerprint": "5de8d2bf3f48f08bd01f17815ecdfb4d5b3513ad589f1c8a35043630fe5f582d",
       "counts": {
         "glyphs": 5,
         "sdf_nodes": 1,
@@ -40,7 +40,7 @@
       "seed": 99,
       "intensity": 0.85,
       "parameter_field_hash": "129d9dd9504ab092",
-      "fingerprint": "567ec7a925df857d6438c18cae77f94b031c0ae5cec844fa05a2880798e9336b",
+      "fingerprint": "fa9a5d5d7b519f4d7e13876ebb5e252a4d02a83e676df03e2c9d071716d4df54",
       "counts": {
         "glyphs": 6,
         "sdf_nodes": 1,

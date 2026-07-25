@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://psyfi.local/schemas/psyfi_export_journey.v1.json",
+  "title": "psyfi.export_journey.v1",
+  "description": "Portable journey package: stills + formula T2V prompt sidecar (no provider call).",
+  "type": "object",
+  "required": ["schema", "substance", "mode", "t2v", "note"],
+  "properties": {
+    "schema": { "const": "psyfi.export_journey.v1" },
+    "substance": { "type": "string" },
+    "mode": { "type": "string" },
+    "intensity": { "type": "number" },
+    "experience_id": { "type": ["string", "null"] },
+    "master_seed": { "type": ["integer", "null"] },
+    "timeline_hash": { "type": ["string", "null"] },
+    "phase_names": { "type": "array", "items": { "type": "string" } },
+    "stills": { "type": "array" },
+    "image_seed": { "type": ["object", "null"] },
+    "t2v": {
+      "type": "object",
+      "required": ["provider", "status", "prompt"],
+      "properties": {
+        "provider": { "type": "string" },
+        "status": { "type": "string" },
+        "prompt": { "type": "string" },
+        "note": { "type": "string" }
+      }
+    },
+    "note": { "type": "string" }
+  }
+}

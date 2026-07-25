@@ -3,12 +3,14 @@ import { useEffect, useMemo, useRef } from 'react'
 import * as THREE from 'three/webgpu'
 import { pass, uniform, vec3, float, mix, renderOutput } from 'three/tsl'
 import { bloom } from 'three/addons/tsl/display/BloomNode.js'
+import { afterImage } from 'three/addons/tsl/display/AfterImageNode.js'
 import type { SceneSnapshotV1 } from '../contracts/SceneSnapshot'
 import type { QualityTier } from '../contracts/QualityTier'
 import { tierConfig } from '../contracts/QualityTier'
+import { resolveTemporalPolicy } from './TemporalAccumulate'
 
 /**
- * G1 present path: scene → optional bloom → grade/exposure → mandatory safety.
+ * G1/G2 present path: scene → bloom → temporal accumulate → grade/exposure → mandatory safety.
  * Non-zero useFrame priority takes over the R3F render loop.
  */
 export function PresentPipeline({
@@ -25,8 +27,10 @@ export function PresentPipeline({
   const uExposure = useMemo(() => uniform(1), [])
   const uGrade = useMemo(() => uniform(new THREE.Vector3(1, 1, 1)), [])
   const bloomStrengthRef = useRef<{ value: number } | null>(null)
+  const temporalDampRef = useRef<{ value: number } | null>(null)
   const lastLuma = useRef(0.45)
   const flashTimes = useRef<number[]>([])
+  const lastIntensity = useRef(0.5)
 
   useEffect(() => {
     const renderer = gl as unknown as InstanceType<typeof THREE.WebGPURenderer>
@@ -43,11 +47,19 @@ export function PresentPipeline({
       bloomStrengthRef.current = null
     }
 
+    if (cfg.post.taa) {
+      const temporal = afterImage(node, 0.82)
+      temporalDampRef.current = temporal.damp
+      node = temporal.getTextureNode()
+    } else {
+      temporalDampRef.current = null
+    }
+
     if (cfg.post.colorGrading || cfg.post.hdr) {
       node = node.mul(uGrade).mul(uExposure)
     }
 
-    // Mandatory safety attenuator
+    // Mandatory safety attenuator (after temporal so history cannot bypass clamps)
     node = node.mul(uSafety)
     node = mix(vec3(0.05, 0.05, 0.055), node, float(0.98))
 
@@ -65,8 +77,9 @@ export function PresentPipeline({
     return () => {
       postRef.current = null
       bloomStrengthRef.current = null
+      temporalDampRef.current = null
     }
-  }, [gl, scene, camera, cfg.post.bloom, cfg.post.colorGrading, cfg.post.hdr, uExposure, uGrade, uSafety, tier])
+  }, [gl, scene, camera, cfg.post.bloom, cfg.post.taa, cfg.post.colorGrading, cfg.post.hdr, uExposure, uGrade, uSafety, tier])
 
   useFrame((state) => {
     const now = state.clock.elapsedTime * 1000
@@ -99,6 +112,23 @@ export function PresentPipeline({
     if (neutral) atten *= 0.65
     uSafety.value = atten
     lastLuma.current = approxLuma * atten + lastLuma.current * (1 - atten)
+
+    const intensityDelta = Math.abs(intensity - lastIntensity.current)
+    lastIntensity.current = intensity
+    const motionProxy = Math.min(
+      1,
+      intensityDelta * 4 + (neutral ? 0 : energy * 0.15) + delta * 1.2,
+    )
+    if (temporalDampRef.current) {
+      const policy = resolveTemporalPolicy({
+        enabled: cfg.post.taa,
+        neutral,
+        motionProxy,
+        safetyAtten: atten,
+        baseDamp: 0.82,
+      })
+      temporalDampRef.current.value = policy.damp
+    }
 
     if (postRef.current) {
       postRef.current.needsUpdate = true

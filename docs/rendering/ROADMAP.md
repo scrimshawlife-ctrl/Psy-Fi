@@ -31,7 +31,7 @@ Platform package: `packages/psyfi-gpu-renderer`
 - [x] Cull + LOD selectors (TS + WGSL; wired into particle draw)
 - [x] AssetLoader worker-mode hook (bytes fetch; decode still deferred)
 - [x] Dispatch compute via `WebGPURenderer` / TSL (`GpuFlowCompute` + SpriteNodeMaterial; CPU fallback)
-- [ ] Temporal accumulation / TAA
+- [x] Temporal accumulation / TAA (`afterImage` + `TemporalAccumulate` policy; safety after history)
 - [ ] Worker glTF/Draco/KTX2 decode
 
 ## Phase G3 — Premium desktop stack

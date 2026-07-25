@@ -5,7 +5,7 @@ import { PresentPipeline } from './PresentPipeline'
 import { SafetyPassNote } from './SafetyPassNote'
 
 /**
- * G1 post stack: PresentPipeline owns WebGPU PostProcessing + mandatory safety.
+ * G1/G2 post stack: PresentPipeline owns bloom, temporal accumulate, grade, mandatory safety.
  */
 export function PostStack({
   snapshot,

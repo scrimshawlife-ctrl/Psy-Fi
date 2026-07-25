@@ -1,275 +1,154 @@
-# PsyFi Mobile & PWA Guide
-
-## 📱 Progressive Web App Features
-
-PsyFi is now a fully functional Progressive Web App that can be installed on mobile devices and used offline.
-
-### Installation Instructions
-
-#### iOS (iPhone/iPad)
-1. Open Safari and navigate to `http://your-domain.com`
-2. Tap the Share button (square with arrow)
-3. Scroll down and tap "Add to Home Screen"
-4. Tap "Add" to confirm
-5. PsyFi will appear as an app icon on your home screen
-
-#### Android (Chrome)
-1. Open Chrome and navigate to `http://your-domain.com`
-2. Tap the menu (⋮) and select "Add to Home Screen"
-3. Or look for the "Install app" prompt at the bottom
-4. Confirm installation
-5. PsyFi will appear in your app drawer
-
-#### Desktop (Chrome/Edge)
-1. Open Chrome or Edge and navigate to `http://your-domain.com`
-2. Look for the install icon (⊕) in the address bar
-3. Click "Install PsyFi"
-4. App will open in standalone window
-
----
-
-## ⚡ Quick Presets
-
-Four optimized presets for different use cases:
-
-### Quick Test (⚡)
-- **Size**: 32×32 pixels
-- **Steps**: 10 iterations
-- **Use case**: Fast validation, testing, mobile quick runs
-- **Speed**: ~0.1-0.3 seconds
-
-### Standard (⬡)
-- **Size**: 64×64 pixels
-- **Steps**: 20 iterations
-- **Use case**: Default balanced simulation
-- **Speed**: ~0.5-1.5 seconds
-
-### Detailed (✨)
-- **Size**: 128×128 pixels
-- **Steps**: 50 iterations
-- **Use case**: High-quality results, research
-- **Speed**: ~3-8 seconds
-
-### Deep Dive (🌀)
-- **Size**: 256×256 pixels
-- **Steps**: 100 iterations
-- **Use case**: Maximum detail, publication quality
-- **Speed**: ~15-60 seconds
-
----
-
-## 📐 Mobile Optimizations
-
-### Touch Targets
-- All interactive elements meet the 44×44px minimum touch target
-- Preset buttons have larger touch areas (100px+ height)
-- Form inputs sized for comfortable thumb typing
-- Primary action button optimized for one-handed use
-
-### Responsive Layout
-
-#### Tablet (≤768px)
-- Two-column preset grid
-- Single-column input fields
-- Single-column metrics display
-- Optimized spacing and padding
-
-#### Mobile (≤480px)
-- Single-column preset grid
-- Full-width buttons
-- Reduced font sizes
-- Compact header and footer
-
-### Typography
-- Base font size: 16px (prevents iOS zoom)
-- System fonts for fast loading
-- JetBrains Mono for code/metrics
-- Optimized letter-spacing for readability
-
----
-
-## 🔌 Offline Capabilities
-
-### Service Worker Features
-- **Caching Strategy**: Cache-first for static assets
-- **Cached Resources**:
-  - Home page (/)
-  - CSS stylesheet
-  - JavaScript app
-  - PWA manifest
-- **Network-first** for API calls (/simulate/)
-
-### Offline Behavior
-1. **First Visit**: Requires network connection
-2. **Subsequent Visits**: App loads from cache
-3. **Simulations**: Requires network (API call)
-4. **UI Interaction**: Works offline
-
----
-
-## 🎨 Mobile UI Features
-
-### Dark Mode
-- Near-black backgrounds (#0a0a0f)
-- Cyan/magenta/violet accents
-- Optimized for OLED screens
-- Reduces battery usage
-
-### Visual Feedback
-- Active states on preset buttons
-- Loading spinner during computation
-- Error messages with clear styling
-- Animated metric bars
-- Smooth transitions
-
-### Gestures
-- Tap preset buttons to apply
-- Scroll to view all metrics
-- Pull-to-refresh (browser dependent)
-- Touch-friendly form controls
-
----
-
-## ⚙️ Technical Specifications
-
-### PWA Manifest
-```json
-{
-  "name": "PsyFi - Consciousness Field Simulator",
-  "short_name": "PsyFi",
-  "display": "standalone",
-  "background_color": "#0a0a0f",
-  "theme_color": "#00ffff",
-  "orientation": "portrait"
-}
-```
-
-### Viewport Configuration
-```html
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0,
-               maximum-scale=1.0, user-scalable=no">
-```
-
-### iOS Specific
-```html
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style"
-      content="black-translucent">
-```
-
----
-
-## 📊 Performance Metrics
-
-### Load Times (on mobile)
-- **Initial Load**: ~1-2 seconds (with network)
-- **Cached Load**: ~200-500ms (offline)
-- **Simulation**: Varies by preset (see above)
-
-### Data Usage
-- **First Load**: ~150KB (HTML + CSS + JS + fonts)
-- **Subsequent**: ~20KB (API responses only)
-- **Offline**: 0KB (cached)
-
-### Battery Impact
-- **Idle**: Minimal (dark mode optimized)
-- **Simulation**: Moderate (CPU intensive)
-- **Recommendation**: Use lower presets on battery
-
----
-
-## 🔒 Security Considerations
-
-### HTTPS Required
-- Service workers require HTTPS in production
-- Localhost exempted for development
-- Install fails on HTTP in production
-
-### Data Privacy
-- All simulations run server-side
-- No user data stored locally
-- No tracking or analytics
-- API calls are ephemeral
-
----
-
-## 🐛 Troubleshooting
-
-### PWA Won't Install
-1. **Check HTTPS**: Must use secure connection
-2. **Check Manifest**: Verify manifest.json loads
-3. **Check Service Worker**: Verify sw.js loads
-4. **Clear Cache**: Try hard refresh (Ctrl+Shift+R)
-
-### Presets Don't Work
-1. **Check JavaScript**: Look for console errors
-2. **Verify Elements**: Ensure preset buttons exist
-3. **Check Network**: API must be reachable
-
-### Offline Mode Issues
-1. **Clear Service Worker**: Dev tools → Application → Service Workers
-2. **Unregister**: Click "Unregister" and refresh
-3. **Reinstall**: Re-register service worker
-
-### Mobile Layout Broken
-1. **Check Viewport**: Verify viewport meta tag
-2. **Check Media Queries**: Test at different widths
-3. **Check Browser**: Test in Chrome/Safari
-4. **Check Cache**: Clear browser cache
-
----
-
-## 📱 Best Practices
-
-### For Users
-- Use Quick Test preset on mobile to save battery
-- Install as PWA for better performance
-- Use landscape mode for larger presets
-- Close other tabs during heavy simulations
-
-### For Developers
-- Test on real devices, not just emulators
-- Monitor performance with DevTools
-- Check all touch targets are 44px+
-- Validate on iOS Safari and Chrome Android
-- Test offline mode thoroughly
-
----
-
-## 🚀 Future Enhancements
-
-### Planned Features
-- [ ] Native app wrapper (Capacitor/React Native)
-- [ ] Push notifications for long simulations
-- [ ] Local storage for simulation history
-- [ ] Background sync for queued simulations
-- [ ] WebGL field visualization
-- [ ] Haptic feedback on interactions
-- [ ] Share results to social media
-- [ ] Export simulation data
-
-### Performance Ideas
-- [ ] WebAssembly for faster computation
-- [ ] Web Workers for parallel processing
-- [ ] IndexedDB for result caching
-- [ ] Lazy loading for code splitting
-
----
-
-## 📚 Resources
-
-- [MDN PWA Guide](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps)
-- [Service Worker API](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API)
-- [Web App Manifest](https://developer.mozilla.org/en-US/docs/Web/Manifest)
-- [iOS PWA Guide](https://developer.apple.com/library/archive/documentation/AppleApplications/Reference/SafariWebContent/ConfiguringWebApplications/ConfiguringWebApplications.html)
-
----
-
-<div align="center">
-
-**⬡ Built for consciousness, optimized for mobile ⬡**
-
-[PsyFi Main](/) • [API Docs](/docs) • [GitHub](https://github.com/scrimshawlife-ctrl/Psy-Fi)
-
-</div>
+# PsyFi Mobile Web and PWA Guide
+
+Status: active web-first guidance. See [`PLANS.md`](PLANS.md), [`docs/WEB_ARCHITECTURE.md`](docs/WEB_ARCHITECTURE.md), and [`docs/IOS_MIGRATION.md`](docs/IOS_MIGRATION.md).
+
+## Product Role
+
+The installable PWA is PsyFi's first mobile application surface. It is not described as equivalent to a native iPhone app. The web experience is used to validate workflows, rendering, terminology, performance, and demand before native development begins.
+
+## Supported Experience
+
+The core workflow must remain available without optional device APIs:
+
+1. Configure or select a simulation preset.
+2. Run or cancel a simulation.
+3. Inspect metrics, assumptions, and provenance.
+4. Save and restore a versioned session.
+5. Export results and session data.
+
+Camera, motion, MIDI, audio, haptics, WebGPU, persistent storage, and installability are progressive enhancements. Unsupported capabilities must produce an explicit fallback state.
+
+## Installation
+
+### iPhone and iPad
+
+1. Open the production HTTPS URL in Safari.
+2. Use Share → Add to Home Screen.
+3. Launch PsyFi from the installed icon.
+
+Installation availability and behavior vary by operating-system and browser version. PsyFi must remain usable in a normal browser tab.
+
+### Android
+
+Use the browser install prompt or Add to Home Screen command when available.
+
+### Desktop
+
+Supported Chromium-based browsers may expose an install action. Installation is optional and must not change authoritative simulation behavior.
+
+## PWA Requirements
+
+- valid web app manifest;
+- production HTTPS;
+- versioned service worker;
+- install icons and maskable icon;
+- deterministic cache invalidation;
+- offline application shell;
+- explicit online/offline status;
+- safe-area support;
+- responsive layout from 320 CSS pixels upward;
+- no loss of data during service-worker update;
+- recovery from interrupted simulations and page suspension.
+
+## Caching Strategy
+
+Do not use a single cache-first strategy for every resource.
+
+| Resource | Default strategy |
+|---|---|
+| Versioned static assets | cache-first with immutable hashes |
+| HTML/navigation | network-first with cached fallback |
+| API simulation requests | network-only unless an explicitly versioned local compute path exists |
+| Preset/catalog metadata | stale-while-revalidate where safe |
+| Saved sessions/results | IndexedDB, not service-worker cache |
+
+Service-worker releases must use named cache versions and delete obsolete caches only after the new worker activates safely.
+
+## Offline Behavior
+
+Offline capability must be described precisely:
+
+- The application shell may load offline after a successful prior visit.
+- Locally saved sessions and results may remain inspectable.
+- Server-backed simulations are unavailable offline.
+- The UI must not imply that a network request succeeded when it was queued or blocked.
+- Any future offline compute implementation requires deterministic parity tests against the Python engine.
+
+## Local Persistence
+
+Use IndexedDB for session history and cached results. Every record must include:
+
+- schema version;
+- engine/API version;
+- seed;
+- canonical parameters;
+- created and updated timestamps;
+- provenance reference;
+- result checksum where practical.
+
+Provide migration functions, export before destructive migration, and a user-visible storage reset control.
+
+## Responsive Interaction
+
+- Minimum touch target: 44 by 44 CSS pixels.
+- Base input font size: at least 16 CSS pixels on mobile.
+- Respect safe-area insets.
+- Avoid hover-only controls.
+- Keep primary run/cancel controls reachable.
+- Permit portrait and landscape unless a workflow has a documented constraint.
+- Do not disable user scaling.
+- Test with keyboard, screen reader, increased text size, reduced motion, and high contrast.
+
+## Visualization Performance
+
+Start with the widest compatible renderer that meets requirements. WebGPU is optional acceleration, not the baseline.
+
+Performance budgets must be measured on representative physical devices:
+
+- application-shell load and interaction readiness;
+- simulation request latency;
+- visualization frame time;
+- memory growth over repeated runs;
+- battery and thermal behavior;
+- background/foreground recovery;
+- payload and cache size.
+
+Move expensive rendering or transforms to Web Workers where possible. Introduce WebAssembly only after profiling identifies a material bottleneck.
+
+## Permissions and Privacy
+
+- Request sensitive permissions only after a user initiates the relevant feature.
+- Explain purpose before camera, motion, MIDI, microphone, or persistent-storage access.
+- Provide a usable fallback after denial.
+- Do not collect analytics by default until a documented privacy model is approved.
+- Never store camera or sensor data implicitly.
+- Validate imported files by type, size, shape, and schema version.
+
+## Browser Capability Matrix
+
+Maintain a tested matrix for current supported versions of:
+
+- Safari on iPhone/iPad;
+- Chrome on Android;
+- Chrome and Edge desktop;
+- Firefox desktop where core workflows are expected.
+
+For each capability record: supported, permission model, foreground/background behavior, fallback, and last verified date.
+
+## Quality Gates
+
+A PWA change is complete only after:
+
+- unit and end-to-end tests pass;
+- installability is verified;
+- update and cache migration paths are tested;
+- offline states are tested;
+- keyboard and screen-reader smoke tests pass;
+- reduced-motion behavior is reviewed;
+- physical-device mobile testing is complete;
+- performance impact is recorded;
+- session compatibility is preserved or migrated.
+
+## Native Transition
+
+Do not default to a generic native wrapper. Capacitor or similar packaging may be evaluated for distribution experiments, but it does not replace the evidence-gated SwiftUI migration defined in [`docs/IOS_MIGRATION.md`](docs/IOS_MIGRATION.md).

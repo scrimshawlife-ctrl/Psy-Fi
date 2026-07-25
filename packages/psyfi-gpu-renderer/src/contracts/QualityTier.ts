@@ -118,11 +118,20 @@ const TIERS: Record<QualityTier, TierConfig> = {
   },
 }
 
+/**
+ * Normalize GPU + shell LOD vocabulary onto ultra|high|balanced|battery.
+ * Shell Live Experience uses balanced|efficient|survival.
+ */
 export function normalizeTier(raw: string | undefined | null): QualityTier {
-  const t = (raw || 'balanced').toLowerCase().replace('battery_saver', 'battery')
+  let t = (raw || 'balanced').toLowerCase().replace(/-/g, '_')
+  if (t === 'battery_saver' || t === 'survival') return 'battery'
+  if (t === 'efficient') return 'balanced'
   if (t === 'ultra' || t === 'high' || t === 'balanced' || t === 'battery') return t
   return 'balanced'
 }
+
+/** Alias kept for shell ↔ GPU Lab handoff docs/tests. */
+export const mapShellQualityToGpuTier = normalizeTier
 
 export function tierConfig(tier: QualityTier): TierConfig {
   return TIERS[tier]

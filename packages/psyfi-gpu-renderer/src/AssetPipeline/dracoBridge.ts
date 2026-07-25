@@ -128,27 +128,104 @@ export class PassthroughDracoWasmDecoder implements DracoWasmDecoder {
 }
 
 /**
- * Real Draco decoder via the `draco3d` npm package (same family as vendored glTF WASM).
- * Browser packaging still ships `/gpu/vendor/draco/gltf/` for DRACOLoader-style URL loads.
+ * Real Draco decoder via vendored glTF WASM (`/gpu/vendor/draco/gltf/`).
+ * Node/vitest loads the same wrapper from `public/vendor`; browser uses a classic script tag.
+ * Falls back to npm `draco3d` only when the vendor path is unavailable.
  */
 export class Draco3dWasmDecoder implements DracoWasmDecoder {
   ready = false
   readonly kind = 'wasm' as const
-  readonly vendorPath = VENDOR_DRACO_GLTF_PATH
+  readonly vendorPath: string
   private module: DracoDecoderModule | null = null
   private initPromise: Promise<void> | null = null
+  private readonly wasmUrlHint?: string
+
+  constructor(vendorPath = VENDOR_DRACO_GLTF_PATH, wasmUrlHint?: string) {
+    this.vendorPath = vendorPath.endsWith('/') ? vendorPath : `${vendorPath}/`
+    this.wasmUrlHint = wasmUrlHint
+  }
 
   ensureReady = async (): Promise<void> => {
     if (this.ready && this.module) return
     if (!this.initPromise) {
-      this.initPromise = (async () => {
-        const mod = (await import('draco3d')) as unknown as Draco3dPkg & { default?: Draco3dPkg }
-        const pkg = (mod.default ?? mod) as Draco3dPkg
-        this.module = await pkg.createDecoderModule({})
-        this.ready = true
-      })()
+      this.initPromise = this.loadModule()
     }
     await this.initPromise
+  }
+
+  private resolveVendorFile(file: string): string {
+    // Google's glTF wrapper requests `*_gltf` names; our vendor pack uses short names.
+    if (file.includes('draco_decoder') && file.endsWith('.wasm')) return 'draco_decoder.wasm'
+    if (file.includes('draco_wasm_wrapper')) return 'draco_wasm_wrapper.js'
+    return file
+  }
+
+  private async loadModule(): Promise<void> {
+    const path = this.vendorPath
+    const locateFile = (file: string) => {
+      if (this.wasmUrlHint && file.endsWith('.wasm')) return this.wasmUrlHint
+      return `${path}${this.resolveVendorFile(file)}`
+    }
+
+    // Node/vitest: evaluate vendored UMD wrapper with a CommonJS shim.
+    if (typeof process !== 'undefined' && process.versions?.node) {
+      try {
+        const { readFileSync } = await import('node:fs')
+        const { fileURLToPath } = await import('node:url')
+        const { dirname, join } = await import('node:path')
+        const { createRequire } = await import('node:module')
+        const require = createRequire(import.meta.url)
+        const here = dirname(fileURLToPath(import.meta.url))
+        const vendorFs = join(here, '../../public/vendor/draco/gltf')
+        const source = readFileSync(join(vendorFs, 'draco_wasm_wrapper.js'), 'utf8')
+        const module = { exports: {} as { (cfg?: object): Promise<DracoDecoderModule> } }
+        const factory = new Function(
+          'module',
+          'exports',
+          'require',
+          '__dirname',
+          '__filename',
+          `${source}\n;return module.exports;`,
+        )(
+          module,
+          module.exports,
+          require,
+          vendorFs,
+          join(vendorFs, 'draco_wasm_wrapper.js'),
+        ) as (cfg?: object) => Promise<DracoDecoderModule>
+        this.module = await factory({
+          locateFile: (file: string) => join(vendorFs, this.resolveVendorFile(file)),
+        })
+        this.ready = true
+        return
+      } catch {
+        // Fall through to npm draco3d (encode helpers / older installs).
+      }
+      const mod = (await import('draco3d')) as unknown as Draco3dPkg & { default?: Draco3dPkg }
+      const pkg = (mod.default ?? mod) as Draco3dPkg
+      this.module = await pkg.createDecoderModule({})
+      this.ready = true
+      return
+    }
+
+    // Browser: classic script + global DracoDecoderModule factory.
+    const g = globalThis as unknown as {
+      DracoDecoderModule?: (cfg?: object) => Promise<DracoDecoderModule>
+    }
+    if (!g.DracoDecoderModule) {
+      await new Promise<void>((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = `${path}draco_wasm_wrapper.js`
+        script.async = true
+        script.onload = () => resolve()
+        script.onerror = () => reject(new Error(`draco: failed to load ${script.src}`))
+        document.head.appendChild(script)
+      })
+    }
+    const factory = g.DracoDecoderModule
+    if (!factory) throw new Error('draco: DracoDecoderModule missing after script load')
+    this.module = await factory({ locateFile })
+    this.ready = true
   }
 
   async decode(req: DracoDecodeRequest): Promise<DracoDecodedMesh> {
@@ -233,14 +310,8 @@ export function createDracoWasmDecoder(opts?: DracoWasmDecoderOptions): DracoWas
   if (opts?.impl) return opts.impl
   if (opts?.mode === 'stub') return new StubDracoWasmDecoder()
   if (opts?.mode === 'passthrough') return new PassthroughDracoWasmDecoder()
-  if (opts?.wasmUrl) {
-    // URL is recorded for browser DRACOLoader-style loads; decode still uses npm WASM.
-    const decoder = new Draco3dWasmDecoder()
-    ;(decoder as Draco3dWasmDecoder & { wasmUrl: string }).wasmUrl = opts.wasmUrl
-    return decoder
-  }
   if (opts?.mode === 'wasm' || opts?.mode === 'auto' || opts?.mode === undefined) {
-    return new Draco3dWasmDecoder()
+    return new Draco3dWasmDecoder(VENDOR_DRACO_GLTF_PATH, opts?.wasmUrl)
   }
   return new StubDracoWasmDecoder()
 }

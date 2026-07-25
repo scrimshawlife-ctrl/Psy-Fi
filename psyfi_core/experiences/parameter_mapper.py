@@ -601,13 +601,17 @@ def map_parameters(
         engines = {k: (1.0 if k == "neutral_view" else 0.0) for k in ENGINE_WEIGHT_KEYS}
         phase_name = "neutral"
 
-    # Quality tier soft clamps
-    if quality_tier == "efficient":
+    # Quality tier soft clamps (shell LOD + GPU battery alias)
+    tier_key = (quality_tier or "balanced").lower().replace("-", "_")
+    if tier_key in ("battery_saver",):
+        tier_key = "battery"
+    if tier_key == "efficient":
         params["pattern_complexity"] = _clamp(params.get("pattern_complexity", 0.4) * 0.75)
         params["bloom"] = _clamp(params.get("bloom", 0.25) * 0.7)
-    elif quality_tier == "survival":
+    elif tier_key in ("survival", "battery"):
         params["pattern_complexity"] = _clamp(params.get("pattern_complexity", 0.4) * 0.45)
         params["recursion_gain"] = _clamp(params.get("recursion_gain", 0.3) * 0.5)
+        params["bloom"] = _clamp(params.get("bloom", 0.25) * 0.55)
         engines = {
             k: (v if k in ("recursive_feedback", "neutral_view", "organic_bloom") else v * 0.25)
             for k, v in engines.items()

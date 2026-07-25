@@ -85,7 +85,7 @@
         <nav class="workspace-nav" aria-label="Workspace sections">
             <a href="#experiencePanel" class="nav-link">Live Experience</a>
             <a href="#workspace" class="nav-link">Workspace</a>
-            <a href="/gpu/" class="nav-link nav-link-icon" title="WebGPU GPU Lab — separate /gpu/ route (not embedded in this shell)"><span class="pf-icon pf-icon-console" aria-hidden="true"></span><span>GPU Lab</span></a>
+            <a href="/gpu/" id="gpuLabNavLink" class="nav-link nav-link-icon" title="WebGPU GPU Lab — opens with current Live Experience params when available"><span class="pf-icon pf-icon-console" aria-hidden="true"></span><span>GPU Lab</span></a>
             <a href="#presets" class="nav-link">Presets</a>
             <a href="#results" class="nav-link">Results</a>
             <details class="nav-more">
@@ -174,10 +174,16 @@
                             </div>
                         </div>
 
-                        <button type="button" class="btn-primary btn-with-icon" id="loadExperienceBtn" data-tip="Materialize timeline for the selected recipe and seed.">
-                            <span class="pf-icon pf-icon-psychedelic" aria-hidden="true"></span>
-                            <span>Load Experience</span>
-                        </button>
+                        <div class="session-actions experience-launch-actions">
+                            <button type="button" class="btn-primary btn-with-icon" id="loadExperienceBtn" data-tip="Materialize timeline for the selected recipe and seed.">
+                                <span class="pf-icon pf-icon-psychedelic" aria-hidden="true"></span>
+                                <span>Load Experience</span>
+                            </button>
+                            <a class="btn-secondary btn-with-icon" id="openGpuLabBtn" href="/gpu/" data-tip="Open WebGPU GPU Lab with the current substance, mode, seed, intensity, and quality tier.">
+                                <span class="pf-icon pf-icon-console" aria-hidden="true"></span>
+                                <span>Open GPU Lab</span>
+                            </a>
+                        </div>
 
                         <details class="control-drawer">
                             <summary>Seed</summary>
@@ -211,7 +217,7 @@
                             <div class="checkbox-row compact-checks">
                                 <label data-tip="Prefer quieter motion cues when available."><input type="checkbox" id="reduceMotionChk"> Reduce motion</label>
                                 <label data-tip="Attenuate high-flash frames via the safety pass."><input type="checkbox" id="dimFlashChk"> Dim flashing</label>
-                                <label data-tip="GPU field path when available; Canvas fallback otherwise."><input type="checkbox" id="preferWebGLChk" checked> Prefer WebGL</label>
+                                <label data-tip="WebGL ParameterField path when available (shell). WebGPU Lab is a separate /gpu/ route."><input type="checkbox" id="preferWebGLChk" checked> Prefer WebGL</label>
                                 <label data-tip="Blend last Workspace sim magnitude under ParameterField."><input type="checkbox" id="sourcePlaneChk"> Sim source plane</label>
                             </div>
                             <div class="input-group" id="sourcePlaneMixGroup" hidden>

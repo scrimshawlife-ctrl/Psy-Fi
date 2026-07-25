@@ -1031,7 +1031,49 @@ document.addEventListener('DOMContentLoaded', () => {
     const playBtn = document.getElementById('playExperienceBtn');
     const pauseBtn = document.getElementById('pauseExperienceBtn');
     const neutralBtn = document.getElementById('neutralBtn');
+    const openGpuLabBtn = document.getElementById('openGpuLabBtn');
+    const gpuLabNavLink = document.getElementById('gpuLabNavLink');
     const statusEl = document.getElementById('experienceStatus');
+
+    /** Map shell LOD → GPU Lab tier query param. */
+    function mapShellQualityToGpuTier(raw) {
+        const t = String(raw || 'balanced').toLowerCase().replace(/-/g, '_');
+        if (t === 'survival' || t === 'battery' || t === 'battery_saver') return 'battery';
+        if (t === 'efficient') return 'balanced';
+        if (t === 'ultra' || t === 'high' || t === 'balanced') return t;
+        return 'balanced';
+    }
+
+    function buildGpuLabUrl() {
+        const q = new URLSearchParams();
+        q.set('from', 'shell');
+        const substance = substanceSelect?.value || 'lsd';
+        const mode = modeSelect?.value || 'open';
+        const intensity = Number(intensityRange?.value);
+        const seed = Number(seedInput?.value);
+        const tier = mapShellQualityToGpuTier(document.getElementById('qualityTierSelect')?.value);
+        const experienceId = experienceSelect?.value || '';
+        q.set('substance', substance);
+        q.set('mode', mode);
+        if (Number.isFinite(intensity)) q.set('intensity', String(intensity));
+        if (Number.isFinite(seed)) q.set('seed', String(Math.floor(seed)));
+        q.set('tier', tier);
+        if (experienceId) q.set('experience_id', experienceId);
+        return `/gpu/?${q.toString()}`;
+    }
+
+    function syncGpuLabLinks() {
+        const href = buildGpuLabUrl();
+        if (openGpuLabBtn) openGpuLabBtn.href = href;
+        if (gpuLabNavLink) gpuLabNavLink.href = href;
+    }
+    syncGpuLabLinks();
+    ;[substanceSelect, experienceSelect, modeSelect, intensityRange, seedInput, document.getElementById('qualityTierSelect')]
+        .filter(Boolean)
+        .forEach((el) => {
+            el.addEventListener('change', syncGpuLabLinks);
+            el.addEventListener('input', syncGpuLabLinks);
+        });
     function syncFieldStatusLive(msg) {
         if (!statusEl) return;
         const t = String(msg || '');

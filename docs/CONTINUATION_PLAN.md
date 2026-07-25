@@ -42,7 +42,7 @@ Board: [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md)
 - [x] Draco/KTX2 GPU upload path + `SceneAssetLayer`
 - [x] G4 parity matrix + scene-snapshot structure goldens
 - [x] Soft-present pixel SHA + histogram goldens ([`PIXEL_GOLDENS.md`](rendering/PIXEL_GOLDENS.md))
-- [x] PWA: `/gpu/` **separate route** ([`PWA_GPU_ROUTE.md`](PWA_GPU_ROUTE.md) · SW v28)
+- [x] PWA: `/gpu/` **separate route** ([`PWA_GPU_ROUTE.md`](PWA_GPU_ROUTE.md) · SW v29)
 - [x] Shell → GPU Lab handoff (`/gpu/?substance&mode&tier…`) + `battery_saver`/`survival` tier aliases
 - [x] Vendored Draco/Basis wired for browser decode; SceneAssetLayer async BasisLZ path
 - [x] Fixture KTX2 emission (`include_fixture_assets` / `PSYFI_SCENE_ASSETS`) + soft-present layers
@@ -52,6 +52,7 @@ Board: [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md)
 - [x] Product art pack schema + `asset_pack_id` attach (empty CI registry)
 - [x] Hardware Ultra fps matrix scaffold (synthetic CI samples)
 - [x] Simulated P0 Ultra QA ([`SIMULATED_ULTRA_QA.md`](SIMULATED_ULTRA_QA.md))
+- [x] Image seed two-pass pipeline ([`IMAGE_SEED_PIPELINE.md`](IMAGE_SEED_PIPELINE.md) · Pass 1 experience conditioner · Pass 2 `modulators.image`)
 
 ## Recommended next steps (priority order)
 

@@ -3,6 +3,19 @@
   "runs": [
     {
       "date": "2026-07-25",
+      "target": "Live Experience image-seed control (index.html + style.css + app.js)",
+      "verb": "component",
+      "genre": "atmospheric",
+      "macrostructure": "Workbench",
+      "theme": "design.md",
+      "component": "image-seed",
+      "nav": "N9",
+      "footer": "Ft2",
+      "designed_as_app": true,
+      "notes": "Pass-1/Pass-2 image seed UI; pf-* tokens; SW v29"
+    },
+    {
+      "date": "2026-07-25",
       "target": "psyfi_api/templates/index.html + psyfi_api/static/style.css",
       "verb": "redesign",
       "genre": "atmospheric",

@@ -39,6 +39,7 @@ Synced via `python3 scripts/sync_frozen_contracts.py`:
 - `POST /api/v1/visualize/parameter-timeline`
 - `POST /api/v1/visualize/field-frame`
 - `POST /api/v1/visualize/scene-snapshot`
+- `POST /api/v1/visualize/image-seed` (+ `/json` base64 alternate)
 - `GET/POST /api/v1/telemetry/*`
 - `GET /health`, `GET /ready`
 

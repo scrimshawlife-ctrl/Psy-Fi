@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://psyfi.local/schemas/psyfi_image_seed.v1.json",
+  "title": "psyfi.image_seed.v1",
+  "description": "Pass-1 experience-conditioned image seed for Live Experience / GPU publish.",
+  "type": "object",
+  "required": ["schema", "master_seed", "influence", "features", "parameter_hints", "note"],
+  "properties": {
+    "schema": { "const": "psyfi.image_seed.v1" },
+    "master_seed": { "type": "integer", "minimum": 0 },
+    "influence": { "type": "number", "minimum": 0, "maximum": 1 },
+    "substance": { "type": "string" },
+    "experience_id": { "type": ["string", "null"] },
+    "mode": { "type": "string" },
+    "features": {
+      "type": "object",
+      "properties": {
+        "mean_rgb": {
+          "type": "array",
+          "items": { "type": "number" },
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "energy": { "type": "number" },
+        "contrast": { "type": "number" },
+        "edge_density": { "type": "number" },
+        "warmth": { "type": "number" },
+        "width": { "type": "integer" },
+        "height": { "type": "integer" }
+      }
+    },
+    "parameter_hints": {
+      "type": "object",
+      "additionalProperties": { "type": "number" }
+    },
+    "source_field": {
+      "type": ["object", "null"],
+      "description": "Luminance plane for Live Experience source-plane blend.",
+      "properties": {
+        "width": { "type": "integer" },
+        "height": { "type": "integer" },
+        "values": { "type": "array" }
+      }
+    },
+    "conditioned_preview_png_base64": {
+      "type": ["string", "null"],
+      "description": "Small PNG preview only; ephemeral, not stored server-side."
+    },
+    "recommended": {
+      "type": "object",
+      "properties": {
+        "mode": { "type": "string" },
+        "intensity": { "type": "number" }
+      }
+    },
+    "note": { "type": "string" }
+  }
+}

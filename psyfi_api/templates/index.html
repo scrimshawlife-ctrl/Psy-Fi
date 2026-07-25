@@ -193,6 +193,45 @@
                             </div>
                         </details>
 
+                        <details class="control-drawer image-seed-drawer" open>
+                            <summary>Image seed</summary>
+                            <div class="image-seed" id="imageSeedControl" data-state="idle">
+                                <p class="input-hint">
+                                    Pass 1 conditions your image with the selected recipe; Pass 2 lives through ParameterField + SafetyPass.
+                                    Uploads are not stored.
+                                </p>
+                                <div class="image-seed-row">
+                                    <div class="image-seed-preview-wrap">
+                                        <img id="imageSeedPreview" class="image-seed-preview" alt="" hidden>
+                                        <div id="imageSeedPreviewEmpty" class="image-seed-preview-empty" aria-hidden="true">No image</div>
+                                    </div>
+                                    <div class="image-seed-fields">
+                                        <div class="input-group">
+                                            <label for="imageSeedFile">Upgrade image</label>
+                                            <input type="file" id="imageSeedFile" accept="image/png,image/jpeg,image/webp" data-tip="PNG, JPEG, or WebP. Conditioned by experience data, then live-modulated.">
+                                        </div>
+                                        <div class="input-group">
+                                            <label for="imageSeedInfluence">Influence <span id="imageSeedInfluenceValue">0.65</span></label>
+                                            <input type="range" id="imageSeedInfluence" min="0" max="1" step="0.01" value="0.65" data-tip="How hard Pass 1 recipe conditioning and Pass 2 image modulator pull.">
+                                        </div>
+                                        <div class="checkbox-row compact-checks">
+                                            <label data-tip="Apply suggested mode/intensity from image features.">
+                                                <input type="checkbox" id="imageSeedApplyRecommended"> Use recommended formula
+                                            </label>
+                                        </div>
+                                        <div class="session-actions dense-actions">
+                                            <button type="button" class="btn-primary btn-with-icon" id="imageSeedApplyBtn" data-tip="Run Pass 1 conditioner, set seed, blend luminance plane, then load experience.">
+                                                <span class="pf-icon pf-icon-console" aria-hidden="true"></span>
+                                                <span>Condition &amp; load</span>
+                                            </button>
+                                            <button type="button" class="btn-secondary" id="imageSeedClearBtn" data-tip="Clear image seed and source-plane blend.">Clear</button>
+                                        </div>
+                                        <p class="image-seed-status" id="imageSeedStatus" role="status" aria-live="polite">Idle</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </details>
+
                         <details class="control-drawer experience-advanced">
                             <summary>Field options</summary>
                             <div class="input-group">

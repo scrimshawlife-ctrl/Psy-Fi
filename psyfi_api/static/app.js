@@ -1179,18 +1179,141 @@ document.addEventListener('DOMContentLoaded', () => {
         intensityValue.textContent = Number(intensityRange.value).toFixed(2);
     });
 
+    const imageSeedControl = document.getElementById('imageSeedControl');
+    const imageSeedFile = document.getElementById('imageSeedFile');
+    const imageSeedInfluence = document.getElementById('imageSeedInfluence');
+    const imageSeedInfluenceValue = document.getElementById('imageSeedInfluenceValue');
+    const imageSeedApplyRecommended = document.getElementById('imageSeedApplyRecommended');
+    const imageSeedApplyBtn = document.getElementById('imageSeedApplyBtn');
+    const imageSeedClearBtn = document.getElementById('imageSeedClearBtn');
+    const imageSeedStatus = document.getElementById('imageSeedStatus');
+    const imageSeedPreview = document.getElementById('imageSeedPreview');
+    const imageSeedPreviewEmpty = document.getElementById('imageSeedPreviewEmpty');
+    let imageSeedState = null;
+
+    function imageInfluence() {
+        return imageSeedInfluence ? Number(imageSeedInfluence.value) : 0;
+    }
+
+    function setImageSeedUiState(state, msg) {
+        if (imageSeedControl) imageSeedControl.dataset.state = state || 'idle';
+        if (imageSeedStatus) imageSeedStatus.textContent = msg || 'Idle';
+        if (imageSeedApplyBtn) imageSeedApplyBtn.disabled = state === 'loading';
+        if (imageSeedFile) imageSeedFile.disabled = state === 'loading';
+    }
+
+    function showImageSeedPreview(b64) {
+        if (!imageSeedPreview) return;
+        if (b64) {
+            imageSeedPreview.src = `data:image/png;base64,${b64}`;
+            imageSeedPreview.hidden = false;
+            if (imageSeedPreviewEmpty) imageSeedPreviewEmpty.hidden = true;
+        } else {
+            imageSeedPreview.removeAttribute('src');
+            imageSeedPreview.hidden = true;
+            if (imageSeedPreviewEmpty) imageSeedPreviewEmpty.hidden = false;
+        }
+    }
+
     function syncModulators() {
+        const img = imageSeedState ? imageInfluence() : 0;
         player.setModulators({
             camera: Number(modCamera?.value || 0),
             motion: Number(modMotion?.value || 0),
             midi: Number(modMidi?.value || 0),
             audio: Number(modAudio?.value || 0),
             haptics: Number(modHaptics?.value || 0),
+            image: img,
         });
     }
     [modCamera, modMotion, modMidi, modAudio, modHaptics].forEach((el) =>
         el?.addEventListener('change', syncModulators),
     );
+
+    imageSeedInfluence?.addEventListener('input', () => {
+        if (imageSeedInfluenceValue) {
+            imageSeedInfluenceValue.textContent = Number(imageSeedInfluence.value).toFixed(2);
+        }
+        syncModulators();
+    });
+
+    imageSeedClearBtn?.addEventListener('click', () => {
+        imageSeedState = null;
+        if (typeof player.clearImageHints === 'function') player.clearImageHints();
+        if (imageSeedFile) imageSeedFile.value = '';
+        showImageSeedPreview(null);
+        // Keep sim source plane if user still has that checkbox; only clear image plane when not bridging.
+        if (!(sourcePlaneChk && sourcePlaneChk.checked && lastBridgeField)) {
+            player.clearSourcePlane();
+        } else {
+            syncSourcePlaneUI();
+        }
+        syncModulators();
+        setImageSeedUiState('idle', 'Image seed cleared');
+    });
+
+    async function conditionImageAndLoad() {
+        const file = imageSeedFile?.files && imageSeedFile.files[0];
+        if (!file) {
+            setImageSeedUiState('error', 'Choose an image first');
+            return;
+        }
+        setImageSeedUiState('loading', 'Conditioning image (Pass 1)…');
+        const fd = new FormData();
+        fd.append('file', file);
+        fd.append('substance', substanceSelect.value || 'lsd');
+        if (experienceSelect.value) fd.append('experience_id', experienceSelect.value);
+        fd.append('mode', modeSelect.value || 'open');
+        fd.append('intensity', String(Number(intensityRange.value)));
+        fd.append('influence', String(imageInfluence()));
+        fd.append('include_preview', 'true');
+        fd.append('include_source_field', 'true');
+        fd.append('apply_recommended', imageSeedApplyRecommended?.checked ? 'true' : 'false');
+        try {
+            const res = await fetch('/api/v1/visualize/image-seed', { method: 'POST', body: fd });
+            const body = await res.json().catch(() => ({}));
+            if (!res.ok) {
+                throw new Error(body.detail || res.statusText || 'image-seed failed');
+            }
+            imageSeedState = body;
+            seedInput.value = String(body.master_seed >>> 0);
+            if (imageSeedApplyRecommended?.checked && body.applied_mode) {
+                modeSelect.value = body.applied_mode;
+            }
+            if (imageSeedApplyRecommended?.checked && body.applied_intensity != null) {
+                intensityRange.value = String(body.applied_intensity);
+                intensityValue.textContent = Number(body.applied_intensity).toFixed(2);
+            }
+            if (typeof player.setImageHints === 'function') {
+                player.setImageHints(body.parameter_hints || null);
+            }
+            showImageSeedPreview(body.conditioned_preview_png_base64 || null);
+            if (body.source_field) {
+                lastBridgeField = body.source_field;
+                if (sourcePlaneChk) sourcePlaneChk.checked = true;
+                if (sourcePlaneMix) {
+                    const mix = Math.min(0.72, Math.max(0.18, imageInfluence() * 0.85));
+                    sourcePlaneMix.value = String(mix);
+                    if (sourcePlaneMixValue) sourcePlaneMixValue.textContent = mix.toFixed(2);
+                }
+                syncSourcePlaneUI();
+            }
+            syncModulators();
+            syncGpuLabLinks();
+            setImageSeedUiState(
+                'success',
+                `Seed ${body.master_seed} · loading live field (Pass 2)…`,
+            );
+            loadBtn.click();
+        } catch (err) {
+            console.error(err);
+            setImageSeedUiState('error', err.message || String(err));
+        }
+    }
+
+    imageSeedApplyBtn?.addEventListener('click', () => {
+        conditionImageAndLoad();
+    });
 
     let neutralOn = false;
     neutralBtn.addEventListener('click', () => {
@@ -1509,7 +1632,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     midi: Number(modMidi?.value || 0),
                     audio: Number(modAudio?.value || 0),
                     haptics: Number(modHaptics?.value || 0),
+                    image: imageSeedState ? imageInfluence() : 0,
                 },
+                image_hints: imageSeedState?.parameter_hints || undefined,
             });
             if (phaseScrub && data.frames) {
                 phaseScrub.disabled = false;
@@ -1523,6 +1648,9 @@ document.addEventListener('DOMContentLoaded', () => {
             statusEl.textContent = player.phaseAdvance
                 ? 'Experience loaded · phase advance on'
                 : 'Experience loaded';
+            if (imageSeedState) {
+                setImageSeedUiState('success', `Live field seeded from image · seed ${imageSeedState.master_seed}`);
+            }
         } catch (err) {
             console.error(err);
             statusEl.textContent = 'Load failed';

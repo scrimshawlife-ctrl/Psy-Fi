@@ -9,6 +9,7 @@ Web-first **Live Experience** runtime:
 - Canvas field renderer with multi-engine blend + non-bypassable safety pass
 - Quiet UI chrome: substance, recipe, Open/Attractor/Void/Power, intensity, seed, Neutral View, provenance
 - Optional **sim source plane**: last workspace `visualization.field` blended under ParameterField engines (Canvas + WebGL), still safety-clamped; toggle + mix on Live Experience after **Bridge from sim**
+- **Image seed (two-pass)**: upload → experience conditioner (Pass 1) → `master_seed` + luminance plane + `modulators.image` live present (Pass 2). See [`IMAGE_SEED_PIPELINE.md`](IMAGE_SEED_PIPELINE.md).
 
 ## Run
 
@@ -33,6 +34,7 @@ Prefer WebGL (on by default) uses a dedicated `#experienceCanvasGL` (Canvas 2D r
 | GET | `/api/v1/experiences/{id}` | Full recipe |
 | GET | `/api/v1/substances` | Substance visual defaults + counts |
 | POST | `/api/v1/visualize/parameter-timeline` | Deterministic parameter timeline or single snapshot |
+| POST | `/api/v1/visualize/image-seed` | Pass-1 experience-conditioned image → seed + hints (+ `/json` base64) |
 
 ## Modes
 

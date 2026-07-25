@@ -1,6 +1,72 @@
 {
   "components": {
     "schemas": {
+      "Body_image_seed_multipart_api_v1_visualize_image_seed_post": {
+        "properties": {
+          "apply_recommended": {
+            "default": false,
+            "title": "Apply Recommended",
+            "type": "boolean"
+          },
+          "experience_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Experience Id"
+          },
+          "file": {
+            "contentMediaType": "application/octet-stream",
+            "title": "File",
+            "type": "string"
+          },
+          "include_preview": {
+            "default": true,
+            "title": "Include Preview",
+            "type": "boolean"
+          },
+          "include_source_field": {
+            "default": true,
+            "title": "Include Source Field",
+            "type": "boolean"
+          },
+          "influence": {
+            "default": 0.65,
+            "title": "Influence",
+            "type": "number"
+          },
+          "intensity": {
+            "default": 0.7,
+            "title": "Intensity",
+            "type": "number"
+          },
+          "mode": {
+            "default": "open",
+            "enum": [
+              "open",
+              "attractor",
+              "void",
+              "power"
+            ],
+            "title": "Mode",
+            "type": "string"
+          },
+          "substance": {
+            "default": "lsd",
+            "title": "Substance",
+            "type": "string"
+          }
+        },
+        "required": [
+          "file"
+        ],
+        "title": "Body_image_seed_multipart_api_v1_visualize_image_seed_post",
+        "type": "object"
+      },
       "FieldFrameRequest": {
         "description": "Bridge: run a bounded Python simulation and return visualizable channels.",
         "properties": {
@@ -87,6 +153,76 @@
           }
         },
         "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "ImageSeedJsonRequest": {
+        "description": "JSON alternate for Pass-1 image seed (base64). Prefer multipart for large files.",
+        "properties": {
+          "apply_recommended": {
+            "default": false,
+            "title": "Apply Recommended",
+            "type": "boolean"
+          },
+          "experience_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Experience Id"
+          },
+          "image_base64": {
+            "title": "Image Base64",
+            "type": "string"
+          },
+          "include_preview": {
+            "default": true,
+            "title": "Include Preview",
+            "type": "boolean"
+          },
+          "include_source_field": {
+            "default": true,
+            "title": "Include Source Field",
+            "type": "boolean"
+          },
+          "influence": {
+            "default": 0.65,
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Influence",
+            "type": "number"
+          },
+          "intensity": {
+            "default": 0.7,
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Intensity",
+            "type": "number"
+          },
+          "mode": {
+            "default": "open",
+            "enum": [
+              "open",
+              "attractor",
+              "void",
+              "power"
+            ],
+            "title": "Mode",
+            "type": "string"
+          },
+          "substance": {
+            "default": "lsd",
+            "title": "Substance",
+            "type": "string"
+          }
+        },
+        "required": [
+          "image_base64"
+        ],
+        "title": "ImageSeedJsonRequest",
         "type": "object"
       },
       "JobCreateRequest": {
@@ -439,6 +575,14 @@
             "title": "Haptics",
             "type": "number"
           },
+          "image": {
+            "default": 0.0,
+            "description": "Pass-2 strength for experience-conditioned image seed hints.",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Image",
+            "type": "number"
+          },
           "midi": {
             "default": 0.0,
             "maximum": 1.0,
@@ -777,6 +921,20 @@
             "minimum": 8.0,
             "title": "Height",
             "type": "integer"
+          },
+          "image_hints": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "type": "number"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Image Hints"
           },
           "include_fixture_assets": {
             "default": false,
@@ -1289,6 +1447,20 @@
               }
             ],
             "title": "Experience Id"
+          },
+          "image_hints": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "type": "number"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Image Hints"
           },
           "intensity": {
             "default": 0.7,
@@ -2936,6 +3108,94 @@
           }
         },
         "summary": "Field Frame",
+        "tags": [
+          "experiences"
+        ]
+      }
+    },
+    "/api/v1/visualize/image-seed": {
+      "post": {
+        "description": "Pass 1: experience-condition an uploaded image \u2192 master_seed + live hints.",
+        "operationId": "image_seed_multipart_api_v1_visualize_image_seed_post",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_image_seed_multipart_api_v1_visualize_image_seed_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Image Seed Multipart Api V1 Visualize Image Seed Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Image Seed Multipart",
+        "tags": [
+          "experiences"
+        ]
+      }
+    },
+    "/api/v1/visualize/image-seed/json": {
+      "post": {
+        "description": "Pass 1 JSON alternate (base64 image).",
+        "operationId": "image_seed_json_api_v1_visualize_image_seed_json_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ImageSeedJsonRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Image Seed Json Api V1 Visualize Image Seed Json Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Image Seed Json",
         "tags": [
           "experiences"
         ]

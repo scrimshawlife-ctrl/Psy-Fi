@@ -22,6 +22,7 @@ def test_health_route_reports_status_payload():
     payload = response.json()
     assert payload["status"] == "healthy"
     assert payload["service"] == "psyfi-api"
+    assert payload["version"] == "0.1.0"
     assert "timestamp" in payload
 
 

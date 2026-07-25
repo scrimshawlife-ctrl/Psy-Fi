@@ -24,7 +24,11 @@ class ConsciousnessOmegaParams(BaseModel):
     """
 
     coupling_type: Literal["symmetric", "asymmetric"] = Field(default="symmetric")
+<<<<<<< HEAD
     # Upper bound matches substance presets / safety defaults (e.g. DMT = 1.2)
+=======
+    # Upper bound matches substance presets / SafetyDefaults (e.g. DMT = 1.2)
+>>>>>>> ece63d3 (Fix audit follow-ups for MIDI, seed provenance, and presets)
     coupling_strength: float = Field(default=0.5, ge=0.0, le=2.0)
     natural_freq_base: float = Field(default=1.0)
     freq_depth_scale: float = Field(default=0.5)

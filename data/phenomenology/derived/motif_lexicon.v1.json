@@ -8,51 +8,66 @@
   },
   "channels": {
     "body_somatic": {
-      "mean": 0.319,
+      "mean": 0.312,
       "max": 1.0,
-      "recipe_count": 29
+      "recipe_count": 42
     },
     "color_light": {
-      "mean": 0.367,
+      "mean": 0.411,
       "max": 1.0,
-      "recipe_count": 30
+      "recipe_count": 46
     },
     "entities": {
-      "mean": 0.274,
+      "mean": 0.205,
       "max": 1.0,
-      "recipe_count": 21
+      "recipe_count": 28
     },
     "geometry": {
-      "mean": 0.306,
+      "mean": 0.334,
       "max": 0.9,
-      "recipe_count": 33
+      "recipe_count": 48
     },
     "machines": {
-      "mean": 0.119,
+      "mean": 0.11,
       "max": 0.85,
-      "recipe_count": 22
+      "recipe_count": 31
     },
     "nature": {
-      "mean": 0.349,
+      "mean": 0.291,
       "max": 1.0,
-      "recipe_count": 27
+      "recipe_count": 37
     },
     "space_void": {
-      "mean": 0.392,
+      "mean": 0.349,
       "max": 1.0,
-      "recipe_count": 29
+      "recipe_count": 39
     },
     "time_memory": {
-      "mean": 0.392,
+      "mean": 0.316,
       "max": 1.0,
-      "recipe_count": 24
+      "recipe_count": 33
     }
   },
   "hooks_by_substance": {
+    "2c-b": [
+      "crisp ornamental geometry with tactile color pop and stable attractors",
+      "textile-like neon lattice with playful chroma without void overwhelm",
+      "beautiful textile-like geometry, neon tracers, stable attractors, amazing color salience and lucid ornamental clarity."
+    ],
+    "2c-e": [
+      "longer-held deep patterns; high complexity with deliberate pacing",
+      "analytic mosaic geometry with lucid attentional grip",
+      "deep analytic patterns held for long stretches, complex mosaics, cosmic geometry, profound focus and awe without terror."
+    ],
     "5-meo-dmt": [
       "minimal form, luminous depth, dissolve rather than ornate pattern",
       "near-formless luminance with soft somatic dissolve; pattern complexity stays low",
       "slow breath-linked expansion into depth without ornate lattice"
+    ],
+    "al-lad": [
+      "lsd-adjacent soft lattice with gentler comeup geometry",
+      "pastel recursive drift; ornamental but less abrasive than peak LSD",
+      "soft lysergic lattice, pastel recursion, gentle kaleidoscope, beautiful colors and calm geometric drift."
     ],
     "dmt": [
       "rapid tunnel/chrysanthemum entry into high-frequency structure",
@@ -79,10 +94,25 @@
       "While I had tripped several times on acid prior to this, D had only done it twice at this point.",
       "Everything adorned with intricate patterns etched into a thick clay-like texture."
     ],
+    "mda": [
+      "luminous empathic field; elevated glow with soft organic motion",
+      "luminous empathy, glowing organic bloom, music-driven color, profound warmth and positive awe."
+    ],
+    "mdma": [
+      "warm connective glow; soft edges and elevated palette energy without panic",
+      "pulse-coupled bloom with lucid social warmth and low lattice aggression",
+      "warm euphoric glow, deep empathy, soft edges, beautiful colors without fear, heartbeat sync with music, life-affirming connection and peaceful awe.",
+      "positive emotional openness, neon warmth, gentle visual bloom, music becomes tactile light, profound love and calm clarity."
+    ],
     "mescaline": [
       "warm ornamental geometry with lucid contrast",
       "sunlit ornamental clarity; plant and textile geometry with stable edges",
       "long warm tracers with lucid attentional hold and low panic valence"
+    ],
+    "mxe": [
+      "soft dissociative mosaic; muted chroma and floating depth",
+      "warm-hole corridor drift with gentle somatic detach",
+      "soft dissociative corridors, warm floating drift, muted colorful mosaic, peaceful detachment and smooth void depth."
     ],
     "pcp": [
       "experimental low-intensity edge ambiguity; intensity capped",

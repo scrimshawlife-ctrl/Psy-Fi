@@ -134,10 +134,27 @@ export function probeDeviceCaps(): DeviceCaps {
   const nav = typeof navigator !== 'undefined' ? navigator : undefined
   const isMobile = !!nav && /Mobi|Android|iPhone|iPad/i.test(nav.userAgent || '')
   const webgpu = typeof navigator !== 'undefined' && 'gpu' in navigator
+  const conn = nav ? (nav as Navigator & { connection?: { saveData?: boolean } }).connection : undefined
+  const preferBattery = isMobile || !!conn?.saveData
   return {
     webgpu,
     maxTextureSize: 8192,
-    preferBattery: isMobile,
+    preferBattery,
     isMobile,
   }
+}
+
+/** Async battery probe — prefer Battery Saver when discharging below 25%. */
+export async function refineBatteryCaps(caps: DeviceCaps): Promise<DeviceCaps> {
+  const getBattery = (navigator as Navigator & { getBattery?: () => Promise<{ charging: boolean; level: number }> }).getBattery
+  if (typeof getBattery !== 'function') return caps
+  try {
+    const bat = await getBattery.call(navigator)
+    if (!bat.charging && bat.level > 0 && bat.level < 0.25) {
+      return { ...caps, preferBattery: true }
+    }
+  } catch {
+    /* ignore */
+  }
+  return caps
 }

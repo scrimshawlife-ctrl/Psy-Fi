@@ -2,7 +2,7 @@
   "schema_version": "1.0.0",
   "freeze_id": "psyfi-api-v1-soft-2026-07-25",
   "status": "soft_frozen",
-  "frozen_at": "2026-07-25T03:23:33.503017Z",
+  "frozen_at": "2026-07-25T03:53:25.398464Z",
   "api_version": "v1",
   "policy": {
     "additive_ok": true,

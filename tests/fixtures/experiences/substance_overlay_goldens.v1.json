@@ -131,6 +131,153 @@
           "weight": 0.2164
         }
       ]
+    },
+    "mdma": {
+      "snapshot_hash": "854c9f381ec25a8b",
+      "timeline_hash": "a2ed9ef8ed0b259b",
+      "palette_tracers": "#63F3E8",
+      "pattern_complexity": 0.2948,
+      "symmetry_order": 0.398,
+      "top_engines": [
+        {
+          "name": "recursive_feedback",
+          "weight": 0.3487
+        },
+        {
+          "name": "kaleidoscope",
+          "weight": 0.2393
+        },
+        {
+          "name": "flow_field",
+          "weight": 0.2238
+        }
+      ]
+    },
+    "2c-b": {
+      "snapshot_hash": "84a5def7eece1347",
+      "timeline_hash": "a65ed651c9b12361",
+      "palette_tracers": "#63F3E8",
+      "pattern_complexity": 0.484,
+      "symmetry_order": 0.634,
+      "top_engines": [
+        {
+          "name": "recursive_feedback",
+          "weight": 0.3726
+        },
+        {
+          "name": "kaleidoscope",
+          "weight": 0.3319
+        },
+        {
+          "name": "flow_field",
+          "weight": 0.1646
+        }
+      ]
+    },
+    "2c-e": {
+      "snapshot_hash": "320d30186d215f09",
+      "timeline_hash": "99b782b44ddbadc8",
+      "palette_tracers": "#63F3E8",
+      "pattern_complexity": 0.5317,
+      "symmetry_order": 0.694,
+      "top_engines": [
+        {
+          "name": "recursive_feedback",
+          "weight": 0.3792
+        },
+        {
+          "name": "kaleidoscope",
+          "weight": 0.3235
+        },
+        {
+          "name": "flow_field",
+          "weight": 0.1328
+        }
+      ]
+    },
+    "al-lad": {
+      "snapshot_hash": "a3074f304ab34087",
+      "timeline_hash": "95d5e03fbf2cfe12",
+      "palette_tracers": "#63F3E8",
+      "pattern_complexity": 0.517,
+      "symmetry_order": 0.675,
+      "top_engines": [
+        {
+          "name": "recursive_feedback",
+          "weight": 0.3902
+        },
+        {
+          "name": "kaleidoscope",
+          "weight": 0.3633
+        },
+        {
+          "name": "flow_field",
+          "weight": 0.1332
+        }
+      ]
+    },
+    "mxe": {
+      "snapshot_hash": "770c16e28beb87ad",
+      "timeline_hash": "66a6e7cb9174398f",
+      "palette_tracers": "#63F3E8",
+      "pattern_complexity": 0.3153,
+      "symmetry_order": 0.423,
+      "top_engines": [
+        {
+          "name": "void_expansion",
+          "weight": 0.4393
+        },
+        {
+          "name": "organic_bloom",
+          "weight": 0.202
+        },
+        {
+          "name": "recursive_feedback",
+          "weight": 0.1906
+        }
+      ]
+    },
+    "mda": {
+      "snapshot_hash": "ac54e5b34be5b12e",
+      "timeline_hash": "674ded0c85ab7d9c",
+      "palette_tracers": "#63F3E8",
+      "pattern_complexity": 0.2567,
+      "symmetry_order": 0.35,
+      "top_engines": [
+        {
+          "name": "recursive_feedback",
+          "weight": 0.394
+        },
+        {
+          "name": "kaleidoscope",
+          "weight": 0.2187
+        },
+        {
+          "name": "flow_field",
+          "weight": 0.2048
+        }
+      ]
+    },
+    "pcp": {
+      "snapshot_hash": "a8f47d09a2ac9845",
+      "timeline_hash": "218ee7474af61946",
+      "palette_tracers": "#A0FF9A",
+      "pattern_complexity": 0.2413,
+      "symmetry_order": 0.324,
+      "top_engines": [
+        {
+          "name": "flow_field",
+          "weight": 0.355
+        },
+        {
+          "name": "recursive_feedback",
+          "weight": 0.3124
+        },
+        {
+          "name": "organic_bloom",
+          "weight": 0.2182
+        }
+      ]
     }
   }
 }

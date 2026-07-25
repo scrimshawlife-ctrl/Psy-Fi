@@ -54,10 +54,29 @@ def test_modulators_change_field_but_stay_clamped() -> None:
         seed=9,
         intensity=0.7,
         phase_t=0.5,
-        modulators={"camera": 0.8, "motion": 0.5, "midi": 0.6},
+        modulators={"camera": 0.8, "motion": 0.5, "midi": 0.6, "audio": 0.7, "haptics": 0.4},
     )
     assert mod.hash != base.hash
     assert mod.parameters["flash_energy"] <= mod.safety["max_flash_hz"] / 3.0
+    audio_only = map_parameters(
+        substance="lsd",
+        mode="open",
+        seed=9,
+        intensity=0.7,
+        phase_t=0.5,
+        modulators={"audio": 0.9},
+    )
+    haptics_only = map_parameters(
+        substance="lsd",
+        mode="open",
+        seed=9,
+        intensity=0.7,
+        phase_t=0.5,
+        modulators={"haptics": 0.9},
+    )
+    assert audio_only.hash != base.hash
+    assert haptics_only.hash != base.hash
+    assert audio_only.hash != haptics_only.hash
 
 
 def test_field_frame_bridge_endpoint() -> None:

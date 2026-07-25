@@ -12,10 +12,11 @@ export interface PsyFiGPUCanvasProps {
 }
 
 export function PsyFiGPUCanvas({ snapshot, tier, children }: PsyFiGPUCanvasProps) {
+  const cfgScale = tier === 'battery' ? 0.65 : tier === 'balanced' ? 0.85 : 1
   return (
     <Canvas
-      shadows
-      dpr={[1, 2]}
+      shadows={tier !== 'battery'}
+      dpr={[1, Math.min(2, 1.5 * cfgScale)]}
       gl={async (props) => createWebGPURenderer(props as never)}
       camera={{ position: [0, 0.35, 2.4], fov: 45, near: 0.05, far: 80 }}
       style={{ width: '100%', height: '100%', background: '#07070B' }}

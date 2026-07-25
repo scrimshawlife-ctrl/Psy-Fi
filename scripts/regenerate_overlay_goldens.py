@@ -11,7 +11,21 @@ from psyfi_core.experiences.parameter_mapper import build_parameter_timeline, ma
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "tests" / "fixtures" / "experiences" / "substance_overlay_goldens.v1.json"
-SUBSTANCES = ("lsd", "psilocybin", "dmt", "5-meo-dmt", "mescaline", "ketamine")
+SUBSTANCES = (
+    "lsd",
+    "psilocybin",
+    "dmt",
+    "5-meo-dmt",
+    "mescaline",
+    "ketamine",
+    "mdma",
+    "2c-b",
+    "2c-e",
+    "al-lad",
+    "mxe",
+    "mda",
+    "pcp",
+)
 
 
 def main() -> None:

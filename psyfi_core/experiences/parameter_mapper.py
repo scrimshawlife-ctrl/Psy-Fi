@@ -354,20 +354,25 @@ def _resolve_overlay(substance: str, substance_overlay: dict[str, Any] | None) -
 
 
 def _apply_modulators(params: dict[str, float], modulators: dict[str, float] | None) -> dict[str, float]:
-    """Optional camera/motion/MIDI modulators — ParameterField only, never direct-to-shader."""
+    """Optional modulators — ParameterField only, never direct-to-shader."""
     if not modulators:
         return params
     camera = _clamp(float(modulators.get("camera", 0.0)))
     motion = _clamp(float(modulators.get("motion", 0.0)))
     midi = _clamp(float(modulators.get("midi", 0.0)))
+    audio = _clamp(float(modulators.get("audio", 0.0)))
+    haptics = _clamp(float(modulators.get("haptics", 0.0)))
     # Keep modulators subtle and safety-friendly.
-    params["palette_energy"] = _clamp(params.get("palette_energy", 0.5) + 0.15 * camera)
+    params["palette_energy"] = _clamp(params.get("palette_energy", 0.5) + 0.15 * camera + 0.1 * audio)
     params["depth_distortion"] = _clamp(params.get("depth_distortion", 0.35) + 0.12 * camera)
-    params["peripheral_flow"] = _clamp(params.get("peripheral_flow", 0.25) + 0.18 * motion)
-    params["displacement"] = _clamp(params.get("displacement", 0.2) + 0.12 * motion)
-    params["feedback_strength"] = _clamp(params.get("feedback_strength", 0.4) + 0.2 * midi)
+    params["peripheral_flow"] = _clamp(params.get("peripheral_flow", 0.25) + 0.18 * motion + 0.1 * haptics)
+    params["displacement"] = _clamp(params.get("displacement", 0.2) + 0.12 * motion + 0.08 * audio)
+    params["feedback_strength"] = _clamp(params.get("feedback_strength", 0.4) + 0.2 * midi + 0.1 * audio)
     params["recursion_gain"] = _clamp(params.get("recursion_gain", 0.35) + 0.15 * midi)
-    params["flash_energy"] = _clamp(params.get("flash_energy", 0.05) + 0.04 * max(camera, midi))
+    params["turbulence"] = _clamp(params.get("turbulence", 0.25) + 0.1 * haptics)
+    params["flash_energy"] = _clamp(
+        params.get("flash_energy", 0.05) + 0.04 * max(camera, midi, audio * 0.5)
+    )
     return params
 
 

@@ -15,12 +15,13 @@ Platform package: `packages/psyfi-gpu-renderer`
 
 ## Phase G1 — GPU present path
 
-- R3F `Canvas` + `three/webgpu` `WebGPURenderer` init
-- Procedural crystalline field + ParameterField-driven uniforms
-- HDR render targets + physically based exposure (basic)
-- Bloom + color grading + safety clamp pass
-- Adaptive quality: Balanced default, Battery Saver probe
-- OffscreenCanvas optional path behind flag
+- [x] R3F `Canvas` + `three/webgpu` `WebGPURenderer` init
+- [x] Procedural crystalline field + ParameterField-driven uniforms
+- [x] HDR tone path + exposure driven by ParameterField intensity/energy
+- [x] Bloom + color grading + **mandatory** safety attenuator (`PresentPipeline`)
+- [x] Adaptive quality: Balanced default; Battery Saver via saveData / mobile / low-battery probe
+- [ ] OffscreenCanvas optional path behind flag
+- [ ] Device matrix evidence (human; shared with G0)
 
 ## Phase G2 — Compute & density
 

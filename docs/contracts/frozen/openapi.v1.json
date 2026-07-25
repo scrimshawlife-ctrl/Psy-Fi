@@ -417,11 +417,25 @@
       "Modulators": {
         "description": "Optional progressive enhancers routed only through ParameterField.",
         "properties": {
+          "audio": {
+            "default": 0.0,
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Audio",
+            "type": "number"
+          },
           "camera": {
             "default": 0.0,
             "maximum": 1.0,
             "minimum": 0.0,
             "title": "Camera",
+            "type": "number"
+          },
+          "haptics": {
+            "default": 0.0,
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Haptics",
             "type": "number"
           },
           "midi": {

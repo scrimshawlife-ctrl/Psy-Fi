@@ -32,3 +32,5 @@ jobs:
         run: npm run gpu:test
       - name: GPU renderer typecheck
         run: npm run gpu:typecheck
+      - name: GPU renderer production build
+        run: npm run gpu:build

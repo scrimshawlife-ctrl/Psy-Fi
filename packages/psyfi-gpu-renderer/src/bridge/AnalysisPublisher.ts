@@ -9,6 +9,7 @@ export interface PublishOptions {
   quality_tier?: string
   experience_id?: string | null
   include_simulation?: boolean
+  include_fixture_assets?: boolean
   reduce_motion?: boolean
   dim_flashing?: boolean
   neutral_view?: boolean
@@ -41,6 +42,7 @@ export class AnalysisPublisher {
       quality_tier: opts.quality_tier ?? 'balanced',
       experience_id: opts.experience_id ?? null,
       include_simulation: opts.include_simulation ?? true,
+      include_fixture_assets: !!opts.include_fixture_assets,
       reduce_motion: !!opts.reduce_motion,
       dim_flashing: !!opts.dim_flashing,
       neutral_view: !!opts.neutral_view,

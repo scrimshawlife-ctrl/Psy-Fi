@@ -82,7 +82,18 @@ describe('WebGPU / soft-present pixel goldens', () => {
     const snap = loadSnapshot(index.cases[0].file)
     const frame = await capturePixelFrame(snap, { preferSoft: true })
     expect(frame.backend).toBe('soft')
+    expect(frame.mode).toBe('soft')
     expect(frame.width).toBe(PIXEL_GOLDEN_SIZE)
+  })
+
+  it('capturePixelFrame reports webgpu-unavailable when HW requested in Node', async () => {
+    const index = JSON.parse(readFileSync(join(fixturesDir, 'index.json'), 'utf8')) as {
+      cases: { file: string }[]
+    }
+    const snap = loadSnapshot(index.cases[0].file)
+    const frame = await capturePixelFrame(snap, { preferSoft: false, tryWebGpu: true })
+    expect(frame.mode).toBe('webgpu-unavailable')
+    expect(frame.backend).toBe('soft')
   })
 
   it('neutral_view soft-present differs from open view', () => {
@@ -96,5 +107,21 @@ describe('WebGPU / soft-present pixel goldens', () => {
       parameter_field: { ...snap.parameter_field, neutral_view: true },
     })
     expect(metricsFromFrame(open).sha256).not.toBe(metricsFromFrame(neutral).sha256)
+  })
+
+  it('fixture ktx2 assets tint the soft-present ground band', () => {
+    const index = JSON.parse(readFileSync(join(fixturesDir, 'index.json'), 'utf8')) as {
+      cases: { file: string }[]
+    }
+    const snap = loadSnapshot(index.cases[0].file)
+    const bare = softPresentSnapshot(snap)
+    const withAssets = softPresentSnapshot({
+      ...snap,
+      assets: {
+        ...(snap.assets || { gltf: [], ktx2: [], splats: [] }),
+        ktx2: [{ id: 'fixture_ground', url: '/gpu/assets/fixtures/ground_rgba8.ktx2', role: 'ground' }],
+      },
+    })
+    expect(metricsFromFrame(bare).sha256).not.toBe(metricsFromFrame(withAssets).sha256)
   })
 })

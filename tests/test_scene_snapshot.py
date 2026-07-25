@@ -10,6 +10,7 @@ from psyfi_core.visualization.scene_snapshot import (
     SCENE_SNAPSHOT_SCHEMA,
     build_scene_snapshot,
     normalize_snapshot_quality_tier,
+    resolve_include_fixture_assets,
 )
 
 client = TestClient(app)
@@ -21,6 +22,43 @@ def test_normalize_snapshot_quality_tier_aliases() -> None:
     assert normalize_snapshot_quality_tier("efficient") == "balanced"
     assert normalize_snapshot_quality_tier("ultra") == "ultra"
     assert normalize_snapshot_quality_tier("nope") == "balanced"
+
+
+def test_fixture_assets_opt_in() -> None:
+    field = map_parameters(substance="lsd", mode="open", intensity=0.7, seed=3).to_dict()
+    empty = build_scene_snapshot(parameter_field=field, quality_tier="balanced", sequence=1)
+    assert empty["assets"]["ktx2"] == []
+    filled = build_scene_snapshot(
+        parameter_field=field,
+        quality_tier="balanced",
+        sequence=1,
+        include_fixture_assets=True,
+    )
+    assert len(filled["assets"]["ktx2"]) == 1
+    assert filled["assets"]["ktx2"][0]["url"].endswith("ground_rgba8.ktx2")
+    assert filled["assets"]["ktx2"][0]["id"] == "fixture_ground"
+
+
+def test_fixture_assets_env_gate(monkeypatch) -> None:
+    monkeypatch.setenv("PSYFI_SCENE_ASSETS", "fixtures")
+    assert resolve_include_fixture_assets(False) is True
+    monkeypatch.setenv("PSYFI_SCENE_ASSETS", "off")
+    assert resolve_include_fixture_assets(True) is False
+
+
+def test_scene_snapshot_endpoint_fixture_assets() -> None:
+    res = client.post(
+        "/api/v1/visualize/scene-snapshot",
+        json={
+            "substance": "lsd",
+            "intensity": 0.6,
+            "seed": 11,
+            "include_simulation": False,
+            "include_fixture_assets": True,
+        },
+    )
+    assert res.status_code == 200, res.text
+    assert res.json()["assets"]["ktx2"][0]["role"] == "ground"
 
 
 def test_battery_saver_uses_battery_post_stack() -> None:

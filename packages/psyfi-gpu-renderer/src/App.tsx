@@ -18,6 +18,7 @@ import {
 import { enabledPasses } from './contracts/RenderGraph'
 import type { SceneSnapshotV1 } from './contracts/SceneSnapshot'
 import { readGpuLaunchParams } from './bridge/launchParams'
+import type { OffscreenPresentMode } from './Renderer/offscreenPresent'
 
 export function App() {
   const launch = useMemo(() => readGpuLaunchParams(), [])
@@ -39,6 +40,8 @@ export function App() {
   const [stats, setStats] = useState(store.stats())
   const profiler = useMemo(() => new FrameProfiler(), [])
   const [profile, setProfile] = useState<FrameProfilerSummary | null>(null)
+  const [presentMode, setPresentMode] = useState<OffscreenPresentMode>('main')
+  const [fixtureAssets, setFixtureAssets] = useState(!!launch.fixtureAssets)
 
   const effectiveTier = resolveTier(tier, caps)
   const passes = enabledPasses(effectiveTier, caps)
@@ -55,6 +58,7 @@ export function App() {
         quality_tier: tier,
         experience_id: launch.experienceId ?? null,
         include_simulation: true,
+        include_fixture_assets: fixtureAssets,
         reduce_motion: window.matchMedia?.('(prefers-reduced-motion: reduce)').matches,
       })
       if (snap) {
@@ -64,14 +68,28 @@ export function App() {
           const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
           setSnapshot(reduceMotion ? interpolator.snap() : interpolator.sample())
         }
-        setStatus(`Snapshot ${snap.sequence} · ${snap.snapshot_id.slice(0, 8)}`)
+        const assetN = snap.assets?.ktx2?.length || 0
+        setStatus(
+          `Snapshot ${snap.sequence} · ${snap.snapshot_id.slice(0, 8)}${assetN ? ` · ${assetN} ktx2` : ''}`,
+        )
       }
       setStats(store.stats())
     } catch (err) {
       console.error(err)
       setStatus(err instanceof Error ? err.message : 'Publish failed')
     }
-  }, [publisher, store, interpolator, substance, mode, intensity, seed, tier, launch.experienceId])
+  }, [
+    publisher,
+    store,
+    interpolator,
+    substance,
+    mode,
+    intensity,
+    seed,
+    tier,
+    launch.experienceId,
+    fixtureAssets,
+  ])
 
   useEffect(() => {
     void refineDeviceCaps(probeDeviceCaps()).then((next) => {
@@ -202,13 +220,26 @@ export function App() {
                 ))}
               </select>
             </label>
+            <label>
+              <input
+                type="checkbox"
+                checked={fixtureAssets}
+                onChange={(e) => setFixtureAssets(e.target.checked)}
+              />{' '}
+              Fixture assets
+            </label>
           </div>
         </details>
         <a href="/">Shell</a>
       </header>
       <div className="gpu-stage">
         {caps.webgpu ? (
-          <PsyFiGPUCanvas snapshot={snapshot} tier={effectiveTier} />
+          <PsyFiGPUCanvas
+            snapshot={snapshot}
+            tier={effectiveTier}
+            preferOffscreen={launch.offscreen}
+            onPresentMode={setPresentMode}
+          />
         ) : (
           <div className="gpu-fallback">
             <p>WebGPU is not available in this browser.</p>
@@ -230,6 +261,8 @@ export function App() {
             perfBand={caps.adapter.perfBand}
             profile={profile}
             particleBudget={tierCfg.particleBudget}
+            presentMode={presentMode}
+            fixtureAssets={!!(snapshot?.assets?.ktx2?.length)}
           />
         ) : null}
       </div>

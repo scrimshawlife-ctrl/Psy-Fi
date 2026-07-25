@@ -1,12 +1,21 @@
 /**
  * Optional hardware WebGPU pixel capture.
  * Falls back to soft-present when adapter/device is unavailable (CI default).
+ *
+ * Modes:
+ * - soft — deterministic scene structure golden (default)
+ * - webgpu-palette — smoke clear/readback only (NOT a scene golden)
+ * - webgpu-unavailable — requested HW but no adapter
+ *
+ * Full R3F SceneRoot stills remain deferred until a GPU CI runner exists.
  */
 
 import type { SceneSnapshotV1 } from '../contracts/SceneSnapshot'
 import { PF_CYAN } from '../styles/tokens'
 import type { PixelFrame } from './pixelTypes'
 import { PIXEL_GOLDEN_SIZE, softPresentSnapshot } from './softPresent'
+
+export type CaptureMode = 'soft' | 'webgpu-palette' | 'webgpu-unavailable'
 
 function parseHexColor(hex: string): [number, number, number] {
   const s = String(hex || PF_CYAN).replace('#', '')
@@ -21,9 +30,7 @@ const MAP_READ = 0x0001
 
 /**
  * Minimal WebGPU clear → readback using the snapshot palette as clear color.
- * Full R3F scene capture is out of scope for headless CI; this validates the
- * WebGPU readback path when an adapter exists. Soft-present remains the
- * deterministic golden for scene structure.
+ * Smoke-tests the adapter/readback path only — never used as a structure golden.
  */
 export async function webgpuPaletteClearCapture(
   snapshot: SceneSnapshotV1,
@@ -84,20 +91,27 @@ export interface CapturePixelOptions {
   tryWebGpu?: boolean
 }
 
+export interface CapturePixelResult extends PixelFrame {
+  mode: CaptureMode
+}
+
 /**
  * Capture pixels for golden comparison.
  * Default: soft-present (deterministic, CI-safe).
- * Set tryWebGpu + preferSoft=false to exercise hardware path locally.
+ * Set tryWebGpu + preferSoft=false to exercise the HW smoke path locally.
  */
 export async function capturePixelFrame(
   snapshot: SceneSnapshotV1,
   opts: CapturePixelOptions = {},
-): Promise<PixelFrame> {
+): Promise<CapturePixelResult> {
   const size = opts.size ?? PIXEL_GOLDEN_SIZE
   const preferSoft = opts.preferSoft !== false
   if (!preferSoft && opts.tryWebGpu) {
     const hw = await webgpuPaletteClearCapture(snapshot, size)
-    if (hw) return hw
+    if (hw) return { ...hw, mode: 'webgpu-palette' }
+    const soft = softPresentSnapshot(snapshot, size)
+    return { ...soft, mode: 'webgpu-unavailable' }
   }
-  return softPresentSnapshot(snapshot, size)
+  const soft = softPresentSnapshot(snapshot, size)
+  return { ...soft, mode: 'soft' }
 }

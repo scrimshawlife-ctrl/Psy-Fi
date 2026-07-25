@@ -34,6 +34,109 @@
     };
   }
 
+  /** Display / monitor probe (no permission). Used by launch scan + capabilities. */
+  function probeMonitor() {
+    const s = global.screen || {};
+    const width = Number(s.width) || Number(global.innerWidth) || 0;
+    const height = Number(s.height) || Number(global.innerHeight) || 0;
+    const availWidth = Number(s.availWidth) || width;
+    const availHeight = Number(s.availHeight) || height;
+    const dpr = Number(global.devicePixelRatio) || 1;
+    const colorDepth = Number(s.colorDepth) || 0;
+    const orientation =
+      (s.orientation && s.orientation.type) ||
+      (width >= height ? 'landscape' : 'portrait');
+    const ok = width > 0 && height > 0;
+    const detail = ok
+      ? `${width}×${height} · ${dpr.toFixed(2)}× DPR` +
+        (colorDepth ? ` · ${colorDepth}-bit` : '') +
+        (orientation ? ` · ${orientation}` : '')
+      : 'display metrics unavailable';
+    return {
+      ok,
+      width,
+      height,
+      availWidth,
+      availHeight,
+      dpr,
+      colorDepth,
+      orientation,
+      detail,
+    };
+  }
+
+  /**
+   * GPU adapter probe — WebGPU requestAdapter + WebGL renderer string.
+   * Feature-detect only; does not keep a device alive.
+   */
+  async function probeGpu() {
+    let webgpu = false;
+    let adapterLabel = '';
+    if (navigator.gpu && typeof navigator.gpu.requestAdapter === 'function') {
+      try {
+        const adapter = await Promise.race([
+          navigator.gpu.requestAdapter({ powerPreference: 'high-performance' }),
+          new Promise((resolve) => setTimeout(() => resolve(null), 2000)),
+        ]);
+        if (adapter) {
+          webgpu = true;
+          let info = adapter.info || null;
+          if (!info && typeof adapter.requestAdapterInfo === 'function') {
+            try {
+              info = await adapter.requestAdapterInfo();
+            } catch (_e) {
+              info = null;
+            }
+          }
+          if (info) {
+            adapterLabel = [info.vendor, info.architecture || info.device || info.description]
+              .filter(Boolean)
+              .join(' ')
+              .trim();
+          }
+        }
+      } catch (_e) {
+        webgpu = false;
+      }
+    }
+
+    let webgl = false;
+    let glRenderer = '';
+    try {
+      const canvas = document.createElement('canvas');
+      const gl =
+        canvas.getContext('webgl', { failIfMajorPerformanceCaveat: false }) ||
+        canvas.getContext('experimental-webgl');
+      if (gl) {
+        webgl = true;
+        const dbg = gl.getExtension('WEBGL_debug_renderer_info');
+        if (dbg) {
+          glRenderer = String(gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL) || '');
+        } else {
+          glRenderer = String(gl.getParameter(gl.RENDERER) || 'WebGL');
+        }
+      }
+    } catch (_e) {
+      webgl = false;
+    }
+
+    const ok = webgpu || webgl;
+    const parts = [];
+    if (webgpu) parts.push(adapterLabel ? `WebGPU · ${adapterLabel}` : 'WebGPU adapter');
+    else parts.push('WebGPU absent');
+    if (webgl && glRenderer) parts.push(glRenderer);
+    else if (webgl) parts.push('WebGL');
+    else parts.push('WebGL absent');
+    return {
+      ok,
+      webgpu,
+      webgl,
+      adapterLabel,
+      glRenderer,
+      detail: parts.join(' · '),
+    };
+  }
+
   class DeviceSensorHub {
     /**
      * @param {{ onChannels?: (ch: object) => void, status?: (msg: string) => void }} opts
@@ -440,5 +543,7 @@
 
   global.PsyFiViz = global.PsyFiViz || {};
   global.PsyFiViz.probeSensorCapabilities = probeSensorCapabilities;
+  global.PsyFiViz.probeMonitor = probeMonitor;
+  global.PsyFiViz.probeGpu = probeGpu;
   global.PsyFiViz.DeviceSensorHub = DeviceSensorHub;
 })(window);

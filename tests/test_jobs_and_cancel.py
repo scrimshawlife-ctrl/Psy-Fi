@@ -110,7 +110,7 @@ def test_service_worker_root_scope_headers() -> None:
         res = client.get("/sw.js")
         assert res.status_code == 200
         assert res.headers.get("service-worker-allowed") == "/"
-        assert "psyfi-shell-v21" in res.text
+        assert "psyfi-shell-v22" in res.text
         assert "isGpuRoute" in res.text
 
 

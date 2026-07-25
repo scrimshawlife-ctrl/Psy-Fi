@@ -38,11 +38,44 @@ document.addEventListener('DOMContentLoaded', () => {
     let deferredInstallPrompt = null;
 
     const gridPresets = {
-        quick: { width: 32, height: 32, steps: 10 },
-        standard: { width: 64, height: 64, steps: 20 },
-        detailed: { width: 128, height: 128, steps: 50 },
-        deep: { width: 256, height: 256, steps: 100 },
+        quick: { width: 32, height: 32, steps: 10, resolution: '32x32' },
+        standard: { width: 64, height: 64, steps: 20, resolution: '64x64' },
+        detailed: { width: 128, height: 128, steps: 50, resolution: '128x128' },
+        deep: { width: 256, height: 256, steps: 100, resolution: '256x256' },
     };
+    const resolutionSelect = document.getElementById('resolutionSelect');
+    const widthInput = document.getElementById('width');
+    const heightInput = document.getElementById('height');
+
+    function syncResolutionSelectFromInputs() {
+        if (!resolutionSelect || !widthInput || !heightInput) return;
+        const key = `${widthInput.value}x${heightInput.value}`;
+        const known = ['32x32', '64x64', '128x128', '256x256', '512x512'];
+        resolutionSelect.value = known.includes(key) ? key : 'custom';
+    }
+
+    function applyResolutionSelection(value, { syncSteps } = { syncSteps: true }) {
+        if (window.PsyFiViz && typeof window.PsyFiViz.applyFieldResolution === 'function' && value !== 'custom') {
+            window.PsyFiViz.applyFieldResolution(value, { syncSteps });
+            return;
+        }
+        const map = {
+            '32x32': gridPresets.quick,
+            '64x64': gridPresets.standard,
+            '128x128': gridPresets.detailed,
+            '256x256': gridPresets.deep,
+            '512x512': { width: 512, height: 512, steps: 100 },
+        };
+        const preset = map[value];
+        if (!preset) return;
+        if (widthInput) widthInput.value = String(preset.width);
+        if (heightInput) heightInput.value = String(preset.height);
+        if (syncSteps) {
+            const stepsEl = document.getElementById('steps');
+            if (stepsEl) stepsEl.value = String(preset.steps);
+        }
+        if (resolutionSelect) resolutionSelect.value = value;
+    }
 
     function setHidden(el, hidden) {
         if (!el) return;
@@ -128,8 +161,23 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('steps').value = preset.steps;
             document.querySelectorAll('.preset-btn').forEach((btn) => btn.classList.remove('active'));
             button.classList.add('active');
+            if (resolutionSelect) resolutionSelect.value = preset.resolution || 'custom';
+            try {
+                sessionStorage.setItem('psyfi.resolution.v1', preset.resolution || 'custom');
+            } catch (_e) {
+                /* ignore */
+            }
         });
     });
+
+    resolutionSelect?.addEventListener('change', () => {
+        if (resolutionSelect.value === 'custom') return;
+        applyResolutionSelection(resolutionSelect.value, { syncSteps: true });
+    });
+    widthInput?.addEventListener('change', syncResolutionSelectFromInputs);
+    heightInput?.addEventListener('change', syncResolutionSelectFromInputs);
+    window.addEventListener('psyfi:resolution-change', () => syncResolutionSelectFromInputs());
+    syncResolutionSelectFromInputs();
 
     function normalizeValue(value, min, max) {
         return (value - min) / (max - min);
@@ -379,14 +427,33 @@ document.addEventListener('DOMContentLoaded', () => {
             (window.PsyFiViz && window.PsyFiViz.probeSensorCapabilities
                 ? window.PsyFiViz.probeSensorCapabilities()
                 : {}) || {};
+        const monitor =
+            window.PsyFiViz && typeof window.PsyFiViz.probeMonitor === 'function'
+                ? window.PsyFiViz.probeMonitor()
+                : { ok: !!(window.screen && window.screen.width), detail: 'screen metrics' };
+        const gpuCache = window.__psyfiGpuProbe || null;
         const rows = [
+            {
+                name: 'Monitor / display',
+                supported: !!monitor.ok,
+                fallback: monitor.detail || 'Display metrics unavailable',
+            },
+            {
+                name: 'GPU adapter',
+                supported: !!(gpuCache ? gpuCache.ok : renderer.webgpuSupported),
+                fallback: gpuCache
+                    ? gpuCache.detail
+                    : renderer.webgpuSupported
+                      ? 'WebGPU feature present — open <a href="/gpu/">GPU Lab</a>'
+                      : 'Worker + Canvas 2D · GPU Lab unavailable',
+            },
             { name: 'Canvas 2D', supported: !!(canvas2d && canvas2d.getContext), fallback: 'Metrics/provenance text only' },
             { name: 'Web Worker rasterizer', supported: !!renderer.workerSupported, fallback: 'Main-thread Canvas rasterize' },
             { name: 'WebGL', supported: !!document.createElement('canvas').getContext('webgl'), fallback: 'Canvas 2D baseline renderer' },
             {
                 name: 'WebGPU',
-                supported: !!renderer.webgpuSupported,
-                fallback: renderer.webgpuSupported
+                supported: !!(gpuCache ? gpuCache.webgpu : renderer.webgpuSupported),
+                fallback: (gpuCache ? gpuCache.webgpu : renderer.webgpuSupported)
                     ? 'Open <a href="/gpu/">GPU Lab</a> (separate /gpu/ route)'
                     : 'Worker + Canvas 2D · GPU Lab unavailable',
             },
@@ -782,13 +849,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Splash finished (or skipped) — refresh capability/sensor UI against final probes.
     window.PsyFiBoot = window.PsyFiBoot || {};
-    window.PsyFiBoot.onLaunchReady = function onLaunchReady() {
+    window.PsyFiBoot.onLaunchReady = function onLaunchReady(results) {
+        const gpu = Array.isArray(results) ? results.find((r) => r.id === 'gpu') : null;
+        if (gpu && gpu.raw) window.__psyfiGpuProbe = gpu.raw;
         renderCapabilities();
+        syncResolutionSelectFromInputs();
     };
-    window.addEventListener('psyfi:launch-ready', () => renderCapabilities());
+    window.addEventListener('psyfi:launch-ready', async (event) => {
+        const results = event.detail && event.detail.results;
+        const gpu = Array.isArray(results) ? results.find((r) => r.id === 'gpu') : null;
+        if (gpu && gpu.raw) {
+            window.__psyfiGpuProbe = gpu.raw;
+        } else if (window.PsyFiViz && typeof window.PsyFiViz.probeGpu === 'function') {
+            window.__psyfiGpuProbe = await window.PsyFiViz.probeGpu();
+        }
+        renderCapabilities();
+        syncResolutionSelectFromInputs();
+    });
     // If splash already entered before this handler bound, sync once.
     if (!document.body.classList.contains('launch-pending')) {
-        renderCapabilities();
+        if (window.PsyFiViz && typeof window.PsyFiViz.probeGpu === 'function') {
+            window.PsyFiViz.probeGpu().then((gpu) => {
+                window.__psyfiGpuProbe = gpu;
+                renderCapabilities();
+            });
+        } else {
+            renderCapabilities();
+        }
     }
 });
 
@@ -864,7 +951,15 @@ document.addEventListener('DOMContentLoaded', () => {
         provenanceEl,
         preferWebGL: !!(preferWebGLChk && preferWebGLChk.checked),
     });
-    player.resize();
+    const viewportResolutionSelect = document.getElementById('viewportResolutionSelect');
+    if (viewportResolutionSelect) {
+        player.setViewportResolution(viewportResolutionSelect.value);
+        viewportResolutionSelect.addEventListener('change', () => {
+            player.setViewportResolution(viewportResolutionSelect.value);
+        });
+    } else {
+        player.resize();
+    }
     window.addEventListener('resize', () => player.resize());
 
     // Optional: poll server MIDI activity into the MIDI modulator slider (fallback if no Web MIDI)

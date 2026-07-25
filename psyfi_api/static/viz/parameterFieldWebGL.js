@@ -226,10 +226,12 @@ void main() {
       this.frame = frame;
     }
 
-    resize(w, h) {
+    resize(w, h, opts) {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      this.canvas.width = Math.floor(w * dpr);
-      this.canvas.height = Math.floor(h * dpr);
+      const bufferW = opts && opts.bufferW ? Math.floor(opts.bufferW) : Math.floor(w * dpr);
+      const bufferH = opts && opts.bufferH ? Math.floor(opts.bufferH) : Math.floor(h * dpr);
+      this.canvas.width = Math.max(16, bufferW);
+      this.canvas.height = Math.max(16, bufferH);
       this.canvas.style.width = w + 'px';
       this.canvas.style.height = h + 'px';
       if (this.gl) this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);

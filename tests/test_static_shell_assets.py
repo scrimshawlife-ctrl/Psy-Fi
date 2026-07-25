@@ -50,7 +50,7 @@ def test_template_wires_cancel_recovery_and_renderer() -> None:
 
 def test_service_worker_precaches_renderer_assets() -> None:
     sw = (STATIC / "sw.js").read_text(encoding="utf-8")
-    assert "psyfi-shell-v21" in sw
+    assert "psyfi-shell-v22" in sw
     assert ".woff2" in sw
     assert "/assets/icons/pf-icon-reset-24.svg" in sw
     assert "/assets/icons/pf-icon-valence-meter-24.svg" in sw
@@ -151,6 +151,13 @@ def test_app_uses_abort_controller_and_worker_renderer() -> None:
     assert "buildChecks" in launch_js
     assert "runScan" in launch_js
     assert "psyfi:launch-ready" in launch_js
+    assert "id: 'monitor'" in launch_js
+    assert "id: 'gpu'" in launch_js
+    assert "applyFieldResolution" in launch_js
+    html = TEMPLATE.read_text(encoding="utf-8")
+    assert "launchResolutionSelect" in html
+    assert 'id="resolutionSelect"' in html
+    assert 'id="viewportResolutionSelect"' in html
     renderer_js = (STATIC / "renderer.js").read_text(encoding="utf-8")
     assert "render_worker.js" in renderer_js
     assert "navigator.gpu" in renderer_js
@@ -166,10 +173,20 @@ def test_app_uses_abort_controller_and_worker_renderer() -> None:
     assert "loadContext" in player_js
     sensors_js = (STATIC / "viz" / "deviceSensors.js").read_text(encoding="utf-8")
     assert "probeSensorCapabilities" in sensors_js
+    assert "probeMonitor" in sensors_js
+    assert "probeGpu" in sensors_js
     assert "enableAvailable" in sensors_js
     assert "DeviceOrientation" in sensors_js or "deviceorientation" in sensors_js
     assert "requestMIDIAccess" in sensors_js
     assert "getGamepads" in sensors_js
+    player_res = (STATIC / "viz" / "experiencePlayer.js").read_text(encoding="utf-8")
+    assert "setViewportResolution" in player_res
+    assert "viewportResolution" in player_res
+    app_js = (STATIC / "app.js").read_text(encoding="utf-8")
+    assert "resolutionSelect" in app_js
+    assert "viewportResolutionSelect" in app_js
+    assert "Monitor / display" in app_js
+    assert "GPU adapter" in app_js
     gl_js = (STATIC / "viz" / "parameterFieldWebGL.js").read_text(encoding="utf-8")
     assert "u_sourceMix" in gl_js
     assert "u_source" in gl_js

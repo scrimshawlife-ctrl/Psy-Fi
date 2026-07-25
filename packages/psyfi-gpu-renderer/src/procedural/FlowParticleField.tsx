@@ -18,6 +18,7 @@ import {
   dispatchFlowCompute,
   type GpuFlowComputePipeline,
 } from '../compute/GpuFlowCompute'
+import { PF_CYAN } from '../styles/tokens'
 
 /**
  * G2 density layer: WebGPU TSL compute when available, CPU InstancedMesh fallback.
@@ -36,7 +37,7 @@ export function FlowParticleField({
   const peripheral = Number(snapshot.parameter_field.parameters?.peripheral_flow ?? 0.25)
   const seed = Number(snapshot.procedural.crystals[0]?.seed ?? 7)
   const count = particleBudgetForTier(Math.min(cfg.particleBudget, 2048), intensity)
-  const color = (snapshot.parameter_field.palette?.tracers as string) || '#3ee7f2'
+  const color = (snapshot.parameter_field.palette?.tracers as string) || PF_CYAN
   const backend = resolveComputeBackend(gl, tier !== 'battery')
 
   if (backend === 'webgpu') {

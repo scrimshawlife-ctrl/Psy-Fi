@@ -19,7 +19,7 @@ export function PsyFiGPUCanvas({ snapshot, tier, children }: PsyFiGPUCanvasProps
       dpr={[1, Math.min(2, 1.5 * cfgScale)]}
       gl={async (props) => createWebGPURenderer(props as never)}
       camera={{ position: [0, 0.35, 2.4], fov: 45, near: 0.05, far: 80 }}
-      style={{ width: '100%', height: '100%', background: 'var(--pf-bg-0, #0a0e14)' }}
+      style={{ width: '100%', height: '100%', background: 'var(--pf-bg-0)' }}
     >
       <Suspense fallback={null}>
         <SceneRoot snapshot={snapshot} tier={tier} />

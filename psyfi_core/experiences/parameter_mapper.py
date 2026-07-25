@@ -434,15 +434,21 @@ def _resolve_overlay(substance: str, substance_overlay: dict[str, Any] | None) -
         return None
 
 
-def _apply_modulators(params: dict[str, float], modulators: dict[str, float] | None) -> dict[str, float]:
+def _apply_modulators(
+    params: dict[str, float],
+    modulators: dict[str, float] | None,
+    image_hints: dict[str, float] | None = None,
+) -> dict[str, float]:
     """Optional modulators — ParameterField only, never direct-to-shader."""
-    if not modulators:
+    if not modulators and not image_hints:
         return params
-    camera = _clamp(float(modulators.get("camera", 0.0)))
-    motion = _clamp(float(modulators.get("motion", 0.0)))
-    midi = _clamp(float(modulators.get("midi", 0.0)))
-    audio = _clamp(float(modulators.get("audio", 0.0)))
-    haptics = _clamp(float(modulators.get("haptics", 0.0)))
+    mods = modulators or {}
+    camera = _clamp(float(mods.get("camera", 0.0)))
+    motion = _clamp(float(mods.get("motion", 0.0)))
+    midi = _clamp(float(mods.get("midi", 0.0)))
+    audio = _clamp(float(mods.get("audio", 0.0)))
+    haptics = _clamp(float(mods.get("haptics", 0.0)))
+    image = _clamp(float(mods.get("image", 0.0)))
     # Keep modulators subtle and safety-friendly.
     params["palette_energy"] = _clamp(params.get("palette_energy", 0.5) + 0.15 * camera + 0.1 * audio)
     params["depth_distortion"] = _clamp(params.get("depth_distortion", 0.35) + 0.12 * camera)
@@ -454,6 +460,19 @@ def _apply_modulators(params: dict[str, float], modulators: dict[str, float] | N
     params["flash_energy"] = _clamp(
         params.get("flash_energy", 0.05) + 0.04 * max(camera, midi, audio * 0.5)
     )
+    # Pass-2 image channel: scale Pass-1 parameter_hints into the live field.
+    if image > 0 and image_hints:
+        for key, delta in image_hints.items():
+            if key == "flash_energy":
+                continue  # never amplify flash from image seed
+            if key in params or key in DEFAULT_PARAMS:
+                params[key] = _clamp(params.get(key, 0.0) + float(delta) * image)
+        params["palette_energy"] = _clamp(params.get("palette_energy", 0.5) + 0.08 * image)
+        params["depth_distortion"] = _clamp(params.get("depth_distortion", 0.35) + 0.06 * image)
+    elif image > 0:
+        params["palette_energy"] = _clamp(params.get("palette_energy", 0.5) + 0.1 * image)
+        params["edge_gain"] = _clamp(params.get("edge_gain", 0.4) + 0.08 * image)
+        params["pattern_complexity"] = _clamp(params.get("pattern_complexity", 0.4) + 0.06 * image)
     return params
 
 
@@ -467,6 +486,7 @@ def map_parameters(
     substance_visual: dict[str, Any] | None = None,
     substance_overlay: dict[str, Any] | None = None,
     modulators: dict[str, float] | None = None,
+    image_hints: dict[str, float] | None = None,
     phase_t: float = 0.4,
     neutral_view: bool = False,
     reduce_motion: bool = False,
@@ -554,7 +574,7 @@ def map_parameters(
             params[k] = _clamp(base * (0.25 + 0.75 * scale))
 
     params["stability"] = _clamp(params.get("stability", 0.55) * (1.15 - 0.35 * scale) + 0.1)
-    params = _apply_modulators(params, modulators)
+    params = _apply_modulators(params, modulators, image_hints=image_hints)
 
     safety = {
         "max_flash_hz": float((experience or {}).get("safety", {}).get("max_flash_hz", 2.0)),
@@ -660,6 +680,7 @@ def build_parameter_timeline(
     seed: int = 42,
     experience: dict[str, Any] | None = None,
     modulators: dict[str, float] | None = None,
+    image_hints: dict[str, float] | None = None,
     reduce_motion: bool = False,
     dim_flashing: bool = False,
     quality_tier: str = "balanced",
@@ -677,6 +698,7 @@ def build_parameter_timeline(
             seed=seed,
             experience=experience,
             modulators=modulators,
+            image_hints=image_hints,
             phase_t=t,
             neutral_view=neutral_view,
             reduce_motion=reduce_motion,

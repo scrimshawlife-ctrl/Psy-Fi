@@ -316,7 +316,8 @@
       this.statusEl = opts.statusEl || null;
       this.provenanceEl = opts.provenanceEl || null;
       this.renderer.onFrameInfo = (info) => this._status(info);
-      this.modulators = { camera: 0, motion: 0, midi: 0, audio: 0, haptics: 0 };
+      this.modulators = { camera: 0, motion: 0, midi: 0, audio: 0, haptics: 0, image: 0 };
+      this.imageHints = null;
       this.loadContext = null;
       this.liveModulators = true;
       this._liveAbort = null;
@@ -444,6 +445,7 @@
         ...payload,
         modulators: this.modulators,
       };
+      if (this.imageHints) body.image_hints = this.imageHints;
       const res = await fetch('/api/v1/visualize/parameter-timeline', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -517,7 +519,9 @@
 
     _hasActiveModulators() {
       const m = this.modulators || {};
-      return ['camera', 'motion', 'midi', 'audio', 'haptics'].some((k) => Number(m[k] || 0) > 0.02);
+      return ['camera', 'motion', 'midi', 'audio', 'haptics', 'image'].some(
+        (k) => Number(m[k] || 0) > 0.02,
+      );
     }
 
     _scheduleLiveRematerialize() {
@@ -547,6 +551,7 @@
         modulators: this.modulators,
         neutral_view: !!this.neutralOn,
       };
+      if (this.imageHints) body.image_hints = this.imageHints;
       try {
         const res = await fetch('/api/v1/visualize/parameter-timeline', {
           method: 'POST',
@@ -602,10 +607,23 @@
         midi: Number(mods.midi || 0),
         audio: Number(mods.audio || 0),
         haptics: Number(mods.haptics || 0),
+        image: Number(mods.image || 0),
       };
       if (this.liveModulators && this.timeline && this._hasActiveModulators()) {
         this._scheduleLiveRematerialize();
       }
+    }
+
+    /** Pass-1 hints from /visualize/image-seed — scaled by modulators.image in Pass 2. */
+    setImageHints(hints) {
+      this.imageHints = hints && typeof hints === 'object' ? { ...hints } : null;
+      if (this.liveModulators && this.timeline && this._hasActiveModulators()) {
+        this._scheduleLiveRematerialize();
+      }
+    }
+
+    clearImageHints() {
+      this.setImageHints(null);
     }
 
     exportTimelineJson() {

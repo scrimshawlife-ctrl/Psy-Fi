@@ -65,7 +65,7 @@ Priority order for the next web-only slices. No calendar estimates — scoped by
 | **A** | Recommend-before-condition UX | **done** — confirm formula before Pass 1 mutates | `recommend_only` · Suggest formula · local ObjectURL preview |
 | **B** | Shell one-shot journey | **done** — Workbench `Seed → journey` | Downloads seed + timeline + T2V JSON; stills via Export journey |
 | **C** | Journey export polish | **done** — shared still capture + UI feedback | 2-frame paint wait · still count · prompt length |
-| **D** | Top-N formula alternatives | Scoring already ranks; API returns winner only | Additive `recommended_alternatives[]` · optional picker |
+| **D** | Top-N formula alternatives | **done** — ranked picks in API + Workbench | `recommended_alternatives[]` · `recommend_top_n` · alt select |
 | **E** | Hardware Ultra fps (optional) | Simulated QA already green | Measured samples when discrete GPU available · see below |
 
 ### Explicit non-goals (this queue)
@@ -82,7 +82,7 @@ Priority order for the next web-only slices. No calendar estimates — scoped by
 - [x] **A** Recommend-before-condition (`recommend_only` + shell suggest panel + local preview)
 - [x] **B** Surface `/visualize/image-seed-journey` in the Workbench (`Seed → journey`)
 - [x] **C** Harden export-journey still capture + prompt feedback
-- [ ] **D** Optional top-N recommended alternatives
+- [x] **D** Top-N recommended alternatives (`recommended_alternatives` + Workbench picker)
 
 ### Done — PWA correctness (post-Hallmark)
 

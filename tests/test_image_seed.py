@@ -17,6 +17,7 @@ from psyfi_core.visualization.image_seed import (
     build_image_seed,
     condition_image,
     derive_master_seed,
+    rank_experiences,
     recommend_experience,
     score_experience_for_features,
 )
@@ -155,6 +156,56 @@ def test_timeline_accepts_image_modulator_and_hints() -> None:
     assert frames[0]["parameters"]["palette_energy"] >= 0.0
 
 
+def test_rank_experiences_returns_top_n_ordered() -> None:
+    features = {
+        "energy": 0.7,
+        "contrast": 0.65,
+        "edge_density": 0.7,
+        "warmth": 0.4,
+    }
+    candidates = [
+        {
+            "id": "exp_void",
+            "title": "Void Soft",
+            "modes": ["void"],
+            "visual_recipe": {
+                "mode_default": "void",
+                "primary_engines": ["void_expansion"],
+                "parameter_bias": {"void_bias": 0.9, "pattern_complexity": 0.1},
+                "palette": {"energy": 0.15},
+            },
+        },
+        {
+            "id": "exp_kaleido",
+            "title": "Kaleido",
+            "modes": ["attractor", "open"],
+            "visual_recipe": {
+                "mode_default": "attractor",
+                "primary_engines": ["kaleidoscope"],
+                "parameter_bias": {"pattern_complexity": 0.7, "attractor_bias": 0.8},
+                "palette": {"energy": 0.7},
+            },
+        },
+        {
+            "id": "exp_mid",
+            "title": "Mid",
+            "modes": ["open"],
+            "visual_recipe": {
+                "mode_default": "open",
+                "primary_engines": ["recursive_feedback"],
+                "parameter_bias": {"pattern_complexity": 0.4},
+                "palette": {"energy": 0.5},
+            },
+        },
+    ]
+    ranked = rank_experiences(candidates, features, "attractor", top_n=2)
+    assert len(ranked) == 2
+    assert ranked[0]["experience_id"] == "exp_kaleido"
+    assert ranked[0]["rank"] == 1
+    assert ranked[0]["score"] >= ranked[1]["score"]
+    assert "recipe" in ranked[0]
+
+
 def test_recommend_experience_ranks_kaleidoscope_for_edges() -> None:
     features = {
         "energy": 0.7,
@@ -192,6 +243,31 @@ def test_recommend_experience_ranks_kaleidoscope_for_edges() -> None:
     assert picked is not None
     assert picked["experience_id"] == "exp_kaleido"
     assert picked["score"] > 0
+
+
+def test_recommended_alternatives_in_api_response() -> None:
+    b64 = base64.b64encode(_png_bytes()).decode("ascii")
+    res = client.post(
+        "/api/v1/visualize/image-seed/json",
+        json={
+            "image_base64": b64,
+            "substance": "lsd",
+            "recommend_only": True,
+            "apply_recommended": True,
+            "recommend_top_n": 3,
+            "include_preview": False,
+            "include_source_field": False,
+        },
+    )
+    assert res.status_code == 200, res.text
+    body = res.json()
+    alts = body["recommended_alternatives"]
+    assert 1 <= len(alts) <= 3
+    assert alts[0]["rank"] == 1
+    assert alts[0]["experience_id"] == body["recommended"]["experience_id"]
+    assert "recipe" not in alts[0]
+    scores = [a["score"] for a in alts]
+    assert scores == sorted(scores, reverse=True)
 
 
 def test_apply_recommended_sets_applied_experience_id() -> None:

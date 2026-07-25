@@ -1771,6 +1771,31 @@ body.launch-ready #appShell {
     color: var(--pf-text-muted);
 }
 
+.image-seed-alt-group {
+    margin-top: 6px;
+}
+
+.image-seed-alt-group label {
+    font-size: 0.78rem;
+    color: var(--pf-text-muted);
+}
+
+.image-seed-alt-group select {
+    width: 100%;
+    min-width: 0;
+    border: 1px solid var(--pf-border-subtle);
+    background: var(--pf-bg-0);
+    color: var(--pf-text-main);
+    padding: 6px 8px;
+    font-family: var(--pf-font-main);
+    font-size: 0.85rem;
+}
+
+.image-seed-alt-group select:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+}
+
 .image-seed-status {
     margin: 0;
     font-family: var(--pf-font-mono);

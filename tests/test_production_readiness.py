@@ -24,6 +24,15 @@ def test_nvidia_gpu_doc_covers_rtx_5060() -> None:
     assert (ROOT / "scripts" / "check_nvidia_host.sh").exists()
 
 
+def test_desktop_gpu_doc_covers_multi_vendor_ultra() -> None:
+    doc = (ROOT / "docs" / "DESKTOP_GPU.md").read_text(encoding="utf-8")
+    assert "RTX 30" in doc or "RTX 30 / 40 / 50" in doc
+    assert "RX 6000" in doc
+    assert "Arc" in doc
+    assert "Ultra" in doc
+    assert "WebGPU" in doc
+
+
 def test_production_readiness_board_doc() -> None:
     board = (ROOT / "docs" / "PRODUCTION_READINESS.md").read_text(encoding="utf-8")
     assert "Production Readiness Board" in board

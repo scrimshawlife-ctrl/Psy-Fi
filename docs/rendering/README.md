@@ -1,7 +1,8 @@
 # PsyFi GPU Rendering Platform
 
-Status: **scaffolded** (parallel track)  
-Does **not** patch `psyfi_api/static/viz/*` (legacy Canvas / WebGL Live Experience remains the production fallback).
+Status: **G0–G3 ready** for Docker web ship; multi-vendor Ultra auto-tier live  
+Does **not** patch `psyfi_api/static/viz/*` (legacy Canvas / WebGL Live Experience remains the production fallback).  
+Next steps: [`../CONTINUATION_PLAN.md`](../CONTINUATION_PLAN.md) · desktop setup: [`../DESKTOP_GPU.md`](../DESKTOP_GPU.md).
 
 ## Documents
 
@@ -10,6 +11,7 @@ Does **not** patch `psyfi_api/static/viz/*` (legacy Canvas / WebGL Live Experien
 | [`ARCHITECTURE.md`](ARCHITECTURE.md) | GPU-first modular platform, decoupled analysis → render |
 | [`ROADMAP.md`](ROADMAP.md) | Phased delivery of effects and subsystems |
 | [`GPU_PERFORMANCE_BUDGET.md`](GPU_PERFORMANCE_BUDGET.md) | Ultra / High / Balanced / Battery Saver budgets |
+| [`../DESKTOP_GPU.md`](../DESKTOP_GPU.md) | Multi-vendor WebGPU Ultra (NVIDIA / AMD / Intel / Apple) |
 | [`SHADER_ORGANIZATION.md`](SHADER_ORGANIZATION.md) | WGSL / TSL layout and naming |
 | [`ASSET_STANDARDS.md`](ASSET_STANDARDS.md) | glTF 2.0, Draco, KTX2, optional Gaussian Splats |
 | [`RENDER_GRAPH.md`](RENDER_GRAPH.md) | Pass graph diagrams and replaceable nodes |

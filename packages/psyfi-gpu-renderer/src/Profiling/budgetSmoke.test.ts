@@ -19,7 +19,11 @@ const caps: DeviceCaps = {
     architecture: '',
     isDiscrete: true,
     isNvidia: true,
+    isAmd: false,
+    isIntel: false,
     isHighEndNvidia: true,
+    isHighEndDiscrete: true,
+    perfBand: 'ultra',
   },
 }
 

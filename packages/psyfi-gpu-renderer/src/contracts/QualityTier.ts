@@ -7,7 +7,7 @@ export interface DeviceCaps {
   maxTextureSize: number
   preferBattery: boolean
   isMobile: boolean
-  /** Prefer Ultra when a high-end NVIDIA discrete adapter is present (e.g. RTX 5060). */
+  /** Prefer Ultra for high-end discrete (NVIDIA 30/40/50, AMD RX 6/7/9xxx, Intel Arc). */
   preferUltra: boolean
   isNvidia: boolean
   isDiscrete: boolean
@@ -128,12 +128,14 @@ export function tierConfig(tier: QualityTier): TierConfig {
   return TIERS[tier]
 }
 
-/** Suggested default tier from probed caps (NVIDIA discrete → Ultra). */
+/** Suggested default tier from probed caps (high-end discrete → Ultra). */
 export function recommendedTier(caps: DeviceCaps): QualityTier {
   if (!caps.webgpu) return 'battery'
   if (caps.preferBattery || caps.isMobile) return caps.isMobile ? 'battery' : 'balanced'
-  if (caps.preferUltra || caps.adapter.isHighEndNvidia) return 'ultra'
-  if (caps.isDiscrete || caps.isNvidia) return 'high'
+  if (caps.preferUltra || caps.adapter.isHighEndDiscrete || caps.adapter.perfBand === 'ultra') {
+    return 'ultra'
+  }
+  if (caps.adapter.perfBand === 'high' || caps.isDiscrete || caps.isNvidia) return 'high'
   return 'balanced'
 }
 
@@ -167,7 +169,11 @@ export function probeDeviceCaps(): DeviceCaps {
       architecture: '',
       isDiscrete: false,
       isNvidia: false,
+      isAmd: false,
+      isIntel: false,
       isHighEndNvidia: false,
+      isHighEndDiscrete: false,
+      perfBand: 'unknown',
     },
   }
 }
@@ -187,7 +193,7 @@ export async function refineBatteryCaps(caps: DeviceCaps): Promise<DeviceCaps> {
   return caps
 }
 
-/** Async WebGPU adapter probe — picks high-performance NVIDIA dGPU when present. */
+/** Async WebGPU adapter probe — prefers high-performance discrete GPU when present. */
 export async function refineGpuAdapterCaps(caps: DeviceCaps): Promise<DeviceCaps> {
   if (!caps.webgpu) return caps
   const adapter = await probeGpuAdapter()
@@ -195,8 +201,8 @@ export async function refineGpuAdapterCaps(caps: DeviceCaps): Promise<DeviceCaps
     ...caps,
     isNvidia: adapter.isNvidia,
     isDiscrete: adapter.isDiscrete,
-    preferUltra: adapter.isHighEndNvidia && !caps.preferBattery && !caps.isMobile,
-    maxTextureSize: adapter.isHighEndNvidia ? 16384 : caps.maxTextureSize,
+    preferUltra: adapter.isHighEndDiscrete && !caps.preferBattery && !caps.isMobile,
+    maxTextureSize: adapter.isHighEndDiscrete ? 16384 : caps.maxTextureSize,
     adapter,
   }
 }

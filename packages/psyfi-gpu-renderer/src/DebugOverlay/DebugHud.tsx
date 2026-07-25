@@ -7,15 +7,21 @@ export function DebugHud({
   passIds,
   webgpu,
   adapterLabel,
-  isNvidia,
+  vendorLabel,
+  perfBand,
 }: {
   tier: QualityTier
   stats: SnapshotStoreStats
   passIds: string[]
   webgpu: boolean
   adapterLabel?: string
-  isNvidia?: boolean
+  /** nvidia | amd | intel | apple | unknown */
+  vendorLabel?: string
+  perfBand?: string
 }) {
+  const vendorTag =
+    vendorLabel && vendorLabel !== 'unknown' ? ` · ${vendorLabel.toUpperCase()}` : ''
+  const bandTag = perfBand && perfBand !== 'unknown' ? ` · band ${perfBand}` : ''
   return (
     <div
       style={{
@@ -34,7 +40,8 @@ export function DebugHud({
     >
       <div>
         <strong>GPU platform</strong> · tier {tier} · {webgpu ? 'WebGPU ok' : 'no navigator.gpu'}
-        {isNvidia ? ' · NVIDIA' : ''}
+        {vendorTag}
+        {bandTag}
       </div>
       {adapterLabel ? (
         <div style={{ color: '#9fd9d2' }}>adapter {adapterLabel}</div>

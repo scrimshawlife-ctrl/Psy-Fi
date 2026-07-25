@@ -1,0 +1,2926 @@
+{
+  "components": {
+    "schemas": {
+      "FieldFrameRequest": {
+        "description": "Bridge: run a bounded Python simulation and return visualizable channels.",
+        "properties": {
+          "height": {
+            "default": 32,
+            "maximum": 128.0,
+            "minimum": 8.0,
+            "title": "Height",
+            "type": "integer"
+          },
+          "intensity": {
+            "default": 0.7,
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Intensity",
+            "type": "number"
+          },
+          "mode": {
+            "default": "open",
+            "enum": [
+              "open",
+              "attractor",
+              "void",
+              "power"
+            ],
+            "title": "Mode",
+            "type": "string"
+          },
+          "preset": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Preset"
+          },
+          "seed": {
+            "default": 42,
+            "minimum": 0.0,
+            "title": "Seed",
+            "type": "integer"
+          },
+          "steps": {
+            "default": 4,
+            "maximum": 64.0,
+            "minimum": 1.0,
+            "title": "Steps",
+            "type": "integer"
+          },
+          "substance": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Substance"
+          },
+          "width": {
+            "default": 32,
+            "maximum": 128.0,
+            "minimum": 8.0,
+            "title": "Width",
+            "type": "integer"
+          }
+        },
+        "title": "FieldFrameRequest",
+        "type": "object"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "title": "Detail",
+            "type": "array"
+          }
+        },
+        "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "JobCreateRequest": {
+        "description": "Create a background simulation job.",
+        "properties": {
+          "height": {
+            "default": 64,
+            "maximum": 512.0,
+            "minimum": 8.0,
+            "title": "Height",
+            "type": "integer"
+          },
+          "preset": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Preset"
+          },
+          "seed": {
+            "anyOf": [
+              {
+                "maximum": 4294967295.0,
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Seed"
+          },
+          "steps": {
+            "default": 10,
+            "maximum": 1000.0,
+            "minimum": 1.0,
+            "title": "Steps",
+            "type": "integer"
+          },
+          "width": {
+            "default": 64,
+            "maximum": 512.0,
+            "minimum": 8.0,
+            "title": "Width",
+            "type": "integer"
+          }
+        },
+        "title": "JobCreateRequest",
+        "type": "object"
+      },
+      "JobSummary": {
+        "description": "Job status payload.",
+        "properties": {
+          "created_at": {
+            "title": "Created At",
+            "type": "string"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "request": {
+            "additionalProperties": true,
+            "title": "Request",
+            "type": "object"
+          },
+          "result": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Result"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          },
+          "updated_at": {
+            "title": "Updated At",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "status",
+          "created_at",
+          "updated_at",
+          "request"
+        ],
+        "title": "JobSummary",
+        "type": "object"
+      },
+      "MIDICCRequest": {
+        "description": "Send MIDI CC message.",
+        "properties": {
+          "control": {
+            "maximum": 127.0,
+            "minimum": 0.0,
+            "title": "Control",
+            "type": "integer"
+          },
+          "value": {
+            "maximum": 127.0,
+            "minimum": 0.0,
+            "title": "Value",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "control",
+          "value"
+        ],
+        "title": "MIDICCRequest",
+        "type": "object"
+      },
+      "MIDIConfigRequest": {
+        "description": "MIDI configuration.",
+        "properties": {
+          "cc_smooth_factor": {
+            "default": 0.1,
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Cc Smooth Factor",
+            "type": "number"
+          },
+          "channel": {
+            "default": 0,
+            "maximum": 15.0,
+            "minimum": 0.0,
+            "title": "Channel",
+            "type": "integer"
+          },
+          "input_device": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Input Device"
+          },
+          "output_device": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Output Device"
+          },
+          "velocity_curve": {
+            "default": "linear",
+            "pattern": "^(linear|exponential|logarithmic)$",
+            "title": "Velocity Curve",
+            "type": "string"
+          }
+        },
+        "title": "MIDIConfigRequest",
+        "type": "object"
+      },
+      "MIDIControlMapResponse": {
+        "description": "Current MIDI control mappings.",
+        "properties": {
+          "cc_to_param": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Cc To Param",
+            "type": "object"
+          },
+          "note_to_preset": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Note To Preset",
+            "type": "object"
+          },
+          "program_to_class": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Program To Class",
+            "type": "object"
+          }
+        },
+        "required": [
+          "cc_to_param",
+          "note_to_preset",
+          "program_to_class"
+        ],
+        "title": "MIDIControlMapResponse",
+        "type": "object"
+      },
+      "MIDIDevicesResponse": {
+        "description": "Available MIDI devices.",
+        "properties": {
+          "input": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Input",
+            "type": "array"
+          },
+          "midi_available": {
+            "title": "Midi Available",
+            "type": "boolean"
+          },
+          "output": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Output",
+            "type": "array"
+          }
+        },
+        "required": [
+          "input",
+          "output",
+          "midi_available"
+        ],
+        "title": "MIDIDevicesResponse",
+        "type": "object"
+      },
+      "MIDINoteRequest": {
+        "description": "Send MIDI note.",
+        "properties": {
+          "duration": {
+            "default": 0.1,
+            "maximum": 10.0,
+            "minimum": 0.0,
+            "title": "Duration",
+            "type": "number"
+          },
+          "note": {
+            "maximum": 127.0,
+            "minimum": 0.0,
+            "title": "Note",
+            "type": "integer"
+          },
+          "velocity": {
+            "maximum": 127.0,
+            "minimum": 0.0,
+            "title": "Velocity",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "note",
+          "velocity"
+        ],
+        "title": "MIDINoteRequest",
+        "type": "object"
+      },
+      "MIDIStatusResponse": {
+        "description": "MIDI service status.",
+        "properties": {
+          "channel": {
+            "title": "Channel",
+            "type": "integer"
+          },
+          "current_params": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "title": "Current Params",
+            "type": "object"
+          },
+          "input_device": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Input Device"
+          },
+          "output_device": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Output Device"
+          },
+          "running": {
+            "title": "Running",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "running",
+          "input_device",
+          "output_device",
+          "channel",
+          "current_params"
+        ],
+        "title": "MIDIStatusResponse",
+        "type": "object"
+      },
+      "Modulators": {
+        "description": "Optional progressive enhancers routed only through ParameterField.",
+        "properties": {
+          "camera": {
+            "default": 0.0,
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Camera",
+            "type": "number"
+          },
+          "midi": {
+            "default": 0.0,
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Midi",
+            "type": "number"
+          },
+          "motion": {
+            "default": 0.0,
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Motion",
+            "type": "number"
+          }
+        },
+        "title": "Modulators",
+        "type": "object"
+      },
+      "PresetDetail": {
+        "description": "Preset detail including portable psyfi parameter defaults.",
+        "properties": {
+          "aliases": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Aliases",
+            "type": "array"
+          },
+          "coupling_strength": {
+            "title": "Coupling Strength",
+            "type": "number"
+          },
+          "drift_amplitude": {
+            "title": "Drift Amplitude",
+            "type": "number"
+          },
+          "drift_velocity": {
+            "title": "Drift Velocity",
+            "type": "number"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "normalization_P": {
+            "title": "Normalization P",
+            "type": "number"
+          },
+          "normalization_V": {
+            "title": "Normalization V",
+            "type": "number"
+          },
+          "phase_noise": {
+            "title": "Phase Noise",
+            "type": "number"
+          },
+          "phase_reset_strength": {
+            "title": "Phase Reset Strength",
+            "type": "number"
+          },
+          "substance_class": {
+            "title": "Substance Class",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "substance_class",
+          "coupling_strength",
+          "phase_noise",
+          "phase_reset_strength",
+          "drift_amplitude",
+          "drift_velocity",
+          "normalization_P",
+          "normalization_V"
+        ],
+        "title": "PresetDetail",
+        "type": "object"
+      },
+      "PresetListResponse": {
+        "description": "Catalog response for substance presets.",
+        "properties": {
+          "count": {
+            "title": "Count",
+            "type": "integer"
+          },
+          "presets": {
+            "items": {
+              "$ref": "#/components/schemas/PresetSummary"
+            },
+            "title": "Presets",
+            "type": "array"
+          }
+        },
+        "required": [
+          "count",
+          "presets"
+        ],
+        "title": "PresetListResponse",
+        "type": "object"
+      },
+      "PresetSummary": {
+        "description": "Lightweight preset card for the web preset browser.",
+        "properties": {
+          "aliases": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Aliases",
+            "type": "array"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "substance_class": {
+            "title": "Substance Class",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "substance_class"
+        ],
+        "title": "PresetSummary",
+        "type": "object"
+      },
+      "PsyFiSession": {
+        "description": "Deterministic session document shared by web and future iOS clients.",
+        "properties": {
+          "abx_core": {
+            "default": "1.3",
+            "title": "Abx Core",
+            "type": "string"
+          },
+          "api_version": {
+            "default": "v1",
+            "title": "Api Version",
+            "type": "string"
+          },
+          "assumptions": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Assumptions",
+            "type": "array"
+          },
+          "created_at": {
+            "title": "Created At",
+            "type": "string"
+          },
+          "engine_version": {
+            "default": "0.1.0",
+            "title": "Engine Version",
+            "type": "string"
+          },
+          "labels": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Labels",
+            "type": "object"
+          },
+          "parameters": {
+            "$ref": "#/components/schemas/SessionParameters"
+          },
+          "preset": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Preset"
+          },
+          "provenance": {
+            "$ref": "#/components/schemas/SessionProvenance"
+          },
+          "result": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SessionResult"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "schema_version": {
+            "default": "psyfi.session.v1",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "seed": {
+            "maximum": 4294967295.0,
+            "minimum": 0.0,
+            "title": "Seed",
+            "type": "integer"
+          },
+          "updated_at": {
+            "title": "Updated At",
+            "type": "string"
+          }
+        },
+        "required": [
+          "seed",
+          "parameters",
+          "provenance"
+        ],
+        "title": "PsyFiSession",
+        "type": "object"
+      },
+      "PsyFiVisualization": {
+        "description": "Renderer-independent visualization schema (Canvas/WebGL/WebGPU/Metal).",
+        "properties": {
+          "accessibility": {
+            "$ref": "#/components/schemas/VisualizationAccessibility"
+          },
+          "channels": {
+            "items": {
+              "$ref": "#/components/schemas/VisualizationChannel"
+            },
+            "title": "Channels",
+            "type": "array"
+          },
+          "field": {
+            "additionalProperties": true,
+            "title": "Field",
+            "type": "object"
+          },
+          "frame_index": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Frame Index"
+          },
+          "layers": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "title": "Layers",
+            "type": "array"
+          },
+          "provenance_id": {
+            "title": "Provenance Id",
+            "type": "string"
+          },
+          "renderer_requirements": {
+            "additionalProperties": true,
+            "title": "Renderer Requirements",
+            "type": "object"
+          },
+          "schema_version": {
+            "default": "psyfi.visualization.v1",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "sequence_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sequence Id"
+          },
+          "view": {
+            "additionalProperties": true,
+            "title": "View",
+            "type": "object"
+          }
+        },
+        "required": [
+          "provenance_id",
+          "field",
+          "channels",
+          "accessibility"
+        ],
+        "title": "PsyFiVisualization",
+        "type": "object"
+      },
+      "SessionMetrics": {
+        "description": "Public metric bundle aligned with SimulateResponse.",
+        "properties": {
+          "coherence": {
+            "title": "Coherence",
+            "type": "number"
+          },
+          "richness": {
+            "title": "Richness",
+            "type": "number"
+          },
+          "roughness": {
+            "title": "Roughness",
+            "type": "number"
+          },
+          "symmetry": {
+            "title": "Symmetry",
+            "type": "number"
+          },
+          "valence": {
+            "title": "Valence",
+            "type": "number"
+          }
+        },
+        "required": [
+          "valence",
+          "coherence",
+          "symmetry",
+          "roughness",
+          "richness"
+        ],
+        "title": "SessionMetrics",
+        "type": "object"
+      },
+      "SessionParameters": {
+        "description": "Canonical parameters required to reproduce a simulation.",
+        "properties": {
+          "coupling_strength": {
+            "default": 0.5,
+            "maximum": 2.0,
+            "minimum": 0.0,
+            "title": "Coupling Strength",
+            "type": "number"
+          },
+          "drift_amplitude": {
+            "anyOf": [
+              {
+                "maximum": 1.0,
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Drift Amplitude"
+          },
+          "drift_velocity": {
+            "anyOf": [
+              {
+                "maximum": 1.0,
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Drift Velocity"
+          },
+          "height": {
+            "maximum": 512.0,
+            "minimum": 8.0,
+            "title": "Height",
+            "type": "integer"
+          },
+          "normalization_P": {
+            "default": 1.0,
+            "title": "Normalization P",
+            "type": "number"
+          },
+          "normalization_V": {
+            "default": 1.0,
+            "title": "Normalization V",
+            "type": "number"
+          },
+          "phase_noise": {
+            "anyOf": [
+              {
+                "maximum": 1.0,
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Phase Noise"
+          },
+          "phase_reset_strength": {
+            "anyOf": [
+              {
+                "maximum": 1.0,
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Phase Reset Strength"
+          },
+          "steps": {
+            "maximum": 1000.0,
+            "minimum": 1.0,
+            "title": "Steps",
+            "type": "integer"
+          },
+          "width": {
+            "maximum": 512.0,
+            "minimum": 8.0,
+            "title": "Width",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "width",
+          "height",
+          "steps"
+        ],
+        "title": "SessionParameters",
+        "type": "object"
+      },
+      "SessionProvenance": {
+        "description": "Portable provenance subset derived from ABX ProvenanceRecord.",
+        "properties": {
+          "id": {
+            "minLength": 1,
+            "title": "Id",
+            "type": "string"
+          },
+          "meta": {
+            "additionalProperties": true,
+            "title": "Meta",
+            "type": "object"
+          },
+          "module_chain": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Module Chain",
+            "type": "array"
+          },
+          "parameters": {
+            "additionalProperties": true,
+            "title": "Parameters",
+            "type": "object"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "title": "SessionProvenance",
+        "type": "object"
+      },
+      "SessionResult": {
+        "description": "Optional result payload attached after a successful run.",
+        "properties": {
+          "checksum": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Checksum"
+          },
+          "metrics": {
+            "$ref": "#/components/schemas/SessionMetrics"
+          },
+          "visualization_ref": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Visualization Ref"
+          }
+        },
+        "required": [
+          "metrics"
+        ],
+        "title": "SessionResult",
+        "type": "object"
+      },
+      "SimulateRequest": {
+        "description": "Request for consciousness field simulation.",
+        "properties": {
+          "height": {
+            "default": 64,
+            "maximum": 512.0,
+            "minimum": 8.0,
+            "title": "Height",
+            "type": "integer"
+          },
+          "preset": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional substance preset id/alias influencing coupling and normalization.",
+            "title": "Preset"
+          },
+          "seed": {
+            "anyOf": [
+              {
+                "maximum": 4294967295.0,
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Seed"
+          },
+          "steps": {
+            "default": 10,
+            "maximum": 1000.0,
+            "minimum": 1.0,
+            "title": "Steps",
+            "type": "integer"
+          },
+          "width": {
+            "default": 64,
+            "maximum": 512.0,
+            "minimum": 8.0,
+            "title": "Width",
+            "type": "integer"
+          }
+        },
+        "title": "SimulateRequest",
+        "type": "object"
+      },
+      "SimulateResponse": {
+        "description": "Response from consciousness field simulation.",
+        "properties": {
+          "api_version": {
+            "default": "v1",
+            "title": "Api Version",
+            "type": "string"
+          },
+          "coherence": {
+            "title": "Coherence",
+            "type": "number"
+          },
+          "engine_version": {
+            "default": "0.1.0",
+            "title": "Engine Version",
+            "type": "string"
+          },
+          "height": {
+            "title": "Height",
+            "type": "integer"
+          },
+          "module_chain": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Module Chain",
+            "type": "array"
+          },
+          "preset": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Preset"
+          },
+          "provenance_id": {
+            "title": "Provenance Id",
+            "type": "string"
+          },
+          "richness": {
+            "title": "Richness",
+            "type": "number"
+          },
+          "roughness": {
+            "title": "Roughness",
+            "type": "number"
+          },
+          "schema_version": {
+            "default": "psyfi.session.v1",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "seed": {
+            "title": "Seed",
+            "type": "integer"
+          },
+          "session": {
+            "$ref": "#/components/schemas/PsyFiSession"
+          },
+          "symmetry": {
+            "title": "Symmetry",
+            "type": "number"
+          },
+          "valence": {
+            "title": "Valence",
+            "type": "number"
+          },
+          "visualization": {
+            "$ref": "#/components/schemas/PsyFiVisualization"
+          },
+          "width": {
+            "title": "Width",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "width",
+          "height",
+          "valence",
+          "coherence",
+          "symmetry",
+          "roughness",
+          "richness",
+          "seed",
+          "provenance_id",
+          "module_chain",
+          "session",
+          "visualization"
+        ],
+        "title": "SimulateResponse",
+        "type": "object"
+      },
+      "TelemetryOptInRequest": {
+        "description": "Client consent toggle for local diagnostic telemetry.",
+        "properties": {
+          "opt_in": {
+            "description": "When true and PSYFI_TELEMETRY_ENABLED=1, events may be buffered locally.",
+            "title": "Opt In",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "opt_in"
+        ],
+        "title": "TelemetryOptInRequest",
+        "type": "object"
+      },
+      "TelemetryStatus": {
+        "description": "Current telemetry gate state.",
+        "properties": {
+          "active": {
+            "title": "Active",
+            "type": "boolean"
+          },
+          "client_opt_in": {
+            "title": "Client Opt In",
+            "type": "boolean"
+          },
+          "event_count": {
+            "title": "Event Count",
+            "type": "integer"
+          },
+          "note": {
+            "title": "Note",
+            "type": "string"
+          },
+          "server_enabled": {
+            "title": "Server Enabled",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "server_enabled",
+          "client_opt_in",
+          "active",
+          "event_count",
+          "note"
+        ],
+        "title": "TelemetryStatus",
+        "type": "object"
+      },
+      "TimelineRequest": {
+        "properties": {
+          "dim_flashing": {
+            "default": false,
+            "title": "Dim Flashing",
+            "type": "boolean"
+          },
+          "experience_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Experience Id"
+          },
+          "intensity": {
+            "default": 0.7,
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Intensity",
+            "type": "number"
+          },
+          "mode": {
+            "default": "open",
+            "enum": [
+              "open",
+              "attractor",
+              "void",
+              "power"
+            ],
+            "title": "Mode",
+            "type": "string"
+          },
+          "modulators": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Modulators"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "neutral_view": {
+            "default": false,
+            "title": "Neutral View",
+            "type": "boolean"
+          },
+          "phase_t": {
+            "anyOf": [
+              {
+                "maximum": 1.0,
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Phase T"
+          },
+          "quality_tier": {
+            "default": "balanced",
+            "title": "Quality Tier",
+            "type": "string"
+          },
+          "reduce_motion": {
+            "default": false,
+            "title": "Reduce Motion",
+            "type": "boolean"
+          },
+          "seed": {
+            "default": 42,
+            "minimum": 0.0,
+            "title": "Seed",
+            "type": "integer"
+          },
+          "steps": {
+            "default": 24,
+            "maximum": 128.0,
+            "minimum": 2.0,
+            "title": "Steps",
+            "type": "integer"
+          },
+          "substance": {
+            "default": "lsd",
+            "title": "Substance",
+            "type": "string"
+          }
+        },
+        "title": "TimelineRequest",
+        "type": "object"
+      },
+      "ValidationError": {
+        "properties": {
+          "ctx": {
+            "title": "Context",
+            "type": "object"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "title": "Location",
+            "type": "array"
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError",
+        "type": "object"
+      },
+      "VisualizationAccessibility": {
+        "description": "Accessibility contract required for every canonical visualization.",
+        "properties": {
+          "downloadable_data_ref": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Downloadable Data Ref"
+          },
+          "high_contrast_palette": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "High Contrast Palette"
+          },
+          "legend": {
+            "items": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "type": "object"
+            },
+            "title": "Legend",
+            "type": "array"
+          },
+          "reduced_motion_alternative": {
+            "minLength": 1,
+            "title": "Reduced Motion Alternative",
+            "type": "string"
+          },
+          "summary": {
+            "minLength": 1,
+            "title": "Summary",
+            "type": "string"
+          }
+        },
+        "required": [
+          "summary",
+          "reduced_motion_alternative"
+        ],
+        "title": "VisualizationAccessibility",
+        "type": "object"
+      },
+      "VisualizationChannel": {
+        "description": "One renderable channel in a platform-neutral visualization scene.",
+        "properties": {
+          "blend": {
+            "default": "replace",
+            "pattern": "^(replace|add|multiply|screen)$",
+            "title": "Blend",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "palette": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Palette"
+          },
+          "role": {
+            "pattern": "^(magnitude|phase|valence|coherence|custom)$",
+            "title": "Role",
+            "type": "string"
+          },
+          "units": {
+            "title": "Units",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "role",
+          "units"
+        ],
+        "title": "VisualizationChannel",
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "description": "Consciousness field simulation engine with ABX-Core v1.3",
+    "title": "PsyFi API",
+    "version": "0.1.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/": {
+      "get": {
+        "description": "Root endpoint - serves the web UI.",
+        "operationId": "root__get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Root"
+      }
+    },
+    "/api/info": {
+      "get": {
+        "description": "API info endpoint (legacy + v1).",
+        "operationId": "api_info_api_info_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "boolean"
+                      }
+                    ]
+                  },
+                  "title": "Response Api Info Api Info Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Api Info"
+      }
+    },
+    "/api/jobs/simulate": {
+      "post": {
+        "description": "Start a cancellable simulation job in a worker thread.",
+        "operationId": "create_simulate_job_api_jobs_simulate_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JobCreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobSummary"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Simulate Job",
+        "tags": [
+          "jobs"
+        ]
+      }
+    },
+    "/api/jobs/{job_id}": {
+      "delete": {
+        "description": "Request cancellation of a queued/running job.",
+        "operationId": "cancel_job_api_jobs__job_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "job_id",
+            "required": true,
+            "schema": {
+              "title": "Job Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobSummary"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Cancel Job",
+        "tags": [
+          "jobs"
+        ]
+      },
+      "get": {
+        "description": "Fetch job status/result.",
+        "operationId": "get_job_api_jobs__job_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "job_id",
+            "required": true,
+            "schema": {
+              "title": "Job Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobSummary"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Job",
+        "tags": [
+          "jobs"
+        ]
+      }
+    },
+    "/api/midi/devices": {
+      "get": {
+        "description": "List available MIDI input and output devices.\n\nReturns:\n    Dictionary with input/output device lists",
+        "operationId": "list_midi_devices_api_midi_devices_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MIDIDevicesResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List Midi Devices",
+        "tags": [
+          "MIDI"
+        ]
+      }
+    },
+    "/api/midi/mappings": {
+      "get": {
+        "description": "Get current MIDI control mappings.\n\nReturns:\n    CC, note, and program change mappings",
+        "operationId": "get_midi_mappings_api_midi_mappings_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MIDIControlMapResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get Midi Mappings",
+        "tags": [
+          "MIDI"
+        ]
+      }
+    },
+    "/api/midi/params": {
+      "get": {
+        "description": "Get current MIDI-controlled parameters.\n\nReturns:\n    Dictionary of parameter name -> value",
+        "operationId": "get_midi_params_api_midi_params_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "number"
+                  },
+                  "title": "Response Get Midi Params Api Midi Params Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get Midi Params",
+        "tags": [
+          "MIDI"
+        ]
+      }
+    },
+    "/api/midi/send/cc": {
+      "post": {
+        "description": "Send MIDI Control Change message.\n\nArgs:\n    request: CC message parameters\n\nReturns:\n    Status message",
+        "operationId": "send_midi_cc_api_midi_send_cc_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MIDICCRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "title": "Response Send Midi Cc Api Midi Send Cc Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Send Midi Cc",
+        "tags": [
+          "MIDI"
+        ]
+      }
+    },
+    "/api/midi/send/note": {
+      "post": {
+        "description": "Send MIDI note on/off.\n\nArgs:\n    request: Note message parameters\n\nReturns:\n    Status message",
+        "operationId": "send_midi_note_api_midi_send_note_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MIDINoteRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "title": "Response Send Midi Note Api Midi Send Note Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Send Midi Note",
+        "tags": [
+          "MIDI"
+        ]
+      }
+    },
+    "/api/midi/start": {
+      "post": {
+        "description": "Start MIDI service with configuration.\n\nArgs:\n    config: MIDI configuration\n\nReturns:\n    Status message",
+        "operationId": "start_midi_service_api_midi_start_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MIDIConfigRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "title": "Response Start Midi Service Api Midi Start Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Start Midi Service",
+        "tags": [
+          "MIDI"
+        ]
+      }
+    },
+    "/api/midi/status": {
+      "get": {
+        "description": "Get current MIDI service status.\n\nReturns:\n    Service status and current parameters",
+        "operationId": "get_midi_status_api_midi_status_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MIDIStatusResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get Midi Status",
+        "tags": [
+          "MIDI"
+        ]
+      }
+    },
+    "/api/midi/stop": {
+      "post": {
+        "description": "Stop MIDI service.\n\nReturns:\n    Status message",
+        "operationId": "stop_midi_service_api_midi_stop_post",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "title": "Response Stop Midi Service Api Midi Stop Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Stop Midi Service",
+        "tags": [
+          "MIDI"
+        ]
+      }
+    },
+    "/api/presets/": {
+      "get": {
+        "description": "List substance presets from the existing JSON registry.",
+        "operationId": "list_substance_presets_api_presets__get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PresetListResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List Substance Presets",
+        "tags": [
+          "presets"
+        ]
+      }
+    },
+    "/api/presets/{preset_id}": {
+      "get": {
+        "description": "Fetch one preset by id or alias.",
+        "operationId": "get_substance_preset_api_presets__preset_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "preset_id",
+            "required": true,
+            "schema": {
+              "title": "Preset Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PresetDetail"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Substance Preset",
+        "tags": [
+          "presets"
+        ]
+      }
+    },
+    "/api/telemetry/events": {
+      "get": {
+        "description": "List locally buffered events (empty unless active).",
+        "operationId": "list_telemetry_events_api_telemetry_events_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response List Telemetry Events Api Telemetry Events Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List Telemetry Events",
+        "tags": [
+          "telemetry"
+        ]
+      }
+    },
+    "/api/telemetry/opt-in": {
+      "post": {
+        "description": "Set client opt-in. Still no-op unless the server env flag is enabled.",
+        "operationId": "set_telemetry_opt_in_api_telemetry_opt_in_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TelemetryOptInRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TelemetryStatus"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Set Telemetry Opt In",
+        "tags": [
+          "telemetry"
+        ]
+      }
+    },
+    "/api/telemetry/status": {
+      "get": {
+        "description": "Return whether telemetry is active.",
+        "operationId": "telemetry_status_api_telemetry_status_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TelemetryStatus"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Telemetry Status",
+        "tags": [
+          "telemetry"
+        ]
+      }
+    },
+    "/api/v1/experiences": {
+      "get": {
+        "operationId": "list_experiences_api_v1_experiences_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "substance",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Substance"
+            }
+          },
+          {
+            "in": "query",
+            "name": "valence",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": "positive",
+              "title": "Valence"
+            }
+          },
+          {
+            "in": "query",
+            "name": "mode",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Mode"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response List Experiences Api V1 Experiences Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Experiences",
+        "tags": [
+          "experiences"
+        ]
+      }
+    },
+    "/api/v1/experiences/reload-catalog": {
+      "post": {
+        "description": "Reload catalog from disk (dev helper).",
+        "operationId": "reload_catalog_api_v1_experiences_reload_catalog_post",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Reload Catalog Api V1 Experiences Reload Catalog Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Reload Catalog",
+        "tags": [
+          "experiences"
+        ]
+      }
+    },
+    "/api/v1/experiences/{experience_id}": {
+      "get": {
+        "operationId": "get_experience_api_v1_experiences__experience_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "experience_id",
+            "required": true,
+            "schema": {
+              "title": "Experience Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Get Experience Api V1 Experiences  Experience Id  Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Experience",
+        "tags": [
+          "experiences"
+        ]
+      }
+    },
+    "/api/v1/info": {
+      "get": {
+        "description": "API info endpoint (legacy + v1).",
+        "operationId": "api_info_api_v1_info_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "boolean"
+                      }
+                    ]
+                  },
+                  "title": "Response Api Info Api V1 Info Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Api Info"
+      }
+    },
+    "/api/v1/jobs/simulate": {
+      "post": {
+        "description": "Start a cancellable simulation job in a worker thread.",
+        "operationId": "create_simulate_job_api_v1_jobs_simulate_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JobCreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobSummary"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Simulate Job",
+        "tags": [
+          "jobs"
+        ]
+      }
+    },
+    "/api/v1/jobs/{job_id}": {
+      "delete": {
+        "description": "Request cancellation of a queued/running job.",
+        "operationId": "cancel_job_api_v1_jobs__job_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "job_id",
+            "required": true,
+            "schema": {
+              "title": "Job Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobSummary"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Cancel Job",
+        "tags": [
+          "jobs"
+        ]
+      },
+      "get": {
+        "description": "Fetch job status/result.",
+        "operationId": "get_job_api_v1_jobs__job_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "job_id",
+            "required": true,
+            "schema": {
+              "title": "Job Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobSummary"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Job",
+        "tags": [
+          "jobs"
+        ]
+      }
+    },
+    "/api/v1/midi/devices": {
+      "get": {
+        "description": "List available MIDI input and output devices.\n\nReturns:\n    Dictionary with input/output device lists",
+        "operationId": "list_midi_devices_api_v1_midi_devices_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MIDIDevicesResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List Midi Devices",
+        "tags": [
+          "MIDI"
+        ]
+      }
+    },
+    "/api/v1/midi/mappings": {
+      "get": {
+        "description": "Get current MIDI control mappings.\n\nReturns:\n    CC, note, and program change mappings",
+        "operationId": "get_midi_mappings_api_v1_midi_mappings_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MIDIControlMapResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get Midi Mappings",
+        "tags": [
+          "MIDI"
+        ]
+      }
+    },
+    "/api/v1/midi/params": {
+      "get": {
+        "description": "Get current MIDI-controlled parameters.\n\nReturns:\n    Dictionary of parameter name -> value",
+        "operationId": "get_midi_params_api_v1_midi_params_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "number"
+                  },
+                  "title": "Response Get Midi Params Api V1 Midi Params Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get Midi Params",
+        "tags": [
+          "MIDI"
+        ]
+      }
+    },
+    "/api/v1/midi/send/cc": {
+      "post": {
+        "description": "Send MIDI Control Change message.\n\nArgs:\n    request: CC message parameters\n\nReturns:\n    Status message",
+        "operationId": "send_midi_cc_api_v1_midi_send_cc_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MIDICCRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "title": "Response Send Midi Cc Api V1 Midi Send Cc Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Send Midi Cc",
+        "tags": [
+          "MIDI"
+        ]
+      }
+    },
+    "/api/v1/midi/send/note": {
+      "post": {
+        "description": "Send MIDI note on/off.\n\nArgs:\n    request: Note message parameters\n\nReturns:\n    Status message",
+        "operationId": "send_midi_note_api_v1_midi_send_note_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MIDINoteRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "title": "Response Send Midi Note Api V1 Midi Send Note Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Send Midi Note",
+        "tags": [
+          "MIDI"
+        ]
+      }
+    },
+    "/api/v1/midi/start": {
+      "post": {
+        "description": "Start MIDI service with configuration.\n\nArgs:\n    config: MIDI configuration\n\nReturns:\n    Status message",
+        "operationId": "start_midi_service_api_v1_midi_start_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MIDIConfigRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "title": "Response Start Midi Service Api V1 Midi Start Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Start Midi Service",
+        "tags": [
+          "MIDI"
+        ]
+      }
+    },
+    "/api/v1/midi/status": {
+      "get": {
+        "description": "Get current MIDI service status.\n\nReturns:\n    Service status and current parameters",
+        "operationId": "get_midi_status_api_v1_midi_status_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MIDIStatusResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get Midi Status",
+        "tags": [
+          "MIDI"
+        ]
+      }
+    },
+    "/api/v1/midi/stop": {
+      "post": {
+        "description": "Stop MIDI service.\n\nReturns:\n    Status message",
+        "operationId": "stop_midi_service_api_v1_midi_stop_post",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "title": "Response Stop Midi Service Api V1 Midi Stop Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Stop Midi Service",
+        "tags": [
+          "MIDI"
+        ]
+      }
+    },
+    "/api/v1/presets/": {
+      "get": {
+        "description": "List substance presets from the existing JSON registry.",
+        "operationId": "list_substance_presets_api_v1_presets__get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PresetListResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List Substance Presets",
+        "tags": [
+          "presets"
+        ]
+      }
+    },
+    "/api/v1/presets/{preset_id}": {
+      "get": {
+        "description": "Fetch one preset by id or alias.",
+        "operationId": "get_substance_preset_api_v1_presets__preset_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "preset_id",
+            "required": true,
+            "schema": {
+              "title": "Preset Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PresetDetail"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Substance Preset",
+        "tags": [
+          "presets"
+        ]
+      }
+    },
+    "/api/v1/ready": {
+      "get": {
+        "description": "Readiness check: presets and critical static assets must be available.",
+        "operationId": "ready_api_v1_ready_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Ready Api V1 Ready Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Ready"
+      }
+    },
+    "/api/v1/simulate/": {
+      "post": {
+        "description": "Simulate consciousness field evolution (cancellable on disconnect).",
+        "operationId": "simulate_consciousness_field_api_v1_simulate__post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SimulateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimulateResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Simulate Consciousness Field",
+        "tags": [
+          "simulation"
+        ]
+      }
+    },
+    "/api/v1/substances": {
+      "get": {
+        "operationId": "list_substances_api_v1_substances_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response List Substances Api V1 Substances Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List Substances",
+        "tags": [
+          "experiences"
+        ]
+      }
+    },
+    "/api/v1/telemetry/events": {
+      "get": {
+        "description": "List locally buffered events (empty unless active).",
+        "operationId": "list_telemetry_events_api_v1_telemetry_events_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response List Telemetry Events Api V1 Telemetry Events Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List Telemetry Events",
+        "tags": [
+          "telemetry"
+        ]
+      }
+    },
+    "/api/v1/telemetry/opt-in": {
+      "post": {
+        "description": "Set client opt-in. Still no-op unless the server env flag is enabled.",
+        "operationId": "set_telemetry_opt_in_api_v1_telemetry_opt_in_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TelemetryOptInRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TelemetryStatus"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Set Telemetry Opt In",
+        "tags": [
+          "telemetry"
+        ]
+      }
+    },
+    "/api/v1/telemetry/status": {
+      "get": {
+        "description": "Return whether telemetry is active.",
+        "operationId": "telemetry_status_api_v1_telemetry_status_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TelemetryStatus"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Telemetry Status",
+        "tags": [
+          "telemetry"
+        ]
+      }
+    },
+    "/api/v1/visualize/field-frame": {
+      "post": {
+        "description": "Run a bounded simulation and pair it with a ParameterField snapshot.",
+        "operationId": "field_frame_api_v1_visualize_field_frame_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FieldFrameRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Field Frame Api V1 Visualize Field Frame Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Field Frame",
+        "tags": [
+          "experiences"
+        ]
+      }
+    },
+    "/api/v1/visualize/parameter-timeline": {
+      "post": {
+        "operationId": "parameter_timeline_api_v1_visualize_parameter_timeline_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TimelineRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Parameter Timeline Api V1 Visualize Parameter Timeline Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Parameter Timeline",
+        "tags": [
+          "experiences"
+        ]
+      }
+    },
+    "/health": {
+      "get": {
+        "description": "Liveness check for monitoring and load balancers.",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "title": "Response Health Health Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Health"
+      }
+    },
+    "/ready": {
+      "get": {
+        "description": "Readiness check: presets and critical static assets must be available.",
+        "operationId": "ready_ready_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Ready Ready Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Ready"
+      }
+    },
+    "/simulate/": {
+      "post": {
+        "description": "Simulate consciousness field evolution (cancellable on disconnect).",
+        "operationId": "simulate_consciousness_field_simulate__post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SimulateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimulateResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Simulate Consciousness Field",
+        "tags": [
+          "simulation"
+        ]
+      }
+    }
+  }
+}

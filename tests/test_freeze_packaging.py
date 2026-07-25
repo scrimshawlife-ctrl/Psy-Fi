@@ -6,10 +6,15 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_freeze_docs_and_goldens_exist() -> None:
-    assert (ROOT / "docs" / "contracts" / "frozen" / "API_V1_FREEZE.md").exists()
+    frozen = ROOT / "docs" / "contracts" / "frozen"
+    assert (frozen / "API_V1_FREEZE.md").exists()
+    assert (frozen / "MANIFEST.json").exists()
+    assert (frozen / "openapi.v1.json").exists()
+    assert (frozen / "psyfi_visual_frame.v1.json").exists()
     assert (ROOT / "docs" / "PHASE4_USABILITY.md").exists()
     assert (ROOT / "docs" / "BROWSER_CAPABILITY_MATRIX.md").exists()
     assert (ROOT / "docs" / "images" / "psyfi-hero.jpg").exists()
+    assert (ROOT / "data" / "phenomenology" / "derived" / "motif_lexicon.v1.json").exists()
     goldens = ROOT / "tests" / "fixtures" / "experiences" / "substance_overlay_goldens.v1.json"
     assert goldens.exists()
     text = goldens.read_text(encoding="utf-8")

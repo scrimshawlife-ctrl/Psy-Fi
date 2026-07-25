@@ -125,7 +125,8 @@ See [`docs/CONTINUATION_PLAN.md`](docs/CONTINUATION_PLAN.md). P0–P2 scaffoldin
 - [x] Split engines + WebGL ParameterField path + phase scrubber
 - [x] Enriched 5-MeO / mescaline / ketamine seed recipes; sim↔experience bridge
 - [x] Optional camera/motion/MIDI modulators + export + Phase 4 checklist draft
-- [ ] Human physical-device evidence rows + formal contract freeze
+- [x] Soft freeze of `/api/v1` contracts (`docs/contracts/frozen/`)
+- [ ] Human physical-device evidence rows → hard freeze
 
 ## Definition of Done
 

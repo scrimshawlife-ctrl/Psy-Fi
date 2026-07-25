@@ -14,6 +14,7 @@ POS_DIR = ROOT / "data" / "phenomenology" / "positive"
 OUT_DIR = ROOT / "data" / "phenomenology" / "derived"
 OUT_PATH = OUT_DIR / "experience_catalog.v1.json"
 OVERLAY_PATH = OUT_DIR / "substance_visual_overlays.v1.json"
+LEXICON_PATH = OUT_DIR / "motif_lexicon.v1.json"
 
 MOTIF_PATTERNS = {
     "geometry": re.compile(
@@ -580,6 +581,35 @@ def build_overlays(recipes: list[dict]) -> dict:
     }
 
 
+def build_motif_lexicon(recipes: list[dict]) -> dict:
+    """Aggregate motif channel usage + top hooks for operator inspection."""
+    channel_hits: dict[str, list[float]] = defaultdict(list)
+    hooks_by_substance: dict[str, list[str]] = defaultdict(list)
+    for recipe in recipes:
+        for channel, score in (recipe.get("motifs") or {}).items():
+            channel_hits[channel].append(float(score))
+        substance = recipe.get("substance") or "unknown"
+        for hook in recipe.get("narrative_hooks") or []:
+            if hook and hook not in hooks_by_substance[substance]:
+                hooks_by_substance[substance].append(hook)
+    channels = {
+        channel: {
+            "mean": round(sum(vals) / max(1, len(vals)), 3),
+            "max": round(max(vals), 3) if vals else 0.0,
+            "recipe_count": len(vals),
+        }
+        for channel, vals in sorted(channel_hits.items())
+    }
+    return {
+        "schema_version": "1.0.0",
+        "generator": "scripts/build_experience_catalog.py",
+        "authority": {"motifs": "INFERRED", "hooks": "INFERRED", "source_existence": "OBSERVED"},
+        "channels": channels,
+        "hooks_by_substance": {k: v[:8] for k, v in sorted(hooks_by_substance.items())},
+        "disclaimer": "Derived motif lexicon for visualization research only. Not medical advice.",
+    }
+
+
 def sync_preset_visual_signatures(overlays: dict) -> list[str]:
     """Push distilled visual_signature scalars into substance_presets.json."""
     presets_path = ROOT / "psyfi_core" / "presets" / "substance_presets.json"
@@ -635,14 +665,17 @@ def main() -> None:
         "recipes": unique,
     }
     overlay_doc = build_overlays(unique)
+    lexicon = build_motif_lexicon(unique)
     OUT_PATH.write_text(json.dumps(catalog, indent=2), encoding="utf-8")
     OVERLAY_PATH.write_text(json.dumps(overlay_doc, indent=2), encoding="utf-8")
+    LEXICON_PATH.write_text(json.dumps(lexicon, indent=2), encoding="utf-8")
     # also copy builtin for import fallback
     builtin = ROOT / "psyfi_core" / "experiences" / "builtin_catalog.v1.json"
     builtin.write_text(json.dumps(catalog, indent=2), encoding="utf-8")
     synced = sync_preset_visual_signatures(overlay_doc.get("overlays") or {})
     print(f"Wrote {len(unique)} recipes -> {OUT_PATH}")
     print(f"Overlays -> {OVERLAY_PATH}")
+    print(f"Lexicon -> {LEXICON_PATH}")
     if synced:
         print(f"Synced visual_signature into presets: {', '.join(synced)}")
     by = Counter(r["substance"] for r in unique)

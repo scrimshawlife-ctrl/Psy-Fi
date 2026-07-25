@@ -1,0 +1,105 @@
+{
+  "schema_version": "1.0.0",
+  "generator": "scripts/build_experience_catalog.py",
+  "authority": {
+    "motifs": "INFERRED",
+    "hooks": "INFERRED",
+    "source_existence": "OBSERVED"
+  },
+  "channels": {
+    "body_somatic": {
+      "mean": 0.319,
+      "max": 1.0,
+      "recipe_count": 29
+    },
+    "color_light": {
+      "mean": 0.367,
+      "max": 1.0,
+      "recipe_count": 30
+    },
+    "entities": {
+      "mean": 0.274,
+      "max": 1.0,
+      "recipe_count": 21
+    },
+    "geometry": {
+      "mean": 0.306,
+      "max": 0.9,
+      "recipe_count": 33
+    },
+    "machines": {
+      "mean": 0.119,
+      "max": 0.85,
+      "recipe_count": 22
+    },
+    "nature": {
+      "mean": 0.349,
+      "max": 1.0,
+      "recipe_count": 27
+    },
+    "space_void": {
+      "mean": 0.392,
+      "max": 1.0,
+      "recipe_count": 29
+    },
+    "time_memory": {
+      "mean": 0.392,
+      "max": 1.0,
+      "recipe_count": 24
+    }
+  },
+  "hooks_by_substance": {
+    "5-meo-dmt": [
+      "minimal form, luminous depth, dissolve rather than ornate pattern",
+      "near-formless luminance with soft somatic dissolve; pattern complexity stays low",
+      "slow breath-linked expansion into depth without ornate lattice"
+    ],
+    "dmt": [
+      "rapid tunnel/chrysanthemum entry into high-frequency structure",
+      "abstract lattice presence without figurative creatures",
+      "beautiful chaos resolves toward ecstasy and peace across phases",
+      "DMT - Erowid Exp - 'First Breakthrough in Eight Years - Machine World' --- <br>Get the Erowid \"Words\" T-shirt<br>Contribute $50 and show support for accurate dr",
+      "\"First Breakthrough in Eight Years - Machine World: An Experience with DMT (exp117473)\".",
+      "Anthropomorphic entities were rushing towards these beams and when they entered the beams their limbs multiplied and they became hyper-spiders.",
+      "I tried a couple of moderately succesful yage journeys which had shown me the potentials of the mindspaces available through DMT.",
+      "I put some dry tobacco in the body of the pipe along with some spice and held it over a candle to heat the pipe."
+    ],
+    "ketamine": [
+      "smooth depth corridors, reduced chroma chaos, floating stability",
+      "detached floating drift; sparse structure and muted chroma",
+      "soft repeating corridors with low edge aggression and calm detachment"
+    ],
+    "lsd": [
+      "floral geometric designs glimmer as light dances on patterned texture",
+      "colors become emotionally salient; glow and aura intensify without panic",
+      "structured cosmic geometry at the edge of scale and recursion",
+      "room softens; gentle pattern crawl and warm chromatic lift",
+      "Obtaining the acid was easy enough, however, this time it came with a warning.",
+      "Being somewhat experienced, or so I thought, I thanked him for his time and shrugged off his suggestion for taking a smaller dose to start off with.",
+      "While I had tripped several times on acid prior to this, D had only done it twice at this point.",
+      "Everything adorned with intricate patterns etched into a thick clay-like texture."
+    ],
+    "mescaline": [
+      "warm ornamental geometry with lucid contrast",
+      "sunlit ornamental clarity; plant and textile geometry with stable edges",
+      "long warm tracers with lucid attentional hold and low panic valence"
+    ],
+    "pcp": [
+      "experimental low-intensity edge ambiguity; intensity capped",
+      "We went a few blocks down the street to a wooded area to smoke some weed that one of them had brought.",
+      "I could see a black and white carousel through the trees, complete with horses and lights and everything, but no sound.",
+      "I knew something was wrong because I smoked a fair bit of pot on a regular basis at that time, and shouldn't have been very high after 2 hits."
+    ],
+    "psilocybin": [
+      "closed-eye dancing fractals behind a soft veil toward oneness",
+      "organic bloom pulses with breath; edges soften into living texture",
+      "color-emotion coupling drifts the palette with slow certainty",
+      "\"Touching the Veil: An Experience with Mushrooms - P.",
+      "The ritual I discovered said that I should bring in fresh flowers, light white candles and copal incense, include a picture of St.",
+      "Martin de Caballero, who is said to represent Chikon-Tokoxo, the Lord of the Mountain, on my altar, and \u201csmudge\u201d the room with palo santo to purify it.",
+      "\"The Universe Felt Sorry, Then Made Love to Itself: An Experience with Mushrooms - P.",
+      "The time was 8:14, and it seemed unlikely that the small initial dose would have a noticeable kick so soon."
+    ]
+  },
+  "disclaimer": "Derived motif lexicon for visualization research only. Not medical advice."
+}

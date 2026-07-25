@@ -27,11 +27,12 @@ Live Experience workflow: **substance → recipe → mode → intensity → play
 
 | Browser / device | Date | Version | Install / A2HS | SW update OK | Jobs cancel | Live Experience | Neutral ≤ intent | Reduce motion | Notes |
 |---|---|---|---|---|---|---|---|---|---|
-| Safari iOS | | | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | |
-| Chrome Android | | | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | |
-| Chrome desktop | | | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | |
-| Edge desktop | | | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | |
-| Firefox desktop | | | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | |
+| CI (Ubuntu / pytest + static wiring) | 2026-07-25 | 3.12 | n/a | ✅ SW asset list | ✅ API | ✅ API/player modules | ✅ unit | ✅ unit | Automated only — not a device substitute |
+| Safari iOS | | | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | human |
+| Chrome Android | | | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | human |
+| Chrome desktop | | | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | human |
+| Edge desktop | | | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | human |
+| Firefox desktop | | | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | human |
 
 ## Automation coverage (CI)
 

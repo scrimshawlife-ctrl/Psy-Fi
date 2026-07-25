@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "psyfi_visual_frame.v1.json",
+  "title": "PsyFiVisualFrame.v1",
+  "description": "Renderer-independent visual frame pairing a ParameterField with optional simulation visualization channels.",
+  "type": "object",
+  "required": ["schema_version", "kind", "parameter_field"],
+  "properties": {
+    "schema_version": { "type": "string", "const": "1.0.0" },
+    "kind": {
+      "type": "string",
+      "enum": ["snapshot", "timeline", "field_frame"]
+    },
+    "seed": { "type": "integer" },
+    "substance": { "type": "string" },
+    "experience_id": { "type": ["string", "null"] },
+    "timeline_hash": { "type": "string" },
+    "parameter_field": { "$ref": "psyfi_parameter_field.v1.json" },
+    "frames": {
+      "type": "array",
+      "items": { "$ref": "psyfi_parameter_field.v1.json" }
+    },
+    "simulation": {
+      "type": "object",
+      "properties": {
+        "width": { "type": "integer" },
+        "height": { "type": "integer" },
+        "metrics": { "type": "object" },
+        "visualization": { "type": "object" },
+        "provenance_id": { "type": "string" },
+        "api_version": { "type": "string" }
+      }
+    },
+    "authority": {
+      "type": "object",
+      "properties": {
+        "parameters": { "type": "string", "enum": ["OBSERVED", "INFERRED", "SPECULATIVE"] },
+        "motifs": { "type": "string", "enum": ["OBSERVED", "INFERRED", "SPECULATIVE"] },
+        "source_existence": { "type": "string", "enum": ["OBSERVED", "INFERRED", "SPECULATIVE"] }
+      }
+    }
+  }
+}

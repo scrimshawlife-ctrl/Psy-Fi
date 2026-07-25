@@ -1,21 +1,32 @@
-# `/api/v1` Contract Freeze Prep
+# `/api/v1` Contract Freeze
 
-Status: **prep** (not yet frozen) — 2026-07-25  
-Related: `docs/contracts/openapi.json`, `docs/CONTINUATION_PLAN.md`, `tests/fixtures/experiences/substance_overlay_goldens.v1.json`
+Status: **soft_frozen** — 2026-07-25  
+Freeze id: `psyfi-api-v1-soft-2026-07-25`  
+Related: `MANIFEST.json`, `docs/CONTINUATION_PLAN.md`, overlay goldens
 
-## Intent
+## Policy
 
-Prepare a freeze of the public web API and experience/overlay schemas after device QA. Until freeze, additive changes are allowed; breaking renames/removals require a version bump discussion.
+| Change type | Allowed under soft freeze? |
+|---|---|
+| Additive fields / routes | Yes (update living OpenAPI + re-sync freeze) |
+| Rename / remove / semantic break | No — bump API version or open new freeze_id |
+| Device QA evidence | Still required for **hard** freeze |
 
-## Candidate freeze set
+Hard freeze remains blocked until physical-device matrix rows and Phase 4 usability evidence are filled.
 
-| Surface | Artifact | Notes |
-|---|---|---|
-| OpenAPI snapshot | `docs/contracts/openapi.json` | CI path-set equality |
-| Session schema | `psyfi_core/schemas/session.schema.json` | `api_version: v1` |
-| Experience recipe | `docs/schemas/psyfi_experience_recipe.v1.json` | catalog entries |
-| Parameter field | `docs/schemas/psyfi_parameter_field.v1.json` | immutable snapshots |
-| Overlay goldens | `tests/fixtures/experiences/substance_overlay_goldens.v1.json` | LSD≠psilocybin≠DMT… |
+## Frozen artifacts
+
+Synced via `python3 scripts/sync_frozen_contracts.py`:
+
+| Artifact | Role |
+|---|---|
+| `openapi.v1.json` | Public route inventory |
+| `session.schema.v1.json` | Portable session document |
+| `psyfi_experience_recipe.v1.json` | Experience catalog recipe |
+| `psyfi_parameter_field.v1.json` | Immutable visual authority |
+| `psyfi_visual_frame.v1.json` | Snapshot/timeline/field_frame envelope |
+| `substance_overlay_goldens.v1.json` | Distinctness hashes |
+| `substance_visual_overlays.v1.json` | Distilled substance visuals |
 
 ## Canonical routes (do not rename lightly)
 
@@ -29,12 +40,21 @@ Prepare a freeze of the public web API and experience/overlay schemas after devi
 - `GET/POST /api/v1/telemetry/*`
 - `GET /health`, `GET /ready`
 
-## Freeze gates (before marking frozen)
+## CI gates
 
-1. Physical-device matrix filled for Safari/Chrome/Edge/Firefox (`docs/BROWSER_CAPABILITY_MATRIX.md`)
-2. Overlay golden suite green in CI
-3. No unresolved breaking OpenAPI drift
-4. Phase 4 usability notes reviewed (`docs/PHASE4_USABILITY.md`)
+- Living OpenAPI path set matches app (`tests/test_openapi_contract.py`)
+- Frozen OpenAPI path set equals living snapshot (`tests/test_frozen_contracts.py`)
+- Overlay goldens green (`tests/test_overlay_goldens.py`)
+
+## Resync
+
+```bash
+python3 scripts/export_openapi.py
+python3 scripts/build_experience_catalog.py
+python3 scripts/regenerate_overlay_goldens.py
+python3 scripts/sync_frozen_contracts.py
+python3 -m pytest tests/test_frozen_contracts.py tests/test_overlay_goldens.py -q
+```
 
 ## Non-claims
 

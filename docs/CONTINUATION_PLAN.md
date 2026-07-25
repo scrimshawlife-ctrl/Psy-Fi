@@ -19,7 +19,7 @@ Deploy: **Docker only** (`DEPLOYMENT.md`); Azure/Render paths removed (#28).
 
 ## What is the “device matrix”?
 
-[`docs/BROWSER_CAPABILITY_MATRIX.md`](BROWSER_CAPABILITY_MATRIX.md) is a **manual checklist**: someone runs PsyFi on Safari iOS, Chrome Android, and desktop browsers and records whether install, service worker, jobs cancel, Live Experience, `/gpu/`, Neutral View, and reduce-motion behave correctly. CI cannot substitute for those rows. Together with [`PHASE4_USABILITY.md`](PHASE4_USABILITY.md), it blocks **hard** freeze only (soft freeze already landed).
+[`docs/BROWSER_CAPABILITY_MATRIX.md`](BROWSER_CAPABILITY_MATRIX.md) is a **manual checklist**: someone runs PsyFi on current-gen phones plus **newer Apple Silicon Macs** and **newer Windows 11 PCs**, and records whether install, service worker, jobs cancel, Live Experience, `/gpu/` compute, Neutral View, and reduce-motion behave correctly. CI cannot substitute for those rows. Together with [`PHASE4_USABILITY.md`](PHASE4_USABILITY.md), it blocks **hard** freeze only (soft freeze already landed).
 
 ## Human gates (block hard freeze)
 

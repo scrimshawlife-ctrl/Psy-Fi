@@ -215,8 +215,8 @@
                                             <input type="range" id="imageSeedInfluence" min="0" max="1" step="0.01" value="0.65" data-tip="How hard Pass 1 recipe conditioning and Pass 2 image modulator pull.">
                                         </div>
                                         <div class="checkbox-row compact-checks">
-                                            <label data-tip="Apply suggested mode/intensity from image features.">
-                                                <input type="checkbox" id="imageSeedApplyRecommended"> Use recommended formula
+                                            <label data-tip="Pick the best catalog recipe for the image, then apply its mode/intensity and re-condition Pass 1 with that recipe.">
+                                                <input type="checkbox" id="imageSeedApplyRecommended" checked> Use recommended formula
                                             </label>
                                         </div>
                                         <div class="session-actions dense-actions">
@@ -314,7 +314,9 @@
                                 <button type="button" class="btn-secondary" id="exportTimelineBtn" data-tip="Download the loaded timeline JSON.">Export timeline</button>
                                 <button type="button" class="btn-secondary" id="exportViewportBtn" data-tip="Capture the current field viewport as PNG.">Export viewport</button>
                                 <button type="button" class="btn-secondary" id="exportJourneyBtn" data-tip="Package stills + formula prompt for optional external text-to-video (no provider call).">Export journey</button>
+                                <button type="button" class="btn-secondary" id="copyT2vPromptBtn" data-tip="Copy the T2V prompt only (uses current timeline + image seed; no provider call).">Copy T2V prompt</button>
                             </div>
+                            <p class="input-hint" id="t2vPromptHint" hidden></p>
                         </details>
 
                         <details class="control-drawer">

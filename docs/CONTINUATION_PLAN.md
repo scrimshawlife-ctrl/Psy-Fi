@@ -55,6 +55,7 @@ Board: [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md)
 - [x] Image seed two-pass pipeline ([`IMAGE_SEED_PIPELINE.md`](IMAGE_SEED_PIPELINE.md) · Pass 1 experience conditioner · Pass 2 `modulators.image`)
 - [x] Image-seed GPU texture handoff (`assets.images` data-URL · `?image_seed=1` sessionStorage)
 - [x] Export journey package + external T2V prompt sidecar (`/visualize/export-journey`)
+- [x] Image-seed catalog recommend + `apply_recommended` + one-shot `/visualize/image-seed-journey`
 
 ## Recommended next steps (priority order)
 

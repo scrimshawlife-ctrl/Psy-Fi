@@ -317,6 +317,73 @@ def recommend_mode_intensity(features: dict[str, Any], mode: str, intensity: flo
     return {"mode": suggested, "intensity": round(suggested_i, 4)}
 
 
+def score_experience_for_features(
+    recipe: dict[str, Any],
+    features: dict[str, Any],
+    suggested_mode: str,
+) -> float:
+    """Higher is better match between image features and a catalog recipe."""
+    vr = recipe.get("visual_recipe") or {}
+    bias = vr.get("parameter_bias") or {}
+    pal = vr.get("palette") or {}
+    mode_default = str(vr.get("mode_default") or "open")
+    modes = set(recipe.get("modes") or [])
+    score = 0.0
+    if mode_default == suggested_mode:
+        score += 3.0
+    elif suggested_mode in modes:
+        score += 1.5
+    energy = float(features.get("energy") or 0.0)
+    contrast = float(features.get("contrast") or 0.0)
+    edges = float(features.get("edge_density") or 0.0)
+    warmth = float(features.get("warmth") or 0.5)
+    pal_e = float(pal.get("energy", bias.get("palette_energy", 0.5)) or 0.5)
+    score += 1.5 * (1.0 - abs(pal_e - energy))
+    complexity = float(bias.get("pattern_complexity", 0.4) or 0.4)
+    score += 1.2 * (1.0 - abs(complexity - max(contrast, edges)))
+    void_b = float(bias.get("void_bias", 0.0) or 0.0)
+    if suggested_mode == "void":
+        score += 0.8 * void_b + 0.4 * (1.0 - energy)
+    attract = float(bias.get("attractor_bias", 0.0) or 0.0)
+    if suggested_mode == "attractor":
+        score += 0.8 * max(attract, float(bias.get("symmetry_order", 0.0) or 0.0))
+    # Warm images prefer higher bloom / organic secondaries
+    engines = list(vr.get("primary_engines") or []) + list(vr.get("secondary_engines") or [])
+    if warmth > 0.55 and "organic_bloom" in engines:
+        score += 0.4
+    if edges > 0.5 and "kaleidoscope" in engines:
+        score += 0.5
+    if energy > 0.55 and "recursive_feedback" in engines:
+        score += 0.35
+    return round(score, 4)
+
+
+def recommend_experience(
+    candidates: list[dict[str, Any]] | None,
+    features: dict[str, Any],
+    suggested_mode: str,
+) -> dict[str, Any] | None:
+    """Pick best catalog recipe for image features. Returns summary or None."""
+    if not candidates:
+        return None
+    ranked: list[tuple[float, dict[str, Any]]] = []
+    for recipe in candidates:
+        if not isinstance(recipe, dict) or not recipe.get("id"):
+            continue
+        ranked.append((score_experience_for_features(recipe, features, suggested_mode), recipe))
+    if not ranked:
+        return None
+    ranked.sort(key=lambda pair: (-pair[0], str(pair[1].get("id"))))
+    best_score, best = ranked[0]
+    return {
+        "experience_id": best.get("id"),
+        "title": best.get("title") or best.get("name"),
+        "mode_default": ((best.get("visual_recipe") or {}).get("mode_default") or suggested_mode),
+        "score": best_score,
+        "recipe": best,
+    }
+
+
 def build_image_seed(
     *,
     image: np.ndarray | bytes | str,
@@ -329,6 +396,8 @@ def build_image_seed(
     include_preview: bool = True,
     include_source_field: bool = True,
     include_texture: bool = True,
+    recipe_candidates: list[dict[str, Any]] | None = None,
+    prefer_recommended_experience: bool = False,
 ) -> dict[str, Any]:
     """Run Pass 1 and return psyfi.image_seed.v1 payload."""
     if isinstance(image, (bytes, bytearray)):
@@ -347,21 +416,41 @@ def build_image_seed(
 
     rgba = _resize_max_edge(rgba, _MAX_EDGE)
     features = analyze_features(rgba)
-    drive = _recipe_drive(experience, substance_overlay)
+    recommended = recommend_mode_intensity(features, mode, intensity)
+    rec_exp = recommend_experience(
+        recipe_candidates,
+        features,
+        str(recommended.get("mode") or mode),
+    )
+    # Condition with explicit experience, else recommended (when preferred / missing).
+    use_experience = experience
+    if prefer_recommended_experience and rec_exp and rec_exp.get("recipe"):
+        use_experience = rec_exp["recipe"]
+    elif use_experience is None and rec_exp and rec_exp.get("recipe"):
+        use_experience = rec_exp["recipe"]
+
+    drive = _recipe_drive(use_experience, substance_overlay)
     # Deterministic conditioner seed from original features before mutate
     pre_seed = derive_master_seed(rgba)
     conditioned = condition_image(rgba, drive=drive, influence=influence, seed=pre_seed)
     master_seed = derive_master_seed(conditioned)
     hints = parameter_hints_from_features(features, drive, influence)
-    recommended = recommend_mode_intensity(features, mode, intensity)
     tex_b64 = encode_preview_png_base64(conditioned, edge=_TEXTURE_EDGE) if include_texture else None
+
+    if rec_exp:
+        recommended = {
+            **recommended,
+            "experience_id": rec_exp.get("experience_id"),
+            "experience_title": rec_exp.get("title"),
+            "experience_score": rec_exp.get("score"),
+        }
 
     return {
         "schema": IMAGE_SEED_SCHEMA,
         "master_seed": int(master_seed),
         "influence": round(_clamp01(influence), 4),
         "substance": substance,
-        "experience_id": (experience or {}).get("id"),
+        "experience_id": (use_experience or {}).get("id") or (experience or {}).get("id"),
         "mode": mode,
         "features": features,
         "parameter_hints": hints,

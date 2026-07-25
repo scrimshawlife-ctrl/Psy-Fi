@@ -17,6 +17,8 @@ from psyfi_core.visualization.image_seed import (
     build_image_seed,
     condition_image,
     derive_master_seed,
+    recommend_experience,
+    score_experience_for_features,
 )
 
 client = TestClient(app)
@@ -151,3 +153,95 @@ def test_timeline_accepts_image_modulator_and_hints() -> None:
     assert res.status_code == 200, res.text
     frames = res.json()["frames"]
     assert frames[0]["parameters"]["palette_energy"] >= 0.0
+
+
+def test_recommend_experience_ranks_kaleidoscope_for_edges() -> None:
+    features = {
+        "energy": 0.7,
+        "contrast": 0.65,
+        "edge_density": 0.7,
+        "warmth": 0.4,
+    }
+    suggested = "attractor"
+    kaleido = {
+        "id": "exp_kaleido",
+        "title": "Kaleido",
+        "modes": ["attractor", "open"],
+        "visual_recipe": {
+            "mode_default": "attractor",
+            "primary_engines": ["kaleidoscope"],
+            "parameter_bias": {"pattern_complexity": 0.7, "attractor_bias": 0.8},
+            "palette": {"energy": 0.7},
+        },
+    }
+    voidish = {
+        "id": "exp_void",
+        "title": "Void Soft",
+        "modes": ["void"],
+        "visual_recipe": {
+            "mode_default": "void",
+            "primary_engines": ["void_expansion"],
+            "parameter_bias": {"void_bias": 0.9, "pattern_complexity": 0.1},
+            "palette": {"energy": 0.15},
+        },
+    }
+    assert score_experience_for_features(kaleido, features, suggested) > score_experience_for_features(
+        voidish, features, suggested
+    )
+    picked = recommend_experience([voidish, kaleido], features, suggested)
+    assert picked is not None
+    assert picked["experience_id"] == "exp_kaleido"
+    assert picked["score"] > 0
+
+
+def test_apply_recommended_sets_applied_experience_id() -> None:
+    b64 = base64.b64encode(_png_bytes()).decode("ascii")
+    res = client.post(
+        "/api/v1/visualize/image-seed/json",
+        json={
+            "image_base64": b64,
+            "substance": "lsd",
+            "experience_id": None,
+            "mode": "open",
+            "intensity": 0.7,
+            "influence": 0.65,
+            "apply_recommended": True,
+            "include_preview": False,
+            "include_source_field": False,
+        },
+    )
+    assert res.status_code == 200, res.text
+    body = res.json()
+    assert body["recommended"].get("experience_id")
+    assert body["applied_experience_id"] == body["recommended"]["experience_id"]
+    assert body["experience_id"] == body["applied_experience_id"]
+    assert body["applied_mode"]
+    assert 0.0 <= float(body["applied_intensity"]) <= 1.0
+
+
+def test_image_seed_journey_endpoint() -> None:
+    b64 = base64.b64encode(_png_bytes()).decode("ascii")
+    res = client.post(
+        "/api/v1/visualize/image-seed-journey",
+        json={
+            "image_base64": b64,
+            "substance": "lsd",
+            "mode": "open",
+            "intensity": 0.65,
+            "influence": 0.55,
+            "apply_recommended": True,
+            "include_preview": False,
+            "include_source_field": False,
+            "steps": 6,
+        },
+    )
+    assert res.status_code == 200, res.text
+    body = res.json()
+    assert body["schema"] == "psyfi.image_seed_journey.v1"
+    assert body["kind"] == "image_seed_journey"
+    assert body["image_seed"]["schema"] == IMAGE_SEED_SCHEMA
+    assert body["image_seed"]["applied_experience_id"]
+    assert len(body["timeline"]["frames"]) == 6
+    assert body["timeline"]["seed"] == body["image_seed"]["master_seed"]
+    assert body["journey"]["t2v"]["status"] == "prompt_only"
+    assert body["journey"]["t2v"]["prompt"]

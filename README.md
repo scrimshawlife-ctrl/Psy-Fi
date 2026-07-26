@@ -156,6 +156,8 @@ Canonical browser API is **`/api/v1`** (**hard-frozen**). Legacy `/api/*` and `/
 
 | Doc                                                                                | Purpose                         |
 | ---------------------------------------------------------------------------------- | ------------------------------- |
+| [`PROJECT_INDEX.md`](PROJECT_INDEX.md)                                             | Codebase map & ownership index  |
+| [`.agents/skills/codebase-memory/`](.agents/skills/codebase-memory/)               | Codebase Memory graph skill     |
 | [`docs/PRODUCTION_READINESS.md`](docs/PRODUCTION_READINESS.md)                     | Production readiness board      |
 | [`docs/CONTINUATION_PLAN.md`](docs/CONTINUATION_PLAN.md)                           | Web-track next steps            |
 | [`docs/rendering/ROADMAP.md`](docs/rendering/ROADMAP.md)                           | GPU G0–G5 roadmap               |

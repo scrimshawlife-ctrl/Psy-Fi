@@ -6,6 +6,20 @@
       "sourceType": "github",
       "skillPath": "skills/hallmark/SKILL.md",
       "computedHash": "8a8ecafd613f09e701330b5aa4a591ac539abb2605596df4a2394f03628d1d76"
+    },
+    "codebase-memory": {
+      "source": "brain-bootstrap/claude-code-brain-bootstrap",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/codebase-memory/SKILL.md",
+      "computedHash": "3c052d374ed7218e70fa2bd783c1088b10c53a1b274c1b52ab759b9da2a7d86c",
+      "notes": "Vendored/adapted under .agents/skills/codebase-memory for PsyFi + codebase-memory-mcp CLI/MCP wiring"
+    },
+    "codebase-memory-mcp": {
+      "source": "github/awesome-copilot",
+      "sourceType": "github",
+      "skillPath": "skills/codebase-memory-mcp/SKILL.md",
+      "computedHash": "7c527114da00276496dd65ed9d68b00cc037999d115102d3c625259b6f43bc22",
+      "notes": "Vendored/adapted under .agents/skills/codebase-memory-mcp"
     }
   }
 }

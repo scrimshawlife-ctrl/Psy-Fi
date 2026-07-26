@@ -6,6 +6,28 @@ Navigable map of the Psy-Fi monorepo for contributors and agents. Prefer this fi
 **Freeze:** `/api/v1` hard-frozen as `psyfi-api-v1-hard-2026-07-25` — see [`docs/contracts/frozen/API_V1_FREEZE.md`](docs/contracts/frozen/API_V1_FREEZE.md).  
 **Status board:** [`docs/PRODUCTION_READINESS.md`](docs/PRODUCTION_READINESS.md) · next work: [`docs/CONTINUATION_PLAN.md`](docs/CONTINUATION_PLAN.md) · phases: [`PLANS.md`](PLANS.md).
 
+### Codebase Memory (graph index)
+
+Indexed with [codebase-memory-mcp](https://github.com/DeusData/codebase-memory-mcp) for structural navigation.
+
+| Item | Value |
+| --- | --- |
+| Project name | `workspace` (when rooted at `/workspace`) |
+| Status | ready |
+| Scale | ~5.4k nodes · ~13k edges |
+| Languages | Python, TypeScript, JavaScript, CSS, Bash, YAML, HTML, TOML |
+| Skill | [`.agents/skills/codebase-memory/SKILL.md`](.agents/skills/codebase-memory/SKILL.md) |
+| MCP (Cursor) | [`.cursor/mcp.json`](.cursor/mcp.json) |
+| ADR | stored in graph via `manage_adr` |
+
+```bash
+# Install (once) then index / refresh
+curl -fsSL https://raw.githubusercontent.com/DeusData/codebase-memory-mcp/main/install.sh | bash
+export PATH="$HOME/.local/bin:$PATH"
+codebase-memory-mcp cli index_repository --repo-path .
+codebase-memory-mcp cli get_architecture --project workspace
+```
+
 ---
 
 ## Architecture (one glance)

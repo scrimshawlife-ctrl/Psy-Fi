@@ -131,6 +131,18 @@ See [`docs/CONTINUATION_PLAN.md`](docs/CONTINUATION_PLAN.md). Ship track landed 
 - [x] GPU platform G0–G4 (`packages/psyfi-gpu-renderer`, multi-vendor Ultra, pixel goldens, PWA route)
 - [x] Simulated Ultra QA + living device matrix (hardware fps optional thereafter)
 
+### Instrument & Spatiotemporal Grounding (planned 2026-07-31)
+
+See [`docs/INSTRUMENT_GROUNDING_PLAN.md`](docs/INSTRUMENT_GROUNDING_PLAN.md) and the active queue in [`docs/CONTINUATION_PLAN.md`](docs/CONTINUATION_PLAN.md).
+
+- I1 Non-linear quantized controls + lever-style commits
+- I2 Dual-field / dual-timeline hold-and-compare
+- I3 Optional spatiotemporal anchors
+- I4 Explicit planner stage
+- I5 First-class Journey objects
+
+All slices preserve ParameterField authority, SafetyPass, Python simulation truth, and the existing claim discipline.
+
 ## Definition of Done
 
 A work item is complete only when implementation, tests, user-facing states, documentation, accessibility behavior, performance impact, and migration implications are addressed. Placeholder UI and undocumented platform-specific coupling do not satisfy completion.

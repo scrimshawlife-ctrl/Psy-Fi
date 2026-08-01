@@ -53,7 +53,8 @@ Full board: [`docs/PRODUCTION_READINESS.md`](docs/PRODUCTION_READINESS.md).
 
 Ship checklist: `pytest` → `npm test && npm run gpu:test && npm run gpu:build` → `docker compose up -d --build` → `/health` `/ready` `/` `/gpu/`.
 
-**Optional next:** hardware Ultra fps confirmation; full R3F stills on a GPU CI runner. Queue: [`docs/CONTINUATION_PLAN.md`](docs/CONTINUATION_PLAN.md).
+**Optional next:** hardware Ultra fps confirmation; full R3F stills on a GPU CI runner.  
+**Instrument track (planned):** non-linear controls, hold-and-compare, optional spatiotemporal anchors, planner stage, Journey objects — see [`docs/INSTRUMENT_GROUNDING_PLAN.md`](docs/INSTRUMENT_GROUNDING_PLAN.md) and [`docs/CONTINUATION_PLAN.md`](docs/CONTINUATION_PLAN.md).
 
 ## Install
 
@@ -160,6 +161,7 @@ Canonical browser API is **`/api/v1`** (**hard-frozen**). Legacy `/api/*` and `/
 | [`.agents/skills/codebase-memory/`](.agents/skills/codebase-memory/)               | Codebase Memory graph skill     |
 | [`docs/PRODUCTION_READINESS.md`](docs/PRODUCTION_READINESS.md)                     | Production readiness board      |
 | [`docs/CONTINUATION_PLAN.md`](docs/CONTINUATION_PLAN.md)                           | Web-track next steps            |
+| [`docs/INSTRUMENT_GROUNDING_PLAN.md`](docs/INSTRUMENT_GROUNDING_PLAN.md)           | Instrument + spatiotemporal grounding plan (I1–I5) |
 | [`docs/rendering/ROADMAP.md`](docs/rendering/ROADMAP.md)                           | GPU G0–G5 roadmap               |
 | [`docs/rendering/G4_CUTOVER.md`](docs/rendering/G4_CUTOVER.md)                     | G4 cutover checklist            |
 | [`docs/rendering/PIXEL_GOLDENS.md`](docs/rendering/PIXEL_GOLDENS.md)               | Soft-present pixel goldens      |

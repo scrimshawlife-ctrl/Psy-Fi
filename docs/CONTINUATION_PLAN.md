@@ -75,6 +75,24 @@ Priority order for the next web-only slices. No calendar estimates — scoped by
 - Breaking ParameterField / SafetyPass authority
 - Native iOS / non-Docker deploys
 
+## Instrument & Spatiotemporal Grounding Track (new — 2026-07-31)
+
+Full plan: [`INSTRUMENT_GROUNDING_PLAN.md`](INSTRUMENT_GROUNDING_PLAN.md).
+
+Distillations from Looking Glass / GL4SS patterns applied to PsyFi’s instrument and generative surfaces while preserving all architectural invariants.
+
+| Priority | Slice | Goal |
+| --- | --- | --- |
+| **I1** | Non-linear quantized controls + lever-style commits | Adaptive spacing for intensity / depth / phase; explicit commit actions; optional solar-elevation bias |
+| **I2** | Dual-field / dual-timeline hold-and-compare | Pin + wipe / blink / side-by-side differential analysis in Live Experience |
+| **I3** | Optional spatiotemporal anchors | lat/lon + year + hour + solar elevation on image-seed and export-journey paths |
+| **I4** | Explicit planner stage | ParameterField + optional anchors → short phenomenological description + motif/lighting notes (deterministic first) |
+| **I5** | First-class Journey objects | Bundle substance/mode/timeline/seed/anchors/planner into reproducible IndexedDB-archivable experiences |
+
+Supporting (opportunistic): safety-clamped transition shaders; client-side model-swappable generative extensions if ever needed beyond prompt sidecars.
+
+**Invariants enforced on every slice**: ParameterField authority, mandatory SafetyPass, Python simulation truth, provenance + OBSERVED/INFERRED labels, no medical claims, determinism for fixed seeds + anchors, additive `/api/v1` only.
+
 ## Recommended next steps (priority order)
 
 ### Active — image-seed UX continuum
@@ -83,6 +101,14 @@ Priority order for the next web-only slices. No calendar estimates — scoped by
 - [x] **B** Surface `/visualize/image-seed-journey` in the Workbench (`Seed → journey`)
 - [x] **C** Harden export-journey still capture + prompt feedback
 - [x] **D** Top-N recommended alternatives (`recommended_alternatives` + Workbench picker)
+
+### Active — Instrument & Spatiotemporal Grounding (see [`INSTRUMENT_GROUNDING_PLAN.md`](INSTRUMENT_GROUNDING_PLAN.md))
+
+- [ ] **I1** Non-linear quantized controls + lever-style commits
+- [ ] **I2** Dual-field / dual-timeline hold-and-compare
+- [ ] **I3** Optional spatiotemporal anchors on image-seed / export-journey
+- [ ] **I4** Explicit planner stage (deterministic first)
+- [ ] **I5** First-class Journey objects + IndexedDB archive
 
 ### Done — PWA correctness (post-Hallmark)
 

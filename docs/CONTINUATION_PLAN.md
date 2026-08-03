@@ -34,7 +34,7 @@ Distillations from Looking Glass / GL4SS patterns applied to PsyFi’s instrumen
 
 ### Active — Instrument & Spatiotemporal Grounding (see [`INSTRUMENT_GROUNDING_PLAN.md`](INSTRUMENT_GROUNDING_PLAN.md))
 
-- [x] **I1** Non-linear quantized controls + lever-style commits — intensity map + Neutral lever + shell wiring complete; stations/solar/export commits remaining (optional polish)
+- [x] **I1** Non-linear quantized controls + lever-style commits — intensity map + Neutral lever + shell wiring complete in local validated files; remote index.html carries instrumentMap script and launch structure; full Live Experience body and app.js mapping helpers remain the local source of truth pending final full-payload land
 - [ ] **I2** Dual-field / dual-timeline hold-and-compare
 - [ ] **I3** Optional spatiotemporal anchors on image-seed / export-journey
 - [ ] **I4** Explicit planner stage (deterministic first)
@@ -42,7 +42,7 @@ Distillations from Looking Glass / GL4SS patterns applied to PsyFi’s instrumen
 
 ## Next recommended
 
-Land remaining shell wiring for I1 (index.html + app.js) if not already on main, then I2.
+I2 hold-and-compare (pin + wipe / blink / side-by-side) or complete the remaining full shell payload land for index.html + app.js.
 
 ## Run
 

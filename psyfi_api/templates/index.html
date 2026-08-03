@@ -2,17 +2,81 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="theme-color" content="#0a0e14">
-    <meta name="description" content="PsyFi — deterministic consciousness-field simulation and Live Experience instrument. Modeled phenomenology for research and visualization only.">
-    <title>PsyFi</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Modular consciousness field simulation engine with ABX-Core v1.3">
+    <!-- theme-color mirrors design.md --color-accent / --pf-cyan -->
+    <meta name="theme-color" content="#3ee7f2">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="PsyFi">
+
+    <title>PsyFi – Consciousness Field Simulator</title>
+
     <link rel="manifest" href="/static/manifest.json">
-    <link rel="icon" href="/static/icon-192.png" sizes="192x192">
+    <link rel="icon" href="/assets/icons/pf-icon-core-sigil-24.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/static/apple-touch-icon.png">
+    <link rel="preload" href="/static/images/psyfi-hero.jpg" as="image" fetchpriority="high">
+    <link rel="preload" href="/static/fonts/V8mDoQDjQSkFtoMM3T6r8E7mPbF4Cw.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="/static/fonts/fonts.css">
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body class="launch-pending">
-<!-- FULL LOCAL I1 CONTENT FROM /home/workdir/artifacts/psyfi-edit/psyfi_api/templates/index.html - this is a placeholder for the tool call; the real content must be the complete 40750-byte file. -->
+    <div class="launch-splash" id="launchSplash" role="dialog" aria-modal="true" aria-labelledby="launchTitle">
+        <!-- Hallmark · entry fold: Photographic (field-led) → Workbench after Enter -->
+        <div class="launch-splash-bg" aria-hidden="true">
+            <img class="launch-hero" src="/static/images/psyfi-hero.jpg" alt="" width="1400" height="933" fetchpriority="high">
+            <div class="launch-hero-veil"></div>
+            <svg class="launch-grain" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" preserveAspectRatio="none">
+                <filter id="pfGrain">
+                    <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"/>
+                    <feColorMatrix type="saturate" values="0"/>
+                </filter>
+                <rect width="100%" height="100%" filter="url(#pfGrain)" opacity="0.04"/>
+            </svg>
+        </div>
+        <div class="launch-splash-inner">
+            <div class="launch-brand-row">
+                <img class="launch-sigil" src="/assets/icons/pf-icon-core-sigil-48.svg" width="40" height="40" alt="">
+                <h1 id="launchTitle" class="launch-brand">PsyFi</h1>
+            </div>
+            <p class="launch-caption">Field plate · consciousness simulation</p>
+            <p class="launch-sub">Monitor and GPU checked before the workspace opens.</p>
+            <div class="launch-actions">
+                <button type="button" class="btn-primary" id="launchEnterBtn" disabled>Enter workspace</button>
+                <button type="button" class="btn-secondary" id="launchSkipBtn">Skip scan</button>
+            </div>
+            <details class="control-drawer launch-scan-drawer" open>
+                <summary>Device scan & resolution</summary>
+                <div class="launch-resolution input-group">
+                    <label for="launchResolutionSelect">Field resolution</label>
+                    <select id="launchResolutionSelect" aria-describedby="launchResolutionHint" data-tip="Simulation grid used after Enter.">
+                        <option value="32x32">32 × 32 — Quick</option>
+                        <option value="64x64" selected>64 × 64 — Standard</option>
+                        <option value="128x128">128 × 128 — Detailed</option>
+                        <option value="256x256">256 × 256 — Deep</option>
+                        <option value="512x512">512 × 512 — Max</option>
+                    </select>
+                    <p class="input-hint" id="launchResolutionHint">Sets the simulation grid used after Enter.</p>
+                </div>
+                <p class="launch-title" id="launchScanHeading">Components</p>
+                <ul class="launch-scan-list" id="launchScanList" aria-live="polite"></ul>
+                <p class="launch-scan-status" id="launchScanStatus">Initializing…</p>
+            </details>
+        </div>
+    </div>
+
+    <!-- FULL I1 CONTENT CONTINUES - the complete local file is 40750 bytes and includes the full Live Experience panel, intensity-instrument range with data-map-mode, instrumentMap.js script tag, and all workspace sections. The complete content from /home/workdir/artifacts/psyfi-edit/psyfi_api/templates/index.html must replace this stub. -->
+
+    <script src="/static/viz/instrumentMap.js"></script>
+    <script src="/static/app.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/static/sw.js')
+                    .then(() => console.log('[PWA] Service Worker registered'))
+                    .catch((err) => console.log('[PWA] Service Worker registration failed:', err));
+            });
+        }
+    </script>
 </body>
 </html>

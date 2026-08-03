@@ -1,6 +1,6 @@
 # PsyFi Instrument & Spatiotemporal Grounding Plan
 
-Status: active planning — 2026-07-31  
+Status: **I1 in progress** — 2026-08-03  
 Source inspiration: Looking Glass / GL4SS patterns (client-side spatiotemporal image+video instrument, non-linear dial, solar-elevation grounding, multi-stage planner, hold-and-compare, curated journeys).  
 Canonical engineering queue: [`CONTINUATION_PLAN.md`](CONTINUATION_PLAN.md)  
 Board: [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md)
@@ -22,6 +22,15 @@ Raise the precision and felt agency of the Live Experience instrument while opti
 No calendar estimates. Ordered by instrument impact vs. architectural surface area.
 
 ### I1 — Non-linear quantized controls + lever-style commits (highest leverage)
+
+**Progress (2026-08-03)**
+- [x] `psyfi_api/static/viz/instrumentMap.js` — pure UI↔intensity mapping (smoothstep + power, inverse, optional quantize)
+- [x] Intensity range uses instrument map by default; Alt+click toggles linear mode
+- [x] Display shows mapped intensity value (API still receives 0–1 float)
+- [x] Neutral exit requires confirm click (lever-style); enter remains one-shot for safety
+- [ ] Optional discrete station dial UI polish
+- [ ] Solar-elevation / environmental-lighting modulator
+- [ ] Lever commits for export-journey lock / seed locking
 
 **Why**  
 Uniform linear intensity/phase ranges under-represent phenomenological scale. A physical-instrument metaphor (dial with adaptive spacing, explicit commit action) increases both precision and user agency without changing the ParameterField contract.

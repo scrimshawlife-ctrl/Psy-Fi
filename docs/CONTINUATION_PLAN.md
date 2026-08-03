@@ -33,16 +33,19 @@ Full plan: [`INSTRUMENT_GROUNDING_PLAN.md`](INSTRUMENT_GROUNDING_PLAN.md).
 ### Active — Instrument & Spatiotemporal Grounding
 
 - [x] **I1** Non-linear quantized controls + lever-style commits — intensity map + Neutral lever + shell wiring complete in local validated files
-- [~] **I2** Dual-field / dual-timeline hold-and-compare — `compareSurface.js` + ExperiencePlayer `pinFrame` / `setCompareMode` / `setWipePosition` / `getComparisonPacket` + renderer hooks landed; canvas dual-draw (wipe composite) and minimal Pin chrome next
+- [x] **I2 player-side** Dual-field hold-and-compare — `compareSurface.js` + full ExperiencePlayer pin API + canvas wipe/blink composite + script includes landed on main
+- [ ] **I2 chrome** Minimal Pin button + Compare mode control (blocked on full index.html shell restore)
+- [ ] **I2 split** Dual-viewport split mode
+- [ ] **I2 archive** Provenance / IndexedDB comparison pairs
 - [ ] **I3** Optional spatiotemporal anchors on image-seed / export-journey
 - [ ] **I4** Explicit planner stage (deterministic first)
 - [ ] **I5** First-class Journey objects
 
 ## Next recommended
 
-1. Canvas wipe composite inside ExperienceRenderer.draw (use `compareSurface.compositeWipe`).
-2. Minimal Pin button + Compare mode control in Live Experience chrome.
-3. Ensure `compareSurface.js` is loaded from index.html / app shell.
+1. Land the full validated `index.html` shell (~40k local) so Live Experience chrome exists on main.
+2. Wire minimal Pin button + Compare mode select to `player.pinFrame()` / `setCompareMode()`.
+3. Optional: spacebar blink toggle + wipe position slider.
 
 ## Run
 

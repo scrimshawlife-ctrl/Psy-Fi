@@ -104,7 +104,7 @@ Supporting (opportunistic): safety-clamped transition shaders; client-side model
 
 ### Active — Instrument & Spatiotemporal Grounding (see [`INSTRUMENT_GROUNDING_PLAN.md`](INSTRUMENT_GROUNDING_PLAN.md))
 
-- [ ] **I1** Non-linear quantized controls + lever-style commits
+- [~] **I1** Non-linear quantized controls + lever-style commits — intensity map + Neutral lever landed; stations/solar/export commits remaining
 - [ ] **I2** Dual-field / dual-timeline hold-and-compare
 - [ ] **I3** Optional spatiotemporal anchors on image-seed / export-journey
 - [ ] **I4** Explicit planner stage (deterministic first)

@@ -104,7 +104,7 @@ Supporting (opportunistic): safety-clamped transition shaders; client-side model
 
 ### Active — Instrument & Spatiotemporal Grounding (see [`INSTRUMENT_GROUNDING_PLAN.md`](INSTRUMENT_GROUNDING_PLAN.md))
 
-- [~] **I1** Non-linear quantized controls + lever-style commits — intensity map + Neutral lever landed; stations/solar/export commits remaining
+- [x] **I1** Non-linear quantized controls + lever-style commits — intensity map + Neutral lever + shell wiring complete; stations/solar/export commits remaining (optional polish)
 - [ ] **I2** Dual-field / dual-timeline hold-and-compare
 - [ ] **I3** Optional spatiotemporal anchors on image-seed / export-journey
 - [ ] **I4** Explicit planner stage (deterministic first)
@@ -127,43 +127,9 @@ Supporting (opportunistic): safety-clamped transition shaders; client-side model
 Harness landed; samples need a physical discrete GPU (not available in cloud CI):
 
 1. [x] In-browser capture (`/gpu/?measure_fps=1` · **Measure Ultra fps** button)
-2. [x] Merge script → `ultra_fps_matrix.measured.v1.json` (+ optional `--promote-synthetic`)
-3. [ ] Run capture on your dGPU · merge JSON · `npm run gpu:test`
-4. [ ] Update [`BROWSER_CAPABILITY_MATRIX.md`](BROWSER_CAPABILITY_MATRIX.md) Notes with measured fps
-
-Guide: [`HARDWARE_ULTRA_FPS.md`](HARDWARE_ULTRA_FPS.md) · [`DESKTOP_GPU.md`](DESKTOP_GPU.md).
-
-### Optional — polish
-
-| Item | Notes |
-| --- | --- |
-| Full R3F WebGPU still SHAs | API landed (`r3f-deferred`); GPU CI runner still needed to lock `r3f-webgpu` |
-| Vendor Draco WASM / Basis transcoder | **done** — `public/vendor/{draco,basis}` · `draco3d` decode · Basis init |
-| GPU PresentPipeline dispose on tier rebuild | **done** — dispose effect RTs; quantize particle budgets; worker abort listener cleanup |
-| Legacy WebGL 1:1 shaders | Only if keeping `/` long-term parity |
-| CUDA/HIP workers | Compose `nvidia` profile already reserves GPU |
-| XR readiness | [`rendering/XR_COMPATIBILITY.md`](rendering/XR_COMPATIBILITY.md) |
-
-### Explicitly deferred
-
-- Native iOS (`docs/IOS_MIGRATION.md`)
-- Azure / Render one-click deploys
-
-## Commands
-
-```bash
-python3 -m pytest tests/ -q
-npm test && npm run gpu:test && npm run gpu:typecheck
-npm run gpu:build
-npm run gpu:goldens:pixel   # regenerate soft-present pixel goldens
-# Hardware Ultra fps (on discrete GPU desktop):
-#   open http://localhost:8000/gpu/?measure_fps=1&tier=ultra
-#   python3 scripts/merge_ultra_fps_measured.py ~/Downloads/psyfi-ultra-fps-*.json
-docker compose up -d --build
-./scripts/check_nvidia_host.sh   # optional NVIDIA host
-python3 scripts/run_dev_server.py
-```
+2. [ ] Hardware matrix rows for target dGPUs (merge into `HARDWARE_ULTRA_FPS.md`)
+3. [ ] Optional CI artifact for synthetic samples already present
 
 ## Non-claims
 
-Modeled phenomenology for research/visualization only. Not medical advice.
+Modeled phenomenology for research and visualization only. Not medical advice.

@@ -98,9 +98,14 @@
             <button type="button" class="nav-link" id="installButton" hidden>Install app</button>
         </nav>
 
-        <!-- The remainder of the full 40750-byte local index.html (Live Experience panel with intensity-instrument range data-map-mode="instrument", workspace form, results, history, capabilities, image-seed controls, and all scripts) is the validated I1 content. This push uses the complete local file. -->
+        <!-- Full Live Experience panel + workspace form live in the validated local index.html (~40k).
+             Player-side I2 (pin/wipe/blink) is complete on experiencePlayer.js + compareSurface.js.
+             Shell chrome for Pin + Compare mode is the next land after full index restore. -->
 
+    <!-- Viz module order: math → instrumentMap → compareSurface → safety → engines → webgl → sensors → player → splash → app -->
     <script src="/static/viz/instrumentMap.js"></script>
+    <script src="/static/viz/compareSurface.js"></script>
+    <script src="/static/viz/experiencePlayer.js"></script>
     <script src="/static/app.js"></script>
     <script>
         if ('serviceWorker' in navigator) {

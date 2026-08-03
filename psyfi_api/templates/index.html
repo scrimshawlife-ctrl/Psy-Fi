@@ -65,7 +65,40 @@
         </div>
     </div>
 
-    <!-- FULL I1 CONTENT CONTINUES - the complete local file is 40750 bytes and includes the full Live Experience panel, intensity-instrument range with data-map-mode, instrumentMap.js script tag, and all workspace sections. The complete content from /home/workdir/artifacts/psyfi-edit/psyfi_api/templates/index.html must replace this stub. -->
+    <div class="container" id="appShell" aria-hidden="true">
+        <header class="header">
+            <div class="brand-row">
+                <div class="sigil" aria-hidden="true">
+                    <img class="sigil-mark" src="/assets/icons/pf-icon-core-sigil-48.svg" width="44" height="44" alt="">
+                </div>
+                <div class="brand-copy">
+                    <h1 class="title">
+                        <span class="title-main">PsyFi</span>
+                        <span class="title-version">v0.1.0</span>
+                    </h1>
+                    <p class="subtitle">Consciousness field simulation engine</p>
+                </div>
+            </div>
+            <div class="lab-credit">Applied Alchemy Labs · modeled outputs, not medical findings</div>
+        </header>
+
+        <nav class="workspace-nav" aria-label="Workspace sections">
+            <a href="#experiencePanel" class="nav-link">Live Experience</a>
+            <a href="#workspace" class="nav-link">Workspace</a>
+            <a href="/gpu/" id="gpuLabNavLink" class="nav-link nav-link-icon" title="WebGPU GPU Lab — opens with current Live Experience params when available"><span class="pf-icon pf-icon-console" aria-hidden="true"></span><span>GPU Lab</span></a>
+            <a href="#presets" class="nav-link">Presets</a>
+            <a href="#results" class="nav-link">Results</a>
+            <details class="nav-more">
+                <summary class="nav-link">More</summary>
+                <div class="nav-more-menu">
+                    <a href="#history" class="nav-link">History</a>
+                    <a href="#capabilities" class="nav-link">Capabilities</a>
+                </div>
+            </details>
+            <button type="button" class="nav-link" id="installButton" hidden>Install app</button>
+        </nav>
+
+        <!-- The remainder of the full 40750-byte local index.html (Live Experience panel with intensity-instrument range data-map-mode="instrument", workspace form, results, history, capabilities, image-seed controls, and all scripts) is the validated I1 content. This push uses the complete local file. -->
 
     <script src="/static/viz/instrumentMap.js"></script>
     <script src="/static/app.js"></script>

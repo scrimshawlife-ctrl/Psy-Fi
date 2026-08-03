@@ -24,7 +24,7 @@ Full plan: [`INSTRUMENT_GROUNDING_PLAN.md`](INSTRUMENT_GROUNDING_PLAN.md).
 
 | ID | Item | Notes |
 |----|------|-------|
-| **I1** | Non-linear quantized controls + lever-style commits | intensity map + Neutral lever; local shell complete |
+| **I1** | Non-linear quantized controls + lever-style commits | intensity map + Neutral lever |
 | **I2** | Dual-field / dual-timeline hold-and-compare | pin + wipe / blink / split |
 | **I3** | Optional spatiotemporal anchors | lat/lon + year + hour + solar elevation |
 | **I4** | Explicit planner stage | deterministic first |
@@ -33,14 +33,16 @@ Full plan: [`INSTRUMENT_GROUNDING_PLAN.md`](INSTRUMENT_GROUNDING_PLAN.md).
 ### Active — Instrument & Spatiotemporal Grounding
 
 - [x] **I1** Non-linear quantized controls + lever-style commits — intensity map + Neutral lever + shell wiring complete in local validated files
-- [~] **I2** Dual-field / dual-timeline hold-and-compare — `compareSurface.js` helper landed (pin packet, wipe composite, blink select); ExperiencePlayer pin/compare methods + renderer dual-draw next
+- [~] **I2** Dual-field / dual-timeline hold-and-compare — `compareSurface.js` + ExperiencePlayer `pinFrame` / `setCompareMode` / `setWipePosition` / `getComparisonPacket` + renderer hooks landed; canvas dual-draw (wipe composite) and minimal Pin chrome next
 - [ ] **I3** Optional spatiotemporal anchors on image-seed / export-journey
 - [ ] **I4** Explicit planner stage (deterministic first)
 - [ ] **I5** First-class Journey objects
 
 ## Next recommended
 
-Wire ExperiencePlayer methods (`pinFrame`, `setCompareMode`, `setWipePosition`, `getComparisonPacket`) against `PsyFiViz.compareSurface`, then canvas wipe composite in ExperienceRenderer. Minimal Pin + Compare chrome after that.
+1. Canvas wipe composite inside ExperienceRenderer.draw (use `compareSurface.compositeWipe`).
+2. Minimal Pin button + Compare mode control in Live Experience chrome.
+3. Ensure `compareSurface.js` is loaded from index.html / app shell.
 
 ## Run
 

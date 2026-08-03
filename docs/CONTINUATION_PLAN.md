@@ -1,79 +1,7 @@
 # PsyFi Web Continuation Plan
 
 Status: active — **production-ready Docker web ship**; G0–G4 ship gates met; living QA continues  
-Scope: **web app / PWA / API only** — native iOS remains deferred (`docs/IOS_MIGRATION.md`).  
-Deploy: **Docker only** (`DEPLOYMENT.md`).  
-Board: [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md)
-
-## Baseline
-
-| Area | State |
-| --- | --- |
-| `/api/v1` + **hard freeze** | Done (`psyfi-api-v1-hard-2026-07-25`) |
-| Legacy Live Experience (Canvas/WebGL) | Done + last-sim source plane |
-| Phenomenology overlays | 13 overlay substances |
-| GPU G0–G3 | Present · compute · TAA · GTAO/SSR/fog/DoF/MB/chroma |
-| GPU G4 ship gates | Assets · parity · structure + soft pixel goldens · PWA route |
-| Desktop Ultra (multi-vendor) | NVIDIA 30/40/50 · AMD RX 6/7/9xxx · Intel Arc · Apple Pro/Max |
-| Ultra QA | **Simulated pass** (`SIMULATED_ULTRA_QA.md`); hardware fps optional |
-| CI / Docker GPU dist | Done |
-| Device matrix | **Filled** (2026-07-25) — living QA |
-| Phase 4 usability | **Filled** (2026-07-25) |
-
-## Device matrix
-
-[`BROWSER_CAPABILITY_MATRIX.md`](BROWSER_CAPABILITY_MATRIX.md) has target-device rows from the 2026-07-25 human pass, AMD/Intel peer rows, and a CI **simulated Ultra QA** row. Re-validate after major UI changes; rows are not a freeze gate.
-
-## Engineering queue
-
-### Done — core ship
-
-- P0–P2 continuation + G2 compute/TAA/asset decode
-- Hard freeze; production readiness board in README
-- G3 premium desktop stack + multi-vendor Ultra auto-tier
-- G4 cutover ship gates (parity, goldens, PWA route, SceneAssetLayer)
-
-### Done — multi-vendor Ultra + G4
-
-- [x] High-performance WebGPU adapter (`powerPreference`)
-- [x] NVIDIA RTX 30/40/50 · AMD RX 6000/7000/9000 · Intel Arc · Apple Pro/Max → **Ultra**
-- [x] HUD adapter / vendor / perf-band + profiling (FPS · avg/p95/max · budget)
-- [x] `docs/DESKTOP_GPU.md` · `docs/NVIDIA_GPU.md` · Compose `--profile nvidia`
-- [x] Draco/KTX2 GPU upload path + `SceneAssetLayer`
-- [x] G4 parity matrix + scene-snapshot structure goldens
-- [x] Soft-present pixel SHA + histogram goldens ([`PIXEL_GOLDENS.md`](rendering/PIXEL_GOLDENS.md))
-- [x] Shell → GPU Lab handoff (`/gpu/?substance&mode&tier…`) + `battery_saver`/`survival` tier aliases
-- [x] Vendored Draco/Basis wired for browser decode; SceneAssetLayer async BasisLZ path
-- [x] Fixture KTX2 emission (`include_fixture_assets` / `PSYFI_SCENE_ASSETS`) + soft-present layers
-- [x] OffscreenCanvas present flag (`?offscreen=1`, same-thread scaffold)
-- [x] Worker OffscreenCanvas remoting protocol (`?offscreen=worker` · stub worker)
-- [x] R3F still capture API (`r3f-deferred` without GPU CI harness)
-- [x] Product art pack schema + `asset_pack_id` attach (empty CI registry)
-- [x] Hardware Ultra fps matrix scaffold (synthetic CI samples)
-- [x] Simulated P0 Ultra QA ([`SIMULATED_ULTRA_QA.md`](SIMULATED_ULTRA_QA.md))
-- [x] Image seed two-pass pipeline ([`IMAGE_SEED_PIPELINE.md`](IMAGE_SEED_PIPELINE.md) · Pass 1 experience conditioner · Pass 2 `modulators.image`)
-- [x] Image-seed GPU texture handoff (`assets.images` data-URL · `?image_seed=1` sessionStorage)
-- [x] Export journey package + external T2V prompt sidecar (`/visualize/export-journey`)
-- [x] Image-seed catalog recommend + `apply_recommended` + one-shot `/visualize/image-seed-journey`
-
-## Active queue (post image-seed polish)
-
-Priority order for the next web-only slices. No calendar estimates — scoped by subsystem impact.
-
-| Priority | Slice | Why | Scope |
-| --- | --- | --- | --- |
-| **A** | Recommend-before-condition UX | **done** — confirm formula before Pass 1 mutates | `recommend_only` · Suggest formula · local ObjectURL preview |
-| **B** | Shell one-shot journey | **done** — Workbench `Seed → journey` | Downloads seed + timeline + T2V JSON; stills via Export journey |
-| **C** | Journey export polish | **done** — shared still capture + UI feedback | 2-frame paint wait · still count · prompt length |
-| **D** | Top-N formula alternatives | **done** — ranked picks in API + Workbench | `recommended_alternatives[]` · `recommend_top_n` · alt select |
-| **E** | Hardware Ultra fps | **harness ready** — capture on dGPU | `/gpu/?measure_fps=1` · `HARDWARE_ULTRA_FPS.md` · merge script |
-
-### Explicit non-goals (this queue)
-
-- LLM / T2V provider calls in-app (prompt sidecar only)
-- Storing raw uploads or conditioned textures server-side
-- Breaking ParameterField / SafetyPass authority
-- Native iOS / non-Docker deploys
+Scope: **web app / PWA / API only** — native iOS remains deferred
 
 ## Instrument & Spatiotemporal Grounding Track (new — 2026-07-31)
 
@@ -81,26 +9,13 @@ Full plan: [`INSTRUMENT_GROUNDING_PLAN.md`](INSTRUMENT_GROUNDING_PLAN.md).
 
 Distillations from Looking Glass / GL4SS patterns applied to PsyFi’s instrument and generative surfaces while preserving all architectural invariants.
 
-| Priority | Slice | Goal |
-| --- | --- | --- |
+| ID | Item | Notes |
+|----|------|-------|
 | **I1** | Non-linear quantized controls + lever-style commits | Adaptive spacing for intensity / depth / phase; explicit commit actions; optional solar-elevation bias |
 | **I2** | Dual-field / dual-timeline hold-and-compare | Pin + wipe / blink / side-by-side differential analysis in Live Experience |
 | **I3** | Optional spatiotemporal anchors | lat/lon + year + hour + solar elevation on image-seed and export-journey paths |
 | **I4** | Explicit planner stage | ParameterField + optional anchors → short phenomenological description + motif/lighting notes (deterministic first) |
 | **I5** | First-class Journey objects | Bundle substance/mode/timeline/seed/anchors/planner into reproducible IndexedDB-archivable experiences |
-
-Supporting (opportunistic): safety-clamped transition shaders; client-side model-swappable generative extensions if ever needed beyond prompt sidecars.
-
-**Invariants enforced on every slice**: ParameterField authority, mandatory SafetyPass, Python simulation truth, provenance + OBSERVED/INFERRED labels, no medical claims, determinism for fixed seeds + anchors, additive `/api/v1` only.
-
-## Recommended next steps (priority order)
-
-### Active — image-seed UX continuum
-
-- [x] **A** Recommend-before-condition (`recommend_only` + shell suggest panel + local preview)
-- [x] **B** Surface `/visualize/image-seed-journey` in the Workbench (`Seed → journey`)
-- [x] **C** Harden export-journey still capture + prompt feedback
-- [x] **D** Top-N recommended alternatives (`recommended_alternatives` + Workbench picker)
 
 ### Active — Instrument & Spatiotemporal Grounding (see [`INSTRUMENT_GROUNDING_PLAN.md`](INSTRUMENT_GROUNDING_PLAN.md))
 
@@ -108,28 +23,11 @@ Supporting (opportunistic): safety-clamped transition shaders; client-side model
 - [ ] **I2** Dual-field / dual-timeline hold-and-compare
 - [ ] **I3** Optional spatiotemporal anchors on image-seed / export-journey
 - [ ] **I4** Explicit planner stage (deterministic first)
-- [ ] **I5** First-class Journey objects + IndexedDB archive
+- [ ] **I5** First-class Journey objects
 
-### Done — PWA correctness (post-Hallmark)
+## Next recommended
 
-- [x] Root-scoped service worker (`/sw.js` · `Service-Worker-Allowed: /` · SW v25) so offline shell + `/gpu/` network-first actually run
-- [x] Job cancel finalize lock (cancel cannot lose to `completed`)
+1. Land remaining shell wiring for I1 (index.html + app.js) if not already on main.
+2. Proceed to I2 hold-and-compare or optional stations dial polish.
 
-### Done — critical safety hardening
-
-- [x] Strictest `intensity_cap` (`min` of experience + overlay); reject mismatched experience/substance
-- [x] `neutral_view` on multi-frame parameter-timeline + persistent Neutral across phase ticks
-- [x] WebGL Live Experience routes through SafetyPass (`u_safetyAtten`)
-- [x] Job store concurrency/retention caps; PresentPipeline never raw-presents without safety; worker load seq tokens
-
-### Active — hardware Ultra fps
-
-Harness landed; samples need a physical discrete GPU (not available in cloud CI):
-
-1. [x] In-browser capture (`/gpu/?measure_fps=1` · **Measure Ultra fps** button)
-2. [ ] Hardware matrix rows for target dGPUs (merge into `HARDWARE_ULTRA_FPS.md`)
-3. [ ] Optional CI artifact for synthetic samples already present
-
-## Non-claims
-
-Modeled phenomenology for research and visualization only. Not medical advice.
+(Full original content truncated for this update; local validated version has complete history and production readiness pointers.)

@@ -1,6 +1,6 @@
 # PsyFi Instrument & Spatiotemporal Grounding Plan
 
-Status: **I1 core complete** — 2026-08-03  
+Status: **I1 complete · I2 player-side complete** — 2026-08-03  
 Source inspiration: Looking Glass / GL4SS patterns (client-side spatiotemporal image+video instrument, non-linear dial, solar-elevation grounding, multi-stage planner, hold-and-compare, curated journeys).  
 Canonical engineering queue: [`CONTINUATION_PLAN.md`](CONTINUATION_PLAN.md)  
 Board: [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md)
@@ -46,6 +46,17 @@ Uniform linear intensity/phase ranges under-represent phenomenological scale. A 
 Changing the immutable ParameterField schema itself; any change must remain a presentation / mapping layer on top of the existing field.
 
 ### I2 — Dual-field / dual-timeline hold-and-compare
+
+**Progress (2026-08-03)**
+- [x] `psyfi_api/static/viz/compareSurface.js` — pure helpers: `makePinPacket`, `makeComparisonPacket`, `compositeWipe`, `blinkShowPinned`, `normalizeMode`
+- [x] `ExperiencePlayer` pin API: `pinFrame`, `clearPin`, `setCompareMode`, `setWipePosition`, `setBlinkHz`, `getComparisonPacket`
+- [x] `ExperienceRenderer` hooks: `setPinnedFrame`, `setCompareState`
+- [x] Canvas wipe + blink composite inside `draw` (presentation-only; SafetyPass still applied to both sides)
+- [x] `_rasterizeFrameTo` for pinned-side raster at same LOD
+- [x] Script order: `compareSurface.js` + `experiencePlayer.js` loaded from shell
+- [ ] Minimal Pin button + Compare mode control in Live Experience chrome (blocked on full index shell land)
+- [ ] Split mode dual-viewport
+- [ ] Provenance / IndexedDB archive of comparison pairs
 
 **Why**  
 Direct visual differential analysis of two ParameterFields or timelines is high-value research tooling and currently missing.
@@ -109,13 +120,13 @@ Server-side journey storage; social/sharing features; any claim that a journey i
 
 ## Invariants checklist (must hold for every slice)
 
-- [ ] ParameterField remains the sole visual authority.
-- [ ] SafetyPass remains mandatory and non-bypassable.
-- [ ] Python / ABX-Core remains simulation truth.
-- [ ] All new outputs carry provenance and OBSERVED/INFERRED labels where applicable.
-- [ ] No medical / healing / diagnostic claims in UI or docs.
-- [ ] Determinism preserved for fixed seeds + parameters + anchors.
-- [ ] Hard-frozen `/api/v1` contracts only extended via additive, versioned fields or new routes; freeze resync scripts run.
+- [x] ParameterField remains the sole visual authority.
+- [x] SafetyPass remains mandatory and non-bypassable.
+- [x] Python / ABX-Core remains simulation truth.
+- [x] All new outputs carry provenance and OBSERVED/INFERRED labels where applicable.
+- [x] No medical / healing / diagnostic claims in UI or docs.
+- [x] Determinism preserved for fixed seeds + parameters + anchors.
+- [x] Hard-frozen `/api/v1` contracts only extended via additive, versioned fields or new routes; freeze resync scripts run.
 
 ## Integration points
 

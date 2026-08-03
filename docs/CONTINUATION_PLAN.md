@@ -1,7 +1,22 @@
 # PsyFi Web Continuation Plan
 
 Status: active — **production-ready Docker web ship**; G0–G4 ship gates met; living QA continues  
-Scope: **web app / PWA / API only** — native iOS remains deferred
+Scope: **web app / PWA / API only** — native iOS remains deferred (`docs/IOS_MIGRATION.md`).  
+Deploy: **Docker only** (`DEPLOYMENT.md`).  
+Board: [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md)
+
+## Baseline
+
+| Area | State |
+| --- | --- |
+| `/api/v1` + **hard freeze** | Done (`psyfi-api-v1-hard-2026-07-25`) |
+| Legacy Live Experience (Canvas/WebGL) | Done |
+| ParameterField + SafetyPass | Done |
+| Image-seed pipeline | Done |
+| Export-journey | Done |
+| PWA + service worker | Done |
+| GPU Lab route | Done |
+| Docker production | Done |
 
 ## Instrument & Spatiotemporal Grounding Track (new — 2026-07-31)
 
@@ -27,7 +42,17 @@ Distillations from Looking Glass / GL4SS patterns applied to PsyFi’s instrumen
 
 ## Next recommended
 
-1. Land remaining shell wiring for I1 (index.html + app.js) if not already on main.
-2. Proceed to I2 hold-and-compare or optional stations dial polish.
+Land remaining shell wiring for I1 (index.html + app.js) if not already on main, then I2.
 
-(Full original content truncated for this update; local validated version has complete history and production readiness pointers.)
+## Run
+
+```bash
+#   python3 scripts/merge_ultra_fps_measured.py ~/Downloads/psyfi-ultra-fps-*.json
+docker compose up -d --build
+./scripts/check_nvidia_host.sh   # optional NVIDIA host
+python3 scripts/run_dev_server.py
+```
+
+## Non-claims
+
+Modeled phenomenology for research/visualization only. Not medical advice.

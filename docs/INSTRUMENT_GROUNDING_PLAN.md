@@ -1,6 +1,6 @@
 # PsyFi Instrument & Spatiotemporal Grounding Plan
 
-Status: **I1 partial · I2 player-side complete · shell restore blocked** — reanalyzed 2026-08-04  
+Status: **I1 core complete · I2 chrome complete** — 2026-08-04  
 Source inspiration: Looking Glass / GL4SS patterns (client-side spatiotemporal image+video instrument, non-linear dial, solar-elevation grounding, multi-stage planner, hold-and-compare, curated journeys).  
 Canonical engineering queue: [`CONTINUATION_PLAN.md`](CONTINUATION_PLAN.md)  
 Board: [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md)
@@ -23,13 +23,13 @@ No calendar estimates. Ordered by instrument impact vs. architectural surface ar
 
 ### I1 — Non-linear quantized controls + lever-style commits (highest leverage)
 
-**Progress (reanalyzed 2026-08-04)**
+**Progress (2026-08-04)**
 - [x] `psyfi_api/static/viz/instrumentMap.js` — pure UI↔intensity mapping (smoothstep + power, inverse, optional quantize)
 - [x] `style.css` `.intensity-instrument` hint styles
-- [ ] Intensity range uses instrument map by default; Alt+click toggles linear mode — **not in `app.js` on main**
-- [ ] Display shows mapped intensity value — blocked on shell + `app.js` wiring
-- [ ] Neutral exit requires confirm click (lever-style) — **not in `app.js` on main**
-- [ ] Shell wiring: `index.html` was truncated at `f44bb46`; restore from `99f9e44` then add `data-map-mode` + hint
+- [x] Intensity range uses instrument map by default; Alt+click toggles linear mode
+- [x] Display shows mapped intensity value (API still receives 0–1 float)
+- [x] Neutral exit requires confirm click (lever-style); enter remains one-shot for safety
+- [x] Shell wiring: restored `index.html` + `data-map-mode` + hint; `app.js` get/set helpers
 - [ ] Optional discrete station dial UI polish
 - [ ] Solar-elevation / environmental-lighting modulator
 - [ ] Lever commits for export-journey lock / seed locking
@@ -54,8 +54,8 @@ Changing the immutable ParameterField schema itself; any change must remain a pr
 - [x] `ExperienceRenderer` hooks: `setPinnedFrame`, `setCompareState`
 - [x] Canvas wipe + blink composite inside `draw` (presentation-only; SafetyPass still applied to both sides)
 - [x] `_rasterizeFrameTo` for pinned-side raster at same LOD
-- [x] Player APIs present in `experiencePlayer.js` (shell must load full viz stack after restore)
-- [ ] Minimal Pin button + Compare mode control in Live Experience chrome (blocked on `index.html` restore from `99f9e44`)
+- [x] Player APIs present in `experiencePlayer.js`
+- [x] Minimal Pin button + Compare mode control (wipe / blink) + wipe slider + Space blink toggle
 - [ ] Split mode dual-viewport
 - [ ] Provenance / IndexedDB archive of comparison pairs
 

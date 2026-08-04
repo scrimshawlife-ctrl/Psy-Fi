@@ -1014,6 +1014,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const modeSelect = document.getElementById('modeSelect');
     const intensityRange = document.getElementById('intensityRange');
     const intensityValue = document.getElementById('intensityValue');
+    const intensityMapHint = document.getElementById('intensityMapHint');
     const seedInput = document.getElementById('seedInput');
     const phaseScrub = document.getElementById('phaseScrub');
     const phaseLabel = document.getElementById('phaseLabel');
@@ -1031,11 +1032,49 @@ document.addEventListener('DOMContentLoaded', () => {
     const playBtn = document.getElementById('playExperienceBtn');
     const pauseBtn = document.getElementById('pauseExperienceBtn');
     const neutralBtn = document.getElementById('neutralBtn');
+    const pinFrameBtn = document.getElementById('pinFrameBtn');
+    const clearPinBtn = document.getElementById('clearPinBtn');
+    const compareModeSelect = document.getElementById('compareModeSelect');
+    const compareWipeGroup = document.getElementById('compareWipeGroup');
+    const wipePositionRange = document.getElementById('wipePositionRange');
+    const wipePositionValue = document.getElementById('wipePositionValue');
     const openGpuLabBtn = document.getElementById('openGpuLabBtn');
     const gpuLabNavLink = document.getElementById('gpuLabNavLink');
     const statusEl = document.getElementById('experienceStatus');
     /** Pass-1 image seed payload (also mirrored to sessionStorage for /gpu/). */
     let imageSeedState = null;
+
+    const instrumentMap = window.PsyFiViz && window.PsyFiViz.instrumentMap;
+
+    /** Mapped intensity (0–1) sent to ParameterField / API — not raw slider UI position. */
+    function getExperienceIntensity() {
+        if (instrumentMap && intensityRange) {
+            return instrumentMap.readIntensityFromRange(intensityRange);
+        }
+        return Number(intensityRange?.value) || 0.7;
+    }
+
+    function syncIntensityDisplay() {
+        if (!intensityValue) return;
+        const v = getExperienceIntensity();
+        intensityValue.textContent = instrumentMap
+            ? instrumentMap.formatIntensity(v)
+            : Number(v).toFixed(2);
+        if (intensityMapHint && intensityRange) {
+            const mode = (intensityRange.dataset && intensityRange.dataset.mapMode) || 'instrument';
+            intensityMapHint.textContent =
+                mode === 'linear' ? 'Linear map · Alt+click for instrument' : 'Instrument map · Alt+click for linear';
+        }
+    }
+
+    function setExperienceIntensity(intensity) {
+        if (instrumentMap && intensityRange) {
+            instrumentMap.writeIntensityToRange(intensityRange, intensity);
+        } else if (intensityRange) {
+            intensityRange.value = String(intensity);
+        }
+        syncIntensityDisplay();
+    }
 
     /** Map shell LOD → GPU Lab tier query param. */
     function mapShellQualityToGpuTier(raw) {
@@ -1077,7 +1116,7 @@ document.addEventListener('DOMContentLoaded', () => {
         q.set('from', 'shell');
         const substance = substanceSelect?.value || 'lsd';
         const mode = modeSelect?.value || 'open';
-        const intensity = Number(intensityRange?.value);
+        const intensity = getExperienceIntensity();
         const seed = Number(seedInput?.value);
         const tier = mapShellQualityToGpuTier(document.getElementById('qualityTierSelect')?.value);
         const experienceId = experienceSelect?.value || '';
@@ -1204,8 +1243,24 @@ document.addEventListener('DOMContentLoaded', () => {
         reduceMotionChk.checked = true;
     }
 
+    // Keep displayed intensity at 0.70 (mapped) rather than raw UI position.
+    setExperienceIntensity(0.7);
+    syncGpuLabLinks();
     intensityRange.addEventListener('input', () => {
-        intensityValue.textContent = Number(intensityRange.value).toFixed(2);
+        syncIntensityDisplay();
+        syncGpuLabLinks();
+    });
+    intensityRange.addEventListener('click', (e) => {
+        if (!e.altKey || !instrumentMap) return;
+        e.preventDefault();
+        const current = getExperienceIntensity();
+        const mode = (intensityRange.dataset.mapMode || 'instrument') === 'linear' ? 'instrument' : 'linear';
+        intensityRange.dataset.mapMode = mode;
+        setExperienceIntensity(current);
+        syncGpuLabLinks();
+        if (statusEl) {
+            statusEl.textContent = mode === 'linear' ? 'Intensity map: linear' : 'Intensity map: instrument';
+        }
     });
 
     const imageSeedControl = document.getElementById('imageSeedControl');
@@ -1383,8 +1438,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 ? body.applied_intensity
                 : body.recommended?.intensity;
         if (intensity != null) {
-            intensityRange.value = String(intensity);
-            intensityValue.textContent = Number(intensity).toFixed(2);
+            setExperienceIntensity(intensity);
         }
     }
 
@@ -1445,7 +1499,7 @@ document.addEventListener('DOMContentLoaded', () => {
             fd.append('file', file);
             fd.append('substance', substanceSelect.value || 'lsd');
             fd.append('mode', modeSelect.value || 'open');
-            fd.append('intensity', String(Number(intensityRange.value)));
+            fd.append('intensity', String(getExperienceIntensity()));
             fd.append('influence', String(imageInfluence()));
             fd.append('include_preview', 'false');
             fd.append('include_source_field', 'false');
@@ -1522,7 +1576,7 @@ document.addEventListener('DOMContentLoaded', () => {
         fd.append('substance', substanceSelect.value || 'lsd');
         if (flags.experience_id) fd.append('experience_id', flags.experience_id);
         fd.append('mode', modeSelect.value || 'open');
-        fd.append('intensity', String(Number(intensityRange.value)));
+        fd.append('intensity', String(getExperienceIntensity()));
         fd.append('influence', String(imageInfluence()));
         fd.append('include_preview', 'true');
         fd.append('include_source_field', 'true');
@@ -1593,7 +1647,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     substance: substanceSelect.value || 'lsd',
                     experience_id: flags.experience_id,
                     mode: modeSelect.value || 'open',
-                    intensity: Number(intensityRange.value),
+                    intensity: getExperienceIntensity(),
                     influence: imageInfluence(),
                     apply_recommended: flags.apply_recommended,
                     recommend_top_n: 5,
@@ -1666,12 +1720,97 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     let neutralOn = false;
-    neutralBtn.addEventListener('click', () => {
-        neutralOn = !neutralOn;
+    let neutralExitArmedUntil = 0;
+    const NEUTRAL_EXIT_ARM_MS = 2800;
+
+    function clearNeutralExitArm() {
+        neutralExitArmedUntil = 0;
+        if (neutralOn) setButtonLabel(neutralBtn, 'Exit Neutral');
+    }
+
+    function applyNeutral(on) {
+        neutralOn = !!on;
         player.neutral(neutralOn);
+        clearNeutralExitArm();
         setButtonLabel(neutralBtn, neutralOn ? 'Exit Neutral' : 'Neutral');
         statusEl.textContent = neutralOn ? 'Neutral view enabled' : 'Field restored';
+    }
+
+    neutralBtn.addEventListener('click', () => {
+        if (!neutralOn) {
+            // Enter Neutral is one-shot for safety.
+            applyNeutral(true);
+            return;
+        }
+        const now = Date.now();
+        if (now <= neutralExitArmedUntil) {
+            applyNeutral(false);
+            return;
+        }
+        // Lever-style exit: first click arms, second confirms within window.
+        neutralExitArmedUntil = now + NEUTRAL_EXIT_ARM_MS;
+        setButtonLabel(neutralBtn, 'Confirm exit');
+        statusEl.textContent = 'Confirm Neutral exit';
+        window.setTimeout(() => {
+            if (Date.now() >= neutralExitArmedUntil && neutralOn) {
+                clearNeutralExitArm();
+            }
+        }, NEUTRAL_EXIT_ARM_MS + 50);
     });
+
+    function syncCompareChrome() {
+        const mode = compareModeSelect?.value || 'off';
+        const hasPin = !!(player.pinned && player.pinned.frame);
+        if (clearPinBtn) clearPinBtn.hidden = !hasPin;
+        if (compareWipeGroup) compareWipeGroup.hidden = mode !== 'wipe';
+        if (wipePositionValue && wipePositionRange) {
+            wipePositionValue.textContent = Number(wipePositionRange.value).toFixed(2);
+        }
+    }
+
+    pinFrameBtn?.addEventListener('click', () => {
+        const pinned = player.pinFrame();
+        if (!pinned) {
+            statusEl.textContent = 'Load an experience before pinning';
+            return;
+        }
+        syncCompareChrome();
+        statusEl.textContent = `Pinned frame · ${pinned.frame.phase || pinned.idx}`;
+    });
+
+    clearPinBtn?.addEventListener('click', () => {
+        player.clearPin();
+        if (compareModeSelect) compareModeSelect.value = 'off';
+        player.setCompareMode('off');
+        syncCompareChrome();
+        statusEl.textContent = 'Pin cleared';
+    });
+
+    compareModeSelect?.addEventListener('change', () => {
+        const mode = compareModeSelect.value || 'off';
+        if (mode !== 'off' && !(player.pinned && player.pinned.frame)) {
+            const pinned = player.pinFrame();
+            if (!pinned) {
+                compareModeSelect.value = 'off';
+                statusEl.textContent = 'Pin a frame before comparing';
+                syncCompareChrome();
+                return;
+            }
+        }
+        player.setCompareMode(mode);
+        if (mode === 'wipe' && wipePositionRange) {
+            player.setWipePosition(Number(wipePositionRange.value));
+        }
+        syncCompareChrome();
+        statusEl.textContent = mode === 'off' ? 'Compare off' : `Compare: ${mode}`;
+    });
+
+    wipePositionRange?.addEventListener('input', () => {
+        player.setWipePosition(Number(wipePositionRange.value));
+        syncCompareChrome();
+    });
+
+    syncCompareChrome();
 
     playBtn.addEventListener('click', () => {
         player.play();
@@ -1932,7 +2071,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     substance,
                     experience_id: experienceSelect.value || null,
                     mode: modeSelect.value || 'open',
-                    intensity: Number(intensityRange.value),
+                    intensity: getExperienceIntensity(),
                     seed: Number(last.seed ?? seedInput.value) || 42,
                     steps: 12,
                     reduce_motion: !!reduceMotionChk.checked,
@@ -1973,7 +2112,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     substance: substanceSelect.value || 'lsd',
                     preset: substanceSelect.value || 'lsd',
                     mode: modeSelect.value || 'open',
-                    intensity: Number(intensityRange.value),
+                    intensity: getExperienceIntensity(),
                 });
                 if (data.parameter_field) {
                     player.timeline = {
@@ -2116,16 +2255,14 @@ document.addEventListener('DOMContentLoaded', () => {
     loadBtn.addEventListener('click', async () => {
         loadBtn.disabled = true;
         statusEl.textContent = 'Loading timeline…';
-        neutralOn = false;
-        setButtonLabel(neutralBtn, 'Neutral');
-        if (typeof player.neutral === 'function') player.neutral(false);
+        applyNeutral(false);
         syncModulators();
         try {
             const data = await player.loadTimeline({
                 substance: substanceSelect.value || 'lsd',
                 experience_id: experienceSelect.value || null,
                 mode: modeSelect.value || 'open',
-                intensity: Number(intensityRange.value),
+                intensity: getExperienceIntensity(),
                 seed: Number(seedInput.value) || 42,
                 steps: 20,
                 reduce_motion: !!reduceMotionChk.checked,
@@ -2166,9 +2303,24 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'n' || e.key === 'N') {
-            if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA')) return;
+        const tag = e.target && e.target.tagName;
+        const inField =
+            tag === 'INPUT' ||
+            tag === 'SELECT' ||
+            tag === 'TEXTAREA' ||
+            tag === 'BUTTON' ||
+            tag === 'A' ||
+            (e.target && e.target.isContentEditable);
+        if ((e.key === 'n' || e.key === 'N') && !inField) {
             neutralBtn.click();
+            return;
+        }
+        // Space toggles blink compare when not typing / activating a control.
+        if (e.code === 'Space' && !inField && compareModeSelect) {
+            e.preventDefault();
+            const next = compareModeSelect.value === 'blink' ? 'off' : 'blink';
+            compareModeSelect.value = next;
+            compareModeSelect.dispatchEvent(new Event('change'));
         }
     });
 

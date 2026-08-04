@@ -131,17 +131,15 @@ See [`docs/CONTINUATION_PLAN.md`](docs/CONTINUATION_PLAN.md). Ship track landed 
 - [x] GPU platform G0–G4 (`packages/psyfi-gpu-renderer`, multi-vendor Ultra, pixel goldens, PWA route)
 - [x] Simulated Ultra QA + living device matrix (hardware fps optional thereafter)
 
-### Instrument & Spatiotemporal Grounding (reanalyzed 2026-08-04)
+### Instrument & Spatiotemporal Grounding (2026-08-04)
 
 See [`docs/INSTRUMENT_GROUNDING_PLAN.md`](docs/INSTRUMENT_GROUNDING_PLAN.md) and the active queue in [`docs/CONTINUATION_PLAN.md`](docs/CONTINUATION_PLAN.md).
 
-**P0 blocker:** `psyfi_api/templates/index.html` on main is a stub — restore from `99f9e44` before chrome work.
-
-- I1 Non-linear quantized controls — `instrumentMap.js` + CSS present; `app.js` + shell wiring still open
-- I2 Dual-field hold-and-compare — player-side done; Pin/Compare chrome blocked on shell restore
-- I3 Optional spatiotemporal anchors
-- I4 Explicit planner stage
-- I5 First-class Journey objects
+- [x] I1 Non-linear quantized controls — instrument map + Neutral lever + shell wiring
+- [x] I2 Dual-field hold-and-compare — player + Pin/wipe/blink chrome (split/archive open)
+- [ ] I3 Optional spatiotemporal anchors
+- [ ] I4 Explicit planner stage
+- [ ] I5 First-class Journey objects
 
 All slices preserve ParameterField authority, SafetyPass, Python simulation truth, and the existing claim discipline.
 

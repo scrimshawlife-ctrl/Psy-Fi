@@ -54,7 +54,7 @@ Full board: [`docs/PRODUCTION_READINESS.md`](docs/PRODUCTION_READINESS.md).
 Ship checklist: `pytest` → `npm test && npm run gpu:test && npm run gpu:build` → `docker compose up -d --build` → `/health` `/ready` `/` `/gpu/`.
 
 **Optional next:** hardware Ultra fps confirmation; full R3F stills on a GPU CI runner.  
-**Instrument track (planned):** non-linear controls, hold-and-compare, optional spatiotemporal anchors, planner stage, Journey objects — see [`docs/INSTRUMENT_GROUNDING_PLAN.md`](docs/INSTRUMENT_GROUNDING_PLAN.md) and [`docs/CONTINUATION_PLAN.md`](docs/CONTINUATION_PLAN.md).
+**Instrument track:** shell restore from `99f9e44` is P0 (stub on main); then finish I1 wiring and I2 Pin chrome — see [`docs/CONTINUATION_PLAN.md`](docs/CONTINUATION_PLAN.md) and [`docs/INSTRUMENT_GROUNDING_PLAN.md`](docs/INSTRUMENT_GROUNDING_PLAN.md).
 
 ## Install
 

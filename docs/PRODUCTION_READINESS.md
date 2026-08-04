@@ -24,7 +24,7 @@ Scope: web app / PWA / API — native iOS deferred (`IOS_MIGRATION.md`).
 | GPU | Draco/KTX2 upload + SceneAssetLayer | **done** | vendored codecs · fixture KTX2 opt-in · product packs deferred |
 | GPU | G4 cutover ship gates | **done** | parity CI · structure goldens · soft pixel goldens · `G4_CUTOVER.md` |
 | GPU | Present/FX dispose + particle budget quantize | **done** | Ultra leak hardening · worker abort listener cleanup |
-| PWA | Installable shell + SW + IndexedDB | **done** | device QA 2026-07-25 · root-scoped `/sw.js` (v12) |
+| PWA | Installable shell + SW + IndexedDB | **done** | device QA 2026-07-25 · root-scoped `/sw.js` (see `sw.js` CACHE_NAME) |
 | PWA | `/gpu/` separate-route decision | **done** | `PWA_GPU_ROUTE.md` · SW v28 · shell→GPU handoff |
 | Safety | Intensity/Neutral/WebGL/job/GPU present hardening | **done** | strictest caps · timeline Neutral · WebGL SafetyPass · job caps · no raw present |
 | Deploy | Docker-only path | **done** | `DEPLOYMENT.md` · multi-stage GPU `dist/` |
@@ -62,7 +62,7 @@ Instrument plan: [`INSTRUMENT_GROUNDING_PLAN.md`](INSTRUMENT_GROUNDING_PLAN.md).
 | **P0** | Ultra auto-tier QA (NVIDIA / AMD / Intel) | **simulated pass** · hardware capture harness ready (`HARDWARE_ULTRA_FPS.md`) |
 | **P1** | G0–G4 ship polish (HUD, assets, goldens, PWA route) | **done** |
 | **P1** | Image-seed UX continuum (recommend-before-condition · Seed→journey · export polish · top-N alts) | **done** (A–D) — `CONTINUATION_PLAN.md` |
-| **P1** | Instrument & Spatiotemporal Grounding (I1–I5) | **I1–I5 done** + station/solar/lever polish (`CONTINUATION_PLAN.md`) |
+| **P1** | Instrument & Spatiotemporal Grounding (I1–I5) | **done** + WebGL compare parity / journey link (`CONTINUATION_PLAN.md`) |
 | **P2** | Lock full R3F WebGPU still SHAs on a GPU CI runner | optional (API landed) |
 | **P2** | Vendor real Draco WASM / Basis transcoder | **done** | `/gpu/vendor/` · SceneAssetLayer async |
 | **P2** | Re-measure device matrix fps after major UI changes | living QA |

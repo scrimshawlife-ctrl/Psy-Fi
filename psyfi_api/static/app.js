@@ -62,6 +62,24 @@ async function listComparisonRecords() {
     }
 }
 
+async function getComparisonRecord(id) {
+    if (!id) return null;
+    try {
+        const db = await openPsyfiDb();
+        const record = await new Promise((resolve, reject) => {
+            const tx = db.transaction(COMPARE_STORE, 'readonly');
+            const request = tx.objectStore(COMPARE_STORE).get(id);
+            request.onsuccess = () => resolve(request.result || null);
+            request.onerror = () => reject(request.error);
+        });
+        db.close();
+        return record;
+    } catch (error) {
+        console.warn('[PsyFi] IndexedDB comparison get failed:', error);
+        return null;
+    }
+}
+
 async function clearComparisonRecords() {
     const db = await openPsyfiDb();
     await new Promise((resolve, reject) => {
@@ -1464,6 +1482,26 @@ document.addEventListener('DOMContentLoaded', () => {
                       : 'Intensity map: instrument';
         }
     });
+    intensityRange.addEventListener('keydown', (e) => {
+        if (!instrumentMap || !(e.altKey && (e.key === 'm' || e.key === 'M'))) return;
+        e.preventDefault();
+        const current = getExperienceIntensity();
+        const cur = intensityRange.dataset.mapMode || 'instrument';
+        const mode = instrumentMap.nextMapMode(cur);
+        intensityRange.dataset.mapMode = mode;
+        intensityRange.classList.toggle('stations-mode', mode === 'stations');
+        setExperienceIntensity(current);
+        syncIntensityDisplay();
+        syncGpuLabLinks();
+        if (statusEl) {
+            statusEl.textContent =
+                mode === 'linear'
+                    ? 'Intensity map: linear'
+                    : mode === 'stations'
+                      ? 'Intensity map: station dial'
+                      : 'Intensity map: instrument';
+        }
+    });
 
     const imageSeedControl = document.getElementById('imageSeedControl');
     const imageSeedFile = document.getElementById('imageSeedFile');
@@ -2063,6 +2101,7 @@ document.addEventListener('DOMContentLoaded', () => {
         player.neutral(neutralOn);
         clearNeutralExitArm();
         setButtonLabel(neutralBtn, neutralOn ? 'Exit Neutral' : 'Neutral');
+        if (neutralBtn) neutralBtn.setAttribute('aria-pressed', neutralOn ? 'true' : 'false');
         statusEl.textContent = neutralOn ? 'Neutral view enabled' : 'Field restored';
     }
 
@@ -2079,11 +2118,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         // Lever-style exit: first click arms, second confirms within window.
         neutralExitArmedUntil = now + NEUTRAL_EXIT_ARM_MS;
+        neutralBtn.setAttribute('aria-pressed', 'true');
         setButtonLabel(neutralBtn, 'Confirm exit');
         statusEl.textContent = 'Confirm Neutral exit';
         window.setTimeout(() => {
             if (Date.now() >= neutralExitArmedUntil && neutralOn) {
                 clearNeutralExitArm();
+                neutralBtn.setAttribute('aria-pressed', 'false');
             }
         }, NEUTRAL_EXIT_ARM_MS + 50);
     });
@@ -2308,6 +2349,8 @@ document.addEventListener('DOMContentLoaded', () => {
         player.exportViewportPng();
     });
 
+    let lastComparisonId = null;
+
     document.getElementById('archiveCompareBtn')?.addEventListener('click', async () => {
         const cs = window.PsyFiViz && window.PsyFiViz.compareSurface;
         if (!cs || !player.pinned) {
@@ -2334,6 +2377,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         try {
             await saveComparisonRecord(record);
+            lastComparisonId = record.id;
             if (window.PsyFiCompareArchive && typeof window.PsyFiCompareArchive.refresh === 'function') {
                 await window.PsyFiCompareArchive.refresh();
             }
@@ -2413,6 +2457,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     spatiotemporal_anchors: readSpatiotemporalAnchors(),
                     notes: plannerNotesValue(),
                     planner_notes: plannerNotesValue(),
+                    comparison_id: lastComparisonId || null,
                     title: experienceSelect?.selectedOptions?.[0]?.textContent || null,
                 }),
             });
@@ -2421,7 +2466,9 @@ document.addEventListener('DOMContentLoaded', () => {
             await saveJourneyRecord(body);
             if (window.PsyFiJourneyArchive?.refresh) await window.PsyFiJourneyArchive.refresh();
             setPlannerStatus(body.planner?.planner_text || 'Journey saved', true);
-            statusEl.textContent = `Journey saved · ${body.id}`;
+            statusEl.textContent = body.comparison_id
+                ? `Journey saved · ${body.id} · compare ${body.comparison_id}`
+                : `Journey saved · ${body.id}`;
         } catch (err) {
             console.error(err);
             statusEl.textContent = 'Save journey failed';
@@ -2440,6 +2487,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const has = [...experienceSelect.options].some((o) => o.value === record.experience_id);
             if (has) experienceSelect.value = record.experience_id;
         }
+        const notesEl = document.getElementById('plannerNotesInput');
+        if (notesEl && record.notes != null) notesEl.value = String(record.notes);
         const anchors = record.spatiotemporal_anchors;
         if (anchors) {
             const setVal = (id, v) => {
@@ -2452,6 +2501,11 @@ document.addEventListener('DOMContentLoaded', () => {
             setVal('anchorHour', anchors.hour);
             setVal('anchorSolarElevation', anchors.solar_elevation_deg);
             syncAnchorStatus(anchors);
+            const solarChk = document.getElementById('anchorSolarModulator');
+            if (solarChk && anchors.solar_elevation_deg != null) {
+                solarChk.checked = true;
+                syncModulators();
+            }
         }
         if (record.planner?.planner_text) {
             setPlannerStatus(record.planner.planner_text, true);
@@ -2459,11 +2513,30 @@ document.addEventListener('DOMContentLoaded', () => {
                 provenanceEl.innerHTML = `<div class="muted">${record.planner.planner_text}</div>`;
             }
         }
-        // Reload experience so live field matches journey recipe.
-        if (loadBtn && !loadBtn.disabled) {
-            loadBtn.click();
+        if (record.comparison_id) lastComparisonId = record.comparison_id;
+
+        statusEl.textContent = `Restoring journey · ${record.id}…`;
+        try {
+            if (loadBtn && !loadBtn.disabled) {
+                loadBtn.click();
+                // Allow rematerialize to start; surface failures via player status.
+                await new Promise((r) => setTimeout(r, 80));
+            }
+            let compareNote = '';
+            if (record.comparison_id) {
+                const cmp = await getComparisonRecord(record.comparison_id);
+                if (cmp) {
+                    window.dispatchEvent(new CustomEvent('psyfi:restore-comparison', { detail: cmp }));
+                    compareNote = ` · compare ${record.comparison_id}`;
+                } else {
+                    compareNote = ` · compare ${record.comparison_id} missing locally`;
+                }
+            }
+            statusEl.textContent = `Restored journey · ${record.id}${compareNote}`;
+        } catch (err) {
+            console.error(err);
+            statusEl.textContent = `Journey restore failed · ${err.message || err}`;
         }
-        statusEl.textContent = `Restored journey · ${record.id}`;
     });
 
     window.addEventListener('psyfi:restore-comparison', (ev) => {
@@ -2686,6 +2759,7 @@ document.addEventListener('DOMContentLoaded', () => {
         exportJourneyArmedUntil = 0;
         if (exportJourneyBtn) {
             exportJourneyBtn.classList.remove('lever-armed');
+            exportJourneyBtn.setAttribute('aria-pressed', 'false');
             setButtonLabel(exportJourneyBtn, 'Export journey');
         }
     }
@@ -2705,6 +2779,7 @@ document.addEventListener('DOMContentLoaded', () => {
         exportJourneyArmedUntil = now + EXPORT_JOURNEY_ARM_MS;
         if (exportJourneyBtn) {
             exportJourneyBtn.classList.add('lever-armed');
+            exportJourneyBtn.setAttribute('aria-pressed', 'true');
             setButtonLabel(exportJourneyBtn, 'Confirm export');
         }
         statusEl.textContent = 'Confirm export journey (captures stills)';

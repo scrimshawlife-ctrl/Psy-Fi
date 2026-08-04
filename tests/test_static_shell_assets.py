@@ -83,7 +83,7 @@ def test_template_wires_cancel_recovery_and_renderer() -> None:
 
 def test_service_worker_precaches_renderer_assets() -> None:
     sw = (STATIC / "sw.js").read_text(encoding="utf-8")
-    assert "psyfi-shell-v38" in sw
+    assert "psyfi-shell-v39" in sw
     assert ".woff2" in sw
     assert "/assets/icons/pf-icon-reset-24.svg" in sw
     assert "/assets/icons/pf-icon-valence-meter-24.svg" in sw
@@ -235,6 +235,8 @@ def test_app_uses_abort_controller_and_worker_renderer() -> None:
     assert "EXPORT_JOURNEY_ARM_MS" in app_js
     assert "SEED_UNLOCK_ARM_MS" in app_js
     assert "tryWriteSeed" in app_js
+    assert "lastComparisonId" in app_js
+    assert "getComparisonRecord" in app_js
     assert "instrumentMap" in app_js
     assert "nextMapMode" in (STATIC / "viz" / "instrumentMap.js").read_text(encoding="utf-8")
     assert "readSolarDayFactor" in app_js
@@ -253,6 +255,11 @@ def test_app_uses_abort_controller_and_worker_renderer() -> None:
     assert "pinFrame" in player_compare
     assert "setCompareMode" in player_compare
     assert "compositeSplit" in player_compare or 'compareMode === \'split\'' in player_compare
+    webgl_js = (STATIC / "viz" / "parameterFieldWebGL.js").read_text(encoding="utf-8")
+    assert "setPinnedFrame" in webgl_js
+    assert "setCompareState" in webgl_js
+    assert "u_compareMode" in webgl_js
+    assert "_ensurePinTarget" in webgl_js
     assert "aria-describedby" in app_js
     assert "Monitor / display" in app_js
     assert "GPU adapter" in app_js

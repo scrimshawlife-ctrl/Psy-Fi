@@ -7,8 +7,10 @@ Web-first **Live Experience** runtime:
 - Phenomenology catalog derived from curated positive reports + seed recipes
 - Immutable `PsyFiParameterField` snapshots (mode / substance / intensity / phase)
 - Canvas field renderer with multi-engine blend + non-bypassable safety pass
-- Quiet UI chrome: substance, recipe, Open/Attractor/Void/Power, intensity, seed, Neutral View, provenance
+- Quiet UI chrome: substance, recipe, Open/Attractor/Void/Power, intensity (instrument / stations / linear), seed lock, Neutral View, provenance
 - Optional **sim source plane**: last workspace `visualization.field` blended under ParameterField engines (Canvas + WebGL), still safety-clamped; toggle + mix on Live Experience after **Bridge from sim**
+- **Hold-and-compare (I2)**: pin + wipe / blink / split on Canvas and WebGL; IndexedDB comparison archive
+- **Spatiotemporal anchors (I3)** + **planner (I4)** + **Journey objects (I5)** — see [`INSTRUMENT_GROUNDING_PLAN.md`](INSTRUMENT_GROUNDING_PLAN.md)
 - **Image seed (two-pass)**: upload → experience conditioner (Pass 1) → `master_seed` + luminance plane + `modulators.image` live present (Pass 2). See [`IMAGE_SEED_PIPELINE.md`](IMAGE_SEED_PIPELINE.md).
 
 ## Run

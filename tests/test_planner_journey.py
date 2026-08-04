@@ -93,6 +93,7 @@ def test_journey_endpoint() -> None:
             "title": "test-journey",
             "spatiotemporal_anchors": {"latitude": 1.0, "longitude": 2.0, "hour": 10.0, "year": 2025},
             "notes": "archive me",
+            "comparison_id": "cmp-test-123",
         },
     )
     assert res.status_code == 200, res.text
@@ -100,3 +101,4 @@ def test_journey_endpoint() -> None:
     assert body["kind"] == "journey"
     assert body["schema"] == JOURNEY_SCHEMA
     assert body["planner"]["planner_text"]
+    assert body["comparison_id"] == "cmp-test-123"

@@ -58,6 +58,7 @@ Changing the immutable ParameterField schema itself; any change must remain a pr
 - [x] Minimal Pin button + Compare mode control (wipe / blink / split) + wipe slider + Space blink toggle
 - [x] Split mode dual-viewport (`compositeSplit` — left pinned, right live)
 - [x] Provenance / IndexedDB archive of comparison pairs (`comparisons` store, schema `psyfi.comparison.v1`)
+- [x] WebGL pin/compare parity (`setPinnedFrame` / `setCompareState` + pin FBO composite; blink respects reduced motion)
 
 **Why**  
 Direct visual differential analysis of two ParameterFields or timelines is high-value research tooling and currently missing.
@@ -120,6 +121,7 @@ Making the planner authoritative over ParameterField; introducing non-determinis
 - [x] `POST /api/v1/visualize/journey`
 - [x] IndexedDB `journeys` store (`DB_VERSION = 3`) + History panel list/restore/clear
 - [x] Compatible with export-journey and image-seed-journey packages
+- [x] `comparison_id` linked from Archive comparison → Save journey; restore reapplies pin when local archive exists
 
 **Why**  
 Package the above into reproducible, archivable, shareable experiences.

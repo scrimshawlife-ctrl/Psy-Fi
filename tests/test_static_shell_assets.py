@@ -65,6 +65,8 @@ def test_template_wires_cancel_recovery_and_renderer() -> None:
     assert 'id="archiveCompareBtn"' in html
     assert 'id="compareList"' in html
     assert ">Split</option>" in html or 'value="split"' in html
+    assert 'id="anchorLatitude"' in html
+    assert 'id="anchorSolarElevation"' in html
     assert 'data-map-mode="instrument"' in html
     assert 'id="intensityMapHint"' in html
     # Root-scoped SW registration (not /static/sw.js — that cannot control `/`).
@@ -226,6 +228,8 @@ def test_app_uses_abort_controller_and_worker_renderer() -> None:
     assert "instrumentMap" in app_js
     assert "archiveCompareBtn" in app_js
     assert "COMPARE_STORE" in app_js
+    assert "readSpatiotemporalAnchors" in app_js
+    assert "appendAnchorsToFormData" in app_js
     assert "makeArchiveRecord" in (STATIC / "viz" / "compareSurface.js").read_text(encoding="utf-8")
     assert "compositeSplit" in (STATIC / "viz" / "compareSurface.js").read_text(encoding="utf-8")
     assert (STATIC / "viz" / "instrumentMap.js").exists()

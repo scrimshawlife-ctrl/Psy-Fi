@@ -18,10 +18,23 @@ from psyfi_core.experiences.parameter_mapper import (
 from psyfi_core.visualization.export_journey import build_export_journey
 from psyfi_core.visualization.image_seed import build_image_seed
 from psyfi_core.visualization.scene_snapshot import build_scene_snapshot
+from psyfi_core.visualization.spatiotemporal import normalize_anchors
 
 router = APIRouter(prefix="/api/v1", tags=["experiences"])
 
 ModeName = Literal["open", "attractor", "void", "power"]
+
+
+class SpatiotemporalAnchors(BaseModel):
+    """Optional I3 grounding plate — additive, never required or authoritative."""
+
+    latitude: float | None = Field(default=None, ge=-90.0, le=90.0)
+    longitude: float | None = Field(default=None, ge=-180.0, le=180.0)
+    year: int | None = Field(default=None, ge=1, le=9999)
+    hour: float | None = Field(default=None, ge=0.0, le=24.0)
+    iso_timestamp: str | None = None
+    day_of_year: int | None = Field(default=None, ge=1, le=366)
+    solar_elevation_deg: float | None = Field(default=None, ge=-90.0, le=90.0)
 
 
 class Modulators(BaseModel):
@@ -62,6 +75,7 @@ class ImageSeedJsonRequest(BaseModel):
         le=12,
         description="How many ranked formula alternatives to include.",
     )
+    spatiotemporal_anchors: SpatiotemporalAnchors | None = None
 
 
 class TimelineRequest(BaseModel):
@@ -78,6 +92,7 @@ class TimelineRequest(BaseModel):
     neutral_view: bool = False
     modulators: Modulators | None = None
     image_hints: dict[str, float] | None = None
+    spatiotemporal_anchors: SpatiotemporalAnchors | None = None
 
 
 class FieldFrameRequest(BaseModel):
@@ -129,6 +144,7 @@ class ExportJourneyRequest(BaseModel):
     image_seed: dict[str, Any] | None = None
     experience_id: str | None = None
     t2v_provider: str = "external"
+    spatiotemporal_anchors: SpatiotemporalAnchors | None = None
 
 
 class ImageSeedJourneyJsonRequest(ImageSeedJsonRequest):
@@ -138,6 +154,53 @@ class ImageSeedJourneyJsonRequest(ImageSeedJsonRequest):
     quality_tier: str = "balanced"
     reduce_motion: bool = False
     dim_flashing: bool = False
+
+
+def _anchors_dict(raw: SpatiotemporalAnchors | dict[str, Any] | None) -> dict[str, Any] | None:
+    if raw is None:
+        return None
+    if isinstance(raw, SpatiotemporalAnchors):
+        return raw.model_dump(exclude_none=True)
+    if isinstance(raw, dict):
+        return raw
+    return None
+
+
+def _parse_optional_float(value: str | float | None) -> float | None:
+    if value is None or value == "":
+        return None
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def _parse_optional_int(value: str | int | None) -> int | None:
+    n = _parse_optional_float(value)  # type: ignore[arg-type]
+    if n is None:
+        return None
+    return int(round(n))
+
+
+def _form_anchors(
+    *,
+    latitude: str | float | None,
+    longitude: str | float | None,
+    year: str | int | None,
+    hour: str | float | None,
+    iso_timestamp: str | None,
+    solar_elevation_deg: str | float | None,
+) -> dict[str, Any] | None:
+    return normalize_anchors(
+        {
+            "latitude": _parse_optional_float(latitude),
+            "longitude": _parse_optional_float(longitude),
+            "year": _parse_optional_int(year),
+            "hour": _parse_optional_float(hour),
+            "iso_timestamp": iso_timestamp or None,
+            "solar_elevation_deg": _parse_optional_float(solar_elevation_deg),
+        }
+    )
 
 
 def _capped_intensity(
@@ -387,6 +450,7 @@ def _run_image_seed(
     apply_recommended: bool,
     recommend_only: bool = False,
     recommend_top_n: int = 5,
+    spatiotemporal_anchors: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     catalog = get_default_catalog()
     # apply_recommended / recommend_only ignore client experience_id so Pass-1
@@ -421,6 +485,7 @@ def _run_image_seed(
             prefer_recommended_experience=prefer_rec or experience is None,
             recommend_only=bool(recommend_only),
             recommend_top_n=recommend_top_n,
+            spatiotemporal_anchors=spatiotemporal_anchors,
         )
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
@@ -464,6 +529,12 @@ async def image_seed_multipart(
     apply_recommended: bool = Form(default=False),
     recommend_only: bool = Form(default=False),
     recommend_top_n: int = Form(default=5),
+    latitude: str | None = Form(default=None),
+    longitude: str | None = Form(default=None),
+    year: str | None = Form(default=None),
+    hour: str | None = Form(default=None),
+    iso_timestamp: str | None = Form(default=None),
+    solar_elevation_deg: str | None = Form(default=None),
 ) -> dict[str, Any]:
     """Pass 1: experience-condition an uploaded image → master_seed + live hints."""
     data = await file.read()
@@ -482,6 +553,14 @@ async def image_seed_multipart(
         apply_recommended=apply_recommended,
         recommend_only=recommend_only,
         recommend_top_n=top_n,
+        spatiotemporal_anchors=_form_anchors(
+            latitude=latitude,
+            longitude=longitude,
+            year=year,
+            hour=hour,
+            iso_timestamp=iso_timestamp,
+            solar_elevation_deg=solar_elevation_deg,
+        ),
     )
 
 
@@ -500,6 +579,7 @@ async def image_seed_json(body: ImageSeedJsonRequest) -> dict[str, Any]:
         apply_recommended=body.apply_recommended,
         recommend_only=body.recommend_only,
         recommend_top_n=body.recommend_top_n,
+        spatiotemporal_anchors=_anchors_dict(body.spatiotemporal_anchors),
     )
 
 
@@ -511,6 +591,7 @@ async def image_seed_journey_json(body: ImageSeedJourneyJsonRequest) -> dict[str
             status_code=400,
             detail="image-seed-journey requires conditioning; set recommend_only=false",
         )
+    anchors = _anchors_dict(body.spatiotemporal_anchors)
     seed_result = _run_image_seed(
         image=body.image_base64,
         substance=body.substance,
@@ -523,6 +604,7 @@ async def image_seed_journey_json(body: ImageSeedJourneyJsonRequest) -> dict[str
         apply_recommended=body.apply_recommended,
         recommend_only=False,
         recommend_top_n=body.recommend_top_n,
+        spatiotemporal_anchors=anchors,
     )
     catalog = get_default_catalog()
     exp_id = seed_result.get("applied_experience_id") or seed_result.get("experience_id")
@@ -552,6 +634,7 @@ async def image_seed_journey_json(body: ImageSeedJourneyJsonRequest) -> dict[str
         image_seed=seed_result,
         experience=experience,
         t2v_provider="external",
+        spatiotemporal_anchors=anchors or seed_result.get("spatiotemporal_anchors"),
     )
     journey["kind"] = "export_journey"
     return {
@@ -694,6 +777,7 @@ async def export_journey(body: ExportJourneyRequest) -> dict[str, Any]:
         image_seed=body.image_seed,
         experience=experience,
         t2v_provider=body.t2v_provider or "external",
+        spatiotemporal_anchors=_anchors_dict(body.spatiotemporal_anchors),
     )
     package["kind"] = "export_journey"
     return package

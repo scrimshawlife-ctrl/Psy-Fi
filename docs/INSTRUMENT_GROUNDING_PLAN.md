@@ -1,6 +1,6 @@
 # PsyFi Instrument & Spatiotemporal Grounding Plan
 
-Status: **I1 + I2 complete** — 2026-08-04  
+Status: **I1–I3 complete** — 2026-08-04  
 Source inspiration: Looking Glass / GL4SS patterns (client-side spatiotemporal image+video instrument, non-linear dial, solar-elevation grounding, multi-stage planner, hold-and-compare, curated journeys).  
 Canonical engineering queue: [`CONTINUATION_PLAN.md`](CONTINUATION_PLAN.md)  
 Board: [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md)
@@ -72,6 +72,14 @@ Direct visual differential analysis of two ParameterFields or timelines is high-
 Altering SafetyPass or introducing new authoritative state outside ParameterField.
 
 ### I3 — Optional spatiotemporal anchors
+
+**Progress (2026-08-04)**
+- [x] `psyfi_core/visualization/spatiotemporal.py` — normalize + deterministic solar elevation
+- [x] Optional anchors on image-seed (multipart + JSON) and export-journey / image-seed-journey
+- [x] Soft drive/hint lighting bias from solar elevation (presentation-only)
+- [x] T2V prompt clause includes spatiotemporal plate
+- [x] Live Experience shell: optional lat/lon/year/hour/solar elevation fields
+- [x] Additive OpenAPI fields re-synced into freeze pack
 
 **Why**  
 Concrete lat/lon + year + hour + solar elevation produce more coherent external visual layers when generation is used. The anchors become part of the seed/provenance packet.

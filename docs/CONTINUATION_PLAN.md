@@ -14,7 +14,7 @@ Board: [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md)
 | ParameterField + SafetyPass | Done |
 | Image-seed pipeline | Done + optional spatiotemporal anchors |
 | Export-journey | Done + optional spatiotemporal anchors + planner |
-| PWA + service worker | Done (root `/sw.js`, shell cache **v37**) |
+| PWA + service worker | Done (root `/sw.js`, shell cache **v38**) |
 | GPU Lab route | Done |
 | Docker production | Done |
 
@@ -38,11 +38,12 @@ Full plan: [`INSTRUMENT_GROUNDING_PLAN.md`](INSTRUMENT_GROUNDING_PLAN.md).
 - [x] **I4** — deterministic planner (`psyfi.planner.v1`, motifs + lighting notes)
 - [x] **I5** — Journey objects (`psyfi.journey.v1`, IndexedDB archive + restore)
 - [x] Station dial + live solar lighting modulator polish
+- [x] Lever commits — export-journey confirm + seed lock/unlock
 
 ## Next recommended
 
-1. Optional lever commits for export-journey lock / seed locking.
-2. Living QA / hardware capture as needed (`PRODUCTION_READINESS.md`).
+1. Living QA / hardware capture as needed (`PRODUCTION_READINESS.md`).
+2. Opportunistic GPU / WebGL polish (`PRODUCTION_READINESS.md` P2).
 
 ## Run
 

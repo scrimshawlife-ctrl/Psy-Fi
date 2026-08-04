@@ -1692,10 +1692,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function approximateSolarElevationDeg(latitude, longitude, hour, dayOfYear) {
         const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
         const lat = (clamp(latitude, -90, 90) * Math.PI) / 180;
-        const decl =
-            (23.44 * Math.PI) / 180 * Math.sin((2 * Math.PI * (284 + dayOfYear)) / 365);
-        const lst = hour + longitude / 15;
-        const ha = ((lst - 12) * 15 * Math.PI) / 180;
+        const lon = clamp(longitude, -180, 180);
+        const doy = Math.max(1, Math.min(366, Math.round(dayOfYear)));
+        const hr = ((hour % 24) + 24) % 24;
+        const decl = ((23.45 * Math.PI) / 180) * Math.sin((2 * Math.PI * (284 + doy)) / 365);
+        const localHour = (hr + lon / 15) % 24;
+        const ha = ((localHour - 12) * 15 * Math.PI) / 180;
         const sinEl =
             Math.sin(lat) * Math.sin(decl) + Math.cos(lat) * Math.cos(decl) * Math.cos(ha);
         return (Math.asin(clamp(sinEl, -1, 1)) * 180) / Math.PI;
@@ -1918,7 +1920,7 @@ document.addEventListener('DOMContentLoaded', () => {
             imageSeedSuggest = body;
             persistImageSeedHandoff(body);
             syncAnchorStatus(body.spatiotemporal_anchors);
-            seedInput.value = String(body.master_seed >>> 0);
+            tryWriteSeed(body.master_seed >>> 0, { reason: 'Pass-1 seed' });
             renderImageSeedRecommend(body, { syncAlt: true });
             if (pickedId && imageSeedAltSelect) imageSeedAltSelect.value = pickedId;
             applyRecommendedControls(body, { fromAlt: selectedAlternative() });
@@ -1995,7 +1997,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 imageSeedSuggest = imageSeedState;
                 persistImageSeedHandoff(imageSeedState);
                 syncAnchorStatus(imageSeedState.spatiotemporal_anchors);
-                seedInput.value = String(imageSeedState.master_seed >>> 0);
+                tryWriteSeed(imageSeedState.master_seed >>> 0, { reason: 'seed→journey' });
                 renderImageSeedRecommend(imageSeedState, { syncAlt: true });
                 applyRecommendedControls(imageSeedState, { fromAlt: selectedAlternative() });
                 if (typeof player.setImageHints === 'function') {
@@ -2150,8 +2152,83 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('regenSeedBtn')?.addEventListener('click', () => {
-        seedInput.value = String(Math.floor(Math.random() * 1e9));
+        tryWriteSeed(Math.floor(Math.random() * 1e9), { reason: 'regen' });
     });
+
+    let seedLocked = false;
+    let seedUnlockArmedUntil = 0;
+    const SEED_UNLOCK_ARM_MS = 2800;
+    const lockSeedBtn = document.getElementById('lockSeedBtn');
+    const seedLockHint = document.getElementById('seedLockHint');
+    const regenSeedBtn = document.getElementById('regenSeedBtn');
+
+    function syncSeedLockChrome() {
+        if (seedInput) {
+            seedInput.readOnly = seedLocked;
+            seedInput.classList.toggle('seed-locked', seedLocked);
+            seedInput.setAttribute('aria-readonly', seedLocked ? 'true' : 'false');
+        }
+        if (regenSeedBtn) regenSeedBtn.disabled = seedLocked;
+        if (lockSeedBtn) {
+            lockSeedBtn.setAttribute('aria-pressed', seedLocked ? 'true' : 'false');
+            setButtonLabel(
+                lockSeedBtn,
+                seedLocked
+                    ? seedUnlockArmedUntil > Date.now()
+                        ? 'Confirm unlock'
+                        : 'Unlock seed'
+                    : 'Lock seed',
+            );
+        }
+        if (seedLockHint) {
+            seedLockHint.textContent = seedLocked
+                ? 'Seed locked · regen and Pass-1 overwrites blocked'
+                : 'Seed unlocked · regen and Pass-1 may change it';
+        }
+    }
+
+    function setSeedLocked(on) {
+        seedLocked = !!on;
+        seedUnlockArmedUntil = 0;
+        syncSeedLockChrome();
+        statusEl.textContent = seedLocked ? 'Master seed locked' : 'Master seed unlocked';
+    }
+
+    /** Write seed only when unlocked (or force); returns false if blocked. */
+    function tryWriteSeed(value, { reason, force } = {}) {
+        if (seedLocked && !force) {
+            statusEl.textContent = reason
+                ? `Seed locked — ${reason} ignored`
+                : 'Seed locked — write ignored';
+            return false;
+        }
+        if (seedInput) seedInput.value = String(value);
+        syncGpuLabLinks();
+        return true;
+    }
+
+    lockSeedBtn?.addEventListener('click', () => {
+        if (!seedLocked) {
+            setSeedLocked(true);
+            return;
+        }
+        const now = Date.now();
+        if (now <= seedUnlockArmedUntil) {
+            setSeedLocked(false);
+            return;
+        }
+        seedUnlockArmedUntil = now + SEED_UNLOCK_ARM_MS;
+        syncSeedLockChrome();
+        statusEl.textContent = 'Confirm seed unlock';
+        window.setTimeout(() => {
+            if (Date.now() >= seedUnlockArmedUntil && seedLocked) {
+                seedUnlockArmedUntil = 0;
+                syncSeedLockChrome();
+            }
+        }, SEED_UNLOCK_ARM_MS + 50);
+    });
+
+    syncSeedLockChrome();
 
     preferWebGLChk?.addEventListener('change', () => {
         player.setPreferWebGL(!!preferWebGLChk.checked);
@@ -2358,7 +2435,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (record.substance && substanceSelect) substanceSelect.value = record.substance;
         if (record.mode && modeSelect) modeSelect.value = record.mode;
         if (record.intensity != null) setExperienceIntensity(record.intensity);
-        if (record.seed != null && seedInput) seedInput.value = String(record.seed);
+        if (record.seed != null) tryWriteSeed(record.seed, { force: true, reason: 'journey restore' });
         if (record.experience_id && experienceSelect) {
             const has = [...experienceSelect.options].some((o) => o.value === record.experience_id);
             if (has) experienceSelect.value = record.experience_id;
@@ -2556,11 +2633,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    document.getElementById('exportJourneyBtn')?.addEventListener('click', async () => {
-        if (!player.timeline) {
-            alert('Load an experience first');
-            return;
-        }
+    let exportJourneyArmedUntil = 0;
+    const EXPORT_JOURNEY_ARM_MS = 2800;
+    const exportJourneyBtn = document.getElementById('exportJourneyBtn');
+
+    async function runExportJourney() {
         const hint = document.getElementById('t2vPromptHint');
         statusEl.textContent = 'Building export journey…';
         try {
@@ -2603,6 +2680,37 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             alert(err.message || String(err));
         }
+    }
+
+    function clearExportJourneyArm() {
+        exportJourneyArmedUntil = 0;
+        if (exportJourneyBtn) {
+            exportJourneyBtn.classList.remove('lever-armed');
+            setButtonLabel(exportJourneyBtn, 'Export journey');
+        }
+    }
+
+    exportJourneyBtn?.addEventListener('click', async () => {
+        if (!player.timeline) {
+            alert('Load an experience first');
+            return;
+        }
+        const now = Date.now();
+        if (now <= exportJourneyArmedUntil) {
+            clearExportJourneyArm();
+            await runExportJourney();
+            return;
+        }
+        // Lever-style commit: first click arms, second confirms within window.
+        exportJourneyArmedUntil = now + EXPORT_JOURNEY_ARM_MS;
+        if (exportJourneyBtn) {
+            exportJourneyBtn.classList.add('lever-armed');
+            setButtonLabel(exportJourneyBtn, 'Confirm export');
+        }
+        statusEl.textContent = 'Confirm export journey (captures stills)';
+        window.setTimeout(() => {
+            if (Date.now() >= exportJourneyArmedUntil) clearExportJourneyArm();
+        }, EXPORT_JOURNEY_ARM_MS + 50);
     });
 
     document.getElementById('bridgeSimBtn')?.addEventListener('click', async () => {

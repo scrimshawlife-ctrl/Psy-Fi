@@ -1,6 +1,6 @@
 # PsyFi Instrument & Spatiotemporal Grounding Plan
 
-Status: **I1–I5 complete** (+ station dial / solar modulator polish) — 2026-08-04  
+Status: **I1–I5 complete** (+ station dial / solar modulator / lever commits) — 2026-08-04  
 Source inspiration: Looking Glass / GL4SS patterns (client-side spatiotemporal image+video instrument, non-linear dial, solar-elevation grounding, multi-stage planner, hold-and-compare, curated journeys).  
 Canonical engineering queue: [`CONTINUATION_PLAN.md`](CONTINUATION_PLAN.md)  
 Board: [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md)
@@ -32,7 +32,7 @@ No calendar estimates. Ordered by instrument impact vs. architectural surface ar
 - [x] Shell wiring: restored `index.html` + `data-map-mode` + hint; `app.js` get/set helpers
 - [x] Optional discrete station dial UI polish (Alt+click cycles instrument → stations → linear)
 - [x] Solar-elevation / environmental-lighting modulator (`modulators.solar` day factor)
-- [ ] Lever commits for export-journey lock / seed locking
+- [x] Lever commits for export-journey lock / seed locking (export confirm + seed lock/unlock levers)
 
 **Why**  
 Uniform linear intensity/phase ranges under-represent phenomenological scale. A physical-instrument metaphor (dial with adaptive spacing, explicit commit action) increases both precision and user agency without changing the ParameterField contract.

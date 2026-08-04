@@ -1654,6 +1654,19 @@ body.launch-ready #appShell {
     min-width: 0;
 }
 
+.seed-row input.seed-locked {
+    opacity: 0.85;
+    border-color: color-mix(in srgb, var(--pf-accent, #3ee7f2) 45%, transparent);
+}
+
+.seed-row #lockSeedBtn[aria-pressed="true"] {
+    outline: 1px solid color-mix(in srgb, var(--pf-accent, #3ee7f2) 55%, transparent);
+}
+
+#exportJourneyBtn.lever-armed {
+    outline: 1px solid color-mix(in srgb, var(--pf-warn, #e8a838) 60%, transparent);
+}
+
 .sensor-actions {
     flex-wrap: wrap;
     gap: 0.45rem;

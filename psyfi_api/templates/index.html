@@ -159,8 +159,8 @@
                             </div>
                             <div class="input-group intensity-instrument">
                                 <label for="intensityRange">Intensity <span id="intensityValue">0.70</span></label>
-                                <input type="range" id="intensityRange" min="0" max="1" step="0.01" value="0.7" data-map-mode="instrument" aria-describedby="intensityMapHint" data-tip="Instrument-mapped 0–1 drive into the field engines; still safety-clamped. Alt+click toggles linear mode.">
-                                <p class="input-hint" id="intensityMapHint">Instrument map · Alt+click for linear</p>
+                                <input type="range" id="intensityRange" min="0" max="1" step="0.01" value="0.7" data-map-mode="instrument" data-stations="21" aria-describedby="intensityMapHint" data-tip="Instrument-mapped 0–1 drive into the field engines; still safety-clamped. Alt+click or Alt+M cycles instrument → stations → linear.">
+                                <p class="input-hint" id="intensityMapHint">Instrument map · Alt+click for stations</p>
                             </div>
                         </div>
 
@@ -202,9 +202,11 @@
                         <details class="control-drawer">
                             <summary>Seed</summary>
                             <div class="seed-row">
-                                <input type="number" id="seedInput" value="42" min="0" data-tip="Master seed for timeline materialization.">
-                                <button type="button" class="btn-secondary btn-with-icon" id="regenSeedBtn" data-tip="Roll a new random seed."><span class="pf-icon pf-icon-reset" aria-hidden="true"></span><span>Regen</span></button>
+                                <input type="number" id="seedInput" value="42" min="0" data-tip="Master seed for timeline materialization. Lock to freeze against regen and Pass-1 overwrites.">
+                                <button type="button" class="btn-secondary btn-with-icon" id="regenSeedBtn" data-tip="Roll a new random seed (disabled while locked)."><span class="pf-icon pf-icon-reset" aria-hidden="true"></span><span>Regen</span></button>
+                                <button type="button" class="btn-secondary" id="lockSeedBtn" data-tip="Freeze the master seed. Lock is one-shot; unlock asks for a confirm click (lever).">Lock seed</button>
                             </div>
+                            <p class="input-hint" id="seedLockHint">Seed unlocked · regen and Pass-1 may change it</p>
                         </details>
 
                         <details class="control-drawer image-seed-drawer" open>
@@ -233,6 +235,43 @@
                                                 <input type="checkbox" id="imageSeedApplyRecommended" checked> Use recommended formula
                                             </label>
                                         </div>
+                                        <details class="control-drawer spatiotemporal-drawer">
+                                            <summary>Spatiotemporal anchors (optional)</summary>
+                                            <p class="input-hint">
+                                                Optional grounding plate for Pass 1 lighting bias and T2V prompt sidecars.
+                                                Solar elevation auto-derives from lat/lon + year + hour when left blank. Not authoritative over ParameterField.
+                                            </p>
+                                            <div class="control-row">
+                                                <div class="input-group">
+                                                    <label for="anchorLatitude">Latitude</label>
+                                                    <input type="number" id="anchorLatitude" min="-90" max="90" step="0.0001" placeholder="e.g. 37.77" data-tip="Decimal degrees. Optional.">
+                                                </div>
+                                                <div class="input-group">
+                                                    <label for="anchorLongitude">Longitude</label>
+                                                    <input type="number" id="anchorLongitude" min="-180" max="180" step="0.0001" placeholder="e.g. -122.42" data-tip="Decimal degrees. Optional.">
+                                                </div>
+                                            </div>
+                                            <div class="control-row">
+                                                <div class="input-group">
+                                                    <label for="anchorYear">Year</label>
+                                                    <input type="number" id="anchorYear" min="1" max="9999" step="1" placeholder="e.g. 2026" data-tip="Calendar year for the research plate.">
+                                                </div>
+                                                <div class="input-group">
+                                                    <label for="anchorHour">Hour</label>
+                                                    <input type="number" id="anchorHour" min="0" max="24" step="0.1" placeholder="0–24" data-tip="Local-ish hour (0–24). Used with lat/lon for solar elevation.">
+                                                </div>
+                                            </div>
+                                            <div class="input-group">
+                                                <label for="anchorSolarElevation">Solar elevation °</label>
+                                                <input type="number" id="anchorSolarElevation" min="-90" max="90" step="0.1" placeholder="auto" data-tip="Leave blank to derive from lat/lon + year + hour. Or set explicitly (OBSERVED).">
+                                            </div>
+                                            <div class="checkbox-row compact-checks">
+                                                <label data-tip="When checked, solar elevation soft-biases live ParameterField lighting (palette/bloom/depth). Presentation-only; never bypasses SafetyPass.">
+                                                    <input type="checkbox" id="anchorSolarModulator"> Use as live lighting modulator
+                                                </label>
+                                            </div>
+                                            <p class="input-hint" id="anchorStatus" role="status">No anchors set</p>
+                                        </details>
                                         <div id="imageSeedRecommend" class="image-seed-recommend" hidden>
                                             <p class="image-seed-recommend-title" id="imageSeedRecommendTitle"></p>
                                             <p class="image-seed-recommend-meta" id="imageSeedRecommendMeta"></p>
@@ -337,10 +376,17 @@
                                 <button type="button" class="btn-secondary" id="bridgeSimBtn" data-tip="Pull last Workspace magnitude under the live engines.">Bridge from sim</button>
                                 <button type="button" class="btn-secondary" id="exportTimelineBtn" data-tip="Download the loaded timeline JSON.">Export timeline</button>
                                 <button type="button" class="btn-secondary" id="exportViewportBtn" data-tip="Capture the current field viewport as PNG.">Export viewport</button>
-                                <button type="button" class="btn-secondary" id="exportJourneyBtn" data-tip="Package stills + formula prompt for optional external text-to-video (no provider call).">Export journey</button>
+                                <button type="button" class="btn-secondary" id="exportJourneyBtn" data-tip="Package stills + formula prompt for optional external text-to-video (no provider call). First click arms; second confirms (lever).">Export journey</button>
                                 <button type="button" class="btn-secondary" id="copyT2vPromptBtn" data-tip="Copy the T2V prompt only (uses current timeline + image seed; no provider call).">Copy T2V prompt</button>
                                 <button type="button" class="btn-secondary" id="archiveCompareBtn" data-tip="Save the current pin + live comparison pair to IndexedDB (INFERRED provenance).">Archive comparison</button>
+                                <button type="button" class="btn-secondary" id="runPlannerBtn" data-tip="Build a deterministic planner packet (motifs + lighting notes) from the loaded field.">Run planner</button>
+                                <button type="button" class="btn-secondary" id="saveJourneyBtn" data-tip="Archive a portable Journey object (substance, mode, seed, anchors, planner) to IndexedDB.">Save journey</button>
                             </div>
+                            <div class="input-group">
+                                <label for="plannerNotesInput">Planner notes</label>
+                                <input type="text" id="plannerNotesInput" maxlength="500" placeholder="Optional operator notes (INFERRED)" data-tip="Folded into the deterministic planner and Journey packet. Not medical advice.">
+                            </div>
+                            <p class="input-hint" id="plannerStatus" hidden role="status"></p>
                             <p class="input-hint" id="t2vPromptHint" hidden></p>
                         </details>
 
@@ -505,6 +551,13 @@
                     <ul class="history-list" id="compareList"></ul>
                     <div class="session-actions">
                         <button type="button" class="btn-secondary" id="clearCompareButton">Clear comparisons</button>
+                    </div>
+                    <h3 class="subsection-title">Journeys</h3>
+                    <p class="input-hint">Portable Journey objects (I5) with planner + optional anchors. Restore reloads recipe controls and planner text.</p>
+                    <p class="empty-state" id="journeyEmpty">No journeys yet. Load an experience, then Save journey from Live Experience I/O.</p>
+                    <ul class="history-list" id="journeyList"></ul>
+                    <div class="session-actions">
+                        <button type="button" class="btn-secondary" id="clearJourneyButton">Clear journeys</button>
                     </div>
                 </div>
             </section>

@@ -3,9 +3,10 @@
 const SESSION_STORAGE_KEY = 'psyfi.session.v1.last';
 const RECOVERY_DISMISS_KEY = 'psyfi.session.v1.recovery_dismissed';
 const DB_NAME = 'psyfi-sessions';
-const DB_VERSION = 2;
+const DB_VERSION = 3;
 const STORE_NAME = 'history';
 const COMPARE_STORE = 'comparisons';
+const JOURNEY_STORE = 'journeys';
 const API_V1 = '/api/v1';
 
 async function openPsyfiDb() {
@@ -19,6 +20,10 @@ async function openPsyfiDb() {
             }
             if (!db.objectStoreNames.contains(COMPARE_STORE)) {
                 const store = db.createObjectStore(COMPARE_STORE, { keyPath: 'id' });
+                store.createIndex('updated_at', 'updated_at');
+            }
+            if (!db.objectStoreNames.contains(JOURNEY_STORE)) {
+                const store = db.createObjectStore(JOURNEY_STORE, { keyPath: 'id' });
                 store.createIndex('updated_at', 'updated_at');
             }
         };
@@ -57,11 +62,70 @@ async function listComparisonRecords() {
     }
 }
 
+async function getComparisonRecord(id) {
+    if (!id) return null;
+    try {
+        const db = await openPsyfiDb();
+        const record = await new Promise((resolve, reject) => {
+            const tx = db.transaction(COMPARE_STORE, 'readonly');
+            const request = tx.objectStore(COMPARE_STORE).get(id);
+            request.onsuccess = () => resolve(request.result || null);
+            request.onerror = () => reject(request.error);
+        });
+        db.close();
+        return record;
+    } catch (error) {
+        console.warn('[PsyFi] IndexedDB comparison get failed:', error);
+        return null;
+    }
+}
+
 async function clearComparisonRecords() {
     const db = await openPsyfiDb();
     await new Promise((resolve, reject) => {
         const tx = db.transaction(COMPARE_STORE, 'readwrite');
         tx.objectStore(COMPARE_STORE).clear();
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => reject(tx.error);
+    });
+    db.close();
+}
+
+async function saveJourneyRecord(record) {
+    if (!record?.id) throw new Error('No journey record to save');
+    const db = await openPsyfiDb();
+    await new Promise((resolve, reject) => {
+        const tx = db.transaction(JOURNEY_STORE, 'readwrite');
+        tx.objectStore(JOURNEY_STORE).put(record);
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => reject(tx.error);
+    });
+    db.close();
+    return record;
+}
+
+async function listJourneyRecords() {
+    try {
+        const db = await openPsyfiDb();
+        const records = await new Promise((resolve, reject) => {
+            const tx = db.transaction(JOURNEY_STORE, 'readonly');
+            const request = tx.objectStore(JOURNEY_STORE).getAll();
+            request.onsuccess = () => resolve(request.result || []);
+            request.onerror = () => reject(request.error);
+        });
+        db.close();
+        return records.sort((a, b) => String(b.updated_at).localeCompare(String(a.updated_at)));
+    } catch (error) {
+        console.warn('[PsyFi] IndexedDB journeys unavailable:', error);
+        return [];
+    }
+}
+
+async function clearJourneyRecords() {
+    const db = await openPsyfiDb();
+    await new Promise((resolve, reject) => {
+        const tx = db.transaction(JOURNEY_STORE, 'readwrite');
+        tx.objectStore(JOURNEY_STORE).clear();
         tx.oncomplete = () => resolve();
         tx.onerror = () => reject(tx.error);
     });
@@ -590,6 +654,43 @@ document.addEventListener('DOMContentLoaded', () => {
         clear: clearComparisonRecords,
     };
 
+    const journeyList = document.getElementById('journeyList');
+    const journeyEmpty = document.getElementById('journeyEmpty');
+
+    async function refreshJourneys() {
+        if (!journeyList) return;
+        const records = await listJourneyRecords();
+        journeyList.innerHTML = '';
+        setHidden(journeyEmpty, records.length > 0);
+        records.forEach((record) => {
+            const item = document.createElement('li');
+            item.className = 'history-item';
+            const motifs = (record.planner?.motifs || []).slice(0, 2).join(', ') || '—';
+            item.innerHTML = `
+                <div class="history-title">
+                    <strong>${record.title || record.substance || 'journey'}</strong>
+                    · ${record.mode || 'open'}
+                    · seed <code>${record.seed ?? '—'}</code>
+                </div>
+                <div class="history-meta">${record.id} · ${motifs} · ${record.updated_at || ''}</div>
+                <button type="button" class="btn-secondary journey-restore">Restore</button>
+            `;
+            item.querySelector('.journey-restore').addEventListener('click', () => {
+                window.dispatchEvent(new CustomEvent('psyfi:restore-journey', { detail: record }));
+                const panel = document.getElementById('experiencePanel');
+                if (panel) panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+            journeyList.appendChild(item);
+        });
+    }
+
+    window.PsyFiJourneyArchive = {
+        refresh: refreshJourneys,
+        save: saveJourneyRecord,
+        list: listJourneyRecords,
+        clear: clearJourneyRecords,
+    };
+
     async function clearHistory() {
         const db = await openDb();
         await new Promise((resolve, reject) => {
@@ -1000,6 +1101,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    document.getElementById('clearJourneyButton')?.addEventListener('click', async () => {
+        try {
+            await clearJourneyRecords();
+            await refreshJourneys();
+        } catch (error) {
+            showError(error.message);
+        }
+    });
+
     document.getElementById('recoveryRestore')?.addEventListener('click', async () => {
         if (!recoveryRecord) return;
         applyRecordToForm(recoveryRecord);
@@ -1065,6 +1175,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadPresets();
     refreshHistory().then(maybeShowRecoveryBanner);
     refreshComparisons();
+    refreshJourneys();
     renderCapabilities();
 
     // Splash finished (or skipped) — refresh capability/sensor UI against final probes.
@@ -1161,8 +1272,11 @@ document.addEventListener('DOMContentLoaded', () => {
             : Number(v).toFixed(2);
         if (intensityMapHint && intensityRange) {
             const mode = (intensityRange.dataset && intensityRange.dataset.mapMode) || 'instrument';
-            intensityMapHint.textContent =
-                mode === 'linear' ? 'Linear map · Alt+click for instrument' : 'Instrument map · Alt+click for linear';
+            intensityMapHint.textContent = instrumentMap
+                ? instrumentMap.mapModeHint(mode)
+                : mode === 'linear'
+                  ? 'Linear map · Alt+click for instrument'
+                  : 'Instrument map · Alt+click for linear';
         }
     }
 
@@ -1353,12 +1467,39 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!e.altKey || !instrumentMap) return;
         e.preventDefault();
         const current = getExperienceIntensity();
-        const mode = (intensityRange.dataset.mapMode || 'instrument') === 'linear' ? 'instrument' : 'linear';
+        const cur = intensityRange.dataset.mapMode || 'instrument';
+        const mode = instrumentMap.nextMapMode(cur);
         intensityRange.dataset.mapMode = mode;
+        intensityRange.classList.toggle('stations-mode', mode === 'stations');
         setExperienceIntensity(current);
         syncGpuLabLinks();
         if (statusEl) {
-            statusEl.textContent = mode === 'linear' ? 'Intensity map: linear' : 'Intensity map: instrument';
+            statusEl.textContent =
+                mode === 'linear'
+                    ? 'Intensity map: linear'
+                    : mode === 'stations'
+                      ? 'Intensity map: station dial'
+                      : 'Intensity map: instrument';
+        }
+    });
+    intensityRange.addEventListener('keydown', (e) => {
+        if (!instrumentMap || !(e.altKey && (e.key === 'm' || e.key === 'M'))) return;
+        e.preventDefault();
+        const current = getExperienceIntensity();
+        const cur = intensityRange.dataset.mapMode || 'instrument';
+        const mode = instrumentMap.nextMapMode(cur);
+        intensityRange.dataset.mapMode = mode;
+        intensityRange.classList.toggle('stations-mode', mode === 'stations');
+        setExperienceIntensity(current);
+        syncIntensityDisplay();
+        syncGpuLabLinks();
+        if (statusEl) {
+            statusEl.textContent =
+                mode === 'linear'
+                    ? 'Intensity map: linear'
+                    : mode === 'stations'
+                      ? 'Intensity map: station dial'
+                      : 'Intensity map: instrument';
         }
     });
 
@@ -1551,6 +1692,124 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
+    function readOptionalNumber(id) {
+        const el = document.getElementById(id);
+        if (!el) return null;
+        const raw = String(el.value || '').trim();
+        if (!raw) return null;
+        const n = Number(raw);
+        return Number.isFinite(n) ? n : null;
+    }
+
+    /** Optional I3 anchors for image-seed / export-journey (null when unset). */
+    function readSpatiotemporalAnchors() {
+        const latitude = readOptionalNumber('anchorLatitude');
+        const longitude = readOptionalNumber('anchorLongitude');
+        const year = readOptionalNumber('anchorYear');
+        const hour = readOptionalNumber('anchorHour');
+        const solar_elevation_deg = readOptionalNumber('anchorSolarElevation');
+        if (
+            latitude == null &&
+            longitude == null &&
+            year == null &&
+            hour == null &&
+            solar_elevation_deg == null
+        ) {
+            return null;
+        }
+        const out = {};
+        if (latitude != null) out.latitude = latitude;
+        if (longitude != null) out.longitude = longitude;
+        if (year != null) out.year = Math.round(year);
+        if (hour != null) out.hour = hour;
+        if (solar_elevation_deg != null) out.solar_elevation_deg = solar_elevation_deg;
+        return out;
+    }
+
+    /** Approximate solar elevation (degrees) — mirrors Python research plate. */
+    function approximateSolarElevationDeg(latitude, longitude, hour, dayOfYear) {
+        const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+        const lat = (clamp(latitude, -90, 90) * Math.PI) / 180;
+        const lon = clamp(longitude, -180, 180);
+        const doy = Math.max(1, Math.min(366, Math.round(dayOfYear)));
+        const hr = ((hour % 24) + 24) % 24;
+        const decl = ((23.45 * Math.PI) / 180) * Math.sin((2 * Math.PI * (284 + doy)) / 365);
+        const localHour = (hr + lon / 15) % 24;
+        const ha = ((localHour - 12) * 15 * Math.PI) / 180;
+        const sinEl =
+            Math.sin(lat) * Math.sin(decl) + Math.cos(lat) * Math.cos(decl) * Math.cos(ha);
+        return (Math.asin(clamp(sinEl, -1, 1)) * 180) / Math.PI;
+    }
+
+    function solarDayFactorFromElevation(elev) {
+        return Math.max(0, Math.min(1, (Number(elev) + 18) / 90));
+    }
+
+    /**
+     * Live solar lighting modulator day factor (0–1) when the opt-in checkbox is on.
+     * Uses explicit elevation, last normalized seed anchors, or a client-side plate.
+     */
+    function readSolarDayFactor() {
+        const chk = document.getElementById('anchorSolarModulator');
+        if (!chk || !chk.checked) return null;
+        let elev = readOptionalNumber('anchorSolarElevation');
+        if (elev == null && imageSeedState?.spatiotemporal_anchors?.solar_elevation_deg != null) {
+            elev = Number(imageSeedState.spatiotemporal_anchors.solar_elevation_deg);
+        }
+        if (elev == null) {
+            const a = readSpatiotemporalAnchors();
+            if (a && a.latitude != null && a.longitude != null && a.hour != null) {
+                elev = approximateSolarElevationDeg(a.latitude, a.longitude, a.hour, 172);
+            }
+        }
+        if (elev == null || !Number.isFinite(elev)) return null;
+        return Math.round(solarDayFactorFromElevation(elev) * 10000) / 10000;
+    }
+
+    function appendAnchorsToFormData(fd) {
+        const a = readSpatiotemporalAnchors();
+        if (!a) return;
+        if (a.latitude != null) fd.append('latitude', String(a.latitude));
+        if (a.longitude != null) fd.append('longitude', String(a.longitude));
+        if (a.year != null) fd.append('year', String(a.year));
+        if (a.hour != null) fd.append('hour', String(a.hour));
+        if (a.solar_elevation_deg != null) fd.append('solar_elevation_deg', String(a.solar_elevation_deg));
+    }
+
+    function syncAnchorStatus(normalized) {
+        const el = document.getElementById('anchorStatus');
+        if (!el) return;
+        const a = normalized || readSpatiotemporalAnchors();
+        if (!a) {
+            el.textContent = 'No anchors set';
+            return;
+        }
+        if (normalized && normalized.solar_elevation_deg != null) {
+            const src = normalized.solar_elevation_source || 'set';
+            el.textContent = `Anchors active · solar ${Number(normalized.solar_elevation_deg).toFixed(1)}° (${src})`;
+            return;
+        }
+        el.textContent = 'Anchors set · solar derives on server when lat/lon + hour present';
+    }
+
+    ;['anchorLatitude', 'anchorLongitude', 'anchorYear', 'anchorHour', 'anchorSolarElevation'].forEach((id) => {
+        document.getElementById(id)?.addEventListener('input', () => {
+            syncAnchorStatus();
+            syncModulators();
+        });
+    });
+    document.getElementById('anchorSolarModulator')?.addEventListener('change', () => {
+        syncModulators();
+        const el = document.getElementById('anchorStatus');
+        const day = readSolarDayFactor();
+        if (el && day != null) {
+            el.textContent = `Live solar modulator on · day factor ${day.toFixed(2)}`;
+        } else if (el) {
+            syncAnchorStatus();
+        }
+    });
+    syncAnchorStatus();
+
     function fileToBase64(file) {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -1566,14 +1825,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function syncModulators() {
         const img = imageSeedState ? imageInfluence() : 0;
-        player.setModulators({
+        const mods = {
             camera: Number(modCamera?.value || 0),
             motion: Number(modMotion?.value || 0),
             midi: Number(modMidi?.value || 0),
             audio: Number(modAudio?.value || 0),
             haptics: Number(modHaptics?.value || 0),
             image: img,
-        });
+        };
+        const solar = readSolarDayFactor();
+        if (solar != null) mods.solar = solar;
+        player.setModulators(mods);
     }
     [modCamera, modMotion, modMidi, modAudio, modHaptics].forEach((el) =>
         el?.addEventListener('change', syncModulators),
@@ -1605,12 +1867,14 @@ document.addEventListener('DOMContentLoaded', () => {
             fd.append('apply_recommended', 'true');
             fd.append('recommend_only', 'true');
             fd.append('recommend_top_n', '5');
+            appendAnchorsToFormData(fd);
             const res = await fetch('/api/v1/visualize/image-seed', { method: 'POST', body: fd });
             const body = await res.json().catch(() => ({}));
             if (!res.ok) {
                 throw new Error(body.detail || res.statusText || 'suggest failed');
             }
             imageSeedSuggest = body;
+            syncAnchorStatus(body.spatiotemporal_anchors);
             renderImageSeedRecommend(body, { syncAlt: true });
             if (imageSeedApplyRecommended?.checked) applyRecommendedControls(body);
             const n = (body.recommended_alternatives || []).length;
@@ -1682,6 +1946,7 @@ document.addEventListener('DOMContentLoaded', () => {
         fd.append('apply_recommended', flags.apply_recommended ? 'true' : 'false');
         fd.append('recommend_only', 'false');
         fd.append('recommend_top_n', '5');
+        appendAnchorsToFormData(fd);
         try {
             const res = await fetch('/api/v1/visualize/image-seed', { method: 'POST', body: fd });
             const body = await res.json().catch(() => ({}));
@@ -1692,7 +1957,8 @@ document.addEventListener('DOMContentLoaded', () => {
             imageSeedState = body;
             imageSeedSuggest = body;
             persistImageSeedHandoff(body);
-            seedInput.value = String(body.master_seed >>> 0);
+            syncAnchorStatus(body.spatiotemporal_anchors);
+            tryWriteSeed(body.master_seed >>> 0, { reason: 'Pass-1 seed' });
             renderImageSeedRecommend(body, { syncAlt: true });
             if (pickedId && imageSeedAltSelect) imageSeedAltSelect.value = pickedId;
             applyRecommendedControls(body, { fromAlt: selectedAlternative() });
@@ -1756,6 +2022,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     quality_tier: (document.getElementById('qualityTierSelect')?.value) || 'balanced',
                     reduce_motion: !!reduceMotionChk?.checked,
                     dim_flashing: !!dimFlashChk?.checked,
+                    spatiotemporal_anchors: readSpatiotemporalAnchors(),
+                    planner_notes: plannerNotesValue(),
                 }),
             });
             const body = await res.json().catch(() => ({}));
@@ -1766,7 +2034,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (imageSeedState) {
                 imageSeedSuggest = imageSeedState;
                 persistImageSeedHandoff(imageSeedState);
-                seedInput.value = String(imageSeedState.master_seed >>> 0);
+                syncAnchorStatus(imageSeedState.spatiotemporal_anchors);
+                tryWriteSeed(imageSeedState.master_seed >>> 0, { reason: 'seed→journey' });
                 renderImageSeedRecommend(imageSeedState, { syncAlt: true });
                 applyRecommendedControls(imageSeedState, { fromAlt: selectedAlternative() });
                 if (typeof player.setImageHints === 'function') {
@@ -1832,6 +2101,7 @@ document.addEventListener('DOMContentLoaded', () => {
         player.neutral(neutralOn);
         clearNeutralExitArm();
         setButtonLabel(neutralBtn, neutralOn ? 'Exit Neutral' : 'Neutral');
+        if (neutralBtn) neutralBtn.setAttribute('aria-pressed', neutralOn ? 'true' : 'false');
         statusEl.textContent = neutralOn ? 'Neutral view enabled' : 'Field restored';
     }
 
@@ -1848,11 +2118,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         // Lever-style exit: first click arms, second confirms within window.
         neutralExitArmedUntil = now + NEUTRAL_EXIT_ARM_MS;
+        neutralBtn.setAttribute('aria-pressed', 'true');
         setButtonLabel(neutralBtn, 'Confirm exit');
         statusEl.textContent = 'Confirm Neutral exit';
         window.setTimeout(() => {
             if (Date.now() >= neutralExitArmedUntil && neutralOn) {
                 clearNeutralExitArm();
+                neutralBtn.setAttribute('aria-pressed', 'false');
             }
         }, NEUTRAL_EXIT_ARM_MS + 50);
     });
@@ -1921,8 +2193,83 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('regenSeedBtn')?.addEventListener('click', () => {
-        seedInput.value = String(Math.floor(Math.random() * 1e9));
+        tryWriteSeed(Math.floor(Math.random() * 1e9), { reason: 'regen' });
     });
+
+    let seedLocked = false;
+    let seedUnlockArmedUntil = 0;
+    const SEED_UNLOCK_ARM_MS = 2800;
+    const lockSeedBtn = document.getElementById('lockSeedBtn');
+    const seedLockHint = document.getElementById('seedLockHint');
+    const regenSeedBtn = document.getElementById('regenSeedBtn');
+
+    function syncSeedLockChrome() {
+        if (seedInput) {
+            seedInput.readOnly = seedLocked;
+            seedInput.classList.toggle('seed-locked', seedLocked);
+            seedInput.setAttribute('aria-readonly', seedLocked ? 'true' : 'false');
+        }
+        if (regenSeedBtn) regenSeedBtn.disabled = seedLocked;
+        if (lockSeedBtn) {
+            lockSeedBtn.setAttribute('aria-pressed', seedLocked ? 'true' : 'false');
+            setButtonLabel(
+                lockSeedBtn,
+                seedLocked
+                    ? seedUnlockArmedUntil > Date.now()
+                        ? 'Confirm unlock'
+                        : 'Unlock seed'
+                    : 'Lock seed',
+            );
+        }
+        if (seedLockHint) {
+            seedLockHint.textContent = seedLocked
+                ? 'Seed locked · regen and Pass-1 overwrites blocked'
+                : 'Seed unlocked · regen and Pass-1 may change it';
+        }
+    }
+
+    function setSeedLocked(on) {
+        seedLocked = !!on;
+        seedUnlockArmedUntil = 0;
+        syncSeedLockChrome();
+        statusEl.textContent = seedLocked ? 'Master seed locked' : 'Master seed unlocked';
+    }
+
+    /** Write seed only when unlocked (or force); returns false if blocked. */
+    function tryWriteSeed(value, { reason, force } = {}) {
+        if (seedLocked && !force) {
+            statusEl.textContent = reason
+                ? `Seed locked — ${reason} ignored`
+                : 'Seed locked — write ignored';
+            return false;
+        }
+        if (seedInput) seedInput.value = String(value);
+        syncGpuLabLinks();
+        return true;
+    }
+
+    lockSeedBtn?.addEventListener('click', () => {
+        if (!seedLocked) {
+            setSeedLocked(true);
+            return;
+        }
+        const now = Date.now();
+        if (now <= seedUnlockArmedUntil) {
+            setSeedLocked(false);
+            return;
+        }
+        seedUnlockArmedUntil = now + SEED_UNLOCK_ARM_MS;
+        syncSeedLockChrome();
+        statusEl.textContent = 'Confirm seed unlock';
+        window.setTimeout(() => {
+            if (Date.now() >= seedUnlockArmedUntil && seedLocked) {
+                seedUnlockArmedUntil = 0;
+                syncSeedLockChrome();
+            }
+        }, SEED_UNLOCK_ARM_MS + 50);
+    });
+
+    syncSeedLockChrome();
 
     preferWebGLChk?.addEventListener('change', () => {
         player.setPreferWebGL(!!preferWebGLChk.checked);
@@ -2002,6 +2349,8 @@ document.addEventListener('DOMContentLoaded', () => {
         player.exportViewportPng();
     });
 
+    let lastComparisonId = null;
+
     document.getElementById('archiveCompareBtn')?.addEventListener('click', async () => {
         const cs = window.PsyFiViz && window.PsyFiViz.compareSurface;
         if (!cs || !player.pinned) {
@@ -2028,6 +2377,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         try {
             await saveComparisonRecord(record);
+            lastComparisonId = record.id;
             if (window.PsyFiCompareArchive && typeof window.PsyFiCompareArchive.refresh === 'function') {
                 await window.PsyFiCompareArchive.refresh();
             }
@@ -2036,6 +2386,156 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error(err);
             statusEl.textContent = 'Archive comparison failed';
             alert(err.message || String(err));
+        }
+    });
+
+    function plannerNotesValue() {
+        const el = document.getElementById('plannerNotesInput');
+        const v = el && String(el.value || '').trim();
+        return v || null;
+    }
+
+    function setPlannerStatus(text, show) {
+        const el = document.getElementById('plannerStatus');
+        if (!el) return;
+        el.hidden = !show;
+        el.textContent = text || '';
+    }
+
+    document.getElementById('runPlannerBtn')?.addEventListener('click', async () => {
+        if (!player.timeline && !player.frame) {
+            statusEl.textContent = 'Load an experience before running the planner';
+            return;
+        }
+        try {
+            const res = await fetch('/api/v1/visualize/planner', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    timeline: player.timeline || null,
+                    parameter_field: player.frame || null,
+                    experience_id: experienceSelect?.value || null,
+                    spatiotemporal_anchors: readSpatiotemporalAnchors(),
+                    notes: plannerNotesValue(),
+                }),
+            });
+            const body = await res.json().catch(() => ({}));
+            if (!res.ok) throw new Error(body.detail || res.statusText || 'planner failed');
+            const motifs = (body.motifs || []).slice(0, 4).join(', ');
+            setPlannerStatus(
+                `${body.lighting_notes || ''} Motifs: ${motifs || '—'}`,
+                true,
+            );
+            statusEl.textContent = `Planner · ${body.hash || 'ok'}`;
+            if (provenanceEl && body.planner_text) {
+                provenanceEl.innerHTML = `<div class="muted">${body.planner_text}</div>`;
+            }
+        } catch (err) {
+            console.error(err);
+            statusEl.textContent = 'Planner failed';
+            alert(err.message || String(err));
+        }
+    });
+
+    document.getElementById('saveJourneyBtn')?.addEventListener('click', async () => {
+        if (!player.timeline) {
+            statusEl.textContent = 'Load an experience before saving a journey';
+            return;
+        }
+        try {
+            const res = await fetch('/api/v1/visualize/journey', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    substance: substanceSelect?.value || 'lsd',
+                    mode: modeSelect?.value || 'open',
+                    intensity: getExperienceIntensity(),
+                    seed: Number(seedInput?.value) || 42,
+                    experience_id: experienceSelect?.value || null,
+                    timeline: player.timeline,
+                    parameter_field: player.frame || null,
+                    spatiotemporal_anchors: readSpatiotemporalAnchors(),
+                    notes: plannerNotesValue(),
+                    planner_notes: plannerNotesValue(),
+                    comparison_id: lastComparisonId || null,
+                    title: experienceSelect?.selectedOptions?.[0]?.textContent || null,
+                }),
+            });
+            const body = await res.json().catch(() => ({}));
+            if (!res.ok) throw new Error(body.detail || res.statusText || 'journey failed');
+            await saveJourneyRecord(body);
+            if (window.PsyFiJourneyArchive?.refresh) await window.PsyFiJourneyArchive.refresh();
+            setPlannerStatus(body.planner?.planner_text || 'Journey saved', true);
+            statusEl.textContent = body.comparison_id
+                ? `Journey saved · ${body.id} · compare ${body.comparison_id}`
+                : `Journey saved · ${body.id}`;
+        } catch (err) {
+            console.error(err);
+            statusEl.textContent = 'Save journey failed';
+            alert(err.message || String(err));
+        }
+    });
+
+    window.addEventListener('psyfi:restore-journey', async (ev) => {
+        const record = ev && ev.detail;
+        if (!record) return;
+        if (record.substance && substanceSelect) substanceSelect.value = record.substance;
+        if (record.mode && modeSelect) modeSelect.value = record.mode;
+        if (record.intensity != null) setExperienceIntensity(record.intensity);
+        if (record.seed != null) tryWriteSeed(record.seed, { force: true, reason: 'journey restore' });
+        if (record.experience_id && experienceSelect) {
+            const has = [...experienceSelect.options].some((o) => o.value === record.experience_id);
+            if (has) experienceSelect.value = record.experience_id;
+        }
+        const notesEl = document.getElementById('plannerNotesInput');
+        if (notesEl && record.notes != null) notesEl.value = String(record.notes);
+        const anchors = record.spatiotemporal_anchors;
+        if (anchors) {
+            const setVal = (id, v) => {
+                const el = document.getElementById(id);
+                if (el && v != null) el.value = String(v);
+            };
+            setVal('anchorLatitude', anchors.latitude);
+            setVal('anchorLongitude', anchors.longitude);
+            setVal('anchorYear', anchors.year);
+            setVal('anchorHour', anchors.hour);
+            setVal('anchorSolarElevation', anchors.solar_elevation_deg);
+            syncAnchorStatus(anchors);
+            const solarChk = document.getElementById('anchorSolarModulator');
+            if (solarChk && anchors.solar_elevation_deg != null) {
+                solarChk.checked = true;
+                syncModulators();
+            }
+        }
+        if (record.planner?.planner_text) {
+            setPlannerStatus(record.planner.planner_text, true);
+            if (provenanceEl) {
+                provenanceEl.innerHTML = `<div class="muted">${record.planner.planner_text}</div>`;
+            }
+        }
+        if (record.comparison_id) lastComparisonId = record.comparison_id;
+
+        statusEl.textContent = `Restoring journey · ${record.id}…`;
+        try {
+            if (loadBtn && !loadBtn.disabled) {
+                loadBtn.click();
+                // Allow rematerialize to start; surface failures via player status.
+                await new Promise((r) => setTimeout(r, 80));
+            }
+            let compareNote = '';
+            if (record.comparison_id) {
+                const cmp = await getComparisonRecord(record.comparison_id);
+                if (cmp) {
+                    window.dispatchEvent(new CustomEvent('psyfi:restore-comparison', { detail: cmp }));
+                    compareNote = ` · compare ${record.comparison_id}`;
+                } else {
+                    compareNote = ` · compare ${record.comparison_id} missing locally`;
+                }
+            }
+            statusEl.textContent = `Restored journey · ${record.id}${compareNote}`;
+        } catch (err) {
+            console.error(err);
+            statusEl.textContent = `Journey restore failed · ${err.message || err}`;
         }
     });
 
@@ -2102,6 +2602,7 @@ document.addEventListener('DOMContentLoaded', () => {
             influence: imageSeedState.influence,
             features: imageSeedState.features,
             parameter_hints: imageSeedState.parameter_hints,
+            spatiotemporal_anchors: imageSeedState.spatiotemporal_anchors || null,
         };
     }
 
@@ -2165,6 +2666,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 image_seed: imageSeedPayloadForJourney(),
                 experience_id: experienceSelect.value || player.timeline.experience_id || null,
                 t2v_provider: 'external',
+                spatiotemporal_anchors: readSpatiotemporalAnchors(),
+                planner_notes: plannerNotesValue(),
             }),
         });
         const body = await res.json().catch(() => ({}));
@@ -2203,11 +2706,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    document.getElementById('exportJourneyBtn')?.addEventListener('click', async () => {
-        if (!player.timeline) {
-            alert('Load an experience first');
-            return;
-        }
+    let exportJourneyArmedUntil = 0;
+    const EXPORT_JOURNEY_ARM_MS = 2800;
+    const exportJourneyBtn = document.getElementById('exportJourneyBtn');
+
+    async function runExportJourney() {
         const hint = document.getElementById('t2vPromptHint');
         statusEl.textContent = 'Building export journey…';
         try {
@@ -2221,6 +2724,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     image_seed: imageSeedPayloadForJourney(),
                     experience_id: experienceSelect.value || player.timeline.experience_id || null,
                     t2v_provider: 'external',
+                    spatiotemporal_anchors: readSpatiotemporalAnchors(),
+                    planner_notes: plannerNotesValue(),
                 }),
             });
             const body = await res.json().catch(() => ({}));
@@ -2248,6 +2753,39 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             alert(err.message || String(err));
         }
+    }
+
+    function clearExportJourneyArm() {
+        exportJourneyArmedUntil = 0;
+        if (exportJourneyBtn) {
+            exportJourneyBtn.classList.remove('lever-armed');
+            exportJourneyBtn.setAttribute('aria-pressed', 'false');
+            setButtonLabel(exportJourneyBtn, 'Export journey');
+        }
+    }
+
+    exportJourneyBtn?.addEventListener('click', async () => {
+        if (!player.timeline) {
+            alert('Load an experience first');
+            return;
+        }
+        const now = Date.now();
+        if (now <= exportJourneyArmedUntil) {
+            clearExportJourneyArm();
+            await runExportJourney();
+            return;
+        }
+        // Lever-style commit: first click arms, second confirms within window.
+        exportJourneyArmedUntil = now + EXPORT_JOURNEY_ARM_MS;
+        if (exportJourneyBtn) {
+            exportJourneyBtn.classList.add('lever-armed');
+            exportJourneyBtn.setAttribute('aria-pressed', 'true');
+            setButtonLabel(exportJourneyBtn, 'Confirm export');
+        }
+        statusEl.textContent = 'Confirm export journey (captures stills)';
+        window.setTimeout(() => {
+            if (Date.now() >= exportJourneyArmedUntil) clearExportJourneyArm();
+        }, EXPORT_JOURNEY_ARM_MS + 50);
     });
 
     document.getElementById('bridgeSimBtn')?.addEventListener('click', async () => {

@@ -87,14 +87,20 @@
 
   /**
    * Read intensity from a range input that stores UI position.
-   * dataset.mapMode: "linear" | "instrument" (default instrument).
+   * dataset.mapMode: "linear" | "instrument" | "stations" (default instrument).
+   * dataset.stations: stop count for stations mode (default 21).
    */
   function readIntensityFromRange(el) {
     if (!el) return 0.7;
     const ui = clamp01(el.value);
     const mode = (el.dataset && el.dataset.mapMode) || 'instrument';
     if (mode === 'linear') return ui;
-    return intensityFromUi(ui);
+    const curved = intensityFromUi(ui);
+    if (mode === 'stations') {
+      const stations = Number(el.dataset && el.dataset.stations) || 21;
+      return quantizeIntensity(curved, stations);
+    }
+    return curved;
   }
 
   /**
@@ -103,8 +109,26 @@
   function writeIntensityToRange(el, intensity) {
     if (!el) return;
     const mode = (el.dataset && el.dataset.mapMode) || 'instrument';
-    const ui = mode === 'linear' ? clamp01(intensity) : uiFromIntensity(intensity);
+    let value = clamp01(intensity);
+    if (mode === 'stations') {
+      const stations = Number(el.dataset && el.dataset.stations) || 21;
+      value = quantizeIntensity(value, stations);
+    }
+    const ui = mode === 'linear' ? value : uiFromIntensity(value);
     el.value = String(ui);
+  }
+
+  /** Cycle instrument → stations → linear → instrument. */
+  function nextMapMode(current) {
+    const order = ['instrument', 'stations', 'linear'];
+    const idx = order.indexOf(current);
+    return order[(idx < 0 ? 0 : idx + 1) % order.length];
+  }
+
+  function mapModeHint(mode) {
+    if (mode === 'linear') return 'Linear map · Alt+click for instrument';
+    if (mode === 'stations') return 'Station dial · Alt+click for linear';
+    return 'Instrument map · Alt+click for stations';
   }
 
   global.PsyFiViz = global.PsyFiViz || {};
@@ -117,6 +141,9 @@
     formatIntensity,
     readIntensityFromRange,
     writeIntensityToRange,
+    nextMapMode,
+    mapModeHint,
+    DEFAULT_STATIONS: 21,
     SCHEMA: 'psyfi.instrumentMap.v1',
   };
 })(window);

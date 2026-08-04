@@ -1,6 +1,6 @@
 # PsyFi Instrument & Spatiotemporal Grounding Plan
 
-Status: **I1 + I2 complete** — 2026-08-04  
+Status: **I1–I5 complete** (+ station dial / solar modulator / lever commits) — 2026-08-04  
 Source inspiration: Looking Glass / GL4SS patterns (client-side spatiotemporal image+video instrument, non-linear dial, solar-elevation grounding, multi-stage planner, hold-and-compare, curated journeys).  
 Canonical engineering queue: [`CONTINUATION_PLAN.md`](CONTINUATION_PLAN.md)  
 Board: [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md)
@@ -30,9 +30,9 @@ No calendar estimates. Ordered by instrument impact vs. architectural surface ar
 - [x] Display shows mapped intensity value (API still receives 0–1 float)
 - [x] Neutral exit requires confirm click (lever-style); enter remains one-shot for safety
 - [x] Shell wiring: restored `index.html` + `data-map-mode` + hint; `app.js` get/set helpers
-- [ ] Optional discrete station dial UI polish
-- [ ] Solar-elevation / environmental-lighting modulator
-- [ ] Lever commits for export-journey lock / seed locking
+- [x] Optional discrete station dial UI polish (Alt+click cycles instrument → stations → linear)
+- [x] Solar-elevation / environmental-lighting modulator (`modulators.solar` day factor)
+- [x] Lever commits for export-journey lock / seed locking (export confirm + seed lock/unlock levers)
 
 **Why**  
 Uniform linear intensity/phase ranges under-represent phenomenological scale. A physical-instrument metaphor (dial with adaptive spacing, explicit commit action) increases both precision and user agency without changing the ParameterField contract.
@@ -58,6 +58,7 @@ Changing the immutable ParameterField schema itself; any change must remain a pr
 - [x] Minimal Pin button + Compare mode control (wipe / blink / split) + wipe slider + Space blink toggle
 - [x] Split mode dual-viewport (`compositeSplit` — left pinned, right live)
 - [x] Provenance / IndexedDB archive of comparison pairs (`comparisons` store, schema `psyfi.comparison.v1`)
+- [x] WebGL pin/compare parity (`setPinnedFrame` / `setCompareState` + pin FBO composite; blink respects reduced motion)
 
 **Why**  
 Direct visual differential analysis of two ParameterFields or timelines is high-value research tooling and currently missing.
@@ -73,6 +74,14 @@ Altering SafetyPass or introducing new authoritative state outside ParameterFiel
 
 ### I3 — Optional spatiotemporal anchors
 
+**Progress (2026-08-04)**
+- [x] `psyfi_core/visualization/spatiotemporal.py` — normalize + deterministic solar elevation
+- [x] Optional anchors on image-seed (multipart + JSON) and export-journey / image-seed-journey
+- [x] Soft drive/hint lighting bias from solar elevation (presentation-only)
+- [x] T2V prompt clause includes spatiotemporal plate
+- [x] Live Experience shell: optional lat/lon/year/hour/solar elevation fields
+- [x] Additive OpenAPI fields re-synced into freeze pack
+
 **Why**  
 Concrete lat/lon + year + hour + solar elevation produce more coherent external visual layers when generation is used. The anchors become part of the seed/provenance packet.
 
@@ -87,6 +96,12 @@ Making spatiotemporal data required; making it the source of truth for the consc
 
 ### I4 — Explicit planner stage
 
+**Progress (2026-08-04)**
+- [x] `psyfi_core/visualization/planner.py` — `psyfi.planner.v1` (motifs, lighting notes, hash)
+- [x] `POST /api/v1/visualize/planner`
+- [x] Embedded in export-journey / image-seed-journey T2V sidecars (`include_planner`)
+- [x] Live Experience: Run planner + optional planner notes
+
 **Why**  
 A short textual phenomenological description produced from ParameterField + optional anchors becomes a clean shared contract for internal overlay weighting and for external still/video prompt packages.
 
@@ -100,6 +115,13 @@ A short textual phenomenological description produced from ParameterField + opti
 Making the planner authoritative over ParameterField; introducing non-determinism into the core simulation loop.
 
 ### I5 — First-class Journey objects
+
+**Progress (2026-08-04)**
+- [x] `psyfi_core/visualization/journey.py` — `psyfi.journey.v1`
+- [x] `POST /api/v1/visualize/journey`
+- [x] IndexedDB `journeys` store (`DB_VERSION = 3`) + History panel list/restore/clear
+- [x] Compatible with export-journey and image-seed-journey packages
+- [x] `comparison_id` linked from Archive comparison → Save journey; restore reapplies pin when local archive exists
 
 **Why**  
 Package the above into reproducible, archivable, shareable experiences.

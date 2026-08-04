@@ -24,6 +24,17 @@
             "title": "File",
             "type": "string"
           },
+          "hour": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hour"
+          },
           "include_preview": {
             "default": true,
             "title": "Include Preview",
@@ -43,6 +54,39 @@
             "default": 0.7,
             "title": "Intensity",
             "type": "number"
+          },
+          "iso_timestamp": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Iso Timestamp"
+          },
+          "latitude": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Latitude"
+          },
+          "longitude": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Longitude"
           },
           "mode": {
             "default": "open",
@@ -65,10 +109,32 @@
             "title": "Recommend Top N",
             "type": "integer"
           },
+          "solar_elevation_deg": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Solar Elevation Deg"
+          },
           "substance": {
             "default": "lsd",
             "title": "Substance",
             "type": "string"
+          },
+          "year": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Year"
           }
         },
         "required": [
@@ -102,6 +168,33 @@
               }
             ],
             "title": "Image Seed"
+          },
+          "include_planner": {
+            "default": true,
+            "title": "Include Planner",
+            "type": "boolean"
+          },
+          "planner_notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional operator notes folded into the deterministic planner (I4).",
+            "title": "Planner Notes"
+          },
+          "spatiotemporal_anchors": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SpatiotemporalAnchors"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "stills": {
             "anyOf": [
@@ -286,6 +379,17 @@
             "title": "Mode",
             "type": "string"
           },
+          "planner_notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Planner Notes"
+          },
           "quality_tier": {
             "default": "balanced",
             "title": "Quality Tier",
@@ -309,6 +413,16 @@
             "default": false,
             "title": "Reduce Motion",
             "type": "boolean"
+          },
+          "spatiotemporal_anchors": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SpatiotemporalAnchors"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "steps": {
             "default": 12,
@@ -400,6 +514,16 @@
             "minimum": 1.0,
             "title": "Recommend Top N",
             "type": "integer"
+          },
+          "spatiotemporal_anchors": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SpatiotemporalAnchors"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "substance": {
             "default": "lsd",
@@ -521,6 +645,131 @@
           "request"
         ],
         "title": "JobSummary",
+        "type": "object"
+      },
+      "JourneyRequest": {
+        "description": "Build a portable psyfi.journey.v1 object (I5) \u2014 client archives locally.",
+        "properties": {
+          "comparison_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Comparison Id"
+          },
+          "experience_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Experience Id"
+          },
+          "intensity": {
+            "default": 0.7,
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Intensity",
+            "type": "number"
+          },
+          "mode": {
+            "default": "open",
+            "enum": [
+              "open",
+              "attractor",
+              "void",
+              "power"
+            ],
+            "title": "Mode",
+            "type": "string"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "parameter_field": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parameter Field"
+          },
+          "planner_notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Planner Notes"
+          },
+          "seed": {
+            "default": 42,
+            "minimum": 0.0,
+            "title": "Seed",
+            "type": "integer"
+          },
+          "spatiotemporal_anchors": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SpatiotemporalAnchors"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "substance": {
+            "default": "lsd",
+            "title": "Substance",
+            "type": "string"
+          },
+          "timeline": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Timeline"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          }
+        },
+        "title": "JourneyRequest",
         "type": "object"
       },
       "MIDICCRequest": {
@@ -784,9 +1033,139 @@
             "minimum": 0.0,
             "title": "Motion",
             "type": "number"
+          },
+          "solar": {
+            "anyOf": [
+              {
+                "maximum": 1.0,
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional solar day factor (0=night, 1=day) from spatiotemporal anchors. When set, applies a soft lighting plate via ParameterField only.",
+            "title": "Solar"
           }
         },
         "title": "Modulators",
+        "type": "object"
+      },
+      "PlannerRequest": {
+        "description": "Deterministic planner from ParameterField + optional anchors (I4).",
+        "properties": {
+          "experience_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Experience Id"
+          },
+          "intensity": {
+            "anyOf": [
+              {
+                "maximum": 1.0,
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Intensity"
+          },
+          "mode": {
+            "anyOf": [
+              {
+                "enum": [
+                  "open",
+                  "attractor",
+                  "void",
+                  "power"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mode"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "parameter_field": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parameter Field"
+          },
+          "seed": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Seed"
+          },
+          "spatiotemporal_anchors": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SpatiotemporalAnchors"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "substance": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Substance"
+          },
+          "timeline": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Timeline"
+          }
+        },
+        "title": "PlannerRequest",
         "type": "object"
       },
       "PresetDetail": {
@@ -1581,6 +1960,102 @@
         "title": "SimulateResponse",
         "type": "object"
       },
+      "SpatiotemporalAnchors": {
+        "description": "Optional I3 grounding plate \u2014 additive, never required or authoritative.",
+        "properties": {
+          "day_of_year": {
+            "anyOf": [
+              {
+                "maximum": 366.0,
+                "minimum": 1.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Day Of Year"
+          },
+          "hour": {
+            "anyOf": [
+              {
+                "maximum": 24.0,
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hour"
+          },
+          "iso_timestamp": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Iso Timestamp"
+          },
+          "latitude": {
+            "anyOf": [
+              {
+                "maximum": 90.0,
+                "minimum": -90.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Latitude"
+          },
+          "longitude": {
+            "anyOf": [
+              {
+                "maximum": 180.0,
+                "minimum": -180.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Longitude"
+          },
+          "solar_elevation_deg": {
+            "anyOf": [
+              {
+                "maximum": 90.0,
+                "minimum": -90.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Solar Elevation Deg"
+          },
+          "year": {
+            "anyOf": [
+              {
+                "maximum": 9999.0,
+                "minimum": 1.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Year"
+          }
+        },
+        "title": "SpatiotemporalAnchors",
+        "type": "object"
+      },
       "TelemetryOptInRequest": {
         "description": "Client consent toggle for local diagnostic telemetry.",
         "properties": {
@@ -1723,6 +2198,16 @@
             "minimum": 0.0,
             "title": "Seed",
             "type": "integer"
+          },
+          "spatiotemporal_anchors": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SpatiotemporalAnchors"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "steps": {
             "default": 24,
@@ -3489,6 +3974,50 @@
         ]
       }
     },
+    "/api/v1/visualize/journey": {
+      "post": {
+        "description": "Build a portable Journey object (I5) for client-side IndexedDB archive.",
+        "operationId": "visualize_journey_api_v1_visualize_journey_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JourneyRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Visualize Journey Api V1 Visualize Journey Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Visualize Journey",
+        "tags": [
+          "experiences"
+        ]
+      }
+    },
     "/api/v1/visualize/parameter-timeline": {
       "post": {
         "operationId": "parameter_timeline_api_v1_visualize_parameter_timeline_post",
@@ -3527,6 +4056,50 @@
           }
         },
         "summary": "Parameter Timeline",
+        "tags": [
+          "experiences"
+        ]
+      }
+    },
+    "/api/v1/visualize/planner": {
+      "post": {
+        "description": "Deterministic I4 planner from ParameterField / timeline + optional anchors.",
+        "operationId": "visualize_planner_api_v1_visualize_planner_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlannerRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Visualize Planner Api V1 Visualize Planner Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Visualize Planner",
         "tags": [
           "experiences"
         ]

@@ -859,6 +859,11 @@ body {
     grid-row: 1 / span 2;
 }
 
+.history-item .journey-restore {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+}
+
 .history-title {
     display: inline-flex;
     flex-wrap: wrap;
@@ -1649,6 +1654,19 @@ body.launch-ready #appShell {
     min-width: 0;
 }
 
+.seed-row input.seed-locked {
+    opacity: 0.85;
+    border-color: color-mix(in srgb, var(--pf-accent, #3ee7f2) 45%, transparent);
+}
+
+.seed-row #lockSeedBtn[aria-pressed="true"] {
+    outline: 1px solid color-mix(in srgb, var(--pf-accent, #3ee7f2) 55%, transparent);
+}
+
+#exportJourneyBtn.lever-armed {
+    outline: 1px solid color-mix(in srgb, var(--pf-warn, #e8a838) 60%, transparent);
+}
+
 .sensor-actions {
     flex-wrap: wrap;
     gap: 0.45rem;
@@ -1928,4 +1946,14 @@ body.launch-ready #appShell {
 }
 .intensity-instrument input[type="range"] {
   accent-color: var(--pf-accent, #3ee7f2);
+}
+.intensity-instrument input[type="range"].stations-mode {
+  background: repeating-linear-gradient(
+    to right,
+    transparent 0,
+    transparent calc(5% - 1px),
+    color-mix(in srgb, var(--pf-accent, #3ee7f2) 35%, transparent) calc(5% - 1px),
+    color-mix(in srgb, var(--pf-accent, #3ee7f2) 35%, transparent) 5%
+  );
+  border-radius: 2px;
 }

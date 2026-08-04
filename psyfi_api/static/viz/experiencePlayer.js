@@ -309,8 +309,25 @@
         if (this.compareMode === 'wipe') {
           displayImg = cs.compositeWipe(this._pinnedRaster, img, this.wipePosition, iw, ih);
         } else if (this.compareMode === 'blink') {
-          const showPin = cs.blinkShowPinned(now, this.blinkHz, this.t0);
-          displayImg = showPin ? this._pinnedRaster : img;
+          let blinkMode = 'blink';
+          try {
+            if (
+              (f && f.reduce_motion) ||
+              (typeof window !== 'undefined' &&
+                window.matchMedia &&
+                window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+            ) {
+              blinkMode = 'split';
+            }
+          } catch (_e) {
+            /* ignore */
+          }
+          if (blinkMode === 'split') {
+            displayImg = cs.compositeSplit(this._pinnedRaster, img, iw, ih);
+          } else {
+            const showPin = cs.blinkShowPinned(now, this.blinkHz, this.t0);
+            displayImg = showPin ? this._pinnedRaster : img;
+          }
         } else if (this.compareMode === 'split') {
           displayImg = cs.compositeSplit(this._pinnedRaster, img, iw, ih);
         }
@@ -642,6 +659,7 @@
 
     _hasActiveModulators() {
       const m = this.modulators || {};
+      if (m.solar != null && Number.isFinite(Number(m.solar))) return true;
       return ['camera', 'motion', 'midi', 'audio', 'haptics', 'image'].some(
         (k) => Number(m[k] || 0) > 0.02,
       );
@@ -732,6 +750,9 @@
         haptics: Number(mods.haptics || 0),
         image: Number(mods.image || 0),
       };
+      if (mods && mods.solar != null && Number.isFinite(Number(mods.solar))) {
+        this.modulators.solar = Math.max(0, Math.min(1, Number(mods.solar)));
+      }
       if (this.liveModulators && this.timeline && this._hasActiveModulators()) {
         this._scheduleLiveRematerialize();
       }
@@ -801,6 +822,9 @@
       if (this.renderer && typeof this.renderer.setCompareState === 'function') {
         this.renderer.setCompareState(state);
       }
+      if (this.webgl && typeof this.webgl.setCompareState === 'function') {
+        this.webgl.setCompareState(state);
+      }
     }
 
     setBlinkHz(hz) {
@@ -809,6 +833,9 @@
       const state = { mode: this.compareMode, wipe: this.wipePosition, blinkHz: this.blinkHz };
       if (this.renderer && typeof this.renderer.setCompareState === 'function') {
         this.renderer.setCompareState(state);
+      }
+      if (this.webgl && typeof this.webgl.setCompareState === 'function') {
+        this.webgl.setCompareState(state);
       }
     }
 

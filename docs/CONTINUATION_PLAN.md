@@ -9,12 +9,12 @@ Board: [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md)
 
 | Area | State |
 | --- | --- |
-| `/api/v1` + **hard freeze** | Done (`psyfi-api-v1-hard-2026-07-25`) |
-| Legacy Live Experience (Canvas/WebGL) | Done — full shell + I1/I2 |
+| `/api/v1` + **hard freeze** | Done (`psyfi-api-v1-hard-2026-07-25`) — additive I3 fields synced |
+| Legacy Live Experience (Canvas/WebGL) | Done — full shell + I1–I5 + polish |
 | ParameterField + SafetyPass | Done |
-| Image-seed pipeline | Done |
-| Export-journey | Done |
-| PWA + service worker | Done (root `/sw.js`, shell cache **v35**) |
+| Image-seed pipeline | Done + optional spatiotemporal anchors |
+| Export-journey | Done + optional spatiotemporal anchors + planner |
+| PWA + service worker | Done (root `/sw.js`, shell cache **v39**) |
 | GPU Lab route | Done |
 | Docker production | Done |
 
@@ -24,29 +24,28 @@ Full plan: [`INSTRUMENT_GROUNDING_PLAN.md`](INSTRUMENT_GROUNDING_PLAN.md).
 
 | ID | Item | Notes |
 |----|------|-------|
-| **I1** | Non-linear quantized controls + lever-style commits | map + shell + `app.js` wiring landed |
+| **I1** | Non-linear quantized controls + lever-style commits | map + stations dial + Neutral lever |
 | **I2** | Dual-field / dual-timeline hold-and-compare | wipe / blink / split + IndexedDB archive |
 | **I3** | Optional spatiotemporal anchors | lat/lon + year + hour + solar elevation |
-| **I4** | Explicit planner stage | deterministic first |
-| **I5** | First-class Journey objects | IndexedDB-archivable |
+| **I4** | Explicit planner stage | `psyfi.planner.v1` + `/visualize/planner` |
+| **I5** | First-class Journey objects | `psyfi.journey.v1` + IndexedDB `journeys` |
 
 ### Active queue
 
-- [x] **P0 Restore shell** — `index.html` restored from `99f9e44`; root `/sw.js`; full viz script order
-- [x] **P0 Finish I1 wiring** — `data-map-mode` + hint; `getExperienceIntensity` / Alt+click linear toggle; Neutral exit confirm
-- [x] **I2 player-side** — `compareSurface.js` + ExperiencePlayer pin API + wipe/blink composite
-- [x] **I2 chrome** — Pin / Clear pin + Compare mode + wipe slider; Space toggles blink
-- [x] **I2 split** — side-by-side dual viewport (`compositeSplit`)
-- [x] **I2 archive** — IndexedDB `comparisons` store + Archive / Restore / Clear UI
-- [ ] **I3** — spatiotemporal anchors on image-seed / export-journey
-- [ ] **I4** — explicit planner stage (deterministic first)
-- [ ] **I5** — first-class Journey objects
+- [x] **I1** — instrument map + Neutral lever + shell wiring
+- [x] **I2** — pin / wipe / blink / split + IndexedDB comparison archive
+- [x] **I3** — `psyfi.spatiotemporal_anchor.v1` on image-seed + export-journey (+ shell UI)
+- [x] **I4** — deterministic planner (`psyfi.planner.v1`, motifs + lighting notes)
+- [x] **I5** — Journey objects (`psyfi.journey.v1`, IndexedDB archive + restore)
+- [x] Station dial + live solar lighting modulator polish
+- [x] Lever commits — export-journey confirm + seed lock/unlock
+- [x] WebGL hold-and-compare parity (pin FBO + wipe/blink/split)
+- [x] Journey `comparison_id` link + restore hardening
 
 ## Next recommended
 
-1. **I3** optional spatiotemporal anchors (lat/lon + year + hour + solar elevation) on image-seed / export-journey.
-2. **I4** deterministic planner stage.
-3. **I5** first-class Journey objects.
+1. Living QA / hardware capture as needed (`PRODUCTION_READINESS.md`).
+2. Opportunistic safety-clamped transition shaders (supporting pattern).
 
 ## Run
 

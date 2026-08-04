@@ -46,6 +46,11 @@ uniform vec3 u_palette;
 uniform float u_seed;
 uniform sampler2D u_source;
 uniform float u_sourceMix;
+uniform sampler2D u_pin;
+uniform float u_hasPin;
+uniform float u_compareMode;
+uniform float u_wipe;
+uniform float u_blinkPin;
 
 float hash(vec2 p) {
   return fract(sin(dot(p + u_seed * 0.001, vec2(127.1, 311.7))) * 43758.5453);
@@ -256,6 +261,19 @@ void main() {
   float peak = max(col.r, max(col.g, col.b));
   if (peak > 0.96) col *= 0.96 / peak;
   col = mix(vec3(0.047, 0.047, 0.055), col, clamp(u_safetyAtten, 0.0, 1.0));
+
+  // I2 hold-and-compare: pin texture is already SafetyPass-attenuated.
+  if (u_hasPin > 0.5 && u_compareMode > 0.5) {
+    vec3 pinCol = texture2D(u_pin, v_uv).rgb;
+    if (u_compareMode < 1.5) {
+      float w = step(u_wipe, v_uv.x);
+      col = mix(pinCol, col, w);
+    } else if (u_compareMode < 2.5) {
+      col = mix(col, pinCol, clamp(u_blinkPin, 0.0, 1.0));
+    } else {
+      col = mix(pinCol, col, step(0.5, v_uv.x));
+    }
+  }
   gl_FragColor = vec4(col, 1.0);
 }`;
 
@@ -280,7 +298,32 @@ void main() {
       this.lodDrop = 0;
       this._emaFrameMs = 16;
       this._lastLodName = 'balanced';
+      // I2 hold-and-compare (presentation only)
+      this.pinnedFrame = null;
+      this.compareMode = 'off';
+      this.wipePosition = 0.5;
+      this.blinkHz = 2;
+      this._pinFbo = null;
+      this._pinTex = null;
+      this._pinW = 0;
+      this._pinH = 0;
+      this._pinHash = '';
       if (this.ok) this._init();
+    }
+
+    setPinnedFrame(frame) {
+      this.pinnedFrame = frame || null;
+      this._pinHash = '';
+    }
+
+    setCompareState(state) {
+      const s = state || {};
+      this.compareMode = s.mode || 'off';
+      if (s.wipe != null) this.wipePosition = Math.min(1, Math.max(0, Number(s.wipe) || 0));
+      if (s.blinkHz != null) {
+        const n = Number(s.blinkHz);
+        this.blinkHz = Number.isFinite(n) && n > 0 ? n : 2;
+      }
     }
 
     _noteFrameMs(ms) {
@@ -390,7 +433,112 @@ void main() {
     draw(now) {
       if (!this.ok || !this.program) return;
       const gl = this.gl;
+      const w = this.canvas.width | 0;
+      const h = this.canvas.height | 0;
+      if (w < 2 || h < 2) return;
+
+      const compareOn =
+        this.pinnedFrame && this.compareMode && this.compareMode !== 'off';
+      let mode = this.compareMode || 'off';
+      if (mode === 'blink' && this._blinkShouldReduce()) {
+        mode = 'split';
+      }
+
+      if (compareOn) {
+        this._ensurePinTarget(w, h);
+        if (!this._pinFbo || !this._pinTex) {
+          // FBO unavailable — present live only (Canvas path still has compare).
+          compareOn = false;
+        } else {
+          const pinHash = this.pinnedFrame.hash || '';
+          if (this._pinHash !== pinHash || this._pinW !== w || this._pinH !== h) {
+            this._drawFrameTo(this.pinnedFrame, now, {
+              fbo: this._pinFbo,
+              width: w,
+              height: h,
+              compareMode: 0,
+              hasPin: 0,
+            });
+            this._pinHash = pinHash;
+            this._pinW = w;
+            this._pinH = h;
+          }
+        }
+      }
+
+      const blinkPin =
+        mode === 'blink' && this._blinkShowPinned(now) ? 1 : 0;
+      const modeCode =
+        mode === 'wipe' ? 1 : mode === 'blink' ? 2 : mode === 'split' ? 3 : 0;
+
+      this._drawFrameTo(this.frame, now, {
+        fbo: null,
+        width: w,
+        height: h,
+        compareMode: compareOn ? modeCode : 0,
+        hasPin: compareOn ? 1 : 0,
+        wipe: this.wipePosition,
+        blinkPin,
+      });
+    }
+
+    _blinkShouldReduce() {
       const f = this.frame || {};
+      if (f.reduce_motion) return true;
+      try {
+        return !!(
+          window.matchMedia &&
+          window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        );
+      } catch (_e) {
+        return false;
+      }
+    }
+
+    _blinkShowPinned(now) {
+      const cs = global.PsyFiViz && global.PsyFiViz.compareSurface;
+      if (cs && typeof cs.blinkShowPinned === 'function') {
+        return cs.blinkShowPinned(now, this.blinkHz, this.t0);
+      }
+      const hz = this.blinkHz > 0 ? this.blinkHz : 2;
+      return Math.floor(((now - this.t0) / 1000) * hz * 2) % 2 === 0;
+    }
+
+    _ensurePinTarget(w, h) {
+      const gl = this.gl;
+      if (this._pinTex && this._pinFbo && this._pinW === w && this._pinH === h) return;
+      if (this._pinTex) gl.deleteTexture(this._pinTex);
+      if (this._pinFbo) gl.deleteFramebuffer(this._pinFbo);
+      const tex = gl.createTexture();
+      gl.bindTexture(gl.TEXTURE_2D, tex);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, w, h, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+      const fbo = gl.createFramebuffer();
+      gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
+      gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tex, 0);
+      const status = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
+      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+      if (status !== gl.FRAMEBUFFER_COMPLETE) {
+        console.warn('[PsyFi WebGL] pin FBO incomplete', status);
+        gl.deleteTexture(tex);
+        gl.deleteFramebuffer(fbo);
+        this._pinTex = null;
+        this._pinFbo = null;
+        return;
+      }
+      this._pinTex = tex;
+      this._pinFbo = fbo;
+      this._pinW = w;
+      this._pinH = h;
+      this._pinHash = '';
+    }
+
+    _drawFrameTo(frame, now, opts) {
+      const gl = this.gl;
+      const f = frame || {};
       const p = f.parameters || {};
       const eng = f.engines || {};
       const resolve =
@@ -400,11 +548,20 @@ void main() {
       const lod = resolve
         ? resolve(f.quality_tier || 'balanced', this.lodDrop)
         : { level: 2, name: 'balanced', trailScale: 1, chromaScale: 1 };
-      this._lastLodName = lod.name || 'balanced';
-      const pal = (global.PsyFiViz.math && global.PsyFiViz.math.hexToRgb((f.palette && f.palette.tracers) || '#3ee7f2')) || {
-        r: 62, g: 231, b: 242,
-      };
+      if (!opts.fbo) this._lastLodName = lod.name || 'balanced';
+      const pal =
+        (global.PsyFiViz.math &&
+          global.PsyFiViz.math.hexToRgb((f.palette && f.palette.tracers) || '#3ee7f2')) || {
+          r: 62,
+          g: 231,
+          b: 242,
+        };
       const time = (now - this.t0) / 1000;
+      const w = opts.width;
+      const h = opts.height;
+
+      gl.bindFramebuffer(gl.FRAMEBUFFER, opts.fbo || null);
+      gl.viewport(0, 0, w, h);
       gl.useProgram(this.program);
       gl.bindBuffer(gl.ARRAY_BUFFER, this.buf);
       gl.enableVertexAttribArray(this.aPos);
@@ -439,19 +596,29 @@ void main() {
       set('u_wV', eng.void_expansion || 0.15);
       set('u_wE', eng.entity_lattice || 0.1);
       set('u_neutral', f.neutral_view || (eng.neutral_view || 0) > 0.8 ? 1 : 0);
-      // Measure from an unattenuated present, then re-draw if SafetyPass pulls down.
       set('u_safetyAtten', 1.0);
       set('u_seed', (f.master_seed || 42) % 1000);
+      set('u_hasPin', opts.hasPin ? 1 : 0);
+      set('u_compareMode', opts.compareMode || 0);
+      set('u_wipe', opts.wipe != null ? opts.wipe : 0.5);
+      set('u_blinkPin', opts.blinkPin ? 1 : 0);
       const pl = gl.getUniformLocation(this.program, 'u_palette');
       if (pl) gl.uniform3f(pl, pal.r / 255, pal.g / 255, pal.b / 255);
 
       const mix = this.sourcePlane ? this.sourcePlane.mix || this._sourceMix || 0 : 0;
-      set('u_sourceMix', mix);
+      // Source plane only on live present, not pin FBO (pin is a frozen ParameterField plate).
+      set('u_sourceMix', opts.fbo ? 0 : mix);
       const srcLoc = gl.getUniformLocation(this.program, 'u_source');
       if (srcLoc != null) {
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, this.sourceTex || this._fallbackTex());
         gl.uniform1i(srcLoc, 0);
+      }
+      const pinLoc = gl.getUniformLocation(this.program, 'u_pin');
+      if (pinLoc != null) {
+        gl.activeTexture(gl.TEXTURE1);
+        gl.bindTexture(gl.TEXTURE_2D, opts.hasPin && this._pinTex ? this._pinTex : this._fallbackTex());
+        gl.uniform1i(pinLoc, 1);
       }
 
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
@@ -460,6 +627,8 @@ void main() {
         set('u_safetyAtten', this._safetyAtten);
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
       }
+      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+      gl.viewport(0, 0, this.canvas.width, this.canvas.height);
     }
 
     _updateSafetyAtten(frame, now) {

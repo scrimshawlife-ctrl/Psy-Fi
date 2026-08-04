@@ -65,6 +65,15 @@ def test_template_wires_cancel_recovery_and_renderer() -> None:
     assert 'id="archiveCompareBtn"' in html
     assert 'id="compareList"' in html
     assert ">Split</option>" in html or 'value="split"' in html
+    assert 'id="anchorLatitude"' in html
+    assert 'id="anchorSolarElevation"' in html
+    assert 'id="anchorSolarModulator"' in html
+    assert 'data-stations="21"' in html
+    assert 'id="lockSeedBtn"' in html
+    assert 'id="seedLockHint"' in html
+    assert 'id="runPlannerBtn"' in html
+    assert 'id="saveJourneyBtn"' in html
+    assert 'id="journeyList"' in html
     assert 'data-map-mode="instrument"' in html
     assert 'id="intensityMapHint"' in html
     # Root-scoped SW registration (not /static/sw.js — that cannot control `/`).
@@ -74,7 +83,7 @@ def test_template_wires_cancel_recovery_and_renderer() -> None:
 
 def test_service_worker_precaches_renderer_assets() -> None:
     sw = (STATIC / "sw.js").read_text(encoding="utf-8")
-    assert "psyfi-shell-v35" in sw
+    assert "psyfi-shell-v39" in sw
     assert ".woff2" in sw
     assert "/assets/icons/pf-icon-reset-24.svg" in sw
     assert "/assets/icons/pf-icon-valence-meter-24.svg" in sw
@@ -223,9 +232,21 @@ def test_app_uses_abort_controller_and_worker_renderer() -> None:
     assert "pinFrameBtn" in app_js
     assert "compareModeSelect" in app_js
     assert "NEUTRAL_EXIT_ARM_MS" in app_js
+    assert "EXPORT_JOURNEY_ARM_MS" in app_js
+    assert "SEED_UNLOCK_ARM_MS" in app_js
+    assert "tryWriteSeed" in app_js
+    assert "lastComparisonId" in app_js
+    assert "getComparisonRecord" in app_js
     assert "instrumentMap" in app_js
+    assert "nextMapMode" in (STATIC / "viz" / "instrumentMap.js").read_text(encoding="utf-8")
+    assert "readSolarDayFactor" in app_js
     assert "archiveCompareBtn" in app_js
     assert "COMPARE_STORE" in app_js
+    assert "readSpatiotemporalAnchors" in app_js
+    assert "appendAnchorsToFormData" in app_js
+    assert "JOURNEY_STORE" in app_js
+    assert "saveJourneyBtn" in app_js
+    assert "runPlannerBtn" in app_js
     assert "makeArchiveRecord" in (STATIC / "viz" / "compareSurface.js").read_text(encoding="utf-8")
     assert "compositeSplit" in (STATIC / "viz" / "compareSurface.js").read_text(encoding="utf-8")
     assert (STATIC / "viz" / "instrumentMap.js").exists()
@@ -234,6 +255,11 @@ def test_app_uses_abort_controller_and_worker_renderer() -> None:
     assert "pinFrame" in player_compare
     assert "setCompareMode" in player_compare
     assert "compositeSplit" in player_compare or 'compareMode === \'split\'' in player_compare
+    webgl_js = (STATIC / "viz" / "parameterFieldWebGL.js").read_text(encoding="utf-8")
+    assert "setPinnedFrame" in webgl_js
+    assert "setCompareState" in webgl_js
+    assert "u_compareMode" in webgl_js
+    assert "_ensurePinTarget" in webgl_js
     assert "aria-describedby" in app_js
     assert "Monitor / display" in app_js
     assert "GPU adapter" in app_js

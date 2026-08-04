@@ -58,12 +58,14 @@ Module: `psyfi_core/visualization/image_seed.py`
 `POST /api/v1/visualize/export-journey` packages timeline + safety-presented stills + `t2v.prompt`.  
 No LLM/video provider is invoked in-app — paste externally.
 
+Optional **I3 spatiotemporal anchors** (`latitude`, `longitude`, `year`, `hour`, `solar_elevation_deg`, …) may be sent on image-seed and export-journey. Solar elevation auto-derives when omitted. Anchors bias Pass-1 lighting slightly and appear in the T2V prompt clause — never authoritative over ParameterField.
+
 ## API (additive)
 
 `POST /api/v1/visualize/image-seed`
 
-- Multipart: `file` + form fields (`substance`, `experience_id`, `mode`, `intensity`, `influence`, `apply_recommended`, `recommend_only`, `recommend_top_n`, …)
-- Or JSON: `{ "image_base64": "...", ... }`
+- Multipart: `file` + form fields (`substance`, `experience_id`, `mode`, `intensity`, `influence`, `apply_recommended`, `recommend_only`, `recommend_top_n`, optional `latitude` / `longitude` / `year` / `hour` / `solar_elevation_deg`, …)
+- Or JSON: `{ "image_base64": "...", "spatiotemporal_anchors": { ... }, ... }`
 - When `apply_recommended` / `recommend_only` is true, client `experience_id` is ignored; catalog pick drives `applied_*`.
 - `recommend_only=true` analyzes features and returns the recommended formula **without** pixel conditioning (Workbench suggest panel).
 - `recommend_top_n` (1–12, default 5) fills `recommended_alternatives[]` (rank · id · title · mode_default · score).

@@ -460,6 +460,14 @@ def _apply_modulators(
     params["flash_energy"] = _clamp(
         params.get("flash_energy", 0.05) + 0.04 * max(camera, midi, audio * 0.5)
     )
+    # Optional solar day factor (0=night, 1=day) — soft lighting plate only.
+    if "solar" in mods and mods.get("solar") is not None:
+        day = _clamp(float(mods["solar"]))
+        params["palette_energy"] = _clamp(params.get("palette_energy", 0.5) + 0.1 * (day - 0.5))
+        params["bloom"] = _clamp(params.get("bloom", 0.25) + 0.08 * (day - 0.45))
+        params["depth_distortion"] = _clamp(
+            params.get("depth_distortion", 0.35) + 0.06 * (0.5 - day)
+        )
     # Pass-2 image channel: scale Pass-1 parameter_hints into the live field.
     if image > 0 and image_hints:
         for key, delta in image_hints.items():

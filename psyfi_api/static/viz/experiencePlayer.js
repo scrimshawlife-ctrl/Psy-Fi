@@ -642,6 +642,7 @@
 
     _hasActiveModulators() {
       const m = this.modulators || {};
+      if (m.solar != null && Number.isFinite(Number(m.solar))) return true;
       return ['camera', 'motion', 'midi', 'audio', 'haptics', 'image'].some(
         (k) => Number(m[k] || 0) > 0.02,
       );
@@ -732,6 +733,9 @@
         haptics: Number(mods.haptics || 0),
         image: Number(mods.image || 0),
       };
+      if (mods && mods.solar != null && Number.isFinite(Number(mods.solar))) {
+        this.modulators.solar = Math.max(0, Math.min(1, Number(mods.solar)));
+      }
       if (this.liveModulators && this.timeline && this._hasActiveModulators()) {
         this._scheduleLiveRematerialize();
       }

@@ -53,6 +53,15 @@ class Modulators(BaseModel):
         le=1.0,
         description="Pass-2 strength for experience-conditioned image seed hints.",
     )
+    solar: float | None = Field(
+        default=None,
+        ge=0.0,
+        le=1.0,
+        description=(
+            "Optional solar day factor (0=night, 1=day) from spatiotemporal anchors. "
+            "When set, applies a soft lighting plate via ParameterField only."
+        ),
+    )
 
 
 class ImageSeedJsonRequest(BaseModel):
@@ -384,7 +393,7 @@ async def parameter_timeline(body: TimelineRequest) -> dict[str, Any]:
         intensity=body.intensity,
         experience=experience,
     )
-    modulators = body.modulators.model_dump() if body.modulators else None
+    modulators = body.modulators.model_dump(exclude_none=True) if body.modulators else None
     image_hints = body.image_hints
 
     if body.phase_t is not None:
@@ -699,7 +708,7 @@ async def scene_snapshot(body: SceneSnapshotRequest) -> dict[str, Any]:
     if body.experience_id and experience is None:
         raise HTTPException(status_code=404, detail=f"Experience not found: {body.experience_id}")
     _assert_experience_substance(experience, substance)
-    modulators = body.modulators.model_dump() if body.modulators else None
+    modulators = body.modulators.model_dump(exclude_none=True) if body.modulators else None
     image_hints = body.image_hints
     intensity = _capped_intensity(
         substance=substance,

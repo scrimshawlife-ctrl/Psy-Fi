@@ -14,6 +14,7 @@ from psyfi_core.visualization.image_seed import build_image_seed
 from psyfi_core.visualization.spatiotemporal import (
     SPATIOTEMPORAL_SCHEMA,
     normalize_anchors,
+    solar_day_factor,
     solar_elevation_deg,
 )
 
@@ -34,6 +35,16 @@ def test_solar_elevation_deterministic() -> None:
     assert night < a
     noon = solar_elevation_deg(latitude=0.0, longitude=0.0, day_of_year=80, hour=12.0)
     assert noon > 50.0
+
+
+def test_solar_day_factor() -> None:
+    day = solar_day_factor({"solar_elevation_deg": 60.0})
+    night = solar_day_factor({"solar_elevation_deg": -20.0})
+    assert day is not None and night is not None
+    assert day > night
+    assert 0.0 <= night <= 1.0
+    assert solar_day_factor(None) is None
+    assert solar_day_factor({}) is None
 
 
 def test_normalize_derives_solar_elevation() -> None:

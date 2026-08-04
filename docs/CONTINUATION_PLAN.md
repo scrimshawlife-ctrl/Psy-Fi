@@ -10,11 +10,11 @@ Board: [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md)
 | Area | State |
 | --- | --- |
 | `/api/v1` + **hard freeze** | Done (`psyfi-api-v1-hard-2026-07-25`) — additive I3 fields synced |
-| Legacy Live Experience (Canvas/WebGL) | Done — full shell + I1/I2/I3 |
+| Legacy Live Experience (Canvas/WebGL) | Done — full shell + I1–I5 + polish |
 | ParameterField + SafetyPass | Done |
 | Image-seed pipeline | Done + optional spatiotemporal anchors |
 | Export-journey | Done + optional spatiotemporal anchors + planner |
-| PWA + service worker | Done (root `/sw.js`, shell cache **v36**) |
+| PWA + service worker | Done (root `/sw.js`, shell cache **v37**) |
 | GPU Lab route | Done |
 | Docker production | Done |
 
@@ -24,7 +24,7 @@ Full plan: [`INSTRUMENT_GROUNDING_PLAN.md`](INSTRUMENT_GROUNDING_PLAN.md).
 
 | ID | Item | Notes |
 |----|------|-------|
-| **I1** | Non-linear quantized controls + lever-style commits | map + shell + `app.js` wiring landed |
+| **I1** | Non-linear quantized controls + lever-style commits | map + stations dial + Neutral lever |
 | **I2** | Dual-field / dual-timeline hold-and-compare | wipe / blink / split + IndexedDB archive |
 | **I3** | Optional spatiotemporal anchors | lat/lon + year + hour + solar elevation |
 | **I4** | Explicit planner stage | `psyfi.planner.v1` + `/visualize/planner` |
@@ -37,10 +37,11 @@ Full plan: [`INSTRUMENT_GROUNDING_PLAN.md`](INSTRUMENT_GROUNDING_PLAN.md).
 - [x] **I3** — `psyfi.spatiotemporal_anchor.v1` on image-seed + export-journey (+ shell UI)
 - [x] **I4** — deterministic planner (`psyfi.planner.v1`, motifs + lighting notes)
 - [x] **I5** — Journey objects (`psyfi.journey.v1`, IndexedDB archive + restore)
+- [x] Station dial + live solar lighting modulator polish
 
 ## Next recommended
 
-1. Optional instrument polish (station dial feel, solar modulator beyond anchors).
+1. Optional lever commits for export-journey lock / seed locking.
 2. Living QA / hardware capture as needed (`PRODUCTION_READINESS.md`).
 
 ## Run

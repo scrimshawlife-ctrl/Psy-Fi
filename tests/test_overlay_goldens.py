@@ -79,6 +79,32 @@ def test_modulators_change_field_but_stay_clamped() -> None:
     assert audio_only.hash != haptics_only.hash
 
 
+def test_solar_modulator_biases_lighting() -> None:
+    base = map_parameters(substance="lsd", mode="open", seed=11, intensity=0.7, phase_t=0.5)
+    day = map_parameters(
+        substance="lsd",
+        mode="open",
+        seed=11,
+        intensity=0.7,
+        phase_t=0.5,
+        modulators={"solar": 0.95},
+    )
+    night = map_parameters(
+        substance="lsd",
+        mode="open",
+        seed=11,
+        intensity=0.7,
+        phase_t=0.5,
+        modulators={"solar": 0.05},
+    )
+    assert day.hash != base.hash
+    assert night.hash != base.hash
+    assert day.hash != night.hash
+    assert day.parameters["palette_energy"] > night.parameters["palette_energy"]
+    assert day.parameters["bloom"] >= night.parameters["bloom"]
+    assert night.parameters["flash_energy"] <= night.safety["max_flash_hz"] / 3.0
+
+
 def test_field_frame_bridge_endpoint() -> None:
     with TestClient(app) as client:
         res = client.post(

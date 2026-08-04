@@ -1033,6 +1033,20 @@
             "minimum": 0.0,
             "title": "Motion",
             "type": "number"
+          },
+          "solar": {
+            "anyOf": [
+              {
+                "maximum": 1.0,
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional solar day factor (0=night, 1=day) from spatiotemporal anchors. When set, applies a soft lighting plate via ParameterField only.",
+            "title": "Solar"
           }
         },
         "title": "Modulators",

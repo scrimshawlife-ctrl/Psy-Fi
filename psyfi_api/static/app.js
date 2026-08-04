@@ -1254,8 +1254,11 @@ document.addEventListener('DOMContentLoaded', () => {
             : Number(v).toFixed(2);
         if (intensityMapHint && intensityRange) {
             const mode = (intensityRange.dataset && intensityRange.dataset.mapMode) || 'instrument';
-            intensityMapHint.textContent =
-                mode === 'linear' ? 'Linear map · Alt+click for instrument' : 'Instrument map · Alt+click for linear';
+            intensityMapHint.textContent = instrumentMap
+                ? instrumentMap.mapModeHint(mode)
+                : mode === 'linear'
+                  ? 'Linear map · Alt+click for instrument'
+                  : 'Instrument map · Alt+click for linear';
         }
     }
 
@@ -1446,12 +1449,19 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!e.altKey || !instrumentMap) return;
         e.preventDefault();
         const current = getExperienceIntensity();
-        const mode = (intensityRange.dataset.mapMode || 'instrument') === 'linear' ? 'instrument' : 'linear';
+        const cur = intensityRange.dataset.mapMode || 'instrument';
+        const mode = instrumentMap.nextMapMode(cur);
         intensityRange.dataset.mapMode = mode;
+        intensityRange.classList.toggle('stations-mode', mode === 'stations');
         setExperienceIntensity(current);
         syncGpuLabLinks();
         if (statusEl) {
-            statusEl.textContent = mode === 'linear' ? 'Intensity map: linear' : 'Intensity map: instrument';
+            statusEl.textContent =
+                mode === 'linear'
+                    ? 'Intensity map: linear'
+                    : mode === 'stations'
+                      ? 'Intensity map: station dial'
+                      : 'Intensity map: instrument';
         }
     });
 
@@ -1678,6 +1688,44 @@ document.addEventListener('DOMContentLoaded', () => {
         return out;
     }
 
+    /** Approximate solar elevation (degrees) — mirrors Python research plate. */
+    function approximateSolarElevationDeg(latitude, longitude, hour, dayOfYear) {
+        const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+        const lat = (clamp(latitude, -90, 90) * Math.PI) / 180;
+        const decl =
+            (23.44 * Math.PI) / 180 * Math.sin((2 * Math.PI * (284 + dayOfYear)) / 365);
+        const lst = hour + longitude / 15;
+        const ha = ((lst - 12) * 15 * Math.PI) / 180;
+        const sinEl =
+            Math.sin(lat) * Math.sin(decl) + Math.cos(lat) * Math.cos(decl) * Math.cos(ha);
+        return (Math.asin(clamp(sinEl, -1, 1)) * 180) / Math.PI;
+    }
+
+    function solarDayFactorFromElevation(elev) {
+        return Math.max(0, Math.min(1, (Number(elev) + 18) / 90));
+    }
+
+    /**
+     * Live solar lighting modulator day factor (0–1) when the opt-in checkbox is on.
+     * Uses explicit elevation, last normalized seed anchors, or a client-side plate.
+     */
+    function readSolarDayFactor() {
+        const chk = document.getElementById('anchorSolarModulator');
+        if (!chk || !chk.checked) return null;
+        let elev = readOptionalNumber('anchorSolarElevation');
+        if (elev == null && imageSeedState?.spatiotemporal_anchors?.solar_elevation_deg != null) {
+            elev = Number(imageSeedState.spatiotemporal_anchors.solar_elevation_deg);
+        }
+        if (elev == null) {
+            const a = readSpatiotemporalAnchors();
+            if (a && a.latitude != null && a.longitude != null && a.hour != null) {
+                elev = approximateSolarElevationDeg(a.latitude, a.longitude, a.hour, 172);
+            }
+        }
+        if (elev == null || !Number.isFinite(elev)) return null;
+        return Math.round(solarDayFactorFromElevation(elev) * 10000) / 10000;
+    }
+
     function appendAnchorsToFormData(fd) {
         const a = readSpatiotemporalAnchors();
         if (!a) return;
@@ -1705,7 +1753,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     ;['anchorLatitude', 'anchorLongitude', 'anchorYear', 'anchorHour', 'anchorSolarElevation'].forEach((id) => {
-        document.getElementById(id)?.addEventListener('input', () => syncAnchorStatus());
+        document.getElementById(id)?.addEventListener('input', () => {
+            syncAnchorStatus();
+            syncModulators();
+        });
+    });
+    document.getElementById('anchorSolarModulator')?.addEventListener('change', () => {
+        syncModulators();
+        const el = document.getElementById('anchorStatus');
+        const day = readSolarDayFactor();
+        if (el && day != null) {
+            el.textContent = `Live solar modulator on · day factor ${day.toFixed(2)}`;
+        } else if (el) {
+            syncAnchorStatus();
+        }
     });
     syncAnchorStatus();
 
@@ -1724,14 +1785,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function syncModulators() {
         const img = imageSeedState ? imageInfluence() : 0;
-        player.setModulators({
+        const mods = {
             camera: Number(modCamera?.value || 0),
             motion: Number(modMotion?.value || 0),
             midi: Number(modMidi?.value || 0),
             audio: Number(modAudio?.value || 0),
             haptics: Number(modHaptics?.value || 0),
             image: img,
-        });
+        };
+        const solar = readSolarDayFactor();
+        if (solar != null) mods.solar = solar;
+        player.setModulators(mods);
     }
     [modCamera, modMotion, modMidi, modAudio, modHaptics].forEach((el) =>
         el?.addEventListener('change', syncModulators),

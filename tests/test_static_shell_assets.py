@@ -67,6 +67,8 @@ def test_template_wires_cancel_recovery_and_renderer() -> None:
     assert ">Split</option>" in html or 'value="split"' in html
     assert 'id="anchorLatitude"' in html
     assert 'id="anchorSolarElevation"' in html
+    assert 'id="anchorSolarModulator"' in html
+    assert 'data-stations="21"' in html
     assert 'id="runPlannerBtn"' in html
     assert 'id="saveJourneyBtn"' in html
     assert 'id="journeyList"' in html
@@ -79,7 +81,7 @@ def test_template_wires_cancel_recovery_and_renderer() -> None:
 
 def test_service_worker_precaches_renderer_assets() -> None:
     sw = (STATIC / "sw.js").read_text(encoding="utf-8")
-    assert "psyfi-shell-v36" in sw
+    assert "psyfi-shell-v37" in sw
     assert ".woff2" in sw
     assert "/assets/icons/pf-icon-reset-24.svg" in sw
     assert "/assets/icons/pf-icon-valence-meter-24.svg" in sw
@@ -229,6 +231,8 @@ def test_app_uses_abort_controller_and_worker_renderer() -> None:
     assert "compareModeSelect" in app_js
     assert "NEUTRAL_EXIT_ARM_MS" in app_js
     assert "instrumentMap" in app_js
+    assert "nextMapMode" in (STATIC / "viz" / "instrumentMap.js").read_text(encoding="utf-8")
+    assert "readSolarDayFactor" in app_js
     assert "archiveCompareBtn" in app_js
     assert "COMPARE_STORE" in app_js
     assert "readSpatiotemporalAnchors" in app_js

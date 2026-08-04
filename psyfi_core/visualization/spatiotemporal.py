@@ -198,6 +198,17 @@ def apply_anchor_hint_bias(hints: dict[str, float], anchors: dict[str, Any] | No
     return out
 
 
+def solar_day_factor(anchors: dict[str, Any] | None) -> float | None:
+    """Map solar elevation to a 0–1 day factor for live lighting modulators.
+
+    Returns None when anchors lack solar elevation. 0 ≈ night, 1 ≈ high sun.
+    """
+    if not anchors or anchors.get("solar_elevation_deg") is None:
+        return None
+    elev = float(anchors["solar_elevation_deg"])
+    return round(_clamp((elev + 18.0) / 90.0, 0.0, 1.0), 4)
+
+
 def format_anchor_prompt_clause(anchors: dict[str, Any] | None) -> str:
     """Short T2V / planner lighting clause from anchors."""
     if not anchors:

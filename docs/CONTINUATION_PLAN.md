@@ -14,7 +14,7 @@ Board: [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md)
 | ParameterField + SafetyPass | Done |
 | Image-seed pipeline | Done + optional spatiotemporal anchors |
 | Export-journey | Done + optional spatiotemporal anchors + planner |
-| PWA + service worker | Done (root `/sw.js`, shell cache **v39**) |
+| PWA + service worker | Done (root `/sw.js`, shell cache **v40**) |
 | GPU Lab route | Done |
 | Docker production | Done |
 
@@ -45,7 +45,11 @@ Full plan: [`INSTRUMENT_GROUNDING_PLAN.md`](INSTRUMENT_GROUNDING_PLAN.md).
 ## Next recommended
 
 1. Living QA / hardware capture as needed (`PRODUCTION_READINESS.md`).
-2. Opportunistic safety-clamped transition shaders (supporting pattern).
+2. _(done)_ Safety-clamped transition shaders — phase / Neutral / journey load.
+
+## Supporting patterns landed
+
+- [x] Safety-clamped soft crossfades (`transitionSurface.js`) for phase, Neutral, journey load — Canvas + WebGL; skipped under reduced motion and when hold-and-compare is active.
 
 ## Run
 

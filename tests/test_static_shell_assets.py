@@ -56,6 +56,7 @@ def test_template_wires_cancel_recovery_and_renderer() -> None:
     assert 'src="/static/renderer.js"' in html
     assert 'src="/static/viz/instrumentMap.js"' in html
     assert 'src="/static/viz/compareSurface.js"' in html
+    assert 'src="/static/viz/transitionSurface.js"' in html
     assert 'src="/static/viz/parameterFieldWebGL.js"' in html
     assert 'src="/static/viz/deviceSensors.js"' in html
     assert 'src="/static/viz/launchSplash.js"' in html
@@ -83,7 +84,8 @@ def test_template_wires_cancel_recovery_and_renderer() -> None:
 
 def test_service_worker_precaches_renderer_assets() -> None:
     sw = (STATIC / "sw.js").read_text(encoding="utf-8")
-    assert "psyfi-shell-v39" in sw
+    assert "psyfi-shell-v40" in sw
+    assert "/static/viz/transitionSurface.js" in sw
     assert ".woff2" in sw
     assert "/assets/icons/pf-icon-reset-24.svg" in sw
     assert "/assets/icons/pf-icon-valence-meter-24.svg" in sw
@@ -92,6 +94,7 @@ def test_service_worker_precaches_renderer_assets() -> None:
     assert "/static/viz/math.js" in sw
     assert "/static/viz/instrumentMap.js" in sw
     assert "/static/viz/compareSurface.js" in sw
+    assert "/static/viz/transitionSurface.js" in sw
     assert "/static/viz/engines/index.js" in sw
     assert "/static/viz/parameterFieldWebGL.js" in sw
     assert "/static/viz/deviceSensors.js" in sw
@@ -251,13 +254,21 @@ def test_app_uses_abort_controller_and_worker_renderer() -> None:
     assert "compositeSplit" in (STATIC / "viz" / "compareSurface.js").read_text(encoding="utf-8")
     assert (STATIC / "viz" / "instrumentMap.js").exists()
     assert (STATIC / "viz" / "compareSurface.js").exists()
+    assert (STATIC / "viz" / "transitionSurface.js").exists()
+    transition_js = (STATIC / "viz" / "transitionSurface.js").read_text(encoding="utf-8")
+    assert "compositeCrossfade" in transition_js
+    assert "makeTransitionState" in transition_js
     player_compare = (STATIC / "viz" / "experiencePlayer.js").read_text(encoding="utf-8")
     assert "pinFrame" in player_compare
     assert "setCompareMode" in player_compare
+    assert "beginTransition" in player_compare
+    assert "setTransitionState" in player_compare
     assert "compositeSplit" in player_compare or 'compareMode === \'split\'' in player_compare
     webgl_js = (STATIC / "viz" / "parameterFieldWebGL.js").read_text(encoding="utf-8")
     assert "setPinnedFrame" in webgl_js
     assert "setCompareState" in webgl_js
+    assert "setTransitionState" in webgl_js
+    assert "u_xfadeMix" in webgl_js
     assert "u_compareMode" in webgl_js
     assert "_ensurePinTarget" in webgl_js
     assert "aria-describedby" in app_js

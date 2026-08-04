@@ -62,7 +62,7 @@ Instrument plan: [`INSTRUMENT_GROUNDING_PLAN.md`](INSTRUMENT_GROUNDING_PLAN.md).
 | **P0** | Ultra auto-tier QA (NVIDIA / AMD / Intel) | **simulated pass** · hardware capture harness ready (`HARDWARE_ULTRA_FPS.md`) |
 | **P1** | G0–G4 ship polish (HUD, assets, goldens, PWA route) | **done** |
 | **P1** | Image-seed UX continuum (recommend-before-condition · Seed→journey · export polish · top-N alts) | **done** (A–D) — `CONTINUATION_PLAN.md` |
-| **P1** | Instrument & Spatiotemporal Grounding (I1–I5) | **done** + WebGL compare parity / journey link (`CONTINUATION_PLAN.md`) |
+| **P1** | Instrument & Spatiotemporal Grounding (I1–I5) | **done** (`#83`) + safety transitions |
 | **P2** | Lock full R3F WebGPU still SHAs on a GPU CI runner | optional (API landed) |
 | **P2** | Vendor real Draco WASM / Basis transcoder | **done** | `/gpu/vendor/` · SceneAssetLayer async |
 | **P2** | Re-measure device matrix fps after major UI changes | living QA |

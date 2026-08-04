@@ -51,6 +51,8 @@ uniform float u_hasPin;
 uniform float u_compareMode;
 uniform float u_wipe;
 uniform float u_blinkPin;
+uniform sampler2D u_xfade;
+uniform float u_xfadeMix;
 
 float hash(vec2 p) {
   return fract(sin(dot(p + u_seed * 0.001, vec2(127.1, 311.7))) * 43758.5453);
@@ -274,6 +276,11 @@ void main() {
       col = mix(pinCol, col, step(0.5, v_uv.x));
     }
   }
+  // Soft crossfade from prior plate (also SafetyPass'd). u_xfadeMix < 0 disables.
+  if (u_xfadeMix >= 0.0) {
+    vec3 fromCol = texture2D(u_xfade, v_uv).rgb;
+    col = mix(fromCol, col, clamp(u_xfadeMix, 0.0, 1.0));
+  }
   gl_FragColor = vec4(col, 1.0);
 }`;
 
@@ -308,6 +315,16 @@ void main() {
       this._pinW = 0;
       this._pinH = 0;
       this._pinHash = '';
+      // Soft transitions
+      this.transitionFrom = null;
+      this.transitionStart = 0;
+      this.transitionDuration = 0;
+      this.transitionKind = 'off';
+      this._xfadeFbo = null;
+      this._xfadeTex = null;
+      this._xfadeW = 0;
+      this._xfadeH = 0;
+      this._xfadeHash = '';
       if (this.ok) this._init();
     }
 
@@ -324,6 +341,15 @@ void main() {
         const n = Number(s.blinkHz);
         this.blinkHz = Number.isFinite(n) && n > 0 ? n : 2;
       }
+    }
+
+    setTransitionState(state) {
+      const s = state || {};
+      this.transitionFrom = s.from || null;
+      this.transitionStart = Number(s.start) || 0;
+      this.transitionDuration = Math.max(0, Number(s.duration) || 0);
+      this.transitionKind = s.kind || 'off';
+      this._xfadeHash = '';
     }
 
     _noteFrameMs(ms) {
@@ -437,8 +463,7 @@ void main() {
       const h = this.canvas.height | 0;
       if (w < 2 || h < 2) return;
 
-      const compareOn =
-        this.pinnedFrame && this.compareMode && this.compareMode !== 'off';
+      let compareOn = !!(this.pinnedFrame && this.compareMode && this.compareMode !== 'off');
       let mode = this.compareMode || 'off';
       if (mode === 'blink' && this._blinkShouldReduce()) {
         mode = 'split';
@@ -447,7 +472,6 @@ void main() {
       if (compareOn) {
         this._ensurePinTarget(w, h);
         if (!this._pinFbo || !this._pinTex) {
-          // FBO unavailable — present live only (Canvas path still has compare).
           compareOn = false;
         } else {
           const pinHash = this.pinnedFrame.hash || '';
@@ -458,11 +482,41 @@ void main() {
               height: h,
               compareMode: 0,
               hasPin: 0,
+              xfadeMix: -1,
             });
             this._pinHash = pinHash;
             this._pinW = w;
             this._pinH = h;
           }
+        }
+      }
+
+      const ts = global.PsyFiViz && global.PsyFiViz.transitionSurface;
+      let xfadeMix = -1;
+      if (
+        !compareOn &&
+        ts &&
+        this.transitionFrom &&
+        this.transitionDuration > 0 &&
+        ts.isActive(now, this.transitionStart, this.transitionDuration)
+      ) {
+        this._ensureXfadeTarget(w, h);
+        if (this._xfadeFbo && this._xfadeTex) {
+          const fromHash = this.transitionFrom.hash || '';
+          if (this._xfadeHash !== fromHash || this._xfadeW !== w || this._xfadeH !== h) {
+            this._drawFrameTo(this.transitionFrom, now, {
+              fbo: this._xfadeFbo,
+              width: w,
+              height: h,
+              compareMode: 0,
+              hasPin: 0,
+              xfadeMix: -1,
+            });
+            this._xfadeHash = fromHash;
+            this._xfadeW = w;
+            this._xfadeH = h;
+          }
+          xfadeMix = ts.progress(now, this.transitionStart, this.transitionDuration);
         }
       }
 
@@ -479,6 +533,7 @@ void main() {
         hasPin: compareOn ? 1 : 0,
         wipe: this.wipePosition,
         blinkPin,
+        xfadeMix,
       });
     }
 
@@ -534,6 +589,38 @@ void main() {
       this._pinW = w;
       this._pinH = h;
       this._pinHash = '';
+    }
+
+    _ensureXfadeTarget(w, h) {
+      const gl = this.gl;
+      if (this._xfadeTex && this._xfadeFbo && this._xfadeW === w && this._xfadeH === h) return;
+      if (this._xfadeTex) gl.deleteTexture(this._xfadeTex);
+      if (this._xfadeFbo) gl.deleteFramebuffer(this._xfadeFbo);
+      const tex = gl.createTexture();
+      gl.bindTexture(gl.TEXTURE_2D, tex);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, w, h, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+      const fbo = gl.createFramebuffer();
+      gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
+      gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tex, 0);
+      const status = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
+      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+      if (status !== gl.FRAMEBUFFER_COMPLETE) {
+        console.warn('[PsyFi WebGL] xfade FBO incomplete', status);
+        gl.deleteTexture(tex);
+        gl.deleteFramebuffer(fbo);
+        this._xfadeTex = null;
+        this._xfadeFbo = null;
+        return;
+      }
+      this._xfadeTex = tex;
+      this._xfadeFbo = fbo;
+      this._xfadeW = w;
+      this._xfadeH = h;
+      this._xfadeHash = '';
     }
 
     _drawFrameTo(frame, now, opts) {
@@ -602,11 +689,13 @@ void main() {
       set('u_compareMode', opts.compareMode || 0);
       set('u_wipe', opts.wipe != null ? opts.wipe : 0.5);
       set('u_blinkPin', opts.blinkPin ? 1 : 0);
+      const xfadeMix = opts.xfadeMix != null ? opts.xfadeMix : -1;
+      set('u_xfadeMix', xfadeMix);
       const pl = gl.getUniformLocation(this.program, 'u_palette');
       if (pl) gl.uniform3f(pl, pal.r / 255, pal.g / 255, pal.b / 255);
 
       const mix = this.sourcePlane ? this.sourcePlane.mix || this._sourceMix || 0 : 0;
-      // Source plane only on live present, not pin FBO (pin is a frozen ParameterField plate).
+      // Source plane only on live present, not pin/xfade FBO.
       set('u_sourceMix', opts.fbo ? 0 : mix);
       const srcLoc = gl.getUniformLocation(this.program, 'u_source');
       if (srcLoc != null) {
@@ -619,6 +708,15 @@ void main() {
         gl.activeTexture(gl.TEXTURE1);
         gl.bindTexture(gl.TEXTURE_2D, opts.hasPin && this._pinTex ? this._pinTex : this._fallbackTex());
         gl.uniform1i(pinLoc, 1);
+      }
+      const xfadeLoc = gl.getUniformLocation(this.program, 'u_xfade');
+      if (xfadeLoc != null) {
+        gl.activeTexture(gl.TEXTURE2);
+        gl.bindTexture(
+          gl.TEXTURE_2D,
+          xfadeMix >= 0 && this._xfadeTex ? this._xfadeTex : this._fallbackTex(),
+        );
+        gl.uniform1i(xfadeLoc, 2);
       }
 
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);

@@ -68,7 +68,7 @@ In-app: Capabilities table + Live Experience **Use available sensors** (`deviceS
 | Chrome — NVIDIA RTX 50-class | 2026-07-25 | Win11 · Chrome · **RTX 5060** (target) | ✅ | ✅ | ✅ | ✅ | ✅ Ultra (auto) | ✅ | ✅ | **Simulated Ultra QA** — adapter→ultra + API `/gpu/` + Neutral; hardware fps TBD · `SIMULATED_ULTRA_QA.md` |
 | Chrome — AMD RX 7000-class | 2026-07-25 | Win11 · Chrome · **RX 7800 XT** (peer) | ✅ | ✅ | ✅ | ✅ | ✅ Ultra (auto) | ✅ | ✅ | **Simulated Ultra QA** — RX 7800 XT band ultra; same suite as NVIDIA peers |
 | Chrome — Intel Arc discrete | 2026-07-25 | Win11 · Chrome · **Arc A770** (peer) | ✅ | ✅ | ✅ | ✅ | ✅ Ultra (auto) | ✅ | ✅ | **Simulated Ultra QA** — Arc A770 band ultra; force dGPU still required on hybrid hosts |
-| Sim Ultra QA (CI / TestClient) | 2026-07-25 | Ubuntu · no dGPU · adapter fixtures | n/a | ✅ SW v30 | ✅ API | ✅ snapshots | ✅ Ultra classify + soft pixels + synthetic fps matrix | ✅ Neutral | ✅ unit | Automated P0 stand-in; see `docs/SIMULATED_ULTRA_QA.md` |
+| Sim Ultra QA (CI / TestClient) | 2026-07-25 | Ubuntu · no dGPU · adapter fixtures | n/a | ✅ SW v41 | ✅ API | ✅ snapshots | ✅ Ultra classify + soft pixels + synthetic fps matrix | ✅ Neutral | ✅ unit | Automated P0 stand-in; see `docs/SIMULATED_ULTRA_QA.md` |
 | Edge — newer Windows 11 PC | 2026-07-25 | Win11 24H2 · Edge 127 · Ryzen 7 + RTX 4060 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | PWA install + SW update retained IndexedDB history |
 | Firefox — newer Mac or PC | 2026-07-25 | macOS 15.5 · Firefox 128 · MacBook Pro M3 | ✅ (manual A2HS) | ✅ | ✅ | ✅ Canvas/WebGL | ❌ WebGPU off → CPU/legacy fallback | ✅ | ✅ | Fallbacks correct; no core-workflow block |
 

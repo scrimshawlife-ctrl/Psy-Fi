@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://psyfi.local/schemas/psyfi_journey.v1.json",
+  "title": "psyfi.journey.v1",
+  "description": "Portable Journey object for client IndexedDB archive/replay. Not a therapeutic protocol.",
+  "type": "object",
+  "required": ["schema", "claim", "id", "substance", "mode", "intensity", "seed", "note"],
+  "properties": {
+    "schema": { "const": "psyfi.journey.v1" },
+    "claim": { "const": "INFERRED" },
+    "id": { "type": "string" },
+    "title": { "type": ["string", "null"] },
+    "substance": { "type": "string" },
+    "mode": { "type": "string" },
+    "intensity": { "type": "number" },
+    "seed": { "type": "integer" },
+    "experience_id": { "type": ["string", "null"] },
+    "timeline_hash": { "type": ["string", "null"] },
+    "phase_names": { "type": "array", "items": { "type": "string" } },
+    "frame_count": { "type": "integer" },
+    "parameter_field_hash": { "type": ["string", "null"] },
+    "spatiotemporal_anchors": { "type": ["object", "null"] },
+    "planner": {
+      "type": ["object", "null"],
+      "properties": {
+        "hash": { "type": ["string", "null"] },
+        "planner_text": { "type": ["string", "null"] },
+        "motifs": { "type": "array", "items": { "type": "string" } },
+        "lighting_notes": { "type": ["string", "null"] },
+        "claim": { "type": ["string", "null"] }
+      }
+    },
+    "comparison_id": { "type": ["string", "null"] },
+    "notes": { "type": ["string", "null"] },
+    "updated_at": { "type": ["string", "null"] },
+    "note": { "type": "string" },
+    "kind": { "type": "string" }
+  }
+}

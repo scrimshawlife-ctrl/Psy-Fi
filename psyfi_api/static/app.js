@@ -2518,6 +2518,7 @@ document.addEventListener('DOMContentLoaded', () => {
         statusEl.textContent = `Restoring journey · ${record.id}…`;
         try {
             if (loadBtn && !loadBtn.disabled) {
+                player._pendingTransitionKind = 'journey';
                 loadBtn.click();
                 // Allow rematerialize to start; surface failures via player status.
                 await new Promise((r) => setTimeout(r, 80));

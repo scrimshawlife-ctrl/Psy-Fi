@@ -84,7 +84,7 @@ def test_template_wires_cancel_recovery_and_renderer() -> None:
 
 def test_service_worker_precaches_renderer_assets() -> None:
     sw = (STATIC / "sw.js").read_text(encoding="utf-8")
-    assert "psyfi-shell-v40" in sw
+    assert "psyfi-shell-v41" in sw
     assert "/static/viz/transitionSurface.js" in sw
     assert ".woff2" in sw
     assert "/assets/icons/pf-icon-reset-24.svg" in sw
@@ -270,7 +270,9 @@ def test_app_uses_abort_controller_and_worker_renderer() -> None:
     assert "setTransitionState" in webgl_js
     assert "u_xfadeMix" in webgl_js
     assert "u_compareMode" in webgl_js
+    assert "Dual-viewport split" in webgl_js or "plateUv" in webgl_js
     assert "_ensurePinTarget" in webgl_js
+    assert "_pendingTransitionKind" in player_compare
     assert "aria-describedby" in app_js
     assert "Monitor / display" in app_js
     assert "GPU adapter" in app_js

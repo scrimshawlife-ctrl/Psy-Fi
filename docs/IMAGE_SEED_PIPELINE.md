@@ -60,6 +60,8 @@ No LLM/video provider is invoked in-app — paste externally.
 
 Optional **I3 spatiotemporal anchors** (`latitude`, `longitude`, `year`, `hour`, `solar_elevation_deg`, …) may be sent on image-seed and export-journey. Solar elevation auto-derives when omitted. Anchors bias Pass-1 lighting slightly and appear in the T2V prompt clause — never authoritative over ParameterField.
 
+Optional **I4 planner** (`planner_notes`, `include_planner`) folds a deterministic `psyfi.planner.v1` packet into export-journey / image-seed-journey T2V sidecars. Live Experience may also apply anchors as a soft `modulators.solar` lighting plate when the opt-in checkbox is on. Seed lock blocks Pass-1 overwrites of the master seed.
+
 ## API (additive)
 
 `POST /api/v1/visualize/image-seed`
@@ -71,9 +73,13 @@ Optional **I3 spatiotemporal anchors** (`latitude`, `longitude`, `year`, `hour`,
 - `recommend_top_n` (1–12, default 5) fills `recommended_alternatives[]` (rank · id · title · mode_default · score).
 - Response schema: `psyfi.image_seed.v1` (recommended may include `experience_id` / `experience_title` / `experience_score`)
 
-`POST /api/v1/visualize/image-seed-journey` → one-shot seed + timeline + `psyfi.export_journey.v1` prompt package (no stills; rejects `recommend_only`)
+`POST /api/v1/visualize/image-seed-journey` → one-shot seed + timeline + `psyfi.export_journey.v1` prompt package (no stills; rejects `recommend_only`; accepts `planner_notes`)
 
-`POST /api/v1/visualize/export-journey` → `psyfi.export_journey.v1`
+`POST /api/v1/visualize/export-journey` → `psyfi.export_journey.v1` (optional `planner` / `spatiotemporal_anchors`)
+
+`POST /api/v1/visualize/planner` → `psyfi.planner.v1`
+
+`POST /api/v1/visualize/journey` → `psyfi.journey.v1` (client IndexedDB archive; no server storage)
 
 ## Non-claims
 

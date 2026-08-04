@@ -25,8 +25,8 @@ python3 scripts/run_dev_server.py
 # open http://localhost:8000 → Live Experience panel
 ```
 
-Renderer modules: `static/viz/math.js`, `safetyPass.js`, `engines/`, `parameterFieldWebGL.js`, `experiencePlayer.js`.  
-Prefer WebGL (on by default) uses a dedicated `#experienceCanvasGL` (Canvas 2D remains `#experienceCanvas`). Fractal styles deepen via Mandelbox-style fold + orbit trap; `chromatic_aberration`, `edge_gain`, and `trail_length` drive both backends. Render LOD follows ParameterField `quality_tier` (Balanced / Efficient / Survival) with adaptive drop under frame pressure; chroma is a cheap single-sample channel push.
+Renderer modules: `static/viz/math.js`, `instrumentMap.js`, `compareSurface.js`, `transitionSurface.js`, `safetyPass.js`, `engines/`, `parameterFieldWebGL.js`, `experiencePlayer.js`.  
+Prefer WebGL (on by default) uses a dedicated `#experienceCanvasGL` (Canvas 2D remains `#experienceCanvas`). Soft safety-clamped crossfades cover phase / Neutral / load / journey restore. Fractal styles deepen via Mandelbox-style fold + orbit trap; `chromatic_aberration`, `edge_gain`, and `trail_length` drive both backends. Render LOD follows ParameterField `quality_tier` (Balanced / Efficient / Survival) with adaptive drop under frame pressure; chroma is a cheap single-sample channel push.
 
 ## API
 
@@ -38,7 +38,9 @@ Prefer WebGL (on by default) uses a dedicated `#experienceCanvasGL` (Canvas 2D r
 | POST | `/api/v1/visualize/parameter-timeline` | Deterministic parameter timeline or single snapshot |
 | POST | `/api/v1/visualize/image-seed` | Pass-1 experience-conditioned image → seed + hints (+ `/json`; `recommend_only` skips conditioning) |
 | POST | `/api/v1/visualize/image-seed-journey` | One-shot Pass-1 seed + timeline + T2V prompt package (no stills) |
-| POST | `/api/v1/visualize/export-journey` | Stills + formula T2V prompt sidecar (no provider call) |
+| POST | `/api/v1/visualize/export-journey` | Stills + formula T2V prompt sidecar (no provider call); optional planner |
+| POST | `/api/v1/visualize/planner` | Deterministic I4 planner (`psyfi.planner.v1`) |
+| POST | `/api/v1/visualize/journey` | Portable I5 Journey object (`psyfi.journey.v1`, client-archivable) |
 
 ## Modes
 

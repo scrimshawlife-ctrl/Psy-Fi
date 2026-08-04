@@ -86,6 +86,10 @@
     "applied_mode": { "type": ["string", "null"] },
     "applied_intensity": { "type": ["number", "null"] },
     "recommend_only": { "type": "boolean" },
+    "spatiotemporal_anchors": {
+      "type": ["object", "null"],
+      "description": "Optional I3 grounding plate echoed on the seed payload."
+    },
     "kind": { "type": "string" },
     "note": { "type": "string" }
   }

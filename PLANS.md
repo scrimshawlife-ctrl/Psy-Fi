@@ -136,7 +136,7 @@ See [`docs/CONTINUATION_PLAN.md`](docs/CONTINUATION_PLAN.md). Ship track landed 
 See [`docs/INSTRUMENT_GROUNDING_PLAN.md`](docs/INSTRUMENT_GROUNDING_PLAN.md) and the active queue in [`docs/CONTINUATION_PLAN.md`](docs/CONTINUATION_PLAN.md).
 
 - [x] I1 Non-linear quantized controls — instrument map + Neutral lever + shell wiring
-- [x] I2 Dual-field hold-and-compare — player + Pin/wipe/blink chrome (split/archive open)
+- [x] I2 Dual-field hold-and-compare — wipe / blink / split + IndexedDB archive
 - [ ] I3 Optional spatiotemporal anchors
 - [ ] I4 Explicit planner stage
 - [ ] I5 First-class Journey objects

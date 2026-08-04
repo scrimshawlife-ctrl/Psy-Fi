@@ -62,6 +62,9 @@ def test_template_wires_cancel_recovery_and_renderer() -> None:
     assert 'src="/static/app.js"' in html
     assert 'id="pinFrameBtn"' in html
     assert 'id="compareModeSelect"' in html
+    assert 'id="archiveCompareBtn"' in html
+    assert 'id="compareList"' in html
+    assert ">Split</option>" in html or 'value="split"' in html
     assert 'data-map-mode="instrument"' in html
     assert 'id="intensityMapHint"' in html
     # Root-scoped SW registration (not /static/sw.js — that cannot control `/`).
@@ -71,7 +74,7 @@ def test_template_wires_cancel_recovery_and_renderer() -> None:
 
 def test_service_worker_precaches_renderer_assets() -> None:
     sw = (STATIC / "sw.js").read_text(encoding="utf-8")
-    assert "psyfi-shell-v34" in sw
+    assert "psyfi-shell-v35" in sw
     assert ".woff2" in sw
     assert "/assets/icons/pf-icon-reset-24.svg" in sw
     assert "/assets/icons/pf-icon-valence-meter-24.svg" in sw
@@ -221,11 +224,16 @@ def test_app_uses_abort_controller_and_worker_renderer() -> None:
     assert "compareModeSelect" in app_js
     assert "NEUTRAL_EXIT_ARM_MS" in app_js
     assert "instrumentMap" in app_js
+    assert "archiveCompareBtn" in app_js
+    assert "COMPARE_STORE" in app_js
+    assert "makeArchiveRecord" in (STATIC / "viz" / "compareSurface.js").read_text(encoding="utf-8")
+    assert "compositeSplit" in (STATIC / "viz" / "compareSurface.js").read_text(encoding="utf-8")
     assert (STATIC / "viz" / "instrumentMap.js").exists()
     assert (STATIC / "viz" / "compareSurface.js").exists()
     player_compare = (STATIC / "viz" / "experiencePlayer.js").read_text(encoding="utf-8")
     assert "pinFrame" in player_compare
     assert "setCompareMode" in player_compare
+    assert "compositeSplit" in player_compare or 'compareMode === \'split\'' in player_compare
     assert "aria-describedby" in app_js
     assert "Monitor / display" in app_js
     assert "GPU adapter" in app_js

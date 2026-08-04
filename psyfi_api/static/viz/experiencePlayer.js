@@ -293,7 +293,7 @@
       if (!this._prev || this._prev.length !== d.length) this._prev = new Uint8ClampedArray(d.length);
       this._prev.set(d);
 
-      // I2: wipe / blink composite against pinned frame (presentation only)
+      // I2: wipe / blink / split composite against pinned frame (presentation only)
       let displayImg = img;
       const cs = global.PsyFiViz && global.PsyFiViz.compareSurface;
       if (cs && this.pinnedFrame && this.compareMode && this.compareMode !== 'off') {
@@ -311,6 +311,8 @@
         } else if (this.compareMode === 'blink') {
           const showPin = cs.blinkShowPinned(now, this.blinkHz, this.t0);
           displayImg = showPin ? this._pinnedRaster : img;
+        } else if (this.compareMode === 'split') {
+          displayImg = cs.compositeSplit(this._pinnedRaster, img, iw, ih);
         }
       }
 

@@ -1,6 +1,6 @@
 # PsyFi Instrument & Spatiotemporal Grounding Plan
 
-Status: **I1 core complete · I2 chrome complete** — 2026-08-04  
+Status: **I1 + I2 complete** — 2026-08-04  
 Source inspiration: Looking Glass / GL4SS patterns (client-side spatiotemporal image+video instrument, non-linear dial, solar-elevation grounding, multi-stage planner, hold-and-compare, curated journeys).  
 Canonical engineering queue: [`CONTINUATION_PLAN.md`](CONTINUATION_PLAN.md)  
 Board: [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md)
@@ -55,9 +55,9 @@ Changing the immutable ParameterField schema itself; any change must remain a pr
 - [x] Canvas wipe + blink composite inside `draw` (presentation-only; SafetyPass still applied to both sides)
 - [x] `_rasterizeFrameTo` for pinned-side raster at same LOD
 - [x] Player APIs present in `experiencePlayer.js`
-- [x] Minimal Pin button + Compare mode control (wipe / blink) + wipe slider + Space blink toggle
-- [ ] Split mode dual-viewport
-- [ ] Provenance / IndexedDB archive of comparison pairs
+- [x] Minimal Pin button + Compare mode control (wipe / blink / split) + wipe slider + Space blink toggle
+- [x] Split mode dual-viewport (`compositeSplit` — left pinned, right live)
+- [x] Provenance / IndexedDB archive of comparison pairs (`comparisons` store, schema `psyfi.comparison.v1`)
 
 **Why**  
 Direct visual differential analysis of two ParameterFields or timelines is high-value research tooling and currently missing.

@@ -3,9 +3,70 @@
 const SESSION_STORAGE_KEY = 'psyfi.session.v1.last';
 const RECOVERY_DISMISS_KEY = 'psyfi.session.v1.recovery_dismissed';
 const DB_NAME = 'psyfi-sessions';
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 const STORE_NAME = 'history';
+const COMPARE_STORE = 'comparisons';
 const API_V1 = '/api/v1';
+
+async function openPsyfiDb() {
+    return new Promise((resolve, reject) => {
+        const request = indexedDB.open(DB_NAME, DB_VERSION);
+        request.onupgradeneeded = () => {
+            const db = request.result;
+            if (!db.objectStoreNames.contains(STORE_NAME)) {
+                const store = db.createObjectStore(STORE_NAME, { keyPath: 'id' });
+                store.createIndex('updated_at', 'updated_at');
+            }
+            if (!db.objectStoreNames.contains(COMPARE_STORE)) {
+                const store = db.createObjectStore(COMPARE_STORE, { keyPath: 'id' });
+                store.createIndex('updated_at', 'updated_at');
+            }
+        };
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+    });
+}
+
+async function saveComparisonRecord(record) {
+    if (!record?.id) throw new Error('No comparison record to save');
+    const db = await openPsyfiDb();
+    await new Promise((resolve, reject) => {
+        const tx = db.transaction(COMPARE_STORE, 'readwrite');
+        tx.objectStore(COMPARE_STORE).put(record);
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => reject(tx.error);
+    });
+    db.close();
+    return record;
+}
+
+async function listComparisonRecords() {
+    try {
+        const db = await openPsyfiDb();
+        const records = await new Promise((resolve, reject) => {
+            const tx = db.transaction(COMPARE_STORE, 'readonly');
+            const request = tx.objectStore(COMPARE_STORE).getAll();
+            request.onsuccess = () => resolve(request.result || []);
+            request.onerror = () => reject(request.error);
+        });
+        db.close();
+        return records.sort((a, b) => String(b.updated_at).localeCompare(String(a.updated_at)));
+    } catch (error) {
+        console.warn('[PsyFi] IndexedDB comparisons unavailable:', error);
+        return [];
+    }
+}
+
+async function clearComparisonRecords() {
+    const db = await openPsyfiDb();
+    await new Promise((resolve, reject) => {
+        const tx = db.transaction(COMPARE_STORE, 'readwrite');
+        tx.objectStore(COMPARE_STORE).clear();
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => reject(tx.error);
+    });
+    db.close();
+}
 
 window.PsyFiTips = {
     bind(root) {
@@ -384,18 +445,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function openDb() {
-        return new Promise((resolve, reject) => {
-            const request = indexedDB.open(DB_NAME, DB_VERSION);
-            request.onupgradeneeded = () => {
-                const db = request.result;
-                if (!db.objectStoreNames.contains(STORE_NAME)) {
-                    const store = db.createObjectStore(STORE_NAME, { keyPath: 'id' });
-                    store.createIndex('updated_at', 'updated_at');
-                }
-            };
-            request.onsuccess = () => resolve(request.result);
-            request.onerror = () => reject(request.error);
-        });
+        return openPsyfiDb();
     }
 
     async function saveHistoryRecord(payload) {
@@ -500,6 +550,45 @@ document.addEventListener('DOMContentLoaded', () => {
             historyList.appendChild(item);
         });
     }
+
+    const compareList = document.getElementById('compareList');
+    const compareEmpty = document.getElementById('compareEmpty');
+
+    async function refreshComparisons() {
+        if (!compareList) return;
+        const records = await listComparisonRecords();
+        compareList.innerHTML = '';
+        setHidden(compareEmpty, records.length > 0);
+        records.forEach((record) => {
+            const item = document.createElement('li');
+            item.className = 'history-item';
+            const pinHash = String(record.pinned?.hash || '—').slice(0, 8);
+            const liveHash = String(record.live?.hash || '—').slice(0, 8);
+            item.innerHTML = `
+                <div class="history-title">
+                    <strong>${record.mode || 'off'}</strong>
+                    · ${record.substance || 'field'}
+                    · pin <code>${pinHash}</code>
+                    · live <code>${liveHash}</code>
+                </div>
+                <div class="history-meta">${record.id} · ${record.claim || 'INFERRED'} · ${record.updated_at || ''}</div>
+                <button type="button" class="btn-secondary compare-restore">Restore</button>
+            `;
+            item.querySelector('.compare-restore').addEventListener('click', () => {
+                window.dispatchEvent(new CustomEvent('psyfi:restore-comparison', { detail: record }));
+                const panel = document.getElementById('experiencePanel');
+                if (panel) panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+            compareList.appendChild(item);
+        });
+    }
+
+    window.PsyFiCompareArchive = {
+        refresh: refreshComparisons,
+        save: saveComparisonRecord,
+        list: listComparisonRecords,
+        clear: clearComparisonRecords,
+    };
 
     async function clearHistory() {
         const db = await openDb();
@@ -902,6 +991,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    document.getElementById('clearCompareButton')?.addEventListener('click', async () => {
+        try {
+            await clearComparisonRecords();
+            await refreshComparisons();
+        } catch (error) {
+            showError(error.message);
+        }
+    });
+
     document.getElementById('recoveryRestore')?.addEventListener('click', async () => {
         if (!recoveryRecord) return;
         applyRecordToForm(recoveryRecord);
@@ -966,6 +1064,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     loadPresets();
     refreshHistory().then(maybeShowRecoveryBanner);
+    refreshComparisons();
     renderCapabilities();
 
     // Splash finished (or skipped) — refresh capability/sensor UI against final probes.
@@ -1901,6 +2000,99 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     document.getElementById('exportViewportBtn')?.addEventListener('click', () => {
         player.exportViewportPng();
+    });
+
+    document.getElementById('archiveCompareBtn')?.addEventListener('click', async () => {
+        const cs = window.PsyFiViz && window.PsyFiViz.compareSurface;
+        if (!cs || !player.pinned) {
+            statusEl.textContent = 'Pin a frame before archiving a comparison';
+            return;
+        }
+        const live = player.frame || (player.timeline && player.timeline.frames && player.timeline.frames[player.idx]);
+        const record = cs.makeArchiveRecord(
+            player.pinned,
+            live,
+            player.idx,
+            player.compareMode || compareModeSelect?.value || 'off',
+            player.wipePosition,
+            player.blinkHz,
+            {
+                substance: substanceSelect?.value || (live && live.substance) || null,
+                experience_id: experienceSelect?.value || null,
+                seed: Number(seedInput?.value) || null,
+            },
+        );
+        if (!record) {
+            statusEl.textContent = 'Could not build comparison archive';
+            return;
+        }
+        try {
+            await saveComparisonRecord(record);
+            if (window.PsyFiCompareArchive && typeof window.PsyFiCompareArchive.refresh === 'function') {
+                await window.PsyFiCompareArchive.refresh();
+            }
+            statusEl.textContent = `Comparison archived · ${record.id}`;
+        } catch (err) {
+            console.error(err);
+            statusEl.textContent = 'Archive comparison failed';
+            alert(err.message || String(err));
+        }
+    });
+
+    window.addEventListener('psyfi:restore-comparison', (ev) => {
+        const record = ev && ev.detail;
+        if (!record || !record.pinned || !record.pinned.frame) {
+            statusEl.textContent = 'Invalid comparison archive';
+            return;
+        }
+        const cs = window.PsyFiViz && window.PsyFiViz.compareSurface;
+        const pin = cs
+            ? cs.makePinPacket(record.pinned.frame, record.pinned.idx, record.pinned.timeline_hash)
+            : {
+                frame: record.pinned.frame,
+                idx: record.pinned.idx | 0,
+                hash: record.pinned.hash || null,
+                timeline_hash: record.pinned.timeline_hash || null,
+                at: record.pinned.at || null,
+            };
+        player.pinned = pin;
+        if (player.renderer && typeof player.renderer.setPinnedFrame === 'function') {
+            player.renderer.setPinnedFrame(pin.frame);
+        }
+        if (player.webgl && typeof player.webgl.setPinnedFrame === 'function') {
+            player.webgl.setPinnedFrame(pin.frame);
+        }
+        const mode = record.mode && record.mode !== 'off' ? record.mode : 'split';
+        if (compareModeSelect) compareModeSelect.value = mode;
+        player.setCompareMode(mode);
+        if (typeof record.wipe_position === 'number' && wipePositionRange) {
+            wipePositionRange.value = String(record.wipe_position);
+            player.setWipePosition(record.wipe_position);
+        }
+        if (typeof record.blink_hz === 'number') player.setBlinkHz(record.blink_hz);
+        // Prefer setPhaseIndex when timeline exists; otherwise install one-frame live snapshot.
+        if (record.live && record.live.frame && !(player.timeline && player.timeline.frames && player.timeline.frames.length)) {
+            player.timeline = {
+                frames: [record.live.frame],
+                timeline_hash: record.pinned.timeline_hash || null,
+                seed: record.seed,
+                experience_id: record.experience_id || null,
+            };
+            player.setPhaseIndex(0);
+        } else if (
+            record.live &&
+            record.live.hash &&
+            player.timeline &&
+            player.timeline.frames
+        ) {
+            const found = player.timeline.frames.findIndex((f) => f && f.hash === record.live.hash);
+            if (found >= 0) {
+                player.setPhaseIndex(found);
+            }
+        }
+        syncCompareChrome();
+        player.play();
+        statusEl.textContent = `Restored comparison · ${mode} · ${record.id}`;
     });
 
     function imageSeedPayloadForJourney() {

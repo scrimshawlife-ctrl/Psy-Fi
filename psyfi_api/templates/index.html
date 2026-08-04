@@ -124,10 +124,11 @@
                             <button type="button" class="btn-secondary btn-with-icon" id="pinFrameBtn" data-tip="Pin the current ParameterField frame for hold-and-compare."><span>Pin</span></button>
                             <button type="button" class="btn-secondary btn-with-icon" id="clearPinBtn" hidden data-tip="Clear the pinned comparison frame."><span>Clear pin</span></button>
                             <label class="compare-mode-label" for="compareModeSelect">Compare</label>
-                            <select id="compareModeSelect" aria-label="Compare mode" data-tip="Off, wipe, or blink against the pinned frame. Space toggles blink when focus is not in a field.">
+                            <select id="compareModeSelect" aria-label="Compare mode" data-tip="Off, wipe, blink, or split against the pinned frame. Space toggles blink when focus is not in a field.">
                                 <option value="off" selected>Off</option>
                                 <option value="wipe">Wipe</option>
                                 <option value="blink">Blink</option>
+                                <option value="split">Split</option>
                             </select>
                             <div class="input-group compare-wipe-group" id="compareWipeGroup" hidden>
                                 <label for="wipePositionRange">Wipe <span id="wipePositionValue">0.50</span></label>
@@ -338,6 +339,7 @@
                                 <button type="button" class="btn-secondary" id="exportViewportBtn" data-tip="Capture the current field viewport as PNG.">Export viewport</button>
                                 <button type="button" class="btn-secondary" id="exportJourneyBtn" data-tip="Package stills + formula prompt for optional external text-to-video (no provider call).">Export journey</button>
                                 <button type="button" class="btn-secondary" id="copyT2vPromptBtn" data-tip="Copy the T2V prompt only (uses current timeline + image seed; no provider call).">Copy T2V prompt</button>
+                                <button type="button" class="btn-secondary" id="archiveCompareBtn" data-tip="Save the current pin + live comparison pair to IndexedDB (INFERRED provenance).">Archive comparison</button>
                             </div>
                             <p class="input-hint" id="t2vPromptHint" hidden></p>
                         </details>
@@ -496,6 +498,13 @@
                             Import session
                             <input id="importSessionInput" type="file" accept="application/json,.json" hidden />
                         </label>
+                    </div>
+                    <h3 class="subsection-title">Comparison pairs</h3>
+                    <p class="input-hint">Archived pin + live ParameterField pairs (INFERRED). Restore re-applies the pin and compare mode.</p>
+                    <p class="empty-state" id="compareEmpty">No comparison archives yet. Pin a frame, choose a compare mode, then Archive comparison from Live Experience I/O.</p>
+                    <ul class="history-list" id="compareList"></ul>
+                    <div class="session-actions">
+                        <button type="button" class="btn-secondary" id="clearCompareButton">Clear comparisons</button>
                     </div>
                 </div>
             </section>

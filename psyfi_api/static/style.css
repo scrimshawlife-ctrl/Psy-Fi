@@ -854,6 +854,11 @@ body {
     grid-row: 1 / span 2;
 }
 
+.history-item .compare-restore {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+}
+
 .history-title {
     display: inline-flex;
     flex-wrap: wrap;
@@ -866,6 +871,13 @@ body {
     font-size: 0.78rem;
     font-variant-numeric: tabular-nums;
     color: var(--pf-text-soft);
+}
+
+.subsection-title {
+    margin: var(--space-4) 0 var(--space-2);
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
 }
 
 .nav-more {

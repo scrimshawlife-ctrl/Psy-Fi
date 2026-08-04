@@ -69,6 +69,11 @@
       this.compareMode = 'off';
       this.wipePosition = 0.5;
       this.blinkHz = 2;
+      // Safety-clamped transitions
+      this.transitionFrom = null;
+      this.transitionStart = 0;
+      this.transitionDuration = 0;
+      this.transitionKind = 'off';
     }
 
     setPinnedFrame(frame) {
@@ -82,6 +87,16 @@
       this.compareMode = state.mode || 'off';
       if (state.wipe != null) this.wipePosition = state.wipe;
       if (state.blinkHz != null) this.blinkHz = state.blinkHz;
+    }
+
+    setTransitionState(state) {
+      const s = state || {};
+      this.transitionFrom = s.from || null;
+      this.transitionStart = Number(s.start) || 0;
+      this.transitionDuration = Math.max(0, Number(s.duration) || 0);
+      this.transitionKind = s.kind || 'off';
+      this._transitionRaster = null;
+      this._transitionRasterHash = '';
     }
 
     _noteFrameMs(ms) {
@@ -293,10 +308,45 @@
       if (!this._prev || this._prev.length !== d.length) this._prev = new Uint8ClampedArray(d.length);
       this._prev.set(d);
 
-      // I2: wipe / blink / split composite against pinned frame (presentation only)
+      // Safety-clamped crossfade (skipped when hold-and-compare is active).
       let displayImg = img;
+      const ts = global.PsyFiViz && global.PsyFiViz.transitionSurface;
+      const compareActive =
+        this.pinnedFrame && this.compareMode && this.compareMode !== 'off';
+      if (
+        ts &&
+        !compareActive &&
+        this.transitionFrom &&
+        this.transitionDuration > 0 &&
+        ts.isActive(now, this.transitionStart, this.transitionDuration)
+      ) {
+        if (!this._xfadeBuf || this._xfadeBuf.width !== iw || this._xfadeBuf.height !== ih) {
+          this._xfadeBuf = ctx.createImageData(iw, ih);
+        }
+        const fromHash = this.transitionFrom.hash || '';
+        if (!this._transitionRaster || this._transitionRasterHash !== fromHash) {
+          this._rasterizeFrameTo(this.transitionFrom, this._xfadeBuf, iw, ih, now, lod, engFns, math());
+          this.safety.apply(this._xfadeBuf, this.transitionFrom.safety || {}, now);
+          this._transitionRaster = this._xfadeBuf;
+          this._transitionRasterHash = fromHash;
+        }
+        const t = ts.progress(now, this.transitionStart, this.transitionDuration);
+        if (!this._blendBuf || this._blendBuf.width !== iw || this._blendBuf.height !== ih) {
+          this._blendBuf = ctx.createImageData(iw, ih);
+        }
+        displayImg = ts.compositeCrossfade(
+          this._transitionRaster,
+          img,
+          t,
+          iw,
+          ih,
+          this._blendBuf,
+        );
+      }
+
+      // I2: wipe / blink / split composite against pinned frame (presentation only)
       const cs = global.PsyFiViz && global.PsyFiViz.compareSurface;
-      if (cs && this.pinnedFrame && this.compareMode && this.compareMode !== 'off') {
+      if (cs && compareActive) {
         if (!this._pinBuf || this._pinBuf.width !== iw || this._pinBuf.height !== ih) {
           this._pinBuf = ctx.createImageData(iw, ih);
         }
@@ -307,7 +357,7 @@
           this._pinnedRasterHash = this.pinnedFrame.hash || '';
         }
         if (this.compareMode === 'wipe') {
-          displayImg = cs.compositeWipe(this._pinnedRaster, img, this.wipePosition, iw, ih);
+          displayImg = cs.compositeWipe(this._pinnedRaster, displayImg, this.wipePosition, iw, ih);
         } else if (this.compareMode === 'blink') {
           let blinkMode = 'blink';
           try {
@@ -323,13 +373,13 @@
             /* ignore */
           }
           if (blinkMode === 'split') {
-            displayImg = cs.compositeSplit(this._pinnedRaster, img, iw, ih);
+            displayImg = cs.compositeSplit(this._pinnedRaster, displayImg, iw, ih);
           } else {
             const showPin = cs.blinkShowPinned(now, this.blinkHz, this.t0);
-            displayImg = showPin ? this._pinnedRaster : img;
+            displayImg = showPin ? this._pinnedRaster : displayImg;
           }
         } else if (this.compareMode === 'split') {
-          displayImg = cs.compositeSplit(this._pinnedRaster, img, iw, ih);
+          displayImg = cs.compositeSplit(this._pinnedRaster, displayImg, iw, ih);
         }
       }
 
@@ -479,6 +529,8 @@
       this.wipePosition = 0.5;
       this.blinkHz = 2;
       this._blinkT0 = performance.now();
+      // Safety-clamped transitions
+      this._transition = null;
       this.setPreferWebGL(this.preferWebGL);
     }
 
@@ -597,14 +649,20 @@
         throw new Error(err.detail || res.statusText);
       }
       const data = await res.json();
+      this.beginTransition('load');
+      this.clearPin();
       if (data.kind === 'snapshot') {
         this.timeline = { frames: [data.frame], timeline_hash: data.frame.hash, seed: data.frame.master_seed };
+        this.frame = data.frame;
         this.setFrame(data.frame);
       } else {
         this.timeline = data;
         this.idx = Math.min(this.idx, data.frames.length - 1);
-        this.setFrame(data.frames[this.idx] || data.frames[0]);
+        const fr = data.frames[this.idx] || data.frames[0];
+        this.frame = this.neutralOn ? this._materializeNeutral(fr) : fr;
+        this.setFrame(this.frame);
       }
+      this._pushTransitionState();
       this._provenance(data);
       return data;
     }
@@ -614,10 +672,56 @@
       if (this.webgl) this.webgl.setFrame(frame);
     }
 
+    _pushTransitionState() {
+      const t = this._transition;
+      const now = performance.now();
+      const ts = global.PsyFiViz && global.PsyFiViz.transitionSurface;
+      let state = { from: null, start: 0, duration: 0, kind: 'off' };
+      if (t && ts && ts.isActive(now, t.start, t.duration)) {
+        state = {
+          from: t.from,
+          start: t.start,
+          duration: t.duration,
+          kind: t.kind,
+        };
+      } else if (t && (!ts || !ts.isActive(now, t.start, t.duration))) {
+        this._transition = null;
+      }
+      if (this.renderer && typeof this.renderer.setTransitionState === 'function') {
+        this.renderer.setTransitionState(state);
+      }
+      if (this.webgl && typeof this.webgl.setTransitionState === 'function') {
+        this.webgl.setTransitionState(state);
+      }
+    }
+
+    /**
+     * Begin a soft crossfade from the current live frame to the next.
+     * Skipped when reduce-motion, compare mode active, or no prior frame.
+     */
+    beginTransition(kind) {
+      const ts = global.PsyFiViz && global.PsyFiViz.transitionSurface;
+      if (!ts) return;
+      const compareOn = this.compareMode && this.compareMode !== 'off' && this.pinned;
+      if (compareOn) {
+        this._transition = null;
+        this._pushTransitionState();
+        return;
+      }
+      const from = this.frame;
+      if (!from) return;
+      const state = ts.makeTransitionState(from, kind, performance.now());
+      this._transition = state.active ? state : null;
+      this._pushTransitionState();
+    }
+
     setPhaseIndex(i) {
       if (!this.timeline || !this.timeline.frames) return;
-      this.idx = Math.max(0, Math.min(this.timeline.frames.length - 1, i | 0));
+      const next = Math.max(0, Math.min(this.timeline.frames.length - 1, i | 0));
+      if (next !== this.idx) this.beginTransition('phase');
+      this.idx = next;
       this._applyFrameForIndex(this.idx);
+      this._pushTransitionState();
       const shown = this.frame || this.timeline.frames[this.idx];
       this._status({
         phase: shown.phase,
@@ -737,8 +841,13 @@
 
     neutral(on) {
       if (!this.timeline || !this.timeline.frames || !this.timeline.frames.length) return;
-      this.neutralOn = !!on;
+      const next = !!on;
+      if (next !== this.neutralOn) {
+        this.beginTransition(next ? 'neutral_in' : 'neutral_out');
+      }
+      this.neutralOn = next;
       this._applyFrameForIndex(this.idx);
+      this._pushTransitionState();
     }
 
     setModulators(mods) {

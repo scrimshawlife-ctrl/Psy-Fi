@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from psyfi_core.visualization.planner import build_planner
 from psyfi_core.visualization.spatiotemporal import (
     format_anchor_prompt_clause,
     normalize_anchors,
@@ -26,6 +27,7 @@ def build_t2v_prompt(
     features: dict[str, Any] | None,
     phase_names: list[str],
     spatiotemporal_anchors: dict[str, Any] | None = None,
+    planner: dict[str, Any] | None = None,
 ) -> str:
     """Short cinematic prompt — research/visualization framing, no medical claims."""
     title = experience_title or experience_id or "open field"
@@ -44,10 +46,16 @@ def build_t2v_prompt(
     cue_txt = ", ".join(cues) if cues else "procedural field cues"
     anchor_clause = format_anchor_prompt_clause(spatiotemporal_anchors)
     anchor_bit = f" {anchor_clause}" if anchor_clause else ""
+    motif_bit = ""
+    if planner and planner.get("motifs"):
+        motif_bit = " Motifs: " + ", ".join(str(m) for m in planner["motifs"][:5]) + "."
+    lighting_bit = ""
+    if planner and planner.get("lighting_notes"):
+        lighting_bit = f" Lighting: {planner['lighting_notes']}"
     return (
         f"Abstract consciousness-field visualization journey, substance signature {substance}, "
         f"mode {mode}, intensity {float(intensity):.2f}, recipe “{title}”. "
-        f"Phase arc: {phases}. Visual cues: {cue_txt}.{anchor_bit} "
+        f"Phase arc: {phases}. Visual cues: {cue_txt}.{anchor_bit}{motif_bit}{lighting_bit} "
         f"Smooth cinematic camera drift through luminous procedural geometry, "
         f"calm color grading, no text overlays, research visualization aesthetic — "
         f"not a depiction of any real clinical or medical state."
@@ -62,6 +70,8 @@ def build_export_journey(
     experience: dict[str, Any] | None = None,
     t2v_provider: str = "external",
     spatiotemporal_anchors: dict[str, Any] | None = None,
+    planner_notes: str | None = None,
+    include_planner: bool = True,
 ) -> dict[str, Any]:
     """Assemble psyfi.export_journey.v1 from a loaded timeline + optional stills."""
     frames = list((timeline or {}).get("frames") or [])
@@ -83,6 +93,15 @@ def build_export_journey(
         anchors = normalize_anchors(image_seed.get("spatiotemporal_anchors"))
     if anchors is None and experience:
         anchors = normalize_anchors(experience.get("spatiotemporal_anchors"))
+    planner = None
+    if include_planner:
+        planner = build_planner(
+            parameter_field=frames[0] if frames else None,
+            spatiotemporal_anchors=anchors,
+            notes=planner_notes,
+            experience=experience,
+            timeline=timeline,
+        )
     prompt = build_t2v_prompt(
         substance=substance,
         mode=mode,
@@ -92,6 +111,7 @@ def build_export_journey(
         features=features if isinstance(features, dict) else None,
         phase_names=phase_names,
         spatiotemporal_anchors=anchors,
+        planner=planner,
     )
     clean_stills: list[dict[str, Any]] = []
     for i, s in enumerate(stills or []):
@@ -121,6 +141,7 @@ def build_export_journey(
         "phase_names": phase_names,
         "stills": clean_stills,
         "spatiotemporal_anchors": anchors,
+        "planner": planner,
         "image_seed": (
             {
                 "master_seed": (image_seed or {}).get("master_seed"),

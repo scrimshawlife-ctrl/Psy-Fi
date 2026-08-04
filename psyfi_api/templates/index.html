@@ -372,7 +372,14 @@
                                 <button type="button" class="btn-secondary" id="exportJourneyBtn" data-tip="Package stills + formula prompt for optional external text-to-video (no provider call).">Export journey</button>
                                 <button type="button" class="btn-secondary" id="copyT2vPromptBtn" data-tip="Copy the T2V prompt only (uses current timeline + image seed; no provider call).">Copy T2V prompt</button>
                                 <button type="button" class="btn-secondary" id="archiveCompareBtn" data-tip="Save the current pin + live comparison pair to IndexedDB (INFERRED provenance).">Archive comparison</button>
+                                <button type="button" class="btn-secondary" id="runPlannerBtn" data-tip="Build a deterministic planner packet (motifs + lighting notes) from the loaded field.">Run planner</button>
+                                <button type="button" class="btn-secondary" id="saveJourneyBtn" data-tip="Archive a portable Journey object (substance, mode, seed, anchors, planner) to IndexedDB.">Save journey</button>
                             </div>
+                            <div class="input-group">
+                                <label for="plannerNotesInput">Planner notes</label>
+                                <input type="text" id="plannerNotesInput" maxlength="500" placeholder="Optional operator notes (INFERRED)" data-tip="Folded into the deterministic planner and Journey packet. Not medical advice.">
+                            </div>
+                            <p class="input-hint" id="plannerStatus" hidden role="status"></p>
                             <p class="input-hint" id="t2vPromptHint" hidden></p>
                         </details>
 
@@ -537,6 +544,13 @@
                     <ul class="history-list" id="compareList"></ul>
                     <div class="session-actions">
                         <button type="button" class="btn-secondary" id="clearCompareButton">Clear comparisons</button>
+                    </div>
+                    <h3 class="subsection-title">Journeys</h3>
+                    <p class="input-hint">Portable Journey objects (I5) with planner + optional anchors. Restore reloads recipe controls and planner text.</p>
+                    <p class="empty-state" id="journeyEmpty">No journeys yet. Load an experience, then Save journey from Live Experience I/O.</p>
+                    <ul class="history-list" id="journeyList"></ul>
+                    <div class="session-actions">
+                        <button type="button" class="btn-secondary" id="clearJourneyButton">Clear journeys</button>
                     </div>
                 </div>
             </section>

@@ -67,6 +67,9 @@ def test_template_wires_cancel_recovery_and_renderer() -> None:
     assert ">Split</option>" in html or 'value="split"' in html
     assert 'id="anchorLatitude"' in html
     assert 'id="anchorSolarElevation"' in html
+    assert 'id="runPlannerBtn"' in html
+    assert 'id="saveJourneyBtn"' in html
+    assert 'id="journeyList"' in html
     assert 'data-map-mode="instrument"' in html
     assert 'id="intensityMapHint"' in html
     # Root-scoped SW registration (not /static/sw.js — that cannot control `/`).
@@ -76,7 +79,7 @@ def test_template_wires_cancel_recovery_and_renderer() -> None:
 
 def test_service_worker_precaches_renderer_assets() -> None:
     sw = (STATIC / "sw.js").read_text(encoding="utf-8")
-    assert "psyfi-shell-v35" in sw
+    assert "psyfi-shell-v36" in sw
     assert ".woff2" in sw
     assert "/assets/icons/pf-icon-reset-24.svg" in sw
     assert "/assets/icons/pf-icon-valence-meter-24.svg" in sw
@@ -230,6 +233,9 @@ def test_app_uses_abort_controller_and_worker_renderer() -> None:
     assert "COMPARE_STORE" in app_js
     assert "readSpatiotemporalAnchors" in app_js
     assert "appendAnchorsToFormData" in app_js
+    assert "JOURNEY_STORE" in app_js
+    assert "saveJourneyBtn" in app_js
+    assert "runPlannerBtn" in app_js
     assert "makeArchiveRecord" in (STATIC / "viz" / "compareSurface.js").read_text(encoding="utf-8")
     assert "compositeSplit" in (STATIC / "viz" / "compareSurface.js").read_text(encoding="utf-8")
     assert (STATIC / "viz" / "instrumentMap.js").exists()

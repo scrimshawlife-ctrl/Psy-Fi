@@ -3,9 +3,10 @@
 const SESSION_STORAGE_KEY = 'psyfi.session.v1.last';
 const RECOVERY_DISMISS_KEY = 'psyfi.session.v1.recovery_dismissed';
 const DB_NAME = 'psyfi-sessions';
-const DB_VERSION = 2;
+const DB_VERSION = 3;
 const STORE_NAME = 'history';
 const COMPARE_STORE = 'comparisons';
+const JOURNEY_STORE = 'journeys';
 const API_V1 = '/api/v1';
 
 async function openPsyfiDb() {
@@ -19,6 +20,10 @@ async function openPsyfiDb() {
             }
             if (!db.objectStoreNames.contains(COMPARE_STORE)) {
                 const store = db.createObjectStore(COMPARE_STORE, { keyPath: 'id' });
+                store.createIndex('updated_at', 'updated_at');
+            }
+            if (!db.objectStoreNames.contains(JOURNEY_STORE)) {
+                const store = db.createObjectStore(JOURNEY_STORE, { keyPath: 'id' });
                 store.createIndex('updated_at', 'updated_at');
             }
         };
@@ -62,6 +67,47 @@ async function clearComparisonRecords() {
     await new Promise((resolve, reject) => {
         const tx = db.transaction(COMPARE_STORE, 'readwrite');
         tx.objectStore(COMPARE_STORE).clear();
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => reject(tx.error);
+    });
+    db.close();
+}
+
+async function saveJourneyRecord(record) {
+    if (!record?.id) throw new Error('No journey record to save');
+    const db = await openPsyfiDb();
+    await new Promise((resolve, reject) => {
+        const tx = db.transaction(JOURNEY_STORE, 'readwrite');
+        tx.objectStore(JOURNEY_STORE).put(record);
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => reject(tx.error);
+    });
+    db.close();
+    return record;
+}
+
+async function listJourneyRecords() {
+    try {
+        const db = await openPsyfiDb();
+        const records = await new Promise((resolve, reject) => {
+            const tx = db.transaction(JOURNEY_STORE, 'readonly');
+            const request = tx.objectStore(JOURNEY_STORE).getAll();
+            request.onsuccess = () => resolve(request.result || []);
+            request.onerror = () => reject(request.error);
+        });
+        db.close();
+        return records.sort((a, b) => String(b.updated_at).localeCompare(String(a.updated_at)));
+    } catch (error) {
+        console.warn('[PsyFi] IndexedDB journeys unavailable:', error);
+        return [];
+    }
+}
+
+async function clearJourneyRecords() {
+    const db = await openPsyfiDb();
+    await new Promise((resolve, reject) => {
+        const tx = db.transaction(JOURNEY_STORE, 'readwrite');
+        tx.objectStore(JOURNEY_STORE).clear();
         tx.oncomplete = () => resolve();
         tx.onerror = () => reject(tx.error);
     });
@@ -590,6 +636,43 @@ document.addEventListener('DOMContentLoaded', () => {
         clear: clearComparisonRecords,
     };
 
+    const journeyList = document.getElementById('journeyList');
+    const journeyEmpty = document.getElementById('journeyEmpty');
+
+    async function refreshJourneys() {
+        if (!journeyList) return;
+        const records = await listJourneyRecords();
+        journeyList.innerHTML = '';
+        setHidden(journeyEmpty, records.length > 0);
+        records.forEach((record) => {
+            const item = document.createElement('li');
+            item.className = 'history-item';
+            const motifs = (record.planner?.motifs || []).slice(0, 2).join(', ') || '—';
+            item.innerHTML = `
+                <div class="history-title">
+                    <strong>${record.title || record.substance || 'journey'}</strong>
+                    · ${record.mode || 'open'}
+                    · seed <code>${record.seed ?? '—'}</code>
+                </div>
+                <div class="history-meta">${record.id} · ${motifs} · ${record.updated_at || ''}</div>
+                <button type="button" class="btn-secondary journey-restore">Restore</button>
+            `;
+            item.querySelector('.journey-restore').addEventListener('click', () => {
+                window.dispatchEvent(new CustomEvent('psyfi:restore-journey', { detail: record }));
+                const panel = document.getElementById('experiencePanel');
+                if (panel) panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+            journeyList.appendChild(item);
+        });
+    }
+
+    window.PsyFiJourneyArchive = {
+        refresh: refreshJourneys,
+        save: saveJourneyRecord,
+        list: listJourneyRecords,
+        clear: clearJourneyRecords,
+    };
+
     async function clearHistory() {
         const db = await openDb();
         await new Promise((resolve, reject) => {
@@ -1000,6 +1083,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    document.getElementById('clearJourneyButton')?.addEventListener('click', async () => {
+        try {
+            await clearJourneyRecords();
+            await refreshJourneys();
+        } catch (error) {
+            showError(error.message);
+        }
+    });
+
     document.getElementById('recoveryRestore')?.addEventListener('click', async () => {
         if (!recoveryRecord) return;
         applyRecordToForm(recoveryRecord);
@@ -1065,6 +1157,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadPresets();
     refreshHistory().then(maybeShowRecoveryBanner);
     refreshComparisons();
+    refreshJourneys();
     renderCapabilities();
 
     // Splash finished (or skipped) — refresh capability/sensor UI against final probes.
@@ -1826,6 +1919,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     reduce_motion: !!reduceMotionChk?.checked,
                     dim_flashing: !!dimFlashChk?.checked,
                     spatiotemporal_anchors: readSpatiotemporalAnchors(),
+                    planner_notes: plannerNotesValue(),
                 }),
             });
             const body = await res.json().catch(() => ({}));
@@ -2110,6 +2204,127 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    function plannerNotesValue() {
+        const el = document.getElementById('plannerNotesInput');
+        const v = el && String(el.value || '').trim();
+        return v || null;
+    }
+
+    function setPlannerStatus(text, show) {
+        const el = document.getElementById('plannerStatus');
+        if (!el) return;
+        el.hidden = !show;
+        el.textContent = text || '';
+    }
+
+    document.getElementById('runPlannerBtn')?.addEventListener('click', async () => {
+        if (!player.timeline && !player.frame) {
+            statusEl.textContent = 'Load an experience before running the planner';
+            return;
+        }
+        try {
+            const res = await fetch('/api/v1/visualize/planner', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    timeline: player.timeline || null,
+                    parameter_field: player.frame || null,
+                    experience_id: experienceSelect?.value || null,
+                    spatiotemporal_anchors: readSpatiotemporalAnchors(),
+                    notes: plannerNotesValue(),
+                }),
+            });
+            const body = await res.json().catch(() => ({}));
+            if (!res.ok) throw new Error(body.detail || res.statusText || 'planner failed');
+            const motifs = (body.motifs || []).slice(0, 4).join(', ');
+            setPlannerStatus(
+                `${body.lighting_notes || ''} Motifs: ${motifs || '—'}`,
+                true,
+            );
+            statusEl.textContent = `Planner · ${body.hash || 'ok'}`;
+            if (provenanceEl && body.planner_text) {
+                provenanceEl.innerHTML = `<div class="muted">${body.planner_text}</div>`;
+            }
+        } catch (err) {
+            console.error(err);
+            statusEl.textContent = 'Planner failed';
+            alert(err.message || String(err));
+        }
+    });
+
+    document.getElementById('saveJourneyBtn')?.addEventListener('click', async () => {
+        if (!player.timeline) {
+            statusEl.textContent = 'Load an experience before saving a journey';
+            return;
+        }
+        try {
+            const res = await fetch('/api/v1/visualize/journey', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    substance: substanceSelect?.value || 'lsd',
+                    mode: modeSelect?.value || 'open',
+                    intensity: getExperienceIntensity(),
+                    seed: Number(seedInput?.value) || 42,
+                    experience_id: experienceSelect?.value || null,
+                    timeline: player.timeline,
+                    parameter_field: player.frame || null,
+                    spatiotemporal_anchors: readSpatiotemporalAnchors(),
+                    notes: plannerNotesValue(),
+                    planner_notes: plannerNotesValue(),
+                    title: experienceSelect?.selectedOptions?.[0]?.textContent || null,
+                }),
+            });
+            const body = await res.json().catch(() => ({}));
+            if (!res.ok) throw new Error(body.detail || res.statusText || 'journey failed');
+            await saveJourneyRecord(body);
+            if (window.PsyFiJourneyArchive?.refresh) await window.PsyFiJourneyArchive.refresh();
+            setPlannerStatus(body.planner?.planner_text || 'Journey saved', true);
+            statusEl.textContent = `Journey saved · ${body.id}`;
+        } catch (err) {
+            console.error(err);
+            statusEl.textContent = 'Save journey failed';
+            alert(err.message || String(err));
+        }
+    });
+
+    window.addEventListener('psyfi:restore-journey', async (ev) => {
+        const record = ev && ev.detail;
+        if (!record) return;
+        if (record.substance && substanceSelect) substanceSelect.value = record.substance;
+        if (record.mode && modeSelect) modeSelect.value = record.mode;
+        if (record.intensity != null) setExperienceIntensity(record.intensity);
+        if (record.seed != null && seedInput) seedInput.value = String(record.seed);
+        if (record.experience_id && experienceSelect) {
+            const has = [...experienceSelect.options].some((o) => o.value === record.experience_id);
+            if (has) experienceSelect.value = record.experience_id;
+        }
+        const anchors = record.spatiotemporal_anchors;
+        if (anchors) {
+            const setVal = (id, v) => {
+                const el = document.getElementById(id);
+                if (el && v != null) el.value = String(v);
+            };
+            setVal('anchorLatitude', anchors.latitude);
+            setVal('anchorLongitude', anchors.longitude);
+            setVal('anchorYear', anchors.year);
+            setVal('anchorHour', anchors.hour);
+            setVal('anchorSolarElevation', anchors.solar_elevation_deg);
+            syncAnchorStatus(anchors);
+        }
+        if (record.planner?.planner_text) {
+            setPlannerStatus(record.planner.planner_text, true);
+            if (provenanceEl) {
+                provenanceEl.innerHTML = `<div class="muted">${record.planner.planner_text}</div>`;
+            }
+        }
+        // Reload experience so live field matches journey recipe.
+        if (loadBtn && !loadBtn.disabled) {
+            loadBtn.click();
+        }
+        statusEl.textContent = `Restored journey · ${record.id}`;
+    });
+
     window.addEventListener('psyfi:restore-comparison', (ev) => {
         const record = ev && ev.detail;
         if (!record || !record.pinned || !record.pinned.frame) {
@@ -2238,6 +2453,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 experience_id: experienceSelect.value || player.timeline.experience_id || null,
                 t2v_provider: 'external',
                 spatiotemporal_anchors: readSpatiotemporalAnchors(),
+                planner_notes: plannerNotesValue(),
             }),
         });
         const body = await res.json().catch(() => ({}));
@@ -2295,6 +2511,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     experience_id: experienceSelect.value || player.timeline.experience_id || null,
                     t2v_provider: 'external',
                     spatiotemporal_anchors: readSpatiotemporalAnchors(),
+                    planner_notes: plannerNotesValue(),
                 }),
             });
             const body = await res.json().catch(() => ({}));

@@ -17,6 +17,8 @@ from psyfi_core.experiences.parameter_mapper import (
 )
 from psyfi_core.visualization.export_journey import build_export_journey
 from psyfi_core.visualization.image_seed import build_image_seed
+from psyfi_core.visualization.journey import build_journey
+from psyfi_core.visualization.planner import build_planner
 from psyfi_core.visualization.scene_snapshot import build_scene_snapshot
 from psyfi_core.visualization.spatiotemporal import normalize_anchors
 
@@ -145,6 +147,42 @@ class ExportJourneyRequest(BaseModel):
     experience_id: str | None = None
     t2v_provider: str = "external"
     spatiotemporal_anchors: SpatiotemporalAnchors | None = None
+    planner_notes: str | None = Field(
+        default=None,
+        description="Optional operator notes folded into the deterministic planner (I4).",
+    )
+    include_planner: bool = True
+
+
+class PlannerRequest(BaseModel):
+    """Deterministic planner from ParameterField + optional anchors (I4)."""
+
+    parameter_field: dict[str, Any] | None = None
+    timeline: dict[str, Any] | None = None
+    experience_id: str | None = None
+    substance: str | None = None
+    mode: ModeName | None = None
+    intensity: float | None = Field(default=None, ge=0.0, le=1.0)
+    seed: int | None = Field(default=None, ge=0)
+    spatiotemporal_anchors: SpatiotemporalAnchors | None = None
+    notes: str | None = None
+
+
+class JourneyRequest(BaseModel):
+    """Build a portable psyfi.journey.v1 object (I5) — client archives locally."""
+
+    substance: str = "lsd"
+    mode: ModeName = "open"
+    intensity: float = Field(default=0.7, ge=0.0, le=1.0)
+    seed: int = Field(default=42, ge=0)
+    experience_id: str | None = None
+    timeline: dict[str, Any] | None = None
+    parameter_field: dict[str, Any] | None = None
+    spatiotemporal_anchors: SpatiotemporalAnchors | None = None
+    notes: str | None = None
+    comparison_id: str | None = None
+    title: str | None = None
+    planner_notes: str | None = None
 
 
 class ImageSeedJourneyJsonRequest(ImageSeedJsonRequest):
@@ -154,6 +192,7 @@ class ImageSeedJourneyJsonRequest(ImageSeedJsonRequest):
     quality_tier: str = "balanced"
     reduce_motion: bool = False
     dim_flashing: bool = False
+    planner_notes: str | None = None
 
 
 def _anchors_dict(raw: SpatiotemporalAnchors | dict[str, Any] | None) -> dict[str, Any] | None:
@@ -635,6 +674,7 @@ async def image_seed_journey_json(body: ImageSeedJourneyJsonRequest) -> dict[str
         experience=experience,
         t2v_provider="external",
         spatiotemporal_anchors=anchors or seed_result.get("spatiotemporal_anchors"),
+        planner_notes=body.planner_notes,
     )
     journey["kind"] = "export_journey"
     return {
@@ -778,9 +818,94 @@ async def export_journey(body: ExportJourneyRequest) -> dict[str, Any]:
         experience=experience,
         t2v_provider=body.t2v_provider or "external",
         spatiotemporal_anchors=_anchors_dict(body.spatiotemporal_anchors),
+        planner_notes=body.planner_notes,
+        include_planner=body.include_planner,
     )
     package["kind"] = "export_journey"
     return package
+
+
+@router.post("/visualize/planner")
+async def visualize_planner(body: PlannerRequest) -> dict[str, Any]:
+    """Deterministic I4 planner from ParameterField / timeline + optional anchors."""
+    catalog = get_default_catalog()
+    experience = catalog.get(body.experience_id) if body.experience_id else None
+    if body.experience_id and experience is None:
+        raise HTTPException(status_code=404, detail=f"Experience not found: {body.experience_id}")
+
+    field = body.parameter_field
+    if field is None and body.substance and body.mode is not None:
+        substance = _normalize_substance(body.substance)
+        _assert_experience_substance(experience, substance)
+        intensity = _capped_intensity(
+            substance=substance,
+            intensity=float(body.intensity if body.intensity is not None else 0.7),
+            experience=experience,
+        )
+        snap = map_parameters(
+            substance=substance,
+            mode=body.mode,
+            intensity=intensity,
+            seed=int(body.seed if body.seed is not None else 42),
+            experience=experience,
+        )
+        field = snap.to_dict()
+
+    if field is None and not body.timeline:
+        raise HTTPException(
+            status_code=400,
+            detail="planner requires parameter_field, timeline, or substance+mode",
+        )
+
+    plan = build_planner(
+        parameter_field=field,
+        spatiotemporal_anchors=_anchors_dict(body.spatiotemporal_anchors),
+        notes=body.notes,
+        experience=experience,
+        timeline=body.timeline,
+    )
+    plan["kind"] = "planner"
+    return plan
+
+
+@router.post("/visualize/journey")
+async def visualize_journey(body: JourneyRequest) -> dict[str, Any]:
+    """Build a portable Journey object (I5) for client-side IndexedDB archive."""
+    catalog = get_default_catalog()
+    experience = catalog.get(body.experience_id) if body.experience_id else None
+    if body.experience_id and experience is None:
+        raise HTTPException(status_code=404, detail=f"Experience not found: {body.experience_id}")
+    substance = _normalize_substance(body.substance or (experience or {}).get("substance") or "lsd")
+    _assert_experience_substance(experience, substance)
+    intensity = _capped_intensity(
+        substance=substance,
+        intensity=body.intensity,
+        experience=experience,
+    )
+    planner = build_planner(
+        parameter_field=body.parameter_field,
+        spatiotemporal_anchors=_anchors_dict(body.spatiotemporal_anchors),
+        notes=body.planner_notes or body.notes,
+        experience=experience,
+        timeline=body.timeline,
+    )
+    packet = build_journey(
+        substance=substance,
+        mode=body.mode,
+        intensity=intensity,
+        seed=body.seed,
+        experience_id=body.experience_id or (experience or {}).get("id"),
+        timeline=body.timeline,
+        parameter_field=body.parameter_field,
+        spatiotemporal_anchors=_anchors_dict(body.spatiotemporal_anchors),
+        planner=planner,
+        comparison_id=body.comparison_id,
+        notes=body.notes,
+        experience=experience,
+        title=body.title,
+    )
+    packet["kind"] = "journey"
+    return packet
 
 
 @router.post("/experiences/reload-catalog")

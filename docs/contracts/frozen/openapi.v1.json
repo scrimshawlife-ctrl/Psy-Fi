@@ -169,6 +169,23 @@
             ],
             "title": "Image Seed"
           },
+          "include_planner": {
+            "default": true,
+            "title": "Include Planner",
+            "type": "boolean"
+          },
+          "planner_notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional operator notes folded into the deterministic planner (I4).",
+            "title": "Planner Notes"
+          },
           "spatiotemporal_anchors": {
             "anyOf": [
               {
@@ -361,6 +378,17 @@
             ],
             "title": "Mode",
             "type": "string"
+          },
+          "planner_notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Planner Notes"
           },
           "quality_tier": {
             "default": "balanced",
@@ -617,6 +645,131 @@
           "request"
         ],
         "title": "JobSummary",
+        "type": "object"
+      },
+      "JourneyRequest": {
+        "description": "Build a portable psyfi.journey.v1 object (I5) \u2014 client archives locally.",
+        "properties": {
+          "comparison_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Comparison Id"
+          },
+          "experience_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Experience Id"
+          },
+          "intensity": {
+            "default": 0.7,
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Intensity",
+            "type": "number"
+          },
+          "mode": {
+            "default": "open",
+            "enum": [
+              "open",
+              "attractor",
+              "void",
+              "power"
+            ],
+            "title": "Mode",
+            "type": "string"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "parameter_field": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parameter Field"
+          },
+          "planner_notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Planner Notes"
+          },
+          "seed": {
+            "default": 42,
+            "minimum": 0.0,
+            "title": "Seed",
+            "type": "integer"
+          },
+          "spatiotemporal_anchors": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SpatiotemporalAnchors"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "substance": {
+            "default": "lsd",
+            "title": "Substance",
+            "type": "string"
+          },
+          "timeline": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Timeline"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          }
+        },
+        "title": "JourneyRequest",
         "type": "object"
       },
       "MIDICCRequest": {
@@ -883,6 +1036,122 @@
           }
         },
         "title": "Modulators",
+        "type": "object"
+      },
+      "PlannerRequest": {
+        "description": "Deterministic planner from ParameterField + optional anchors (I4).",
+        "properties": {
+          "experience_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Experience Id"
+          },
+          "intensity": {
+            "anyOf": [
+              {
+                "maximum": 1.0,
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Intensity"
+          },
+          "mode": {
+            "anyOf": [
+              {
+                "enum": [
+                  "open",
+                  "attractor",
+                  "void",
+                  "power"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mode"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "parameter_field": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parameter Field"
+          },
+          "seed": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Seed"
+          },
+          "spatiotemporal_anchors": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SpatiotemporalAnchors"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "substance": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Substance"
+          },
+          "timeline": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Timeline"
+          }
+        },
+        "title": "PlannerRequest",
         "type": "object"
       },
       "PresetDetail": {
@@ -3691,6 +3960,50 @@
         ]
       }
     },
+    "/api/v1/visualize/journey": {
+      "post": {
+        "description": "Build a portable Journey object (I5) for client-side IndexedDB archive.",
+        "operationId": "visualize_journey_api_v1_visualize_journey_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JourneyRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Visualize Journey Api V1 Visualize Journey Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Visualize Journey",
+        "tags": [
+          "experiences"
+        ]
+      }
+    },
     "/api/v1/visualize/parameter-timeline": {
       "post": {
         "operationId": "parameter_timeline_api_v1_visualize_parameter_timeline_post",
@@ -3729,6 +4042,50 @@
           }
         },
         "summary": "Parameter Timeline",
+        "tags": [
+          "experiences"
+        ]
+      }
+    },
+    "/api/v1/visualize/planner": {
+      "post": {
+        "description": "Deterministic I4 planner from ParameterField / timeline + optional anchors.",
+        "operationId": "visualize_planner_api_v1_visualize_planner_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlannerRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Visualize Planner Api V1 Visualize Planner Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Visualize Planner",
         "tags": [
           "experiences"
         ]

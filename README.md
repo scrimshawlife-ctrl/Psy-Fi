@@ -54,7 +54,7 @@ Full board: [`docs/PRODUCTION_READINESS.md`](docs/PRODUCTION_READINESS.md).
 Ship checklist: `pytest` → `npm test && npm run gpu:test && npm run gpu:build` → `docker compose up -d --build` → `/health` `/ready` `/` `/gpu/`.
 
 **Optional next:** hardware Ultra fps confirmation; full R3F stills on a GPU CI runner.  
-**Instrument track:** I1–I3 landed (instrument map, hold-and-compare, spatiotemporal anchors); next is I4–I5 — see [`docs/CONTINUATION_PLAN.md`](docs/CONTINUATION_PLAN.md) and [`docs/INSTRUMENT_GROUNDING_PLAN.md`](docs/INSTRUMENT_GROUNDING_PLAN.md).
+**Instrument track:** I1–I5 landed (instrument map, hold-and-compare, spatiotemporal anchors, planner, Journey objects) — see [`docs/CONTINUATION_PLAN.md`](docs/CONTINUATION_PLAN.md) and [`docs/INSTRUMENT_GROUNDING_PLAN.md`](docs/INSTRUMENT_GROUNDING_PLAN.md).
 
 ## Install
 

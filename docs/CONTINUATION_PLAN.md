@@ -13,8 +13,8 @@ Board: [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md)
 | Legacy Live Experience (Canvas/WebGL) | Done — full shell + I1/I2/I3 |
 | ParameterField + SafetyPass | Done |
 | Image-seed pipeline | Done + optional spatiotemporal anchors |
-| Export-journey | Done + optional spatiotemporal anchors |
-| PWA + service worker | Done (root `/sw.js`, shell cache **v35**) |
+| Export-journey | Done + optional spatiotemporal anchors + planner |
+| PWA + service worker | Done (root `/sw.js`, shell cache **v36**) |
 | GPU Lab route | Done |
 | Docker production | Done |
 
@@ -27,21 +27,21 @@ Full plan: [`INSTRUMENT_GROUNDING_PLAN.md`](INSTRUMENT_GROUNDING_PLAN.md).
 | **I1** | Non-linear quantized controls + lever-style commits | map + shell + `app.js` wiring landed |
 | **I2** | Dual-field / dual-timeline hold-and-compare | wipe / blink / split + IndexedDB archive |
 | **I3** | Optional spatiotemporal anchors | lat/lon + year + hour + solar elevation |
-| **I4** | Explicit planner stage | deterministic first |
-| **I5** | First-class Journey objects | IndexedDB-archivable |
+| **I4** | Explicit planner stage | `psyfi.planner.v1` + `/visualize/planner` |
+| **I5** | First-class Journey objects | `psyfi.journey.v1` + IndexedDB `journeys` |
 
 ### Active queue
 
 - [x] **I1** — instrument map + Neutral lever + shell wiring
 - [x] **I2** — pin / wipe / blink / split + IndexedDB comparison archive
 - [x] **I3** — `psyfi.spatiotemporal_anchor.v1` on image-seed + export-journey (+ shell UI)
-- [ ] **I4** — explicit planner stage (deterministic first)
-- [ ] **I5** — first-class Journey objects
+- [x] **I4** — deterministic planner (`psyfi.planner.v1`, motifs + lighting notes)
+- [x] **I5** — Journey objects (`psyfi.journey.v1`, IndexedDB archive + restore)
 
 ## Next recommended
 
-1. **I4** deterministic planner stage (ParameterField + optional anchors → planner text / motifs / lighting notes).
-2. **I5** first-class Journey objects (IndexedDB + shell load/save/replay).
+1. Optional instrument polish (station dial feel, solar modulator beyond anchors).
+2. Living QA / hardware capture as needed (`PRODUCTION_READINESS.md`).
 
 ## Run
 

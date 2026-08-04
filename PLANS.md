@@ -138,8 +138,8 @@ See [`docs/INSTRUMENT_GROUNDING_PLAN.md`](docs/INSTRUMENT_GROUNDING_PLAN.md) and
 - [x] I1 Non-linear quantized controls — instrument map + Neutral lever + shell wiring
 - [x] I2 Dual-field hold-and-compare — wipe / blink / split + IndexedDB archive
 - [x] I3 Optional spatiotemporal anchors — image-seed / export-journey + shell
-- [ ] I4 Explicit planner stage
-- [ ] I5 First-class Journey objects
+- [x] I4 Explicit planner stage — `psyfi.planner.v1` + `/visualize/planner`
+- [x] I5 First-class Journey objects — `psyfi.journey.v1` + IndexedDB archive/restore
 
 All slices preserve ParameterField authority, SafetyPass, Python simulation truth, and the existing claim discipline.
 

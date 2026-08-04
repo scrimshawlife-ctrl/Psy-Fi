@@ -95,6 +95,12 @@ Making spatiotemporal data required; making it the source of truth for the consc
 
 ### I4 — Explicit planner stage
 
+**Progress (2026-08-04)**
+- [x] `psyfi_core/visualization/planner.py` — `psyfi.planner.v1` (motifs, lighting notes, hash)
+- [x] `POST /api/v1/visualize/planner`
+- [x] Embedded in export-journey / image-seed-journey T2V sidecars (`include_planner`)
+- [x] Live Experience: Run planner + optional planner notes
+
 **Why**  
 A short textual phenomenological description produced from ParameterField + optional anchors becomes a clean shared contract for internal overlay weighting and for external still/video prompt packages.
 
@@ -108,6 +114,12 @@ A short textual phenomenological description produced from ParameterField + opti
 Making the planner authoritative over ParameterField; introducing non-determinism into the core simulation loop.
 
 ### I5 — First-class Journey objects
+
+**Progress (2026-08-04)**
+- [x] `psyfi_core/visualization/journey.py` — `psyfi.journey.v1`
+- [x] `POST /api/v1/visualize/journey`
+- [x] IndexedDB `journeys` store (`DB_VERSION = 3`) + History panel list/restore/clear
+- [x] Compatible with export-journey and image-seed-journey packages
 
 **Why**  
 Package the above into reproducible, archivable, shareable experiences.

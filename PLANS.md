@@ -137,7 +137,7 @@ See [`docs/INSTRUMENT_GROUNDING_PLAN.md`](docs/INSTRUMENT_GROUNDING_PLAN.md) and
 
 - [x] I1 Non-linear quantized controls — instrument map + Neutral lever + shell wiring
 - [x] I2 Dual-field hold-and-compare — wipe / blink / split + IndexedDB archive
-- [ ] I3 Optional spatiotemporal anchors
+- [x] I3 Optional spatiotemporal anchors — image-seed / export-journey + shell
 - [ ] I4 Explicit planner stage
 - [ ] I5 First-class Journey objects
 

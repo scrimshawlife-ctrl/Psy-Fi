@@ -14,6 +14,12 @@ from typing import Any
 
 import numpy as np
 
+from psyfi_core.visualization.spatiotemporal import (
+    apply_anchor_drive_bias,
+    apply_anchor_hint_bias,
+    normalize_anchors,
+)
+
 IMAGE_SEED_SCHEMA = "psyfi.image_seed.v1"
 _MAX_EDGE = 384
 _PREVIEW_EDGE = 128
@@ -433,11 +439,14 @@ def build_image_seed(
     prefer_recommended_experience: bool = False,
     recommend_only: bool = False,
     recommend_top_n: int = 5,
+    spatiotemporal_anchors: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Run Pass 1 and return psyfi.image_seed.v1 payload.
 
     When ``recommend_only`` is true, skip pixel conditioning and return features +
     catalog recommendation so the client can confirm formula before Pass 1 mutates.
+    Optional ``spatiotemporal_anchors`` (I3) bias conditioner drive / hints and are
+    echoed in the provenance packet — never authoritative over ParameterField.
     """
     if isinstance(image, (bytes, bytearray)):
         rgba = decode_image_bytes(bytes(image))
@@ -480,12 +489,20 @@ def build_image_seed(
             "experience_score": rec_exp.get("score"),
         }
 
-    drive = _recipe_drive(use_experience, substance_overlay)
+    anchors = normalize_anchors(spatiotemporal_anchors)
+    # Recipe defaults may optionally declare anchors when the client sends none.
+    if anchors is None and isinstance(use_experience, dict):
+        anchors = normalize_anchors(use_experience.get("spatiotemporal_anchors"))
+
+    drive = apply_anchor_drive_bias(_recipe_drive(use_experience, substance_overlay), anchors)
     pre_seed = derive_master_seed(rgba)
 
     if recommend_only:
         # Provisional seed from the original image; Pass 1 conditioner not run.
-        hints = parameter_hints_from_features(features, drive, influence)
+        hints = apply_anchor_hint_bias(
+            parameter_hints_from_features(features, drive, influence),
+            anchors,
+        )
         return {
             "schema": IMAGE_SEED_SCHEMA,
             "master_seed": int(pre_seed),
@@ -495,6 +512,7 @@ def build_image_seed(
             "mode": mode,
             "features": features,
             "parameter_hints": hints,
+            "spatiotemporal_anchors": anchors,
             "source_field": None,
             "conditioned_preview_png_base64": None,
             "conditioned_texture_png_base64": None,
@@ -512,7 +530,10 @@ def build_image_seed(
 
     conditioned = condition_image(rgba, drive=drive, influence=influence, seed=pre_seed)
     master_seed = derive_master_seed(conditioned)
-    hints = parameter_hints_from_features(features, drive, influence)
+    hints = apply_anchor_hint_bias(
+        parameter_hints_from_features(features, drive, influence),
+        anchors,
+    )
     tex_b64 = encode_preview_png_base64(conditioned, edge=_TEXTURE_EDGE) if include_texture else None
 
     return {
@@ -524,6 +545,7 @@ def build_image_seed(
         "mode": mode,
         "features": features,
         "parameter_hints": hints,
+        "spatiotemporal_anchors": anchors,
         "source_field": luminance_source_field(conditioned) if include_source_field else None,
         "conditioned_preview_png_base64": (
             encode_preview_png_base64(conditioned) if include_preview else None

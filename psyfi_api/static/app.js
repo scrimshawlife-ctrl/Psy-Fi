@@ -1551,6 +1551,71 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
+    function readOptionalNumber(id) {
+        const el = document.getElementById(id);
+        if (!el) return null;
+        const raw = String(el.value || '').trim();
+        if (!raw) return null;
+        const n = Number(raw);
+        return Number.isFinite(n) ? n : null;
+    }
+
+    /** Optional I3 anchors for image-seed / export-journey (null when unset). */
+    function readSpatiotemporalAnchors() {
+        const latitude = readOptionalNumber('anchorLatitude');
+        const longitude = readOptionalNumber('anchorLongitude');
+        const year = readOptionalNumber('anchorYear');
+        const hour = readOptionalNumber('anchorHour');
+        const solar_elevation_deg = readOptionalNumber('anchorSolarElevation');
+        if (
+            latitude == null &&
+            longitude == null &&
+            year == null &&
+            hour == null &&
+            solar_elevation_deg == null
+        ) {
+            return null;
+        }
+        const out = {};
+        if (latitude != null) out.latitude = latitude;
+        if (longitude != null) out.longitude = longitude;
+        if (year != null) out.year = Math.round(year);
+        if (hour != null) out.hour = hour;
+        if (solar_elevation_deg != null) out.solar_elevation_deg = solar_elevation_deg;
+        return out;
+    }
+
+    function appendAnchorsToFormData(fd) {
+        const a = readSpatiotemporalAnchors();
+        if (!a) return;
+        if (a.latitude != null) fd.append('latitude', String(a.latitude));
+        if (a.longitude != null) fd.append('longitude', String(a.longitude));
+        if (a.year != null) fd.append('year', String(a.year));
+        if (a.hour != null) fd.append('hour', String(a.hour));
+        if (a.solar_elevation_deg != null) fd.append('solar_elevation_deg', String(a.solar_elevation_deg));
+    }
+
+    function syncAnchorStatus(normalized) {
+        const el = document.getElementById('anchorStatus');
+        if (!el) return;
+        const a = normalized || readSpatiotemporalAnchors();
+        if (!a) {
+            el.textContent = 'No anchors set';
+            return;
+        }
+        if (normalized && normalized.solar_elevation_deg != null) {
+            const src = normalized.solar_elevation_source || 'set';
+            el.textContent = `Anchors active · solar ${Number(normalized.solar_elevation_deg).toFixed(1)}° (${src})`;
+            return;
+        }
+        el.textContent = 'Anchors set · solar derives on server when lat/lon + hour present';
+    }
+
+    ;['anchorLatitude', 'anchorLongitude', 'anchorYear', 'anchorHour', 'anchorSolarElevation'].forEach((id) => {
+        document.getElementById(id)?.addEventListener('input', () => syncAnchorStatus());
+    });
+    syncAnchorStatus();
+
     function fileToBase64(file) {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -1605,12 +1670,14 @@ document.addEventListener('DOMContentLoaded', () => {
             fd.append('apply_recommended', 'true');
             fd.append('recommend_only', 'true');
             fd.append('recommend_top_n', '5');
+            appendAnchorsToFormData(fd);
             const res = await fetch('/api/v1/visualize/image-seed', { method: 'POST', body: fd });
             const body = await res.json().catch(() => ({}));
             if (!res.ok) {
                 throw new Error(body.detail || res.statusText || 'suggest failed');
             }
             imageSeedSuggest = body;
+            syncAnchorStatus(body.spatiotemporal_anchors);
             renderImageSeedRecommend(body, { syncAlt: true });
             if (imageSeedApplyRecommended?.checked) applyRecommendedControls(body);
             const n = (body.recommended_alternatives || []).length;
@@ -1682,6 +1749,7 @@ document.addEventListener('DOMContentLoaded', () => {
         fd.append('apply_recommended', flags.apply_recommended ? 'true' : 'false');
         fd.append('recommend_only', 'false');
         fd.append('recommend_top_n', '5');
+        appendAnchorsToFormData(fd);
         try {
             const res = await fetch('/api/v1/visualize/image-seed', { method: 'POST', body: fd });
             const body = await res.json().catch(() => ({}));
@@ -1692,6 +1760,7 @@ document.addEventListener('DOMContentLoaded', () => {
             imageSeedState = body;
             imageSeedSuggest = body;
             persistImageSeedHandoff(body);
+            syncAnchorStatus(body.spatiotemporal_anchors);
             seedInput.value = String(body.master_seed >>> 0);
             renderImageSeedRecommend(body, { syncAlt: true });
             if (pickedId && imageSeedAltSelect) imageSeedAltSelect.value = pickedId;
@@ -1756,6 +1825,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     quality_tier: (document.getElementById('qualityTierSelect')?.value) || 'balanced',
                     reduce_motion: !!reduceMotionChk?.checked,
                     dim_flashing: !!dimFlashChk?.checked,
+                    spatiotemporal_anchors: readSpatiotemporalAnchors(),
                 }),
             });
             const body = await res.json().catch(() => ({}));
@@ -1766,6 +1836,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (imageSeedState) {
                 imageSeedSuggest = imageSeedState;
                 persistImageSeedHandoff(imageSeedState);
+                syncAnchorStatus(imageSeedState.spatiotemporal_anchors);
                 seedInput.value = String(imageSeedState.master_seed >>> 0);
                 renderImageSeedRecommend(imageSeedState, { syncAlt: true });
                 applyRecommendedControls(imageSeedState, { fromAlt: selectedAlternative() });
@@ -2102,6 +2173,7 @@ document.addEventListener('DOMContentLoaded', () => {
             influence: imageSeedState.influence,
             features: imageSeedState.features,
             parameter_hints: imageSeedState.parameter_hints,
+            spatiotemporal_anchors: imageSeedState.spatiotemporal_anchors || null,
         };
     }
 
@@ -2165,6 +2237,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 image_seed: imageSeedPayloadForJourney(),
                 experience_id: experienceSelect.value || player.timeline.experience_id || null,
                 t2v_provider: 'external',
+                spatiotemporal_anchors: readSpatiotemporalAnchors(),
             }),
         });
         const body = await res.json().catch(() => ({}));
@@ -2221,6 +2294,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     image_seed: imageSeedPayloadForJourney(),
                     experience_id: experienceSelect.value || player.timeline.experience_id || null,
                     t2v_provider: 'external',
+                    spatiotemporal_anchors: readSpatiotemporalAnchors(),
                 }),
             });
             const body = await res.json().catch(() => ({}));

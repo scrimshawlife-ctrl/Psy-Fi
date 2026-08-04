@@ -46,7 +46,7 @@
                 <button type="button" class="btn-secondary" id="launchSkipBtn">Skip scan</button>
             </div>
             <details class="control-drawer launch-scan-drawer" open>
-                <summary>Device scan & resolution</summary>
+                <summary>Device scan &amp; resolution</summary>
                 <div class="launch-resolution input-group">
                     <label for="launchResolutionSelect">Field resolution</label>
                     <select id="launchResolutionSelect" aria-describedby="launchResolutionHint" data-tip="Simulation grid used after Enter.">
@@ -98,19 +98,482 @@
             <button type="button" class="nav-link" id="installButton" hidden>Install app</button>
         </nav>
 
-        <!-- Full Live Experience panel + workspace form live in the validated local index.html (~40k).
-             Player-side I2 (pin/wipe/blink) is complete on experiencePlayer.js + compareSurface.js.
-             Shell chrome for Pin + Compare mode is the next land after full index restore. -->
+        <div class="recovery-banner" id="recoveryBanner" hidden role="status" aria-live="polite">
+            <p id="recoveryText">A previous session is available to restore.</p>
+            <div class="session-actions">
+                <button type="button" class="btn-secondary" id="recoveryRestore">Restore</button>
+                <button type="button" class="btn-secondary" id="recoveryDismiss">Dismiss</button>
+            </div>
+        </div>
+
+        <main class="main-content">
+            <!-- Live Experience Workspace — field viewport leads Workbench -->
+            <section class="panel experience-panel" id="experiencePanel">
+                <div class="panel-header">
+                    <h2>Live Experience</h2>
+                    <div class="field-status" id="experienceStatus">Field idle</div>
+                </div>
+                <div class="panel-body experience-body">
+                    <div class="experience-viewport-wrap">
+                        <canvas id="experienceCanvas" aria-label="PsyFi visual field (Canvas)"></canvas>
+                        <canvas id="experienceCanvasGL" aria-label="PsyFi visual field (WebGL)" hidden></canvas>
+                        <div class="experience-chrome">
+                            <button type="button" class="btn-danger btn-with-icon" id="neutralBtn" data-tip="Emergency calm frame. Enter is immediate; exit asks for a confirm click (lever). Safety pass stays authoritative."><span class="pf-icon pf-icon-reset" aria-hidden="true"></span><span>Neutral</span></button>
+                            <button type="button" class="btn-secondary btn-with-icon" id="playExperienceBtn" data-tip="Start the field render loop. Phase advance is separate."><span class="pf-icon pf-icon-field-grid" aria-hidden="true"></span><span>Play</span></button>
+                            <button type="button" class="btn-secondary btn-with-icon" id="pauseExperienceBtn" data-tip="Pause field render and phase advance."><span class="pf-icon pf-icon-binding" aria-hidden="true"></span><span>Pause</span></button>
+                            <button type="button" class="btn-secondary btn-with-icon" id="pinFrameBtn" data-tip="Pin the current ParameterField frame for hold-and-compare."><span>Pin</span></button>
+                            <button type="button" class="btn-secondary btn-with-icon" id="clearPinBtn" hidden data-tip="Clear the pinned comparison frame."><span>Clear pin</span></button>
+                            <label class="compare-mode-label" for="compareModeSelect">Compare</label>
+                            <select id="compareModeSelect" aria-label="Compare mode" data-tip="Off, wipe, blink, or split against the pinned frame. Space toggles blink when focus is not in a field.">
+                                <option value="off" selected>Off</option>
+                                <option value="wipe">Wipe</option>
+                                <option value="blink">Blink</option>
+                                <option value="split">Split</option>
+                            </select>
+                            <div class="input-group compare-wipe-group" id="compareWipeGroup" hidden>
+                                <label for="wipePositionRange">Wipe <span id="wipePositionValue">0.50</span></label>
+                                <input type="range" id="wipePositionRange" min="0" max="1" step="0.01" value="0.5" data-tip="Horizontal wipe position between live and pinned frames.">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="experience-controls">
+                        <div class="control-row">
+                            <div class="input-group">
+                                <label for="substanceSelect">Substance</label>
+                                <select id="substanceSelect" data-tip="Substance recipe that seeds ParameterField coupling."></select>
+                            </div>
+                            <div class="input-group">
+                                <label for="experienceSelect">Recipe</label>
+                                <select id="experienceSelect" data-tip="Experience timeline recipe for the selected substance."></select>
+                            </div>
+                        </div>
+                        <div class="control-row">
+                            <div class="input-group">
+                                <label for="modeSelect">Mode</label>
+                                <select id="modeSelect" data-tip="Open / Attractor / Void / Power — shapes ParameterField coupling, not a substance claim.">
+                                    <option value="open">Open</option>
+                                    <option value="attractor">Attractor</option>
+                                    <option value="void">Void</option>
+                                    <option value="power">Power</option>
+                                </select>
+                            </div>
+                            <div class="input-group intensity-instrument">
+                                <label for="intensityRange">Intensity <span id="intensityValue">0.70</span></label>
+                                <input type="range" id="intensityRange" min="0" max="1" step="0.01" value="0.7" data-map-mode="instrument" aria-describedby="intensityMapHint" data-tip="Instrument-mapped 0–1 drive into the field engines; still safety-clamped. Alt+click toggles linear mode.">
+                                <p class="input-hint" id="intensityMapHint">Instrument map · Alt+click for linear</p>
+                            </div>
+                        </div>
+
+                        <div class="phase-transport" role="group" aria-labelledby="phaseTransportLabel">
+                            <div class="phase-transport-head">
+                                <span id="phaseTransportLabel">Phase</span>
+                                <span class="phase-label" id="phaseLabel">—</span>
+                            </div>
+                            <input type="range" id="phaseScrub" min="0" max="19" step="1" value="0" disabled aria-describedby="phaseHint" data-tip="Jump to a timeline frame. Load an experience first.">
+                            <p class="input-hint" id="phaseHint">Load an experience to scrub phases.</p>
+                            <div class="phase-transport-controls">
+                                <label class="toggle-row" for="phaseAdvanceChk" data-tip="When on, step through phases while the field plays.">
+                                    <input type="checkbox" id="phaseAdvanceChk" checked>
+                                    <span>Advance</span>
+                                </label>
+                                <div class="input-group phase-speed-group">
+                                    <label for="phaseSpeedSelect">Speed</label>
+                                    <select id="phaseSpeedSelect" data-tip="Phase step rate. Field render loop is independent.">
+                                        <option value="0.5">0.5×</option>
+                                        <option value="1" selected>1×</option>
+                                        <option value="2">2×</option>
+                                        <option value="4">4×</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="session-actions experience-launch-actions">
+                            <button type="button" class="btn-primary btn-with-icon" id="loadExperienceBtn" data-tip="Materialize timeline for the selected recipe and seed.">
+                                <span class="pf-icon pf-icon-psychedelic" aria-hidden="true"></span>
+                                <span>Load Experience</span>
+                            </button>
+                            <a class="btn-secondary btn-with-icon" id="openGpuLabBtn" href="/gpu/" data-tip="Open WebGPU GPU Lab with the current substance, mode, seed, intensity, and quality tier.">
+                                <span class="pf-icon pf-icon-console" aria-hidden="true"></span>
+                                <span>Open GPU Lab</span>
+                            </a>
+                        </div>
+
+                        <details class="control-drawer">
+                            <summary>Seed</summary>
+                            <div class="seed-row">
+                                <input type="number" id="seedInput" value="42" min="0" data-tip="Master seed for timeline materialization.">
+                                <button type="button" class="btn-secondary btn-with-icon" id="regenSeedBtn" data-tip="Roll a new random seed."><span class="pf-icon pf-icon-reset" aria-hidden="true"></span><span>Regen</span></button>
+                            </div>
+                        </details>
+
+                        <details class="control-drawer image-seed-drawer" open>
+                            <summary>Image seed</summary>
+                            <div class="image-seed" id="imageSeedControl" data-state="idle">
+                                <p class="input-hint">
+                                    Pass 1 conditions your image with the selected recipe; Pass 2 lives through ParameterField + SafetyPass.
+                                    Uploads are not stored.
+                                </p>
+                                <div class="image-seed-row">
+                                    <div class="image-seed-preview-wrap">
+                                        <img id="imageSeedPreview" class="image-seed-preview" alt="" hidden>
+                                        <div id="imageSeedPreviewEmpty" class="image-seed-preview-empty" aria-hidden="true">No image</div>
+                                    </div>
+                                    <div class="image-seed-fields">
+                                        <div class="input-group">
+                                            <label for="imageSeedFile">Upgrade image</label>
+                                            <input type="file" id="imageSeedFile" accept="image/png,image/jpeg,image/webp" data-tip="PNG, JPEG, or WebP. Conditioned by experience data, then live-modulated.">
+                                        </div>
+                                        <div class="input-group">
+                                            <label for="imageSeedInfluence">Influence <span id="imageSeedInfluenceValue">0.65</span></label>
+                                            <input type="range" id="imageSeedInfluence" min="0" max="1" step="0.01" value="0.65" data-tip="How hard Pass 1 recipe conditioning and Pass 2 image modulator pull.">
+                                        </div>
+                                        <div class="checkbox-row compact-checks">
+                                            <label data-tip="Pick the best catalog recipe for the image, then apply its mode/intensity and re-condition Pass 1 with that recipe.">
+                                                <input type="checkbox" id="imageSeedApplyRecommended" checked> Use recommended formula
+                                            </label>
+                                        </div>
+                                        <div id="imageSeedRecommend" class="image-seed-recommend" hidden>
+                                            <p class="image-seed-recommend-title" id="imageSeedRecommendTitle"></p>
+                                            <p class="image-seed-recommend-meta" id="imageSeedRecommendMeta"></p>
+                                            <div class="input-group image-seed-alt-group">
+                                                <label for="imageSeedAltSelect">Formula alternatives</label>
+                                                <select id="imageSeedAltSelect" data-tip="Ranked catalog matches for this image. Pick one before Condition &amp; load."></select>
+                                            </div>
+                                        </div>
+                                        <div class="session-actions dense-actions">
+                                            <button type="button" class="btn-secondary" id="imageSeedSuggestBtn" data-tip="Analyze the image and suggest a catalog formula without conditioning pixels.">Suggest formula</button>
+                                            <button type="button" class="btn-primary btn-with-icon" id="imageSeedApplyBtn" data-tip="Run Pass 1 conditioner, set seed, blend luminance plane, then load experience.">
+                                                <span class="pf-icon pf-icon-console" aria-hidden="true"></span>
+                                                <span>Condition &amp; load</span>
+                                            </button>
+                                            <button type="button" class="btn-secondary" id="imageSeedJourneyBtn" data-tip="One-shot: condition image → timeline → T2V prompt package (no stills). No provider call.">Seed → journey</button>
+                                            <button type="button" class="btn-secondary" id="imageSeedClearBtn" data-tip="Clear image seed and source-plane blend.">Clear</button>
+                                        </div>
+                                        <p class="image-seed-status" id="imageSeedStatus" role="status" aria-live="polite">Idle</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </details>
+
+                        <details class="control-drawer experience-advanced">
+                            <summary>Field options</summary>
+                            <div class="input-group">
+                                <label for="viewportResolutionSelect">Viewport</label>
+                                <select id="viewportResolutionSelect" data-tip="Internal buffer size. Auto fits the panel with DPR capped.">
+                                    <option value="auto" selected>Auto (fit · DPR cap)</option>
+                                    <option value="640x400">640 × 400</option>
+                                    <option value="960x540">960 × 540</option>
+                                    <option value="1280x720">1280 × 720</option>
+                                    <option value="1920x1080">1920 × 1080</option>
+                                    <option value="native">Native monitor</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label for="qualityTierSelect">Quality</label>
+                                <select id="qualityTierSelect" data-tip="Render LOD: fold iters, noise octaves, Canvas res, chroma/trail. Auto-drops under frame pressure.">
+                                    <option value="balanced" selected>Balanced</option>
+                                    <option value="efficient">Efficient</option>
+                                    <option value="survival">Survival</option>
+                                </select>
+                            </div>
+                            <div class="checkbox-row compact-checks">
+                                <label data-tip="Prefer quieter motion cues when available."><input type="checkbox" id="reduceMotionChk"> Reduce motion</label>
+                                <label data-tip="Attenuate high-flash frames via the safety pass."><input type="checkbox" id="dimFlashChk"> Dim flashing</label>
+                                <label data-tip="WebGL ParameterField path when available (shell). WebGPU Lab is a separate /gpu/ route."><input type="checkbox" id="preferWebGLChk" checked> Prefer WebGL</label>
+                                <label data-tip="Blend last Workspace sim magnitude under ParameterField."><input type="checkbox" id="sourcePlaneChk"> Sim source plane</label>
+                            </div>
+                            <div class="input-group" id="sourcePlaneMixGroup" hidden>
+                                <label for="sourcePlaneMix">Source mix <span id="sourcePlaneMixValue">0.32</span></label>
+                                <input type="range" id="sourcePlaneMix" min="0" max="1" step="0.01" value="0.32" data-tip="Blend strength for the sim source plane (safety-clamped).">
+                            </div>
+                        </details>
+
+                        <details class="control-drawer modulator-panel">
+                            <summary>Sensors</summary>
+                            <p class="input-hint">Opt-in meters feed ParameterField only — never stored, never direct-to-shader.</p>
+                            <div class="session-actions sensor-actions">
+                                <button type="button" class="btn-primary" id="enableAvailableSensorsBtn" data-tip="Enable every sensor this browser exposes (still gesture-gated where required).">Use available</button>
+                                <button type="button" class="btn-secondary" id="disableSensorsBtn" data-tip="Stop all sensor meters.">Stop</button>
+                            </div>
+                            <div class="control-row">
+                                <div class="input-group">
+                                    <label for="sensorEnableSelect">Enable</label>
+                                    <select id="sensorEnableSelect" data-tip="Pick one sensor to enable.">
+                                        <option value="">Select sensor…</option>
+                                        <option value="camera">Camera</option>
+                                        <option value="motion">Motion</option>
+                                        <option value="audio">Mic</option>
+                                        <option value="midi">Web MIDI</option>
+                                        <option value="gamepad">Gamepad</option>
+                                        <option value="ambient">Ambient light</option>
+                                        <option value="haptics">Haptics</option>
+                                    </select>
+                                </div>
+                                <button type="button" class="btn-secondary" id="sensorEnableBtn" data-tip="Enable the selected sensor meter.">Enable</button>
+                            </div>
+                            <div class="mod-meter-grid">
+                                <label>Camera <input type="range" id="modCamera" min="0" max="1" step="0.01" value="0"></label>
+                                <label>Motion <input type="range" id="modMotion" min="0" max="1" step="0.01" value="0"></label>
+                                <label>MIDI <input type="range" id="modMidi" min="0" max="1" step="0.01" value="0"></label>
+                                <label>Audio <input type="range" id="modAudio" min="0" max="1" step="0.01" value="0"></label>
+                                <label>Haptics <input type="range" id="modHaptics" min="0" max="1" step="0.01" value="0"></label>
+                            </div>
+                            <!-- Hidden legacy hooks kept for tests / progressive enhancement -->
+                            <div class="sensor-legacy-btns" hidden>
+                                <button type="button" id="enableCameraBtn">Camera</button>
+                                <button type="button" id="enableMotionBtn">Motion</button>
+                                <button type="button" id="enableAudioBtn">Mic</button>
+                                <button type="button" id="enableMidiBtn">Web MIDI</button>
+                                <button type="button" id="enableGamepadBtn">Gamepad</button>
+                                <button type="button" id="enableAmbientBtn">Ambient light</button>
+                                <button type="button" id="enableHapticsBtn">Haptics</button>
+                            </div>
+                        </details>
+
+                        <details class="control-drawer">
+                            <summary>I/O</summary>
+                            <div class="session-actions dense-actions">
+                                <button type="button" class="btn-secondary" id="bridgeSimBtn" data-tip="Pull last Workspace magnitude under the live engines.">Bridge from sim</button>
+                                <button type="button" class="btn-secondary" id="exportTimelineBtn" data-tip="Download the loaded timeline JSON.">Export timeline</button>
+                                <button type="button" class="btn-secondary" id="exportViewportBtn" data-tip="Capture the current field viewport as PNG.">Export viewport</button>
+                                <button type="button" class="btn-secondary" id="exportJourneyBtn" data-tip="Package stills + formula prompt for optional external text-to-video (no provider call).">Export journey</button>
+                                <button type="button" class="btn-secondary" id="copyT2vPromptBtn" data-tip="Copy the T2V prompt only (uses current timeline + image seed; no provider call).">Copy T2V prompt</button>
+                                <button type="button" class="btn-secondary" id="archiveCompareBtn" data-tip="Save the current pin + live comparison pair to IndexedDB (INFERRED provenance).">Archive comparison</button>
+                            </div>
+                            <p class="input-hint" id="t2vPromptHint" hidden></p>
+                        </details>
+
+                        <details class="control-drawer">
+                            <summary>Provenance</summary>
+                            <div class="provenance-panel" id="experienceProvenancePanel">
+                                <div class="muted">Load an experience to inspect provenance.</div>
+                            </div>
+                        </details>
+                    </div>
+                </div>
+            </section>
+
+            <section class="panel control-panel" id="workspace">
+                <div class="panel-header">
+                    <h2>Simulation Workspace</h2>
+                </div>
+                <div class="panel-body">
+                    <form id="simulationForm" class="workspace-form dense-form">
+                        <div class="input-grid workspace-grid">
+                            <div class="input-group">
+                                <label for="gridPresetSelect">Grid preset</label>
+                                <select id="gridPresetSelect" data-tip="Sets resolution and step count together.">
+                                    <option value="quick">Quick — 32×32 · 10 steps</option>
+                                    <option value="standard" selected>Standard — 64×64 · 20 steps</option>
+                                    <option value="detailed">Detailed — 128×128 · 50 steps</option>
+                                    <option value="deep">Deep — 256×256 · 100 steps</option>
+                                    <option value="custom">Custom resolution…</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label for="resolutionSelect">Field resolution</label>
+                                <select id="resolutionSelect" data-tip="Simulation grid size. Custom unlocks width/height.">
+                                    <option value="32x32">32 × 32</option>
+                                    <option value="64x64" selected>64 × 64</option>
+                                    <option value="128x128">128 × 128</option>
+                                    <option value="256x256">256 × 256</option>
+                                    <option value="512x512">512 × 512</option>
+                                    <option value="custom">Custom</option>
+                                </select>
+                            </div>
+                            <div class="input-group custom-size-group" id="customSizeGroup" hidden>
+                                <label for="width">Width</label>
+                                <input type="number" id="width" name="width" value="64" min="8" max="512" required>
+                            </div>
+                            <div class="input-group custom-size-group" id="customHeightGroup" hidden>
+                                <label for="height">Height</label>
+                                <input type="number" id="height" name="height" value="64" min="8" max="512" required>
+                            </div>
+                            <div class="input-group">
+                                <label for="steps">Steps</label>
+                                <input type="number" id="steps" name="steps" value="20" min="1" max="1000" required data-tip="Evolution steps for the consciousness field.">
+                            </div>
+                            <div class="input-group">
+                                <label for="seed">Seed</label>
+                                <input type="number" id="seed" name="seed" value="1337" min="0" max="4294967295" required data-tip="Master seed for the simulation run.">
+                            </div>
+                            <div class="input-group">
+                                <label for="substancePreset">Substance</label>
+                                <select id="substancePreset" name="substancePreset" data-tip="Optional substance coupling for the simulation.">
+                                    <option value="">None (baseline)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <!-- Legacy preset buttons retained for progressive enhancement / tests -->
+                        <div class="preset-buttons" hidden>
+                            <button type="button" class="preset-btn" data-preset="quick">Quick</button>
+                            <button type="button" class="preset-btn" data-preset="standard">Standard</button>
+                            <button type="button" class="preset-btn" data-preset="detailed">Detailed</button>
+                            <button type="button" class="preset-btn" data-preset="deep">Deep</button>
+                        </div>
+                        <div class="run-actions">
+                            <button type="submit" class="btn-primary btn-with-icon" id="runButton" data-tip="Run the consciousness field simulation on the server.">
+                                <span class="pf-icon pf-icon-field-grid" aria-hidden="true"></span>
+                                <span>Run Simulation</span>
+                            </button>
+                            <button type="button" class="btn-secondary" id="cancelButton" hidden data-tip="Request server-side job cancellation.">Cancel</button>
+                        </div>
+                        <details class="control-drawer">
+                            <summary>Run options</summary>
+                            <label class="checkbox-row" for="preferWebGPU" data-tip="Prefer WebGPU heatmap when available.">
+                                <input type="checkbox" id="preferWebGPU" checked>
+                                Prefer WebGPU when available
+                            </label>
+                            <label class="checkbox-row" for="telemetryOptIn" data-tip="Local diagnostic telemetry; off unless the server enables it.">
+                                <input type="checkbox" id="telemetryOptIn">
+                                Opt in to local diagnostic telemetry
+                            </label>
+                            <p class="network-status" id="networkStatus" data-state="online" aria-live="polite">Online — server computation available</p>
+                            <p class="input-hint">Esc or Cancel requests server-side job cancellation.</p>
+                        </details>
+                    </form>
+                </div>
+            </section>
+
+            <section class="panel" id="presets">
+                <div class="panel-header">
+                    <h2>Substance Preset Browser</h2>
+                </div>
+                <div class="panel-body">
+                    <p class="empty-state" id="presetEmpty">Loading presets from the existing registry…</p>
+                    <div class="substance-grid" id="substanceGrid" hidden></div>
+                </div>
+            </section>
+
+            <section class="panel results-panel" id="results">
+                <div class="panel-header">
+                    <h2>Results &amp; Provenance</h2>
+                    <div class="field-dimensions" id="fieldDimensions">No run yet</div>
+                </div>
+                <div class="panel-body">
+                    <p class="empty-state" id="resultsEmpty">Run a simulation to inspect metrics, provenance, and the field heatmap.</p>
+
+                    <div id="resultsContent" hidden>
+                        <div class="viz-layout">
+                            <div class="viz-frame">
+                                <canvas id="fieldCanvas" width="320" height="320" role="img" aria-labelledby="vizSummary"></canvas>
+                                <canvas id="fieldCanvasGPU" width="320" height="320" hidden role="img" aria-labelledby="vizSummary"></canvas>
+                                <p class="viz-summary" id="vizSummary"></p>
+                                <p class="input-hint" id="vizBackend">Renderer: pending</p>
+                            </div>
+                            <div class="metrics-grid">
+                                <div class="metric-card"><div class="metric-label"><span class="pf-icon pf-icon-valence" aria-hidden="true"></span>Valence</div><div class="metric-value" id="valence">--</div><div class="metric-bar"><div class="metric-bar-fill" id="valenceBar"></div></div></div>
+                                <div class="metric-card"><div class="metric-label"><span class="pf-icon pf-icon-jhana" aria-hidden="true"></span>Coherence</div><div class="metric-value" id="coherence">--</div><div class="metric-bar"><div class="metric-bar-fill" id="coherenceBar"></div></div></div>
+                                <div class="metric-card"><div class="metric-label"><span class="pf-icon pf-icon-binding" aria-hidden="true"></span>Symmetry</div><div class="metric-value" id="symmetry">--</div><div class="metric-bar"><div class="metric-bar-fill" id="symmetryBar"></div></div></div>
+                                <div class="metric-card"><div class="metric-label"><span class="pf-icon pf-icon-field-grid" aria-hidden="true"></span>Roughness</div><div class="metric-value" id="roughness">--</div><div class="metric-bar"><div class="metric-bar-fill" id="roughnessBar"></div></div></div>
+                                <div class="metric-card"><div class="metric-label"><span class="pf-icon pf-icon-psychedelic" aria-hidden="true"></span>Richness</div><div class="metric-value" id="richness">--</div><div class="metric-bar"><div class="metric-bar-fill" id="richnessBar"></div></div></div>
+                            </div>
+                        </div>
+
+                        <div class="provenance-panel" id="provenancePanel" aria-live="polite">
+                            <div>Seed: <code id="resultSeed">--</code></div>
+                            <div>Preset: <code id="resultPreset">--</code></div>
+                            <div>Provenance: <code id="resultProvenance">--</code></div>
+                            <div>Modules: <code id="resultModules">--</code></div>
+                        </div>
+                        <div class="session-actions dense-actions">
+                            <button type="button" class="btn-secondary" id="exportSessionButton" data-tip="Download the current session JSON.">Export Session JSON</button>
+                            <button type="button" class="btn-secondary" id="saveHistoryButton" data-tip="Store this run in IndexedDB history.">Save to History</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="panel" id="history">
+                <div class="panel-header">
+                    <h2>Session History</h2>
+                </div>
+                <div class="panel-body">
+                    <p class="empty-state" id="historyEmpty">No IndexedDB history yet. Save a completed run, or import a Psy-Fi session JSON to inspect offline.</p>
+                    <ul class="history-list" id="historyList"></ul>
+                    <div class="session-actions">
+                        <button type="button" class="btn-secondary" id="clearHistoryButton">Clear History</button>
+                        <label class="btn-secondary file-import" for="importSessionInput">
+                            Import session
+                            <input id="importSessionInput" type="file" accept="application/json,.json" hidden />
+                        </label>
+                    </div>
+                    <h3 class="subsection-title">Comparison pairs</h3>
+                    <p class="input-hint">Archived pin + live ParameterField pairs (INFERRED). Restore re-applies the pin and compare mode.</p>
+                    <p class="empty-state" id="compareEmpty">No comparison archives yet. Pin a frame, choose a compare mode, then Archive comparison from Live Experience I/O.</p>
+                    <ul class="history-list" id="compareList"></ul>
+                    <div class="session-actions">
+                        <button type="button" class="btn-secondary" id="clearCompareButton">Clear comparisons</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="panel" id="capabilities">
+                <div class="panel-header">
+                    <h2>Browser Capability Diagnostics</h2>
+                </div>
+                <div class="panel-body">
+                    <p class="input-hint">
+                        Optional APIs never block the core online workflow. Sensor rows are feature-detected
+                        without prompting; enable meters from Live Experience after a user gesture.
+                    </p>
+                    <table class="capability-table" id="capabilityTable">
+                        <thead>
+                            <tr>
+                                <th scope="col">Capability</th>
+                                <th scope="col">Supported</th>
+                                <th scope="col">Fallback</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="panel error-panel" id="errorPanel" hidden>
+                <div class="panel-header error-header">
+                    <h2>Error</h2>
+                </div>
+                <div class="panel-body">
+                    <pre id="errorMessage"></pre>
+                </div>
+            </section>
+
+            <div class="loading-overlay" id="loadingOverlay" hidden>
+                <div class="spinner"></div>
+                <p id="loadingStatus">Computing consciousness field…</p>
+                <button type="button" class="btn-secondary" id="loadingDismissBtn">Dismiss</button>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <div class="footer-links">
+                <a href="/docs" target="_blank">API Docs</a>
+                <span class="separator" aria-hidden="true">·</span>
+                <a href="https://github.com/scrimshawlife-ctrl/Psy-Fi" target="_blank">GitHub</a>
+                <span class="separator" aria-hidden="true">·</span>
+                <span class="abx-credit"><span class="pf-icon pf-icon-ethics" aria-hidden="true"></span>ABX-Core v1.3</span>
+            </div>
+        </footer>
+    </div>
 
     <!-- Viz module order: math → instrumentMap → compareSurface → safety → engines → webgl → sensors → player → splash → app -->
+    <script src="/static/renderer.js"></script>
+    <script src="/static/viz/math.js"></script>
     <script src="/static/viz/instrumentMap.js"></script>
     <script src="/static/viz/compareSurface.js"></script>
+    <script src="/static/viz/safetyPass.js"></script>
+    <script src="/static/viz/engines/index.js"></script>
+    <script src="/static/viz/parameterFieldWebGL.js"></script>
+    <script src="/static/viz/deviceSensors.js"></script>
     <script src="/static/viz/experiencePlayer.js"></script>
+    <script src="/static/viz/launchSplash.js"></script>
     <script src="/static/app.js"></script>
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/static/sw.js')
+                navigator.serviceWorker.register('/sw.js', { scope: '/' })
                     .then(() => console.log('[PWA] Service Worker registered'))
                     .catch((err) => console.log('[PWA] Service Worker registration failed:', err));
             });

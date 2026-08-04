@@ -1,6 +1,6 @@
 # PsyFi Instrument & Spatiotemporal Grounding Plan
 
-Status: **I1 complete · I2 player-side complete** — 2026-08-03  
+Status: **I1 + I2 complete** — 2026-08-04  
 Source inspiration: Looking Glass / GL4SS patterns (client-side spatiotemporal image+video instrument, non-linear dial, solar-elevation grounding, multi-stage planner, hold-and-compare, curated journeys).  
 Canonical engineering queue: [`CONTINUATION_PLAN.md`](CONTINUATION_PLAN.md)  
 Board: [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md)
@@ -23,12 +23,13 @@ No calendar estimates. Ordered by instrument impact vs. architectural surface ar
 
 ### I1 — Non-linear quantized controls + lever-style commits (highest leverage)
 
-**Progress (2026-08-03)**
+**Progress (2026-08-04)**
 - [x] `psyfi_api/static/viz/instrumentMap.js` — pure UI↔intensity mapping (smoothstep + power, inverse, optional quantize)
+- [x] `style.css` `.intensity-instrument` hint styles
 - [x] Intensity range uses instrument map by default; Alt+click toggles linear mode
 - [x] Display shows mapped intensity value (API still receives 0–1 float)
 - [x] Neutral exit requires confirm click (lever-style); enter remains one-shot for safety
-- [x] Shell wiring landed: `app.js` helpers + range listener + Neutral armed state; `index.html` map-mode attr + hint; `style.css` instrument hint
+- [x] Shell wiring: restored `index.html` + `data-map-mode` + hint; `app.js` get/set helpers
 - [ ] Optional discrete station dial UI polish
 - [ ] Solar-elevation / environmental-lighting modulator
 - [ ] Lever commits for export-journey lock / seed locking
@@ -53,10 +54,10 @@ Changing the immutable ParameterField schema itself; any change must remain a pr
 - [x] `ExperienceRenderer` hooks: `setPinnedFrame`, `setCompareState`
 - [x] Canvas wipe + blink composite inside `draw` (presentation-only; SafetyPass still applied to both sides)
 - [x] `_rasterizeFrameTo` for pinned-side raster at same LOD
-- [x] Script order: `compareSurface.js` + `experiencePlayer.js` loaded from shell
-- [ ] Minimal Pin button + Compare mode control in Live Experience chrome (blocked on full index shell land)
-- [ ] Split mode dual-viewport
-- [ ] Provenance / IndexedDB archive of comparison pairs
+- [x] Player APIs present in `experiencePlayer.js`
+- [x] Minimal Pin button + Compare mode control (wipe / blink / split) + wipe slider + Space blink toggle
+- [x] Split mode dual-viewport (`compositeSplit` — left pinned, right live)
+- [x] Provenance / IndexedDB archive of comparison pairs (`comparisons` store, schema `psyfi.comparison.v1`)
 
 **Why**  
 Direct visual differential analysis of two ParameterFields or timelines is high-value research tooling and currently missing.

@@ -854,6 +854,11 @@ body {
     grid-row: 1 / span 2;
 }
 
+.history-item .compare-restore {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+}
+
 .history-title {
     display: inline-flex;
     flex-wrap: wrap;
@@ -866,6 +871,13 @@ body {
     font-size: 0.78rem;
     font-variant-numeric: tabular-nums;
     color: var(--pf-text-soft);
+}
+
+.subsection-title {
+    margin: var(--space-4) 0 var(--space-2);
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
 }
 
 .nav-more {
@@ -1358,9 +1370,37 @@ body.launch-ready #appShell {
     bottom: 0;
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: var(--space-2);
     padding: var(--space-3);
     background: linear-gradient(transparent, color-mix(in srgb, var(--pf-bg-0) 92%, transparent));
+}
+
+.experience-chrome .compare-mode-label {
+    font-size: 0.72rem;
+    opacity: 0.8;
+}
+
+.experience-chrome #compareModeSelect {
+    min-height: 44px;
+    font-size: 0.85rem;
+}
+
+.experience-chrome .compare-wipe-group {
+    flex: 1 1 8rem;
+    min-width: 7rem;
+    max-width: 14rem;
+    margin: 0;
+}
+
+.experience-chrome .compare-wipe-group label {
+    font-size: 0.72rem;
+}
+
+.experience-chrome .compare-wipe-group input[type="range"] {
+    width: 100%;
+    min-height: 44px;
+    margin: 0;
 }
 
 .experience-controls {

@@ -3,9 +3,70 @@
 const SESSION_STORAGE_KEY = 'psyfi.session.v1.last';
 const RECOVERY_DISMISS_KEY = 'psyfi.session.v1.recovery_dismissed';
 const DB_NAME = 'psyfi-sessions';
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 const STORE_NAME = 'history';
+const COMPARE_STORE = 'comparisons';
 const API_V1 = '/api/v1';
+
+async function openPsyfiDb() {
+    return new Promise((resolve, reject) => {
+        const request = indexedDB.open(DB_NAME, DB_VERSION);
+        request.onupgradeneeded = () => {
+            const db = request.result;
+            if (!db.objectStoreNames.contains(STORE_NAME)) {
+                const store = db.createObjectStore(STORE_NAME, { keyPath: 'id' });
+                store.createIndex('updated_at', 'updated_at');
+            }
+            if (!db.objectStoreNames.contains(COMPARE_STORE)) {
+                const store = db.createObjectStore(COMPARE_STORE, { keyPath: 'id' });
+                store.createIndex('updated_at', 'updated_at');
+            }
+        };
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+    });
+}
+
+async function saveComparisonRecord(record) {
+    if (!record?.id) throw new Error('No comparison record to save');
+    const db = await openPsyfiDb();
+    await new Promise((resolve, reject) => {
+        const tx = db.transaction(COMPARE_STORE, 'readwrite');
+        tx.objectStore(COMPARE_STORE).put(record);
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => reject(tx.error);
+    });
+    db.close();
+    return record;
+}
+
+async function listComparisonRecords() {
+    try {
+        const db = await openPsyfiDb();
+        const records = await new Promise((resolve, reject) => {
+            const tx = db.transaction(COMPARE_STORE, 'readonly');
+            const request = tx.objectStore(COMPARE_STORE).getAll();
+            request.onsuccess = () => resolve(request.result || []);
+            request.onerror = () => reject(request.error);
+        });
+        db.close();
+        return records.sort((a, b) => String(b.updated_at).localeCompare(String(a.updated_at)));
+    } catch (error) {
+        console.warn('[PsyFi] IndexedDB comparisons unavailable:', error);
+        return [];
+    }
+}
+
+async function clearComparisonRecords() {
+    const db = await openPsyfiDb();
+    await new Promise((resolve, reject) => {
+        const tx = db.transaction(COMPARE_STORE, 'readwrite');
+        tx.objectStore(COMPARE_STORE).clear();
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => reject(tx.error);
+    });
+    db.close();
+}
 
 window.PsyFiTips = {
     bind(root) {
@@ -384,18 +445,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function openDb() {
-        return new Promise((resolve, reject) => {
-            const request = indexedDB.open(DB_NAME, DB_VERSION);
-            request.onupgradeneeded = () => {
-                const db = request.result;
-                if (!db.objectStoreNames.contains(STORE_NAME)) {
-                    const store = db.createObjectStore(STORE_NAME, { keyPath: 'id' });
-                    store.createIndex('updated_at', 'updated_at');
-                }
-            };
-            request.onsuccess = () => resolve(request.result);
-            request.onerror = () => reject(request.error);
-        });
+        return openPsyfiDb();
     }
 
     async function saveHistoryRecord(payload) {
@@ -500,6 +550,45 @@ document.addEventListener('DOMContentLoaded', () => {
             historyList.appendChild(item);
         });
     }
+
+    const compareList = document.getElementById('compareList');
+    const compareEmpty = document.getElementById('compareEmpty');
+
+    async function refreshComparisons() {
+        if (!compareList) return;
+        const records = await listComparisonRecords();
+        compareList.innerHTML = '';
+        setHidden(compareEmpty, records.length > 0);
+        records.forEach((record) => {
+            const item = document.createElement('li');
+            item.className = 'history-item';
+            const pinHash = String(record.pinned?.hash || '—').slice(0, 8);
+            const liveHash = String(record.live?.hash || '—').slice(0, 8);
+            item.innerHTML = `
+                <div class="history-title">
+                    <strong>${record.mode || 'off'}</strong>
+                    · ${record.substance || 'field'}
+                    · pin <code>${pinHash}</code>
+                    · live <code>${liveHash}</code>
+                </div>
+                <div class="history-meta">${record.id} · ${record.claim || 'INFERRED'} · ${record.updated_at || ''}</div>
+                <button type="button" class="btn-secondary compare-restore">Restore</button>
+            `;
+            item.querySelector('.compare-restore').addEventListener('click', () => {
+                window.dispatchEvent(new CustomEvent('psyfi:restore-comparison', { detail: record }));
+                const panel = document.getElementById('experiencePanel');
+                if (panel) panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+            compareList.appendChild(item);
+        });
+    }
+
+    window.PsyFiCompareArchive = {
+        refresh: refreshComparisons,
+        save: saveComparisonRecord,
+        list: listComparisonRecords,
+        clear: clearComparisonRecords,
+    };
 
     async function clearHistory() {
         const db = await openDb();
@@ -902,6 +991,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    document.getElementById('clearCompareButton')?.addEventListener('click', async () => {
+        try {
+            await clearComparisonRecords();
+            await refreshComparisons();
+        } catch (error) {
+            showError(error.message);
+        }
+    });
+
     document.getElementById('recoveryRestore')?.addEventListener('click', async () => {
         if (!recoveryRecord) return;
         applyRecordToForm(recoveryRecord);
@@ -966,6 +1064,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     loadPresets();
     refreshHistory().then(maybeShowRecoveryBanner);
+    refreshComparisons();
     renderCapabilities();
 
     // Splash finished (or skipped) — refresh capability/sensor UI against final probes.
@@ -1014,6 +1113,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const modeSelect = document.getElementById('modeSelect');
     const intensityRange = document.getElementById('intensityRange');
     const intensityValue = document.getElementById('intensityValue');
+    const intensityMapHint = document.getElementById('intensityMapHint');
     const seedInput = document.getElementById('seedInput');
     const phaseScrub = document.getElementById('phaseScrub');
     const phaseLabel = document.getElementById('phaseLabel');
@@ -1031,11 +1131,49 @@ document.addEventListener('DOMContentLoaded', () => {
     const playBtn = document.getElementById('playExperienceBtn');
     const pauseBtn = document.getElementById('pauseExperienceBtn');
     const neutralBtn = document.getElementById('neutralBtn');
+    const pinFrameBtn = document.getElementById('pinFrameBtn');
+    const clearPinBtn = document.getElementById('clearPinBtn');
+    const compareModeSelect = document.getElementById('compareModeSelect');
+    const compareWipeGroup = document.getElementById('compareWipeGroup');
+    const wipePositionRange = document.getElementById('wipePositionRange');
+    const wipePositionValue = document.getElementById('wipePositionValue');
     const openGpuLabBtn = document.getElementById('openGpuLabBtn');
     const gpuLabNavLink = document.getElementById('gpuLabNavLink');
     const statusEl = document.getElementById('experienceStatus');
     /** Pass-1 image seed payload (also mirrored to sessionStorage for /gpu/). */
     let imageSeedState = null;
+
+    const instrumentMap = window.PsyFiViz && window.PsyFiViz.instrumentMap;
+
+    /** Mapped intensity (0–1) sent to ParameterField / API — not raw slider UI position. */
+    function getExperienceIntensity() {
+        if (instrumentMap && intensityRange) {
+            return instrumentMap.readIntensityFromRange(intensityRange);
+        }
+        return Number(intensityRange?.value) || 0.7;
+    }
+
+    function syncIntensityDisplay() {
+        if (!intensityValue) return;
+        const v = getExperienceIntensity();
+        intensityValue.textContent = instrumentMap
+            ? instrumentMap.formatIntensity(v)
+            : Number(v).toFixed(2);
+        if (intensityMapHint && intensityRange) {
+            const mode = (intensityRange.dataset && intensityRange.dataset.mapMode) || 'instrument';
+            intensityMapHint.textContent =
+                mode === 'linear' ? 'Linear map · Alt+click for instrument' : 'Instrument map · Alt+click for linear';
+        }
+    }
+
+    function setExperienceIntensity(intensity) {
+        if (instrumentMap && intensityRange) {
+            instrumentMap.writeIntensityToRange(intensityRange, intensity);
+        } else if (intensityRange) {
+            intensityRange.value = String(intensity);
+        }
+        syncIntensityDisplay();
+    }
 
     /** Map shell LOD → GPU Lab tier query param. */
     function mapShellQualityToGpuTier(raw) {
@@ -1077,7 +1215,7 @@ document.addEventListener('DOMContentLoaded', () => {
         q.set('from', 'shell');
         const substance = substanceSelect?.value || 'lsd';
         const mode = modeSelect?.value || 'open';
-        const intensity = Number(intensityRange?.value);
+        const intensity = getExperienceIntensity();
         const seed = Number(seedInput?.value);
         const tier = mapShellQualityToGpuTier(document.getElementById('qualityTierSelect')?.value);
         const experienceId = experienceSelect?.value || '';
@@ -1204,8 +1342,24 @@ document.addEventListener('DOMContentLoaded', () => {
         reduceMotionChk.checked = true;
     }
 
+    // Keep displayed intensity at 0.70 (mapped) rather than raw UI position.
+    setExperienceIntensity(0.7);
+    syncGpuLabLinks();
     intensityRange.addEventListener('input', () => {
-        intensityValue.textContent = Number(intensityRange.value).toFixed(2);
+        syncIntensityDisplay();
+        syncGpuLabLinks();
+    });
+    intensityRange.addEventListener('click', (e) => {
+        if (!e.altKey || !instrumentMap) return;
+        e.preventDefault();
+        const current = getExperienceIntensity();
+        const mode = (intensityRange.dataset.mapMode || 'instrument') === 'linear' ? 'instrument' : 'linear';
+        intensityRange.dataset.mapMode = mode;
+        setExperienceIntensity(current);
+        syncGpuLabLinks();
+        if (statusEl) {
+            statusEl.textContent = mode === 'linear' ? 'Intensity map: linear' : 'Intensity map: instrument';
+        }
     });
 
     const imageSeedControl = document.getElementById('imageSeedControl');
@@ -1383,8 +1537,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 ? body.applied_intensity
                 : body.recommended?.intensity;
         if (intensity != null) {
-            intensityRange.value = String(intensity);
-            intensityValue.textContent = Number(intensity).toFixed(2);
+            setExperienceIntensity(intensity);
         }
     }
 
@@ -1445,7 +1598,7 @@ document.addEventListener('DOMContentLoaded', () => {
             fd.append('file', file);
             fd.append('substance', substanceSelect.value || 'lsd');
             fd.append('mode', modeSelect.value || 'open');
-            fd.append('intensity', String(Number(intensityRange.value)));
+            fd.append('intensity', String(getExperienceIntensity()));
             fd.append('influence', String(imageInfluence()));
             fd.append('include_preview', 'false');
             fd.append('include_source_field', 'false');
@@ -1522,7 +1675,7 @@ document.addEventListener('DOMContentLoaded', () => {
         fd.append('substance', substanceSelect.value || 'lsd');
         if (flags.experience_id) fd.append('experience_id', flags.experience_id);
         fd.append('mode', modeSelect.value || 'open');
-        fd.append('intensity', String(Number(intensityRange.value)));
+        fd.append('intensity', String(getExperienceIntensity()));
         fd.append('influence', String(imageInfluence()));
         fd.append('include_preview', 'true');
         fd.append('include_source_field', 'true');
@@ -1593,7 +1746,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     substance: substanceSelect.value || 'lsd',
                     experience_id: flags.experience_id,
                     mode: modeSelect.value || 'open',
-                    intensity: Number(intensityRange.value),
+                    intensity: getExperienceIntensity(),
                     influence: imageInfluence(),
                     apply_recommended: flags.apply_recommended,
                     recommend_top_n: 5,
@@ -1666,12 +1819,97 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     let neutralOn = false;
-    neutralBtn.addEventListener('click', () => {
-        neutralOn = !neutralOn;
+    let neutralExitArmedUntil = 0;
+    const NEUTRAL_EXIT_ARM_MS = 2800;
+
+    function clearNeutralExitArm() {
+        neutralExitArmedUntil = 0;
+        if (neutralOn) setButtonLabel(neutralBtn, 'Exit Neutral');
+    }
+
+    function applyNeutral(on) {
+        neutralOn = !!on;
         player.neutral(neutralOn);
+        clearNeutralExitArm();
         setButtonLabel(neutralBtn, neutralOn ? 'Exit Neutral' : 'Neutral');
         statusEl.textContent = neutralOn ? 'Neutral view enabled' : 'Field restored';
+    }
+
+    neutralBtn.addEventListener('click', () => {
+        if (!neutralOn) {
+            // Enter Neutral is one-shot for safety.
+            applyNeutral(true);
+            return;
+        }
+        const now = Date.now();
+        if (now <= neutralExitArmedUntil) {
+            applyNeutral(false);
+            return;
+        }
+        // Lever-style exit: first click arms, second confirms within window.
+        neutralExitArmedUntil = now + NEUTRAL_EXIT_ARM_MS;
+        setButtonLabel(neutralBtn, 'Confirm exit');
+        statusEl.textContent = 'Confirm Neutral exit';
+        window.setTimeout(() => {
+            if (Date.now() >= neutralExitArmedUntil && neutralOn) {
+                clearNeutralExitArm();
+            }
+        }, NEUTRAL_EXIT_ARM_MS + 50);
     });
+
+    function syncCompareChrome() {
+        const mode = compareModeSelect?.value || 'off';
+        const hasPin = !!(player.pinned && player.pinned.frame);
+        if (clearPinBtn) clearPinBtn.hidden = !hasPin;
+        if (compareWipeGroup) compareWipeGroup.hidden = mode !== 'wipe';
+        if (wipePositionValue && wipePositionRange) {
+            wipePositionValue.textContent = Number(wipePositionRange.value).toFixed(2);
+        }
+    }
+
+    pinFrameBtn?.addEventListener('click', () => {
+        const pinned = player.pinFrame();
+        if (!pinned) {
+            statusEl.textContent = 'Load an experience before pinning';
+            return;
+        }
+        syncCompareChrome();
+        statusEl.textContent = `Pinned frame · ${pinned.frame.phase || pinned.idx}`;
+    });
+
+    clearPinBtn?.addEventListener('click', () => {
+        player.clearPin();
+        if (compareModeSelect) compareModeSelect.value = 'off';
+        player.setCompareMode('off');
+        syncCompareChrome();
+        statusEl.textContent = 'Pin cleared';
+    });
+
+    compareModeSelect?.addEventListener('change', () => {
+        const mode = compareModeSelect.value || 'off';
+        if (mode !== 'off' && !(player.pinned && player.pinned.frame)) {
+            const pinned = player.pinFrame();
+            if (!pinned) {
+                compareModeSelect.value = 'off';
+                statusEl.textContent = 'Pin a frame before comparing';
+                syncCompareChrome();
+                return;
+            }
+        }
+        player.setCompareMode(mode);
+        if (mode === 'wipe' && wipePositionRange) {
+            player.setWipePosition(Number(wipePositionRange.value));
+        }
+        syncCompareChrome();
+        statusEl.textContent = mode === 'off' ? 'Compare off' : `Compare: ${mode}`;
+    });
+
+    wipePositionRange?.addEventListener('input', () => {
+        player.setWipePosition(Number(wipePositionRange.value));
+        syncCompareChrome();
+    });
+
+    syncCompareChrome();
 
     playBtn.addEventListener('click', () => {
         player.play();
@@ -1762,6 +2000,99 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     document.getElementById('exportViewportBtn')?.addEventListener('click', () => {
         player.exportViewportPng();
+    });
+
+    document.getElementById('archiveCompareBtn')?.addEventListener('click', async () => {
+        const cs = window.PsyFiViz && window.PsyFiViz.compareSurface;
+        if (!cs || !player.pinned) {
+            statusEl.textContent = 'Pin a frame before archiving a comparison';
+            return;
+        }
+        const live = player.frame || (player.timeline && player.timeline.frames && player.timeline.frames[player.idx]);
+        const record = cs.makeArchiveRecord(
+            player.pinned,
+            live,
+            player.idx,
+            player.compareMode || compareModeSelect?.value || 'off',
+            player.wipePosition,
+            player.blinkHz,
+            {
+                substance: substanceSelect?.value || (live && live.substance) || null,
+                experience_id: experienceSelect?.value || null,
+                seed: Number(seedInput?.value) || null,
+            },
+        );
+        if (!record) {
+            statusEl.textContent = 'Could not build comparison archive';
+            return;
+        }
+        try {
+            await saveComparisonRecord(record);
+            if (window.PsyFiCompareArchive && typeof window.PsyFiCompareArchive.refresh === 'function') {
+                await window.PsyFiCompareArchive.refresh();
+            }
+            statusEl.textContent = `Comparison archived · ${record.id}`;
+        } catch (err) {
+            console.error(err);
+            statusEl.textContent = 'Archive comparison failed';
+            alert(err.message || String(err));
+        }
+    });
+
+    window.addEventListener('psyfi:restore-comparison', (ev) => {
+        const record = ev && ev.detail;
+        if (!record || !record.pinned || !record.pinned.frame) {
+            statusEl.textContent = 'Invalid comparison archive';
+            return;
+        }
+        const cs = window.PsyFiViz && window.PsyFiViz.compareSurface;
+        const pin = cs
+            ? cs.makePinPacket(record.pinned.frame, record.pinned.idx, record.pinned.timeline_hash)
+            : {
+                frame: record.pinned.frame,
+                idx: record.pinned.idx | 0,
+                hash: record.pinned.hash || null,
+                timeline_hash: record.pinned.timeline_hash || null,
+                at: record.pinned.at || null,
+            };
+        player.pinned = pin;
+        if (player.renderer && typeof player.renderer.setPinnedFrame === 'function') {
+            player.renderer.setPinnedFrame(pin.frame);
+        }
+        if (player.webgl && typeof player.webgl.setPinnedFrame === 'function') {
+            player.webgl.setPinnedFrame(pin.frame);
+        }
+        const mode = record.mode && record.mode !== 'off' ? record.mode : 'split';
+        if (compareModeSelect) compareModeSelect.value = mode;
+        player.setCompareMode(mode);
+        if (typeof record.wipe_position === 'number' && wipePositionRange) {
+            wipePositionRange.value = String(record.wipe_position);
+            player.setWipePosition(record.wipe_position);
+        }
+        if (typeof record.blink_hz === 'number') player.setBlinkHz(record.blink_hz);
+        // Prefer setPhaseIndex when timeline exists; otherwise install one-frame live snapshot.
+        if (record.live && record.live.frame && !(player.timeline && player.timeline.frames && player.timeline.frames.length)) {
+            player.timeline = {
+                frames: [record.live.frame],
+                timeline_hash: record.pinned.timeline_hash || null,
+                seed: record.seed,
+                experience_id: record.experience_id || null,
+            };
+            player.setPhaseIndex(0);
+        } else if (
+            record.live &&
+            record.live.hash &&
+            player.timeline &&
+            player.timeline.frames
+        ) {
+            const found = player.timeline.frames.findIndex((f) => f && f.hash === record.live.hash);
+            if (found >= 0) {
+                player.setPhaseIndex(found);
+            }
+        }
+        syncCompareChrome();
+        player.play();
+        statusEl.textContent = `Restored comparison · ${mode} · ${record.id}`;
     });
 
     function imageSeedPayloadForJourney() {
@@ -1932,7 +2263,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     substance,
                     experience_id: experienceSelect.value || null,
                     mode: modeSelect.value || 'open',
-                    intensity: Number(intensityRange.value),
+                    intensity: getExperienceIntensity(),
                     seed: Number(last.seed ?? seedInput.value) || 42,
                     steps: 12,
                     reduce_motion: !!reduceMotionChk.checked,
@@ -1973,7 +2304,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     substance: substanceSelect.value || 'lsd',
                     preset: substanceSelect.value || 'lsd',
                     mode: modeSelect.value || 'open',
-                    intensity: Number(intensityRange.value),
+                    intensity: getExperienceIntensity(),
                 });
                 if (data.parameter_field) {
                     player.timeline = {
@@ -2116,16 +2447,14 @@ document.addEventListener('DOMContentLoaded', () => {
     loadBtn.addEventListener('click', async () => {
         loadBtn.disabled = true;
         statusEl.textContent = 'Loading timeline…';
-        neutralOn = false;
-        setButtonLabel(neutralBtn, 'Neutral');
-        if (typeof player.neutral === 'function') player.neutral(false);
+        applyNeutral(false);
         syncModulators();
         try {
             const data = await player.loadTimeline({
                 substance: substanceSelect.value || 'lsd',
                 experience_id: experienceSelect.value || null,
                 mode: modeSelect.value || 'open',
-                intensity: Number(intensityRange.value),
+                intensity: getExperienceIntensity(),
                 seed: Number(seedInput.value) || 42,
                 steps: 20,
                 reduce_motion: !!reduceMotionChk.checked,
@@ -2166,9 +2495,24 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'n' || e.key === 'N') {
-            if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA')) return;
+        const tag = e.target && e.target.tagName;
+        const inField =
+            tag === 'INPUT' ||
+            tag === 'SELECT' ||
+            tag === 'TEXTAREA' ||
+            tag === 'BUTTON' ||
+            tag === 'A' ||
+            (e.target && e.target.isContentEditable);
+        if ((e.key === 'n' || e.key === 'N') && !inField) {
             neutralBtn.click();
+            return;
+        }
+        // Space toggles blink compare when not typing / activating a control.
+        if (e.code === 'Space' && !inField && compareModeSelect) {
+            e.preventDefault();
+            const next = compareModeSelect.value === 'blink' ? 'off' : 'blink';
+            compareModeSelect.value = next;
+            compareModeSelect.dispatchEvent(new Event('change'));
         }
     });
 

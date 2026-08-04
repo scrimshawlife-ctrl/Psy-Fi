@@ -9,12 +9,12 @@ Board: [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md)
 
 | Area | State |
 | --- | --- |
-| `/api/v1` + **hard freeze** | Done (`psyfi-api-v1-hard-2026-07-25`) — additive I3 fields synced |
-| Legacy Live Experience (Canvas/WebGL) | Done — full shell + I1–I5 + polish |
+| `/api/v1` + **hard freeze** | Done (`psyfi-api-v1-hard-2026-07-25`) — additive I3–I5 routes synced |
+| Legacy Live Experience (Canvas/WebGL) | Done — full shell + I1–I5 + transitions |
 | ParameterField + SafetyPass | Done |
-| Image-seed pipeline | Done + optional spatiotemporal anchors |
-| Export-journey | Done + optional spatiotemporal anchors + planner |
-| PWA + service worker | Done (root `/sw.js`, shell cache **v40**) |
+| Image-seed pipeline | Done + anchors + planner notes |
+| Export-journey | Done + anchors + planner |
+| PWA + service worker | Done (root `/sw.js`, shell cache **v41**) |
 | GPU Lab route | Done |
 | Docker production | Done |
 
@@ -39,17 +39,21 @@ Full plan: [`INSTRUMENT_GROUNDING_PLAN.md`](INSTRUMENT_GROUNDING_PLAN.md).
 - [x] **I5** — Journey objects (`psyfi.journey.v1`, IndexedDB archive + restore)
 - [x] Station dial + live solar lighting modulator polish
 - [x] Lever commits — export-journey confirm + seed lock/unlock
-- [x] WebGL hold-and-compare parity (pin FBO + wipe/blink/split)
+- [x] WebGL hold-and-compare parity (pin FBO + wipe/blink/split dual-viewport)
 - [x] Journey `comparison_id` link + restore hardening
+- [x] Safety-clamped soft transitions (phase / Neutral / load / journey)
+- [x] Doc + schema drift sync (planner/journey schemas, freeze route list, SW cites)
+- [x] Viz helper numeric invariant tests (`tests/js/run_viz_helper_tests.mjs`)
 
 ## Next recommended
 
-1. Living QA / hardware capture as needed (`PRODUCTION_READINESS.md`).
-2. _(done)_ Safety-clamped transition shaders — phase / Neutral / journey load.
+1. Living QA / hardware capture as needed (`PRODUCTION_READINESS.md`, `HARDWARE_ULTRA_FPS.md`).
+2. Optional model-swappable client generative extensions (user key only) — non-goal for core path.
 
 ## Supporting patterns landed
 
-- [x] Safety-clamped soft crossfades (`transitionSurface.js`) for phase, Neutral, journey load — Canvas + WebGL; skipped under reduced motion and when hold-and-compare is active.
+- [x] Safety-clamped soft crossfades (`transitionSurface.js`) for phase, Neutral, load, journey restore — Canvas + WebGL; skipped under reduced motion and when hold-and-compare is active.
+- [x] WebGL split dual-viewport parity with Canvas `compositeSplit`.
 
 ## Run
 

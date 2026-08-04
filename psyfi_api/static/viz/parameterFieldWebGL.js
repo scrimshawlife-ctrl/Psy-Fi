@@ -217,7 +217,24 @@ vec3 fieldAt(vec2 uv) {
 }
 
 void main() {
-  vec2 uv = v_uv * 2.0 - 1.0;
+  // Dual-viewport split remaps each half to a full plate (Canvas compositeSplit parity).
+  bool splitMode = u_hasPin > 0.5 && u_compareMode > 2.5;
+  vec2 plateUv = v_uv;
+  if (splitMode) {
+    plateUv = v_uv.x < 0.5
+      ? vec2(clamp(v_uv.x * 2.0, 0.0, 1.0), v_uv.y)
+      : vec2(clamp((v_uv.x - 0.5) * 2.0, 0.0, 1.0), v_uv.y);
+  }
+  if (splitMode && v_uv.x < 0.5) {
+    vec3 pinCol = texture2D(u_pin, plateUv).rgb;
+    if (abs(v_uv.x - 0.5) < 0.0025) {
+      pinCol = min(vec3(1.0), pinCol + vec3(0.12));
+    }
+    gl_FragColor = vec4(pinCol, 1.0);
+    return;
+  }
+
+  vec2 uv = plateUv * 2.0 - 1.0;
   uv.x *= 1.2;
   if (u_neutral > 0.8) {
     float r = length(uv);
@@ -235,7 +252,7 @@ void main() {
   float chroma = clamp(u_chroma, 0.0, 1.0);
 
   if (u_sourceMix > 0.001) {
-    float src = texture2D(u_source, v_uv).r;
+    float src = texture2D(u_source, plateUv).r;
     float sm = clamp(u_sourceMix, 0.0, 1.0) * 0.85;
     v = mix(v, src, sm);
   }
@@ -265,16 +282,17 @@ void main() {
   col = mix(vec3(0.047, 0.047, 0.055), col, clamp(u_safetyAtten, 0.0, 1.0));
 
   // I2 hold-and-compare: pin texture is already SafetyPass-attenuated.
-  if (u_hasPin > 0.5 && u_compareMode > 0.5) {
+  // Split handled above (dual-viewport remap); wipe/blink composite here.
+  if (u_hasPin > 0.5 && u_compareMode > 0.5 && u_compareMode < 2.5) {
     vec3 pinCol = texture2D(u_pin, v_uv).rgb;
     if (u_compareMode < 1.5) {
       float w = step(u_wipe, v_uv.x);
       col = mix(pinCol, col, w);
-    } else if (u_compareMode < 2.5) {
-      col = mix(col, pinCol, clamp(u_blinkPin, 0.0, 1.0));
     } else {
-      col = mix(pinCol, col, step(0.5, v_uv.x));
+      col = mix(col, pinCol, clamp(u_blinkPin, 0.0, 1.0));
     }
+  } else if (splitMode && abs(v_uv.x - 0.5) < 0.0025) {
+    col = min(vec3(1.0), col + vec3(0.12));
   }
   // Soft crossfade from prior plate (also SafetyPass'd). u_xfadeMix < 0 disables.
   if (u_xfadeMix >= 0.0) {

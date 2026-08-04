@@ -42,6 +42,8 @@ Synced via `python3 scripts/sync_frozen_contracts.py`:
 - `POST /api/v1/visualize/image-seed` (+ `/json` base64 alternate)
 - `POST /api/v1/visualize/image-seed-journey`
 - `POST /api/v1/visualize/export-journey`
+- `POST /api/v1/visualize/planner`
+- `POST /api/v1/visualize/journey`
 - `GET/POST /api/v1/telemetry/*`
 - `GET /health`, `GET /ready`
 

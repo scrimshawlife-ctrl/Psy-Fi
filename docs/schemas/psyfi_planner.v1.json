@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://psyfi.local/schemas/psyfi_planner.v1.json",
+  "title": "psyfi.planner.v1",
+  "description": "Deterministic INFERRED planner packet (motifs + lighting notes). Not authoritative over ParameterField.",
+  "type": "object",
+  "required": ["schema", "claim", "planner_text", "motifs", "lighting_notes", "hash", "note"],
+  "properties": {
+    "schema": { "const": "psyfi.planner.v1" },
+    "claim": { "const": "INFERRED" },
+    "planner_text": { "type": "string" },
+    "motifs": { "type": "array", "items": { "type": "string" } },
+    "lighting_notes": { "type": "string" },
+    "parameter_field_hash": { "type": ["string", "null"] },
+    "substance": { "type": ["string", "null"] },
+    "mode": { "type": ["string", "null"] },
+    "intensity": { "type": ["number", "null"] },
+    "master_seed": { "type": ["integer", "null"] },
+    "experience_id": { "type": ["string", "null"] },
+    "spatiotemporal_anchors": { "type": ["object", "null"] },
+    "notes": { "type": ["string", "null"] },
+    "hash": { "type": "string" },
+    "note": { "type": "string" },
+    "kind": { "type": "string" }
+  }
+}

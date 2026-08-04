@@ -47,7 +47,7 @@ python3 scripts/build_experience_catalog.py
 ### Frontend
 - `psyfi_api/static/viz/experiencePlayer.js` — multi-engine Canvas field + safety pass
 - Live Experience panel alongside simulation workspace
-- Service worker precache includes experience player (`psyfi-shell-v30`)
+- Service worker precache includes experience player (see `psyfi_api/static/sw.js` `CACHE_NAME`, currently **v41**)
 
 ### Tests
 ```text
@@ -80,17 +80,15 @@ pytest tests/ -q
 
 ## Known limitations
 
-- Legacy Live Experience: Canvas (CPU fractal fold + fbm) + optional WebGL ParameterField (Mandelbox fold, orbit trap, chroma/edge/trail); Prefer WebGL on by default
-- No live camera/sensor adapters in this slice
-- Modular per-engine JS files still live inside `experiencePlayer.js`
+- Legacy Live Experience: Canvas + Prefer-WebGL ParameterField with I2 compare + safety transitions
+- Modular engines also live under `static/viz/engines/`; player orchestrates present
 - 5-MeO / mescaline / ketamine overlays are seed-heavy (few scraped samples)
 - PCP recipes intensity-capped; treated experimental
 - Native iOS is a separate deferred track
 
 ## Next
 
-1. WebGL shader port of the same parameter field
-2. Optional getUserMedia camera texture input
-3. Device motion → parameter_mapper live modulators
-4. More positive source packs for 5-MeO / mescaline / ketamine
-5. iOS Metal adapters against the same schemas after web validation
+1. Living device / hardware Ultra fps capture as needed (`HARDWARE_ULTRA_FPS.md`)
+2. Optional getUserMedia camera texture input (ParameterField modulators only)
+3. More positive source packs for 5-MeO / mescaline / ketamine
+4. iOS Metal adapters against the same schemas after web validation (deferred track)

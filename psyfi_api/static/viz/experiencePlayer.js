@@ -531,6 +531,7 @@
       this._blinkT0 = performance.now();
       // Safety-clamped transitions
       this._transition = null;
+      this._pendingTransitionKind = null;
       this.setPreferWebGL(this.preferWebGL);
     }
 
@@ -623,7 +624,7 @@
       if (this.webgl) this.webgl.resize(w, h, opts);
     }
 
-    async loadTimeline(payload) {
+    async loadTimeline(payload, opts) {
       this.loadContext = {
         substance: payload.substance,
         experience_id: payload.experience_id || null,
@@ -649,7 +650,10 @@
         throw new Error(err.detail || res.statusText);
       }
       const data = await res.json();
-      this.beginTransition('load');
+      const transitionKind =
+        (opts && opts.transitionKind) || this._pendingTransitionKind || 'load';
+      this._pendingTransitionKind = null;
+      this.beginTransition(transitionKind);
       this.clearPin();
       if (data.kind === 'snapshot') {
         this.timeline = { frames: [data.frame], timeline_hash: data.frame.hash, seed: data.frame.master_seed };

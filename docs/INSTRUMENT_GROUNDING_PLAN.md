@@ -138,6 +138,7 @@ Server-side journey storage; social/sharing features; any claim that a journey i
 ## Supporting patterns (lower priority / opportunistic)
 
 - [x] Immersive but safety-clamped transition shaders (phase change, Neutral View entry/exit, journey load) that respect `prefers-reduced-motion` and the final luminance attenuator — `transitionSurface.js` + Canvas/WebGL crossfade.
+- [x] WebGL split dual-viewport parity with Canvas `compositeSplit`.
 - Model-swappable client-side generative extensions (OpenRouter-style, user key only) if external still/video generation is ever added beyond the current prompt-sidecar approach.
 - Instrument language in UI copy (“dial”, “lever”, “through the glass”) kept quiet and non-theatrical.
 
